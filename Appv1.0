@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Organisation</title>
+  <style>
+    /* APPLE-LIKE DESIGN SYSTEM */
+    :root {
+      --bg: #F2F2F7;
+      --card: #FFFFFF;
+      --text: #000000;
+      --text-muted: #8E8E93;
+      --border: #E5E5EA;
+      --grey-fill: #D1D1D6;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #000000;
+        --card: #1C1C1E;
+        --text: #FFFFFF;
+        --border: #38383A;
+        --grey-fill: #636366;
+      }
+    }
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif; }
+    body {
+      background-color: var(--bg); color: var(--text);
+      margin: 0; padding: 0; overflow-x: hidden;
+      -webkit-user-select: none;
+    }
+
+    /* SPLASH SCREEN */
+    #splash {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: white; color: black; z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px; font-weight: 600; letter-spacing: 1px;
+      transition: opacity 0.5s ease;
+    }
+
+    /* LAYOUTS */
+    .screen {
+      padding: 16px; padding-top: calc(env(safe-area-inset-top) + 20px);
+      display: none; animation: fadeIn 0.3s ease;
+    }
+    .screen.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    h1 { font-size: 32px; font-weight: 700; margin-bottom: 24px; }
+    h2 { font-size: 22px; font-weight: 600; margin-top: 32px; margin-bottom: 16px; }
+
+    /* SUBJECT CARDS */
+    .card {
+      border: 1px solid var(--border); border-radius: 16px;
+      padding: 16px; margin-bottom: 12px;
+      display: flex; align-items: center; gap: 16px;
+      transition: background 0.3s ease;
+      cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    }
+    
+    /* 5 BOXES SYSTEM */
+    .boxes-container { display: flex; gap: 6px; }
+    .box {
+      width: 22px; height: 22px; border-radius: 6px;
+      border: 2px solid var(--border);
+      transition: all 0.2s;
+    }
+    .box.active { background-color: var(--grey-fill); border-color: var(--grey-fill); }
+
+    .subject-title { font-size: 18px; font-weight: 600; flex: 1; }
+
+    /* DETAIL SCREEN */
+    .header-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+    .back-btn {
+      color: #007AFF; font-size: 17px; background: none; border: none; padding: 0; font-weight: 500; cursor: pointer;
+    }
+    
+    .status-row {
+      display: flex; align-items: center; gap: 12px; padding: 12px;
+      background: var(--card); border-radius: 12px; margin-bottom: 8px;
+    }
+
+    /* INPUTS & LISTS */
+    .input-group { display: flex; gap: 8px; margin-bottom: 16px; }
+    input[type="text"], input[type="date"], textarea {
+      flex: 1; padding: 12px; border-radius: 12px; border: 1px solid var(--border);
+      background: var(--card); color: var(--text); font-size: 16px;
+    }
+    textarea { height: 100px; resize: none; width: 100%; margin-top: 8px; }
+    button.add-btn { background: #007AFF; color: white; border: none; padding: 0 20px; border-radius: 12px; font-weight: 600; }
+
+    .list-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px; background: var(--card); border-radius: 12px; margin-bottom: 8px;
+      border: 1px solid var(--border);
+    }
+    .date-badge { font-size: 14px; color: var(--text-muted); font-weight: 500; }
+    .delete-btn { color: #FF3B30; background: none; border: none; font-weight: bold; font-size: 18px; }
+  </style>
+</head>
+<body>
+
+  <div id="splash">Organisation</div>
+
+  <div id="home-screen" class="screen active">
+    <h1>Subjects</h1>
+    <div id="subjects-list"></div>
+
+    <h2>Global Notes & Tasks</h2>
+    <div class="input-group">
+      <input type="text" id="global-task" placeholder="Task description...">
+      <input type="date" id="global-date">
+      <button class="add-btn" onclick="addGlobalNote()">Add</button>
+    </div>
+    <div id="global-notes-list"></div>
+  </div>
+
+  <div id="detail-screen" class="screen">
+    <div class="header-bar">
+      <button class="back-btn" onclick="goHome()">&#10094; Back</button>
+      <h1 id="detail-title" style="margin:0;"></h1>
+    </div>
+
+    <h3>Current Status</h3>
+    <div id="detail-statuses"></div>
+
+    <h3>Homework</h3>
+    <div class="input-group">
+      <input type="text" id="hw-desc" placeholder="Homework description...">
+      <input type="date" id="hw-date">
+      <button class="add-btn" onclick="addHomework()">Add</button>
+    </div>
+    <div id="hw-list"></div>
+
+    <h3>Notes</h3>
+    <textarea id="subject-notes" placeholder="Add additional information here..." onblur="saveNotes()"></textarea>
+  </div>
+
+  <script>
+    // --- 1. DATA SETUP ---
+    const initialSubjects = [
+      "English", "General Mathematics", "Economics", "Legal studies", 
+      "Pre mathematical methods", "Religious education", "Physics", "Wellbeing"
+    ];
+    
+    // Status definitions: [Color for Background, Label]
+    const statuses = [
+      { color: "rgba(255, 59, 48, 0.15)", label: "Falling behind" },  // Transparent Dark Red
+      { color: "rgba(255, 149, 0, 0.15)", label: "Behind" },          // Orange/Light red
+      { color: "rgba(0, 122, 255, 0.15)", label: "Up to date" },      // Blue (Middle)
+      { color: "rgba(52, 199, 89, 0.15)", label: "Ahead" },           // Light Green
+      { color: "rgba(0, 100, 0, 0.15)", label: "Well ahead" }         // Dark Green
+    ];
+
+    let subjectsData = JSON.parse(localStorage.getItem('org_subjects')) || initialSubjects.map(name => ({
+      id: name.replace(/\s+/g, '-').toLowerCase(),
+      name: name,
+      status: 2, // Default: Up to date
+      homework: [],
+      notes: ""
+    }));
+
+    let globalNotes = JSON.parse(localStorage.getItem('org_global')) || [];
+    let currentSubjectId = null;
+
+    // --- 2. INITIALIZATION & SPLASH ---
+    window.onload = () => {
+      setTimeout(() => {
+        const splash = document.getElementById('splash');
+        splash.style.opacity = '0';
+        setTimeout(() => splash.style.display = 'none', 500);
+        checkNotifications(); // Ask permission and check due dates
+      }, 1000);
+      renderHome();
+    };
+
+    function saveData() {
+      localStorage.setItem('org_subjects', JSON.stringify(subjectsData));
+      localStorage.setItem('org_global', JSON.stringify(globalNotes));
+    }
+
+    // --- 3. RENDERING MAIN SCREEN ---
+    function renderHome() {
+      const list = document.getElementById('subjects-list');
+      list.innerHTML = subjectsData.map((sub, subjectIndex) => `
+        <div class="card" style="background-color: ${statuses[sub.status].color}" onclick="openDetail('${sub.id}')">
+          <div class="boxes-container">
+            ${[0, 1, 2, 3, 4].map(boxIndex => `
+              <div class="box ${sub.status === boxIndex ? 'active' : ''}" 
+                   onclick="event.stopPropagation(); setStatus('${sub.id}', ${boxIndex})">
+              </div>
+            `).join('')}
+          </div>
+          <div class="subject-title">${sub.name}</div>
+        </div>
+      `).join('');
+
+      const gList = document.getElementById('global-notes-list');
+      gList.innerHTML = globalNotes.map(n => `
+        <div class="list-item">
+          <div>
+            <div>${n.text}</div>
+            <div class="date-badge">Due: ${formatDate(n.date)}</div>
+          </div>
+          <button class="delete-btn" onclick="deleteGlobal('${n.id}')">×</button>
+        </div>
+      `).join('');
+    }
+
+    // --- 4. STATUS UPDATES ---
+    function setStatus(subId, statusIndex) {
+      const sub = subjectsData.find(s => s.id === subId);
+      sub.status = statusIndex;
+      saveData();
+      renderHome();
+      if (currentSubjectId === subId) renderDetail();
+    }
+
+    // --- 5. DETAIL SCREEN NAVIGATION ---
+    function openDetail(subId) {
+      currentSubjectId = subId;
+      document.getElementById('home-screen').classList.remove('active');
+      document.getElementById('detail-screen').classList.add('active');
+      renderDetail();
+    }
+
+    function goHome() {
+      currentSubjectId = null;
+      document.getElementById('detail-screen').classList.remove('active');
+      document.getElementById('home-screen').classList.add('active');
+      renderHome();
+    }
+
+    function renderDetail() {
+      const sub = subjectsData.find(s => s.id === currentSubjectId);
+      document.getElementById('detail-title').innerText = sub.name;
+      document.getElementById('subject-notes').value = sub.notes;
+
+      // Status buttons list
+      const statusDiv = document.getElementById('detail-statuses');
+      statusDiv.innerHTML = statuses.map((stat, i) => `
+        <div class="status-row" onclick="setStatus('${sub.id}', ${i})">
+          <div class="box ${sub.status === i ? 'active' : ''}"></div>
+          <div style="font-weight: 500;">${stat.label}</div>
+        </div>
+      `).join('');
+
+      // Homework list
+      const hwList = document.getElementById('hw-list');
+      hwList.innerHTML = sub.homework.map(hw => `
+        <div class="list-item">
+          <div>
+            <div>${hw.text}</div>
+            <div class="date-badge">Due: ${formatDate(hw.date)}</div>
+          </div>
+          <button class="delete-btn" onclick="deleteHomework('${hw.id}')">×</button>
+        </div>
+      `).join('');
+    }
+
+    // --- 6. ADDING/DELETING DATA ---
+    function addHomework() {
+      const desc = document.getElementById('hw-desc');
+      const date = document.getElementById('hw-date');
+      if (!desc.value || !date.value) return alert("Please enter both description and date!");
+      
+      const sub = subjectsData.find(s => s.id === currentSubjectId);
+      sub.homework.push({ id: Date.now().toString(), text: desc.value, date: date.value });
+      desc.value = ''; date.value = '';
+      saveData(); renderDetail();
+    }
+
+    function deleteHomework(hwId) {
+      const sub = subjectsData.find(s => s.id === currentSubjectId);
+      sub.homework = sub.homework.filter(h => h.id !== hwId);
+      saveData(); renderDetail();
+    }
+
+    function addGlobalNote() {
+      const text = document.getElementById('global-task');
+      const date = document.getElementById('global-date');
+      if (!text.value || !date.value) return alert("Please enter task and date!");
+      
+      globalNotes.push({ id: Date.now().toString(), text: text.value, date: date.value });
+      text.value = ''; date.value = '';
+      saveData(); renderHome();
+    }
+
+    function deleteGlobal(id) {
+      globalNotes = globalNotes.filter(n => n.id !== id);
+      saveData(); renderHome();
+    }
+
+    function saveNotes() {
+      const sub = subjectsData.find(s => s.id === currentSubjectId);
+      sub.notes = document.getElementById('subject-notes').value;
+      saveData();
+    }
+
+    // --- 7. UTILS & NOTIFICATIONS ---
+    function formatDate(dateString) {
+      const options = { weekday: 'short', month: 'short', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString('en-US', options);
+    }
+
+    function checkNotifications() {
+      if ("Notification" in window) {
+        Notification.requestPermission().then(permission => {
+          if (permission === "granted") {
+            const today = new Date();
+            const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            let dueSoon = [];
+            
+            // Check global notes
+            globalNotes.forEach(note => {
+              const d = new Date(note.date);
+              if (d.toDateString() === today.toDateString() || d.toDateString() === tomorrow.toDateString()) {
+                dueSoon.push(`Global: ${note.text}`);
+              }
+            });
+
+            // Check homework
+            subjectsData.forEach(sub => {
+              sub.homework.forEach(hw => {
+                const d = new Date(hw.date);
+                if (d.toDateString() === today.toDateString() || d.toDateString() === tomorrow.toDateString()) {
+                  dueSoon.push(`${sub.name}: ${hw.text}`);
+                }
+              });
+            });
+
+            if (dueSoon.length > 0) {
+              new Notification("Homework Due Soon!", { body: dueSoon.join('\n') });
+            }
+          }
+        });
+      }
+    }
+  </script>
+</body>
+</html>
