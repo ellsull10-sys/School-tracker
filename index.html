@@ -2,108 +2,141 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <title>Organisation</title>
+  <title>School Tracker</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+
   <style>
-    /* APPLE-LIKE DESIGN SYSTEM */
+    /* PREMIUM UI DESIGN SYSTEM */
     :root {
-      --bg: #F2F2F7;
+      --bg: #F7F7F9; /* Softer background */
       --card: #FFFFFF;
-      --text: #000000;
-      --text-muted: #8E8E93;
-      --border: #E5E5EA;
-      --grey-fill: #D1D1D6;
+      --text: #1A1A1A; /* Darker for better contrast */
+      --text-muted: #5C5C60; /* Higher contrast than Apple default */
+      --border: #E0E0E6;
+      --grey-fill: #C7C7CC;
+      --accent: #2C3E50; /* Sleek Dark Slate instead of Apple Blue */
     }
     @media (prefers-color-scheme: dark) {
       :root {
         --bg: #000000;
         --card: #1C1C1E;
-        --text: #FFFFFF;
-        --border: #38383A;
-        --grey-fill: #636366;
+        --text: #F5F5F5;
+        --text-muted: #A0A0A5;
+        --border: #333336;
+        --grey-fill: #555555;
+        --accent: #8D99AE; /* Lighter slate for dark mode */
       }
     }
-    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif; }
+    * { box-sizing: border-box; }
+    
+    /* Font Application */
     body {
       background-color: var(--bg); color: var(--text);
       margin: 0; padding: 0; overflow-x: hidden;
       -webkit-user-select: none;
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+    }
+    h1, h2, h3, .subject-title {
+      font-family: 'Outfit', sans-serif;
+      letter-spacing: -0.3px;
     }
 
     /* SPLASH SCREEN */
     #splash {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: white; color: black; z-index: 9999;
+      background: var(--bg); color: var(--text); z-index: 9999;
       display: flex; align-items: center; justify-content: center;
-      font-size: 32px; font-weight: 600; letter-spacing: 1px;
+      font-size: 36px; font-weight: 700; font-family: 'Outfit', sans-serif;
       transition: opacity 0.5s ease;
     }
 
     /* LAYOUTS */
     .screen {
       padding: 16px; padding-top: calc(env(safe-area-inset-top) + 20px);
-      display: none; animation: fadeIn 0.3s ease;
+      display: none; animation: fadeIn 0.25s ease-out;
     }
     .screen.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-    h1 { font-size: 32px; font-weight: 700; margin-bottom: 24px; }
-    h2 { font-size: 22px; font-weight: 600; margin-top: 32px; margin-bottom: 16px; }
+    h1 { font-size: 32px; font-weight: 700; margin-bottom: 24px; color: var(--text); }
+    h2 { font-size: 20px; font-weight: 600; margin-top: 32px; margin-bottom: 16px; color: var(--text); }
+    h3 { font-size: 18px; font-weight: 600; margin-top: 24px; margin-bottom: 12px; }
 
     /* SUBJECT CARDS */
     .card {
-      border: 1px solid var(--border); border-radius: 16px;
+      border: 1px solid var(--border); border-radius: 18px;
       padding: 16px; margin-bottom: 12px;
-      display: flex; align-items: center; gap: 16px;
-      transition: background 0.3s ease;
-      cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+      display: flex; align-items: center; gap: 14px;
+      transition: background 0.3s ease, border-color 0.3s ease;
+      cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.03);
     }
     
     /* 5 BOXES SYSTEM */
-    .boxes-container { display: flex; gap: 6px; }
+    .boxes-container { display: flex; gap: 5px; flex-shrink: 0; }
     .box {
-      width: 22px; height: 22px; border-radius: 6px;
-      border: 2px solid var(--border);
-      transition: all 0.2s;
+      width: 20px; height: 20px; border-radius: 5px;
+      border: 1.5px solid var(--border);
+      transition: all 0.2s ease;
     }
     .box.active { background-color: var(--grey-fill); border-color: var(--grey-fill); }
 
-    .subject-title { font-size: 18px; font-weight: 600; flex: 1; }
+    .subject-title { font-size: 18px; font-weight: 500; flex: 1; line-height: 1.2; }
 
-    /* DETAIL SCREEN */
-    .header-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+    /* DETAIL SCREEN & CUSTOM BACK BUTTON */
+    .header-bar { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
     .back-btn {
-      color: #007AFF; font-size: 17px; background: none; border: none; padding: 0; font-weight: 500; cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+      background: var(--card); color: var(--text);
+      border: 1px solid var(--border); padding: 8px 16px; 
+      border-radius: 20px; font-size: 14px; font-weight: 500; 
+      font-family: 'Inter', sans-serif; cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
     }
     
     .status-row {
-      display: flex; align-items: center; gap: 12px; padding: 12px;
-      background: var(--card); border-radius: 12px; margin-bottom: 8px;
+      display: flex; align-items: center; gap: 12px; padding: 14px;
+      background: var(--card); border-radius: 14px; margin-bottom: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02); border: 1px solid var(--border);
     }
 
-    /* INPUTS & LISTS */
-    .input-group { display: flex; gap: 8px; margin-bottom: 16px; }
-    input[type="text"], input[type="date"], textarea {
-      flex: 1; padding: 12px; border-radius: 12px; border: 1px solid var(--border);
-      background: var(--card); color: var(--text); font-size: 16px;
+    /* INPUTS & LISTS - FIXED FOR SCREEN SIZE */
+    .input-group { 
+      display: flex; gap: 8px; margin-bottom: 16px; width: 100%;
     }
-    textarea { height: 100px; resize: none; width: 100%; margin-top: 8px; }
-    button.add-btn { background: #007AFF; color: white; border: none; padding: 0 20px; border-radius: 12px; font-weight: 600; }
+    input[type="text"], input[type="date"], textarea {
+      flex: 1; min-width: 0; /* Forces inputs to shrink instead of breaking screen */
+      padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border);
+      background: var(--card); color: var(--text); font-size: 15px;
+      font-family: 'Inter', sans-serif; font-weight: 400;
+    }
+    textarea { height: 120px; resize: none; width: 100%; margin-top: 4px; line-height: 1.5; }
+    
+    button.add-btn { 
+      background: var(--accent); color: white; border: none; 
+      padding: 0 16px; border-radius: 12px; font-weight: 500; 
+      font-family: 'Inter', sans-serif; font-size: 15px;
+      flex-shrink: 0; /* Keeps button from squishing */
+    }
 
     .list-item {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 14px; background: var(--card); border-radius: 12px; margin-bottom: 8px;
-      border: 1px solid var(--border);
+      padding: 16px; background: var(--card); border-radius: 14px; margin-bottom: 8px;
+      border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);
     }
-    .date-badge { font-size: 14px; color: var(--text-muted); font-weight: 500; }
-    .delete-btn { color: #FF3B30; background: none; border: none; font-weight: bold; font-size: 18px; }
+    .date-badge { font-size: 13px; color: var(--text-muted); font-weight: 500; margin-top: 4px; }
+    .delete-btn { color: #FF3B30; background: none; border: none; font-weight: 400; font-size: 22px; padding: 0 10px; }
   </style>
 </head>
 <body>
 
-  <div id="splash">Organisation</div>
+  <div id="splash">School Tracker</div>
 
   <div id="home-screen" class="screen active">
     <h1>Subjects</h1>
@@ -120,7 +153,10 @@
 
   <div id="detail-screen" class="screen">
     <div class="header-bar">
-      <button class="back-btn" onclick="goHome()">&#10094; Back</button>
+      <button class="back-btn" onclick="goHome()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        Back
+      </button>
       <h1 id="detail-title" style="margin:0;"></h1>
     </div>
 
@@ -148,17 +184,17 @@
     
     // Status definitions: [Color for Background, Label]
     const statuses = [
-      { color: "rgba(255, 59, 48, 0.15)", label: "Falling behind" },  // Transparent Dark Red
-      { color: "rgba(255, 149, 0, 0.15)", label: "Behind" },          // Orange/Light red
-      { color: "rgba(0, 122, 255, 0.15)", label: "Up to date" },      // Blue (Middle)
-      { color: "rgba(52, 199, 89, 0.15)", label: "Ahead" },           // Light Green
-      { color: "rgba(0, 100, 0, 0.15)", label: "Well ahead" }         // Dark Green
+      { color: "rgba(255, 59, 48, 0.12)", label: "Falling behind" },
+      { color: "rgba(255, 149, 0, 0.12)", label: "Behind" },          
+      { color: "rgba(44, 62, 80, 0.12)", label: "Up to date" },      
+      { color: "rgba(52, 199, 89, 0.12)", label: "Ahead" },           
+      { color: "rgba(34, 139, 34, 0.12)", label: "Well ahead" }         
     ];
 
     let subjectsData = JSON.parse(localStorage.getItem('org_subjects')) || initialSubjects.map(name => ({
       id: name.replace(/\s+/g, '-').toLowerCase(),
       name: name,
-      status: 2, // Default: Up to date
+      status: 2, 
       homework: [],
       notes: ""
     }));
@@ -172,7 +208,7 @@
         const splash = document.getElementById('splash');
         splash.style.opacity = '0';
         setTimeout(() => splash.style.display = 'none', 500);
-        checkNotifications(); // Ask permission and check due dates
+        checkNotifications(); 
       }, 1000);
       renderHome();
     };
@@ -186,7 +222,7 @@
     function renderHome() {
       const list = document.getElementById('subjects-list');
       list.innerHTML = subjectsData.map((sub, subjectIndex) => `
-        <div class="card" style="background-color: ${statuses[sub.status].color}" onclick="openDetail('${sub.id}')">
+        <div class="card" style="background-color: ${statuses[sub.status].color}; border-color: ${statuses[sub.status].color.replace('0.12', '0.3')}" onclick="openDetail('${sub.id}')">
           <div class="boxes-container">
             ${[0, 1, 2, 3, 4].map(boxIndex => `
               <div class="box ${sub.status === boxIndex ? 'active' : ''}" 
@@ -202,7 +238,7 @@
       gList.innerHTML = globalNotes.map(n => `
         <div class="list-item">
           <div>
-            <div>${n.text}</div>
+            <div style="font-weight: 500;">${n.text}</div>
             <div class="date-badge">Due: ${formatDate(n.date)}</div>
           </div>
           <button class="delete-btn" onclick="deleteGlobal('${n.id}')">×</button>
@@ -224,6 +260,7 @@
       currentSubjectId = subId;
       document.getElementById('home-screen').classList.remove('active');
       document.getElementById('detail-screen').classList.add('active');
+      window.scrollTo(0, 0); // Scroll to top when opening a subject
       renderDetail();
     }
 
@@ -231,6 +268,7 @@
       currentSubjectId = null;
       document.getElementById('detail-screen').classList.remove('active');
       document.getElementById('home-screen').classList.add('active');
+      window.scrollTo(0, 0);
       renderHome();
     }
 
@@ -242,9 +280,9 @@
       // Status buttons list
       const statusDiv = document.getElementById('detail-statuses');
       statusDiv.innerHTML = statuses.map((stat, i) => `
-        <div class="status-row" onclick="setStatus('${sub.id}', ${i})">
+        <div class="status-row" onclick="setStatus('${sub.id}', ${i})" style="cursor: pointer;">
           <div class="box ${sub.status === i ? 'active' : ''}"></div>
-          <div style="font-weight: 500;">${stat.label}</div>
+          <div style="font-weight: 500; font-family: 'Inter', sans-serif;">${stat.label}</div>
         </div>
       `).join('');
 
@@ -253,7 +291,7 @@
       hwList.innerHTML = sub.homework.map(hw => `
         <div class="list-item">
           <div>
-            <div>${hw.text}</div>
+            <div style="font-weight: 500;">${hw.text}</div>
             <div class="date-badge">Due: ${formatDate(hw.date)}</div>
           </div>
           <button class="delete-btn" onclick="deleteHomework('${hw.id}')">×</button>
@@ -303,7 +341,9 @@
     // --- 7. UTILS & NOTIFICATIONS ---
     function formatDate(dateString) {
       const options = { weekday: 'short', month: 'short', day: 'numeric' };
-      return new Date(dateString).toLocaleDateString('en-US', options);
+      // Splitting date to fix timezone offset issues on iOS
+      const [year, month, day] = dateString.split('-');
+      return new Date(year, month - 1, day).toLocaleDateString('en-US', options);
     }
 
     function checkNotifications() {
@@ -315,19 +355,19 @@
             
             let dueSoon = [];
             
-            // Check global notes
             globalNotes.forEach(note => {
-              const d = new Date(note.date);
-              if (d.toDateString() === today.toDateString() || d.toDateString() === tomorrow.toDateString()) {
+              const [y, m, d] = note.date.split('-');
+              const noteDate = new Date(y, m - 1, d);
+              if (noteDate.toDateString() === today.toDateString() || noteDate.toDateString() === tomorrow.toDateString()) {
                 dueSoon.push(`Global: ${note.text}`);
               }
             });
 
-            // Check homework
             subjectsData.forEach(sub => {
               sub.homework.forEach(hw => {
-                const d = new Date(hw.date);
-                if (d.toDateString() === today.toDateString() || d.toDateString() === tomorrow.toDateString()) {
+                const [y, m, d] = hw.date.split('-');
+                const hwDate = new Date(y, m - 1, d);
+                if (hwDate.toDateString() === today.toDateString() || hwDate.toDateString() === tomorrow.toDateString()) {
                   dueSoon.push(`${sub.name}: ${hw.text}`);
                 }
               });
