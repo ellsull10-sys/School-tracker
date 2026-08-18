@@ -11,33 +11,48 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    /* OG PREMIUM UI DESIGN SYSTEM - APPLE STYLE */
+    /* 💎 PREMIUM LIQUID GLASS DESIGN SYSTEM 💎 */
     :root {
-      --bg: #F2F2F7; /* Classic iOS background grey */
-      --card: #FFFFFF; /* Pure white cards for contrast */
-      --text: #000000;
-      --text-muted: #8E8E93;
-      --border: #E5E5EA; /* Subtle Apple border */
-      --grey-fill: #E5E5EA; /* Checkbox empty state */
+      /* Soft ambient base for glass to blur against */
+      --bg-base: #F2F4F7; 
+      
+      /* Glassmorphism Variables */
+      --glass-bg: rgba(255, 255, 255, 0.65);
+      --glass-border: rgba(255, 255, 255, 0.8);
+      --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.05);
+      
+      --text: #1C1C1E;
+      --text-muted: #6C6C70;
+      
       --accent: #2C3E50; /* Sleek Dark Slate */
-      --accent-grad: linear-gradient(135deg, #34495E, #2C3E50);
-      --warning: #FF9500;
-      --critical: #FF3B30;
+      --accent-grad: linear-gradient(135deg, #475569, #1E293B);
+      --warning: #F59E0B;
+      --critical: #EF4444;
     }
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #000000; --card: #1C1C1E; --text: #FFFFFF; --text-muted: #A0A0A5;
-        --border: #38383A; --grey-fill: #38383A; --accent: #8D99AE;
-        --accent-grad: linear-gradient(135deg, #4A5D70, #2C3E50);
+        --bg-base: #000000;
+        --glass-bg: rgba(28, 28, 30, 0.65);
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        --text: #F5F5F5; 
+        --text-muted: #A0A0A5;
+        --accent: #94A3B8;
+        --accent-grad: linear-gradient(135deg, #4A5D70, #1E293B);
       }
     }
     * { box-sizing: border-box; }
     
     body {
-      background-color: var(--bg); color: var(--text);
+      /* Subtle mesh gradient for premium glass effect */
+      background-color: var(--bg-base); 
+      background-image: radial-gradient(circle at 15% 50%, rgba(218, 226, 240, 0.7), transparent 50%),
+                        radial-gradient(circle at 85% 30%, rgba(230, 225, 240, 0.6), transparent 50%);
+      background-attachment: fixed;
+      color: var(--text);
       margin: 0; padding: 0; overflow-x: hidden;
       -webkit-user-select: none; font-family: 'Inter', sans-serif; font-weight: 400;
     }
@@ -45,9 +60,9 @@
 
     #splash {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; 
-      background: var(--bg); color: var(--text); z-index: 9999;
+      background: var(--bg-base); color: var(--text); z-index: 9999;
       display: flex; align-items: center; justify-content: center;
-      font-size: 36px; font-weight: 700; font-family: 'Outfit', sans-serif;
+      font-size: 36px; font-weight: 800; font-family: 'Outfit', sans-serif;
       transition: opacity 0.5s ease;
     }
 
@@ -56,25 +71,29 @@
     @keyframes liquidPop { 0% { opacity: 0; transform: scale(0.9) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
 
     .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-    h1 { font-size: 32px; font-weight: 700; margin: 0; color: var(--text); }
-    h2 { font-size: 20px; font-weight: 600; margin-top: 32px; margin-bottom: 16px; color: var(--text); }
+    h1 { font-size: 34px; font-weight: 800; margin: 0; color: var(--text); text-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+    h2 { font-size: 20px; font-weight: 700; margin-top: 32px; margin-bottom: 16px; color: var(--text); }
     h3 { font-size: 18px; font-weight: 600; margin-top: 24px; margin-bottom: 12px; }
     
     .icon-btn { background: none; border: none; color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s; padding: 0; }
     .icon-btn:active { transform: scale(0.7); }
 
-    /* DASHBOARD WIDGETS (NOW PERFECTLY SYMMETRICAL) */
-    .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; align-items: stretch; }
-    
-    .widget { 
-      background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 16px; 
-      box-shadow: 0 2px 12px rgba(0,0,0,0.03); display: flex; flex-direction: column; justify-content: space-between; 
+    /* --- LIQUID GLASS REUSABLE CLASS --- */
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow);
+      border-radius: 20px;
     }
+
+    /* DASHBOARD WIDGETS */
+    .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; align-items: stretch; }
+    .widget { padding: 16px; display: flex; flex-direction: column; justify-content: space-between; }
     
-    /* Simon Widget Specifics */
     .simon-widget {
-      background: var(--accent); color: white; text-decoration: none; border: none;
-      transition: transform 0.2s; cursor: pointer;
+      background: var(--accent-grad); color: white; text-decoration: none; border: none;
+      transition: transform 0.2s; cursor: pointer; box-shadow: 0 8px 24px rgba(30, 41, 59, 0.25);
     }
     .simon-widget:active { transform: scale(0.95); }
     .simon-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
@@ -84,76 +103,111 @@
     
     .ring-container { display: flex; align-items: center; gap: 12px; margin-top: auto; }
     .circular-chart { max-width: 45px; max-height: 45px; }
-    .circle-bg { fill: none; stroke: var(--border); stroke-width: 3.5; }
+    .circle-bg { fill: none; stroke: rgba(0,0,0,0.05); stroke-width: 3.5; }
     .circle { fill: none; stroke-width: 3.5; stroke-linecap: round; transition: stroke-dasharray 0.5s ease; stroke: var(--accent); }
     .ring-text { font-size: 18px; font-weight: 700; font-family: 'Outfit', sans-serif; color: var(--text); }
 
     /* Subject Health Progress Bar */
-    .health-bar-container { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 16px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.03); }
-    .health-bar { display: flex; height: 12px; border-radius: 6px; overflow: hidden; background: var(--border); margin-top: 8px; }
+    .health-bar-container { padding: 16px; margin-bottom: 24px; }
+    .health-bar { display: flex; height: 12px; border-radius: 6px; overflow: hidden; background: rgba(0,0,0,0.05); margin-top: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
     .health-segment { height: 100%; transition: width 0.5s ease; }
 
     /* DEADLINES & TIMETABLE */
     .horizontal-scroll { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 12px; margin-bottom: -4px; scroll-snap-type: x mandatory; scrollbar-width: none; }
     .horizontal-scroll::-webkit-scrollbar { display: none; }
     
-    .deadline-card { flex: 0 0 130px; scroll-snap-align: start; background: var(--accent); color: white; border-radius: 16px; padding: 14px; position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-    .deadline-card.warning { background: var(--warning); }
-    .deadline-card.critical { background: var(--critical); animation: pulseAlert 2s infinite; }
-    .dl-days { font-size: 26px; font-weight: 700; font-family: 'Outfit', sans-serif; line-height: 1; }
+    .deadline-card { flex: 0 0 130px; scroll-snap-align: start; background: var(--accent-grad); color: white; border-radius: 18px; padding: 14px; position: relative; box-shadow: 0 6px 16px rgba(30, 41, 59, 0.2); }
+    .deadline-card.warning { background: linear-gradient(135deg, var(--warning), #D97706); }
+    .deadline-card.critical { background: linear-gradient(135deg, var(--critical), #DC2626); animation: pulseAlert 2s infinite; }
+    .dl-days { font-size: 28px; font-weight: 800; font-family: 'Outfit', sans-serif; line-height: 1; }
     .dl-label { font-size: 13px; font-weight: 500; opacity: 0.9; margin-top: 4px; }
-    @keyframes pulseAlert { 0% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(255, 59, 48, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); } }
+    @keyframes pulseAlert { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
 
-    .timetable-card { flex: 0 0 120px; scroll-snap-align: start; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.03); }
-    .tt-session { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
-    .tt-subject { font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.2; }
+    .timetable-card { flex: 0 0 120px; scroll-snap-align: start; padding: 14px; display: flex; flex-direction: column; gap: 8px; cursor: pointer; transition: transform 0.2s; }
+    .timetable-card:active { transform: scale(0.92); }
+    .tt-session { font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
+    .tt-subject { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.2; }
 
-    /* OG SUBJECT CARDS & BOXES */
+    /* SUBJECT CARDS (LIQUID GLASS) */
     #subjects-list { display: flex; flex-direction: column; position: relative; }
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 14px; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); cursor: pointer; box-shadow: 0 2px 12px rgba(0,0,0,0.03); }
+    .card { 
+      padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 14px; 
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); cursor: pointer; 
+    }
     .card:active { transform: scale(0.96); }
     
-    .boxes-container { display: flex; gap: 5px; flex-shrink: 0; }
-    .box { width: 22px; height: 22px; border-radius: 6px; border: 1.5px solid var(--border); transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55); background: var(--card); }
-    .box:active { transform: scale(0.5); }
-    .box.active { background-color: var(--grey-fill); border-color: var(--grey-fill); transform: scale(1.1); }
-    .subject-title { font-size: 18px; font-weight: 500; flex: 1; line-height: 1.2; }
+    /* 🔴 COLOR-MAPPED HIGH CONTRAST BOXES 🔴 */
+    .boxes-container { display: flex; gap: 6px; flex-shrink: 0; }
+    .box { 
+      width: 24px; height: 24px; border-radius: 7px; 
+      border: 2px solid rgba(0,0,0,0.1); 
+      background: rgba(255,255,255,0.7); 
+      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
+    }
+    .box:active { transform: scale(0.6); }
+    /* This active class dynamically pulls the specific status hex color */
+    .box.active { 
+      background-color: var(--box-color); 
+      border-color: var(--box-color); 
+      transform: scale(1.15); 
+      box-shadow: 0 4px 12px var(--box-color); 
+      opacity: 0.95;
+    }
+    .subject-title { font-size: 18px; font-weight: 600; flex: 1; line-height: 1.2; }
 
-    /* OG DETAILS SCREEN NAVIGATION */
+    /* DETAILS SCREEN NAVIGATION */
     .header-bar { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
-    .back-btn { display: flex; align-items: center; gap: 6px; background: var(--card); color: var(--text); border: 1px solid var(--border); padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 500; font-family: 'Inter', sans-serif; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.03); transition: transform 0.2s; }
+    .back-btn { display: flex; align-items: center; gap: 6px; color: var(--text); padding: 8px 16px; font-size: 15px; font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer; transition: transform 0.2s; }
     .back-btn:active { transform: scale(0.85); }
     
-    /* OG STATUS ROWS */
-    .status-row { display: flex; align-items: center; gap: 12px; padding: 14px; background: var(--card); border-radius: 16px; margin-bottom: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); border: 1px solid var(--border); transition: transform 0.2s; }
+    /* STATUS ROWS (NOW INHERIT GLASS & PROPER COLOR) */
+    .status-row { 
+      display: flex; align-items: center; gap: 14px; padding: 14px; 
+      border-radius: 16px; margin-bottom: 8px; 
+      transition: transform 0.2s, background-color 0.3s, border-color 0.3s; 
+      cursor: pointer;
+    }
     .status-row:active { transform: scale(0.97); }
+    /* The active row takes on the tinted background color */
+    .status-row.active-status {
+      background-color: var(--status-bg);
+      border-color: var(--box-color);
+    }
+    .status-label { font-weight: 600; color: var(--text-muted); transition: color 0.3s; }
+    .status-row.active-status .status-label { color: var(--text); }
 
-    /* OG INPUT GROUPS */
+    /* INPUT GROUPS */
     .input-group { display: flex; gap: 8px; margin-bottom: 16px; width: 100%; }
-    input[type="text"], input[type="date"], input[type="number"], textarea { flex: 1; min-width: 0; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-size: 15px; font-family: 'Inter', sans-serif; }
+    input[type="text"], input[type="date"], input[type="number"], textarea { 
+      flex: 1; min-width: 0; padding: 14px 16px; border-radius: 14px; 
+      border: 1px solid var(--glass-border); 
+      background: rgba(255,255,255,0.5); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      color: var(--text); font-size: 15px; font-family: 'Inter', sans-serif; 
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.01);
+    }
     textarea { height: 120px; resize: none; width: 100%; margin-top: 4px; line-height: 1.5; }
-    button.add-btn { background: var(--accent); color: white; border: none; padding: 0 16px; border-radius: 14px; font-weight: 500; font-family: 'Inter', sans-serif; font-size: 15px; flex-shrink: 0; transition: transform 0.2s; }
+    button.add-btn { background: var(--accent-grad); color: white; border: none; padding: 0 18px; border-radius: 14px; font-weight: 600; font-family: 'Inter', sans-serif; font-size: 15px; flex-shrink: 0; transition: transform 0.2s; box-shadow: 0 6px 16px rgba(30, 41, 59, 0.2); }
     button.add-btn:active { transform: scale(0.85); }
 
-    /* OG LIST ITEMS & DELETE BUTTONS */
-    .list-item { display: flex; justify-content: space-between; align-items: center; padding: 16px; background: var(--card); border-radius: 16px; margin-bottom: 8px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.02); animation: liquidPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-    .list-item.overdue { border-color: var(--critical); background: rgba(255, 59, 48, 0.05); }
+    /* LIST ITEMS */
+    .list-item { display: flex; justify-content: space-between; align-items: center; padding: 16px; border-radius: 16px; margin-bottom: 8px; animation: liquidPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .list-item.overdue { border-color: var(--critical); background: rgba(239, 68, 68, 0.1); }
     .date-badge { font-size: 13px; color: var(--text-muted); font-weight: 500; margin-top: 4px; }
     .delete-btn { color: var(--critical); background: none; border: none; font-weight: 300; font-size: 26px; padding: 0 10px; transition: transform 0.2s; cursor: pointer; }
     .delete-btn:active { transform: scale(0.7); }
-    .grade-badge { font-size: 14px; font-weight: 600; background: var(--bg); border: 1px solid var(--border); padding: 4px 8px; border-radius: 8px; color: var(--text); }
-    .average-banner { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 14px; text-align: center; font-weight: 600; font-size: 16px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+    .grade-badge { font-size: 14px; font-weight: 700; background: rgba(0,0,0,0.05); padding: 4px 10px; border-radius: 8px; color: var(--text); }
+    .average-banner { padding: 16px; text-align: center; font-weight: 700; font-size: 18px; margin-bottom: 16px; }
 
     /* SMART CAPTURE GALLERY */
     .photo-gallery { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 12px; scroll-snap-type: x mandatory; scrollbar-width: none; }
     .photo-gallery::-webkit-scrollbar { display: none; }
-    .photo-card { flex: 0 0 140px; height: 100px; scroll-snap-align: start; border-radius: 16px; background-size: cover; background-position: center; border: 1px solid var(--border); position: relative; }
-    .del-photo { position: absolute; top: -6px; right: -6px; background: var(--critical); color: white; border: none; width: 22px; height: 22px; border-radius: 11px; font-weight: bold; font-size: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .photo-card { flex: 0 0 140px; height: 100px; scroll-snap-align: start; border-radius: 14px; background-size: cover; background-position: center; border: 1px solid var(--glass-border); position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .del-photo { position: absolute; top: -6px; right: -6px; background: var(--critical); color: white; border: none; width: 24px; height: 24px; border-radius: 12px; font-weight: bold; font-size: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
-    /* STATIC TIMER CARD (NEVER OVERLAPS) */
-    .timer-card { display: flex; justify-content: space-between; align-items: center; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.03); }
-    .timer-info { display: flex; align-items: center; gap: 12px; }
-    .timer-display { font-size: 24px; font-weight: 700; font-family: 'Outfit', sans-serif; color: var(--text); }
+    /* TIMER CARD */
+    .timer-card { display: flex; justify-content: space-between; align-items: center; padding: 18px; margin-bottom: 24px; }
+    .timer-info { display: flex; align-items: center; gap: 14px; }
+    .timer-display { font-size: 28px; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--text); letter-spacing: 1px; }
   </style>
 </head>
 <body>
@@ -165,16 +219,15 @@
   <div id="home-screen" class="screen active">
     <div class="top-bar">
       <h1>Dashboard</h1>
-      <!-- SVG Settings Icon -->
-      <button class="icon-btn" onclick="openScreen('settings-screen')">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      <button class="icon-btn glass-card" style="width:40px; height:40px;" onclick="openScreen('settings-screen')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
       </button>
     </div>
 
-    <!-- DASHBOARD WIDGETS (NOW PERFECTLY SYMMETRICAL) -->
+    <!-- DASHBOARD WIDGETS -->
     <div class="dashboard-grid">
-      <!-- Study Ring Widget -->
-      <div class="widget">
+      <!-- Study Ring Widget (Glass) -->
+      <div class="widget glass-card">
         <div class="widget-title">Daily Activity</div>
         <div class="ring-container">
           <svg viewBox="0 0 36 36" class="circular-chart">
@@ -185,8 +238,8 @@
         </div>
       </div>
       
-      <!-- Simon Launch Widget (Behaves identically to the ring widget) -->
-      <a href="https://simon.iona.vic.edu.au/" target="_blank" class="widget simon-widget">
+      <!-- Simon Launch Widget -->
+      <a href="https://simon.iona.vic.edu.au/" target="_blank" class="widget simon-widget glass-card" style="border: none;">
         <div class="simon-title">Portal</div>
         <div class="simon-action">
           Open Simon
@@ -195,8 +248,8 @@
       </a>
     </div>
 
-    <!-- OG SUBJECT HEALTH PROGRESS BAR -->
-    <div class="health-bar-container">
+    <!-- SUBJECT HEALTH PROGRESS BAR -->
+    <div class="health-bar-container glass-card">
       <div class="widget-title" style="margin-bottom: 0;">Subject Health</div>
       <div class="health-bar" id="health-bar"></div>
     </div>
@@ -226,15 +279,15 @@
   <div id="detail-screen" class="screen">
     <div class="header-bar">
       <!-- CLEAR SVG BACK ARROW -->
-      <button class="back-btn" onclick="goHome()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      <button class="back-btn glass-card" onclick="goHome()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
         Back
       </button>
       <h1 id="detail-title" style="margin:0;"></h1>
     </div>
     
     <h3>Current Status</h3>
-    <!-- OG VERTICAL STATUS ROWS -->
+    <!-- STATUS ROWS INJECTED HERE -->
     <div id="detail-statuses"></div>
 
     <!-- SMART CAPTURE SCANNER -->
@@ -248,7 +301,7 @@
     <div class="photo-gallery" id="photo-gallery"></div>
 
     <h3>Grades & Assessments</h3>
-    <div id="average-banner" class="average-banner">No Grades Logged</div>
+    <div id="average-banner" class="average-banner glass-card">No Grades Logged</div>
     <div class="input-group">
       <input type="text" id="grade-name" placeholder="Name">
       <input type="number" id="grade-score" placeholder="Score" style="flex: 0.5;">
@@ -265,9 +318,9 @@
     </div>
     <div id="hw-list"></div>
     
-    <!-- STATIC TIMER CARD (NEVER OVERLAPS TEXT) -->
+    <!-- STATIC TIMER CARD -->
     <h3>Focus Timer</h3>
-    <div class="timer-card">
+    <div class="timer-card glass-card">
       <div class="timer-info">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
         <div class="timer-display" id="timer-display">25:00</div>
@@ -284,7 +337,7 @@
   <!-- SETTINGS SCREEN -->
   <div id="settings-screen" class="screen">
     <div class="header-bar">
-      <button class="back-btn" onclick="goHome()">
+      <button class="back-btn glass-card" onclick="goHome()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Dashboard
       </button>
       <h1 style="margin:0;">Settings</h1>
@@ -356,13 +409,13 @@
       }
     }
 
-    // --- DATA & MIGRATION ---
+    // --- COLOR PALETTE DATA ---
     const statuses = [
-      { color: "rgba(255, 59, 48, 0.12)", hex: "#FF3B30", label: "Falling behind" }, 
-      { color: "rgba(255, 149, 0, 0.12)", hex: "#FF9500", label: "Behind" },          
-      { color: "rgba(44, 62, 80, 0.08)", hex: "#8E8E93", label: "Up to date" },      
-      { color: "rgba(52, 199, 89, 0.15)", hex: "#34C759", label: "Ahead" },           
-      { color: "rgba(2, 79, 43, 0.12)", hex: "#024F2B", label: "Well ahead" }         
+      { color: "rgba(239, 68, 68, 0.15)", hex: "#EF4444", label: "Falling behind" }, 
+      { color: "rgba(245, 158, 11, 0.15)", hex: "#F59E0B", label: "Behind" },          
+      { color: "var(--glass-bg)", hex: "#94A3B8", label: "Up to date" },      
+      { color: "rgba(16, 185, 129, 0.15)", hex: "#10B981", label: "Ahead" },           
+      { color: "rgba(5, 150, 105, 0.2)", hex: "#059669", label: "Well ahead" }         
     ];
 
     let subjectsData = JSON.parse(localStorage.getItem('org_subjects'));
@@ -424,10 +477,10 @@
       if (todaysClasses) {
         ttSection.innerHTML = `<h2>Today's Schedule</h2><div class="horizontal-scroll" style="margin-bottom: 24px;">${todaysClasses.map((className, index) => {
           const matchingSub = subjectsData.find(s => s.name.toLowerCase() === className.toLowerCase());
-          const cCol = matchingSub ? statuses[matchingSub.status].color : 'var(--card)';
-          const bCol = matchingSub ? statuses[matchingSub.status].color.replace(/0\.\d+/, '0.3') : 'var(--border)';
+          const cCol = matchingSub ? statuses[matchingSub.status].color : 'var(--glass-bg)';
+          const bCol = matchingSub ? statuses[matchingSub.status].hex : 'var(--glass-border)';
           const act = matchingSub ? `onclick="openDetail('${matchingSub.id}')"` : '';
-          return `<div class="timetable-card" style="background-color: ${cCol}; border-color: ${bCol};" ${act}><div class="tt-session">${sessionLabels[index]}</div><div class="tt-subject">${className}</div></div>`;
+          return `<div class="timetable-card glass-card" style="background-color: ${cCol}; border-color: ${bCol}; opacity: 0.9;" ${act}><div class="tt-session">${sessionLabels[index]}</div><div class="tt-subject">${className}</div></div>`;
         }).join('')}</div>`;
       } else { ttSection.innerHTML = ''; }
 
@@ -439,10 +492,13 @@
       let counts = [0,0,0,0,0]; subjectsData.forEach(s => counts[s.status]++);
       document.getElementById('health-bar').innerHTML = counts.map((count, i) => count > 0 ? `<div class="health-segment" style="width: ${(count/subjectsData.length)*100}%; background-color: ${statuses[i].hex};"></div>` : '').join('');
 
+      // LIQUID GLASS CARDS WITH DYNAMIC BOX COLORS
       document.getElementById('subjects-list').innerHTML = subjectsData.map(sub => `
-        <div class="card" data-id="${sub.id}" style="background-color: ${statuses[sub.status].color}; border-color: ${statuses[sub.status].color.replace(/0\.\d+/, '0.4')}" onclick="openDetail('${sub.id}')">
+        <div class="card glass-card" data-id="${sub.id}" style="background-color: ${statuses[sub.status].color}; border-color: ${statuses[sub.status].hex}; opacity: 0.9;" onclick="openDetail('${sub.id}')">
           <div class="boxes-container">
-            ${[0, 1, 2, 3, 4].map(i => `<div class="box ${sub.status === i ? 'active' : ''}" onclick="event.stopPropagation(); setStatus('${sub.id}', ${i})"></div>`).join('')}
+            ${[0, 1, 2, 3, 4].map(i => `
+              <div class="box ${sub.status === i ? 'active' : ''}" style="--box-color: ${statuses[i].hex};" onclick="event.stopPropagation(); setStatus('${sub.id}', ${i})"></div>
+            `).join('')}
           </div>
           <div class="subject-title">${sub.name}</div>
         </div>
@@ -451,7 +507,7 @@
       // Global Tasks
       document.getElementById('global-notes-list').innerHTML = globalNotes.map(n => {
         const overdueClass = isOverdue(n.date) ? 'overdue' : '';
-        return `<div class="list-item ${overdueClass}"><div><div style="font-weight: 500; font-size: 16px; color: ${overdueClass ? 'var(--critical)' : 'var(--text)'};">${n.text}</div><div class="date-badge">Due: ${formatDate(n.date)}</div></div><button class="delete-btn" onclick="deleteGlobal('${n.id}')">×</button></div>`
+        return `<div class="list-item glass-card ${overdueClass}"><div><div style="font-weight: 500; font-size: 16px; color: ${overdueClass ? 'var(--critical)' : 'var(--text)'};">${n.text}</div><div class="date-badge">Due: ${formatDate(n.date)}</div></div><button class="delete-btn" onclick="deleteGlobal('${n.id}')">×</button></div>`
       }).join('');
     }
 
@@ -484,7 +540,7 @@
         const card = list.querySelector(`.card[data-id="${sub.id}"]`);
         if (card) {
           list.appendChild(card); 
-          card.style.backgroundColor = statuses[sub.status].color; card.style.borderColor = statuses[sub.status].color.replace(/0\.\d+/, '0.4');
+          card.style.backgroundColor = statuses[sub.status].color; card.style.borderColor = statuses[sub.status].hex;
           card.querySelectorAll('.box').forEach((box, i) => { if (i === sub.status) box.classList.add('active'); else box.classList.remove('active'); });
         }
       });
@@ -513,11 +569,11 @@
       const sub = subjectsData.find(s => s.id === currentSubjectId);
       document.getElementById('detail-title').innerText = sub.name; document.getElementById('subject-notes').value = sub.notes;
       
-      // OG Vertical Status Rows
+      // 🔴 COLOR-MAPPED VERTICAL STATUS ROWS 🔴
       document.getElementById('detail-statuses').innerHTML = statuses.map((stat, i) => `
-        <div class="status-row" onclick="setStatus('${sub.id}', ${i})" style="cursor: pointer;">
-          <div class="box ${sub.status === i ? 'active' : ''}"></div>
-          <div style="font-weight: 500;">${stat.label}</div>
+        <div class="status-row glass-card ${sub.status === i ? 'active-status' : ''}" style="--status-bg: ${stat.color}; --box-color: ${stat.hex};" onclick="setStatus('${sub.id}', ${i})">
+          <div class="box ${sub.status === i ? 'active' : ''}" style="--box-color: ${stat.hex};"></div>
+          <div class="status-label">${stat.label}</div>
         </div>
       `).join('');
       
@@ -527,17 +583,16 @@
       let totalScore = 0; let totalOut = 0;
       document.getElementById('grades-list').innerHTML = sub.grades.map(g => {
         totalScore += parseFloat(g.score); totalOut += parseFloat(g.outOf);
-        return `<div class="list-item"><div><div style="font-weight: 500;">${g.name}</div><div class="date-badge">${g.score} / ${g.outOf}</div></div><div style="display:flex; align-items:center; gap: 10px;"><div class="grade-badge">${Math.round((g.score/g.outOf)*100)}%</div><button class="delete-btn" onclick="deleteGrade('${g.id}')">×</button></div></div>`
+        return `<div class="list-item glass-card"><div><div style="font-weight: 500;">${g.name}</div><div class="date-badge">${g.score} / ${g.outOf}</div></div><div style="display:flex; align-items:center; gap: 10px;"><div class="grade-badge">${Math.round((g.score/g.outOf)*100)}%</div><button class="delete-btn" onclick="deleteGrade('${g.id}')">×</button></div></div>`
       }).join('');
       document.getElementById('average-banner').innerText = totalOut > 0 ? `Current Average: ${Math.round((totalScore/totalOut)*100)}%` : "No Grades Logged";
 
       document.getElementById('hw-list').innerHTML = sub.homework.map(hw => {
         const overdueClass = isOverdue(hw.date) ? 'overdue' : '';
-        return `<div class="list-item ${overdueClass}"><div><div style="font-weight: 500; font-size: 16px; color: ${overdueClass ? 'var(--critical)' : 'var(--text)'};">${hw.text}</div><div class="date-badge">Due: ${formatDate(hw.date)}</div></div><button class="delete-btn" onclick="deleteHomework('${hw.id}')">×</button></div>`
+        return `<div class="list-item glass-card ${overdueClass}"><div><div style="font-weight: 500; font-size: 16px; color: ${overdueClass ? 'var(--critical)' : 'var(--text)'};">${hw.text}</div><div class="date-badge">Due: ${formatDate(hw.date)}</div></div><button class="delete-btn" onclick="deleteHomework('${hw.id}')">×</button></div>`
       }).join('');
     }
 
-    // Completing tasks adds to the ring!
     function deleteGlobal(id) { playSound('tick'); addRingScore(); globalNotes = globalNotes.filter(n => n.id !== id); saveData(); renderHome(false); }
     function deleteHomework(hwId) { playSound('tick'); addRingScore(); const sub = subjectsData.find(s => s.id === currentSubjectId); sub.homework = sub.homework.filter(h => h.id !== hwId); saveData(); renderDetail(); }
     
@@ -567,7 +622,7 @@
       }
     }
 
-    function renderSettings() { document.getElementById('settings-subjects-list').innerHTML = subjectsData.map(sub => `<div class="list-item"><div style="font-weight: 500;">${sub.name}</div><button class="delete-btn" onclick="deleteSubject('${sub.id}')">×</button></div>`).join(''); }
+    function renderSettings() { document.getElementById('settings-subjects-list').innerHTML = subjectsData.map(sub => `<div class="list-item glass-card"><div style="font-weight: 500;">${sub.name}</div><button class="delete-btn" onclick="deleteSubject('${sub.id}')">×</button></div>`).join(''); }
     function addSubject() { playSound('pop'); const input = document.getElementById('new-subject'); if (!input.value) return; subjectsData.push({ id: Date.now().toString(), name: input.value, status: 2, homework: [], notes: "", grades: [], photos: []}); input.value = ''; saveData(); renderSettings(); }
     function deleteSubject(id) { playSound('tick'); if(confirm("Delete subject?")) { subjectsData = subjectsData.filter(s => s.id !== id); saveData(); renderSettings(); } }
     function formatDate(dateString) { const options = { weekday: 'short', month: 'short', day: 'numeric' }; const [y, m, d] = dateString.split('-'); return new Date(y, m - 1, d).toLocaleDateString('en-US', options); }
