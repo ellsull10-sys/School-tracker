@@ -16,24 +16,14 @@
   <style>
     /* PREMIUM UI DESIGN SYSTEM */
     :root {
-      --bg: #F2F2F7;
-      --card: #FFFFFF;
-      --text: #111111;
-      --text-muted: #666666;
-      --border: #D1D1D6;
-      --grey-fill: #AEAEB2;
-      --accent: #1C2B39;
+      --bg: #F2F2F7; --card: #FFFFFF; --text: #111111; --text-muted: #666666;
+      --border: #D1D1D6; --grey-fill: #AEAEB2; --accent: #1C2B39;
       --accent-grad: linear-gradient(135deg, #2C3E50, #1A252F);
     }
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #000000;
-        --card: #1C1C1E;
-        --text: #F5F5F5;
-        --text-muted: #A0A0A5;
-        --border: #38383A;
-        --grey-fill: #636366;
-        --accent: #8D99AE;
+        --bg: #000000; --card: #1C1C1E; --text: #F5F5F5; --text-muted: #A0A0A5;
+        --border: #38383A; --grey-fill: #636366; --accent: #8D99AE;
         --accent-grad: linear-gradient(135deg, #4A5D70, #2C3E50);
       }
     }
@@ -56,23 +46,16 @@
 
     .screen { padding: 16px; padding-top: calc(env(safe-area-inset-top) + 20px); display: none; }
     .screen.active { display: block; animation: liquidPop 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.4) forwards; }
-    
-    @keyframes liquidPop {
-      0% { opacity: 0; transform: scale(0.8) translateY(50px); }
-      50% { transform: scale(1.03) translateY(-10px); }
-      100% { opacity: 1; transform: scale(1) translateY(0); }
-    }
+    @keyframes liquidPop { 0% { opacity: 0; transform: scale(0.8) translateY(50px); } 50% { transform: scale(1.03) translateY(-10px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
 
-    /* TOP BAR & HEADINGS */
     .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
     h1 { font-size: 34px; font-weight: 700; margin: 0; color: var(--text); }
     h2 { font-size: 22px; font-weight: 600; margin-top: 32px; margin-bottom: 16px; color: var(--text); }
     h3 { font-size: 20px; font-weight: 600; margin-top: 24px; margin-bottom: 12px; }
-
     .icon-btn { background: none; border: none; color: var(--text); font-size: 24px; cursor: pointer; transition: transform 0.2s; }
     .icon-btn:active { transform: scale(0.7); }
 
-    /* DASHBOARD & WIDGETS */
+    /* DASHBOARD WIDGETS */
     .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
     .widget {
       background: linear-gradient(145deg, var(--card), rgba(255,255,255,0.4));
@@ -82,12 +65,27 @@
     .widget-title { font-size: 14px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; }
     .simon-btn {
       background: var(--accent-grad); color: white; text-decoration: none; text-align: center;
-      padding: 12px; border-radius: 12px; font-weight: 600; font-size: 15px;
-      box-shadow: 0 6px 16px rgba(28, 43, 57, 0.2); transition: transform 0.2s;
+      padding: 12px; border-radius: 12px; font-weight: 600; font-size: 15px; box-shadow: 0 6px 16px rgba(28, 43, 57, 0.2); transition: transform 0.2s;
     }
     .simon-btn:active { transform: scale(0.95); }
     .health-bar { display: flex; height: 12px; border-radius: 6px; overflow: hidden; background: var(--grey-fill); margin-top: 4px; }
     .health-segment { height: 100%; transition: width 0.5s ease; }
+
+    /* DYNAMIC TIMETABLE (HORIZONTAL SCROLL) */
+    .timetable-container {
+      display: flex; gap: 12px; overflow-x: auto; padding-bottom: 12px; margin-bottom: -4px;
+      scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    }
+    .timetable-container::-webkit-scrollbar { display: none; }
+    .timetable-card {
+      flex: 0 0 120px; scroll-snap-align: start;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 18px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.04); transition: transform 0.2s; cursor: pointer;
+    }
+    .timetable-card:active { transform: scale(0.92); }
+    .tt-session { font-size: 12px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .tt-subject { font-size: 16px; font-weight: 700; color: var(--text); line-height: 1.1; }
 
     /* SUBJECT CARDS */
     #subjects-list { display: flex; flex-direction: column; position: relative; }
@@ -95,8 +93,7 @@
       background: linear-gradient(145deg, var(--card), rgba(255,255,255,0.4));
       border: 1px solid var(--border); border-radius: 20px; padding: 18px; margin-bottom: 14px;
       display: flex; align-items: center; gap: 16px; cursor: pointer; 
-      box-shadow: 0 12px 32px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.03);
-      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.03); transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
     .card:active { transform: scale(0.92) translateY(4px); box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
     
@@ -110,15 +107,14 @@
     .header-bar { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
     .back-btn {
       display: flex; align-items: center; gap: 6px; background: linear-gradient(145deg, var(--card), #F9F9F9); color: var(--text);
-      border: 1px solid var(--border); padding: 10px 18px; border-radius: 24px; font-size: 15px; font-weight: 600; 
-      cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 1px solid var(--border); padding: 10px 18px; border-radius: 24px; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     .back-btn:active { transform: scale(0.85); }
     
     .status-row { display: flex; align-items: center; gap: 14px; padding: 16px; background: var(--card); border-radius: 16px; margin-bottom: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1px solid var(--border); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     .status-row:active { transform: scale(0.95); background: var(--bg); }
 
-    /* INPUTS & BADGES */
+    /* INPUTS & TASKS */
     .input-group { display: flex; gap: 10px; margin-bottom: 20px; width: 100%; flex-wrap: wrap; }
     input[type="text"], input[type="date"], input[type="number"], textarea, input[type="url"] {
       flex: 1; min-width: 0; padding: 14px 16px; border-radius: 14px; border: 1px solid var(--border);
@@ -127,15 +123,13 @@
     textarea { height: 140px; resize: none; width: 100%; margin-top: 8px; line-height: 1.5; }
     
     button.add-btn { 
-      background: var(--accent-grad); color: white; border: none; padding: 0 20px; border-radius: 14px; font-weight: 600; 
-      font-size: 16px; flex-shrink: 0; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.5); box-shadow: 0 6px 16px rgba(28, 43, 57, 0.2);
+      background: var(--accent-grad); color: white; border: none; padding: 0 20px; border-radius: 14px; font-weight: 600; font-size: 16px; flex-shrink: 0; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.5); box-shadow: 0 6px 16px rgba(28, 43, 57, 0.2);
     }
     button.add-btn:active { transform: scale(0.8); }
 
     .grade-badge { font-size: 15px; font-weight: 700; background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 8px; }
     .average-banner { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; text-align: center; font-weight: 700; font-size: 20px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); color: var(--accent); }
 
-    /* OVERDUE ALERTS */
     @keyframes pulseAlert { 0% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.4); } 70% { box-shadow: 0 0 0 12px rgba(255, 59, 48, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); } }
     .overdue { border: 1px solid #FF3B30 !important; animation: pulseAlert 2s infinite; background: linear-gradient(135deg, #e74c3c, #c0392b) !important; }
     
@@ -144,13 +138,11 @@
     .delete-btn { color: #FF6B6B; background: none; border: none; font-weight: 300; font-size: 28px; padding: 0 10px; transition: transform 0.2s; }
     .delete-btn:active { transform: scale(0.6); }
 
-    /* FLOATING TIMER PILL */
     .timer-pill {
       position: fixed; bottom: calc(env(safe-area-inset-bottom) + 20px); left: 50%; transform: translateX(-50%);
       background: var(--accent-grad); color: white; border-radius: 30px; padding: 12px 24px;
       display: flex; align-items: center; gap: 12px; box-shadow: 0 12px 32px rgba(28, 43, 57, 0.3);
-      font-weight: 700; font-size: 20px; font-family: 'Outfit', sans-serif; z-index: 100;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: none;
+      font-weight: 700; font-size: 20px; font-family: 'Outfit', sans-serif; z-index: 100; display: none;
     }
     .timer-pill.visible { display: flex; animation: slideUpCard 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     .timer-btn { background: rgba(255,255,255,0.2); border: none; color: white; width: 34px; height: 34px; border-radius: 17px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; }
@@ -164,14 +156,13 @@
   <!-- SPLASH SCREEN -->
   <div id="splash">School Tracker</div>
 
-  <!-- MAIN HOME SCREEN -->
+  <!-- HOME SCREEN -->
   <div id="home-screen" class="screen active">
     <div class="top-bar">
       <h1>Dashboard</h1>
       <button class="icon-btn" onclick="openScreen('settings-screen')">⚙️</button>
     </div>
 
-    <!-- NEW DASHBOARD WIDGETS -->
     <div class="dashboard-grid">
       <div class="widget">
         <div class="widget-title">Iona Simon Portal</div>
@@ -184,10 +175,13 @@
       </div>
     </div>
 
+    <!-- DYNAMIC TIMETABLE INJECTED HERE -->
+    <div id="dynamic-timetable-section"></div>
+
     <h2>Subjects</h2>
     <div id="subjects-list"></div>
 
-    <h2>Global Notes & Tasks</h2>
+    <h2>Global Tasks</h2>
     <div class="input-group">
       <input type="text" id="global-task" placeholder="Task description...">
       <input type="date" id="global-date">
@@ -196,23 +190,20 @@
     <div id="global-notes-list"></div>
   </div>
 
-  <!-- SUBJECT DETAIL SCREEN -->
+  <!-- DETAIL SCREEN -->
   <div id="detail-screen" class="screen">
     <div class="header-bar">
-      <button class="back-btn" onclick="goHome()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Back
-      </button>
+      <button class="back-btn" onclick="goHome()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Back</button>
       <h1 id="detail-title" style="margin:0;"></h1>
     </div>
-
+    
     <h3>Current Status</h3>
     <div id="detail-statuses"></div>
 
-    <!-- GRADES TRACKER -->
     <h3>Grades & Assessments</h3>
     <div id="average-banner" class="average-banner">No Grades Logged</div>
     <div class="input-group">
-      <input type="text" id="grade-name" placeholder="Assessment Name">
+      <input type="text" id="grade-name" placeholder="Name">
       <input type="number" id="grade-score" placeholder="Score" style="flex: 0.5;">
       <input type="number" id="grade-out-of" placeholder="Out of" style="flex: 0.5;">
       <button class="add-btn" onclick="addGrade()">Log</button>
@@ -226,11 +217,9 @@
       <button class="add-btn" onclick="addHomework()">Add</button>
     </div>
     <div id="hw-list"></div>
-
     <h3>Notes</h3>
     <textarea id="subject-notes" placeholder="Add additional information here..." onblur="saveNotes()"></textarea>
 
-    <!-- FLOATING POMODORO TIMER -->
     <div class="timer-pill visible">
       ⏱️ <span id="timer-display">25:00</span>
       <button class="timer-btn" onclick="toggleTimer()" id="timer-toggle">▶</button>
@@ -240,57 +229,64 @@
   <!-- SETTINGS SCREEN -->
   <div id="settings-screen" class="screen">
     <div class="header-bar">
-      <button class="back-btn" onclick="goHome()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Home
-      </button>
+      <button class="back-btn" onclick="goHome()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Home</button>
       <h1 style="margin:0;">Settings</h1>
     </div>
-
     <h3>Subject Manager</h3>
     <div class="input-group">
       <input type="text" id="new-subject" placeholder="New Subject Name...">
       <button class="add-btn" onclick="addSubject()">Create</button>
     </div>
     <div id="settings-subjects-list"></div>
-
-    <h3>Simon Calendar Sync</h3>
-    <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 12px;">Paste your Simon .ics link below. Note: Browser security (CORS) may block direct connection to school servers.</p>
-    <div class="input-group">
-      <input type="url" id="ics-link" placeholder="https://simon.iona.vic.edu.au/calendar.ics">
-      <button class="add-btn" onclick="syncCalendar()">Sync</button>
-    </div>
   </div>
 
   <script>
+    // --- IONA TIMETABLE ENGINE (10 DAY CYCLE) ---
+    // Mathematically calculates fortnight days from August 10, 2026 (Day 1)
+    const timetableCycle = {
+      0: ["Community Group", "Economics", "Economics", "English", "English", "General Mathematics", "General Mathematics", "Community Group"], // Mon Day 1
+      1: ["Community Group", "Pre mathematical methods", "Wellbeing", "Religious education", "Religious education", "Economics", "English", "Community Group"], // Tue Day 2
+      2: ["Community Group", "Legal studies", "Legal studies", "Physics", "Physics", "Pre mathematical methods", "Pre mathematical methods", "Community Group"], // Wed Day 3
+      3: ["Community Group", "Economics", "Economics", "General Mathematics", "General Mathematics", "English", "English", "Community Group"], // Thu Day 4
+      4: ["Community Group", "Legal studies", "Legal studies", "Pre mathematical methods", "Pre mathematical methods", "Physics", "Physics", "Community Group"], // Fri Day 5
+      7: ["Community Group", "English", "English", "Economics", "Economics", "General Mathematics", "General Mathematics", "Community Group"], // Mon Day 6
+      8: ["Community Group", "Physics", "Wellbeing", "Religious education", "Religious education", "Legal studies", "General Mathematics", "Community Group"], // Tue Day 7 (Aug 18)
+      9: ["Community Group", "Physics", "Physics", "Legal studies", "Legal studies", "Pre mathematical methods", "Pre mathematical methods", "Community Group"], // Wed Day 8
+      10: ["Community Group", "English", "English", "General Mathematics", "General Mathematics", "Economics", "Economics", "Community Group"], // Thu Day 9
+      11: ["Community Group", "Physics", "Physics", "Legal studies", "Legal studies", "Pre mathematical methods", "Pre mathematical methods", "Community Group"] // Fri Day 10
+    };
+    
+    const sessionLabels = ["AM Group", "Session 1", "Session 2", "Session 3", "Session 4", "Session 5", "Session 6", "PM Group"];
+
+    function getTodaysTimetable() {
+      const anchor = new Date(2026, 7, 10); // Aug 10, 2026 (Month is 0-indexed)
+      anchor.setHours(0,0,0,0);
+      const today = new Date(); today.setHours(0,0,0,0);
+      const diffDays = Math.floor((today - anchor) / (1000 * 60 * 60 * 24));
+      if (diffDays < 0) return null; 
+      const cycleDay = diffDays % 14; 
+      return timetableCycle[cycleDay] || null; // Returns null on weekends
+    }
+
     // --- SYNTHESIZED AUDIO ---
     let audioCtx;
     function playSound(type) {
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       if (audioCtx.state === 'suspended') audioCtx.resume();
-      
       const osc = audioCtx.createOscillator(); const gainNode = audioCtx.createGain();
       osc.connect(gainNode); gainNode.connect(audioCtx.destination);
-      
       if (type === 'tick') {
-        osc.type = 'sine'; osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(1400, audioCtx.currentTime + 0.08);
+        osc.type = 'sine'; osc.frequency.setValueAtTime(800, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(1400, audioCtx.currentTime + 0.08);
         gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
         osc.start(); osc.stop(audioCtx.currentTime + 0.08);
       } else if (type === 'pop') {
-        osc.type = 'triangle'; osc.frequency.setValueAtTime(300, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.15);
+        osc.type = 'triangle'; osc.frequency.setValueAtTime(300, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.15);
         gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
         osc.start(); osc.stop(audioCtx.currentTime + 0.15);
       } else if (type === 'swoosh') {
-        osc.type = 'sine'; osc.frequency.setValueAtTime(300, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(500, audioCtx.currentTime + 0.15);
+        osc.type = 'sine'; osc.frequency.setValueAtTime(300, audioCtx.currentTime); osc.frequency.exponentialRampToValueAtTime(500, audioCtx.currentTime + 0.15);
         gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime); gainNode.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
         osc.start(); osc.stop(audioCtx.currentTime + 0.15);
-      } else if (type === 'alarm') {
-        osc.type = 'square'; osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-        osc.frequency.setValueAtTime(800, audioCtx.currentTime + 0.2);
-        gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime); gainNode.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.6);
       }
     }
 
@@ -308,69 +304,65 @@
       subjectsData = ["English", "General Mathematics", "Economics", "Legal studies", "Pre mathematical methods", "Religious education", "Physics", "Wellbeing"].map(name => ({
         id: name.replace(/\s+/g, '-').toLowerCase(), name: name, status: 2, homework: [], notes: "", grades: []
       }));
-    } else {
-      // Migrate old data to support grades
-      subjectsData.forEach(sub => { if (!sub.grades) sub.grades = []; });
     }
     
     let globalNotes = JSON.parse(localStorage.getItem('org_global')) || [];
     let currentSubjectId = null;
 
     window.onload = () => {
-      setTimeout(() => {
-        const splash = document.getElementById('splash');
-        splash.style.opacity = '0'; setTimeout(() => splash.style.display = 'none', 500);
-      }, 1000);
+      setTimeout(() => { document.getElementById('splash').style.opacity = '0'; setTimeout(() => document.getElementById('splash').style.display = 'none', 500); }, 1000);
       renderHome(true);
     };
 
-    function saveData() {
-      localStorage.setItem('org_subjects', JSON.stringify(subjectsData));
-      localStorage.setItem('org_global', JSON.stringify(globalNotes));
-    }
+    function saveData() { localStorage.setItem('org_subjects', JSON.stringify(subjectsData)); localStorage.setItem('org_global', JSON.stringify(globalNotes)); }
+    function isOverdue(dateString) { const today = new Date(); today.setHours(0,0,0,0); const [y, m, d] = dateString.split('-'); return new Date(y, m - 1, d) < today; }
 
-    // --- OVERDUE LOGIC ---
-    function isOverdue(dateString) {
-      const today = new Date(); today.setHours(0,0,0,0);
-      const [y, m, d] = dateString.split('-');
-      const itemDate = new Date(y, m - 1, d);
-      return itemDate < today;
-    }
-
-    // --- RENDER HOME & HEALTH BAR ---
     function renderHome(initialLoad = false) {
+      // 1. Render Timetable
+      const todaysClasses = getTodaysTimetable();
+      const ttSection = document.getElementById('dynamic-timetable-section');
+      if (todaysClasses) {
+        ttSection.innerHTML = `
+          <h2>Today's Schedule</h2>
+          <div class="timetable-container">
+            ${todaysClasses.map((className, index) => {
+              // Try to find the matching subject to get its health color & ID
+              const matchingSub = subjectsData.find(s => s.name.toLowerCase() === className.toLowerCase());
+              const cardColor = matchingSub ? statuses[matchingSub.status].color : 'var(--card)';
+              const borderColor = matchingSub ? statuses[matchingSub.status].color.replace(/0\.\d+/, '0.4') : 'var(--border)';
+              const clickAction = matchingSub ? `onclick="openDetail('${matchingSub.id}')"` : '';
+              
+              return `
+              <div class="timetable-card" style="background-color: ${cardColor}; border-color: ${borderColor};" ${clickAction}>
+                <div class="tt-session">${sessionLabels[index]}</div>
+                <div class="tt-subject">${className}</div>
+              </div>`;
+            }).join('')}
+          </div>`;
+      } else {
+        ttSection.innerHTML = ''; // Hide on weekends!
+      }
+
+      // 2. Render Subjects
       if (initialLoad) {
         subjectsData.sort((a, b) => a.status - b.status);
-        const list = document.getElementById('subjects-list');
-        list.innerHTML = subjectsData.map(sub => `
+        document.getElementById('subjects-list').innerHTML = subjectsData.map(sub => `
           <div class="card" data-id="${sub.id}" style="background-color: ${statuses[sub.status].color}; border-color: ${statuses[sub.status].color.replace(/0\.\d+/, '0.4')}" onclick="openDetail('${sub.id}')">
             <div class="boxes-container">
-              ${[0, 1, 2, 3, 4].map(boxIndex => `<div class="box ${sub.status === boxIndex ? 'active' : ''}" onclick="event.stopPropagation(); setStatus('${sub.id}', ${boxIndex})"></div>`).join('')}
+              ${[0, 1, 2, 3, 4].map(i => `<div class="box ${sub.status === i ? 'active' : ''}" onclick="event.stopPropagation(); setStatus('${sub.id}', ${i})"></div>`).join('')}
             </div>
             <div class="subject-title">${sub.name}</div>
           </div>
         `).join('');
       }
 
-      // Update Health Bar Chart
-      let counts = [0,0,0,0,0];
-      subjectsData.forEach(s => counts[s.status]++);
-      document.getElementById('health-bar').innerHTML = counts.map((count, i) => {
-        let percentage = (count / subjectsData.length) * 100;
-        return percentage > 0 ? `<div class="health-segment" style="width: ${percentage}%; background-color: ${statuses[i].hex};"></div>` : '';
-      }).join('');
+      // 3. Render Health Bar & Tasks
+      let counts = [0,0,0,0,0]; subjectsData.forEach(s => counts[s.status]++);
+      document.getElementById('health-bar').innerHTML = counts.map((count, i) => count > 0 ? `<div class="health-segment" style="width: ${(count/subjectsData.length)*100}%; background-color: ${statuses[i].hex};"></div>` : '').join('');
 
-      // Render Global Tasks (With Overdue Pulse)
       document.getElementById('global-notes-list').innerHTML = globalNotes.map(n => {
         const overdueClass = isOverdue(n.date) ? 'overdue' : '';
-        return `
-        <div class="list-item ${overdueClass}">
-          <div>
-            <div style="font-weight: 600; font-size: 17px;">${n.text} ${overdueClass ? '⚠️' : ''}</div>
-            <div class="date-badge" style="${overdueClass ? 'color: #FFF;' : ''}">Due: ${formatDate(n.date)}</div>
-          </div>
-          <button class="delete-btn" onclick="deleteGlobal('${n.id}')">×</button>
-        </div>`
+        return `<div class="list-item ${overdueClass}"><div><div style="font-weight: 600; font-size: 17px;">${n.text} ${overdueClass ? '⚠️' : ''}</div><div class="date-badge" style="${overdueClass ? 'color: #FFF;' : ''}">Due: ${formatDate(n.date)}</div></div><button class="delete-btn" onclick="deleteGlobal('${n.id}')">×</button></div>`
       }).join('');
     }
 
@@ -378,7 +370,6 @@
     function animateReorder(clickedSubId) {
       const list = document.getElementById('subjects-list'); const cards = Array.from(list.children);
       const firstPositions = {}; cards.forEach(card => firstPositions[card.dataset.id] = card.getBoundingClientRect());
-      
       subjectsData.sort((a, b) => a.status - b.status);
       subjectsData.forEach(sub => {
         const card = list.querySelector(`.card[data-id="${sub.id}"]`);
@@ -388,7 +379,6 @@
           card.querySelectorAll('.box').forEach((box, i) => { if (i === sub.status) box.classList.add('active'); else box.classList.remove('active'); });
         }
       });
-
       cards.forEach(card => {
         const id = card.dataset.id; const currentRect = card.getBoundingClientRect(); const prevRect = firstPositions[id];
         const deltaY = prevRect.top - currentRect.top;
@@ -405,147 +395,48 @@
       });
     }
 
-    function setStatus(subId, statusIndex) {
-      playSound('tick'); const sub = subjectsData.find(s => s.id === subId); sub.status = statusIndex; saveData(); 
-      if (currentSubjectId === null) { animateReorder(subId); renderHome(false); } else { renderDetail(); }
-    }
+    function setStatus(subId, statusIndex) { playSound('tick'); subjectsData.find(s => s.id === subId).status = statusIndex; saveData(); if (currentSubjectId === null) { animateReorder(subId); renderHome(false); } else { renderDetail(); } }
 
-    // --- SCREEN NAVIGATION ---
-    function openScreen(screenId) {
-      playSound('swoosh');
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      const activeScreen = document.getElementById(screenId);
-      void activeScreen.offsetWidth; activeScreen.classList.add('active');
-      window.scrollTo(0, 0);
-      if (screenId === 'settings-screen') renderSettings();
-    }
+    function openScreen(screenId) { playSound('swoosh'); document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); const activeScreen = document.getElementById(screenId); void activeScreen.offsetWidth; activeScreen.classList.add('active'); window.scrollTo(0, 0); if (screenId === 'settings-screen') renderSettings(); }
     function openDetail(subId) { currentSubjectId = subId; openScreen('detail-screen'); renderDetail(); }
     function goHome() { currentSubjectId = null; subjectsData.sort((a, b) => a.status - b.status); renderHome(true); openScreen('home-screen'); }
 
-    // --- DETAIL & GRADES ---
     function renderDetail() {
       const sub = subjectsData.find(s => s.id === currentSubjectId);
-      document.getElementById('detail-title').innerText = sub.name;
-      document.getElementById('subject-notes').value = sub.notes;
-      document.getElementById('detail-statuses').innerHTML = statuses.map((stat, i) => `
-        <div class="status-row" onclick="setStatus('${sub.id}', ${i})" style="cursor: pointer;">
-          <div class="box ${sub.status === i ? 'active' : ''}"></div>
-          <div style="font-weight: 600;">${stat.label}</div>
-        </div>
-      `).join('');
-
-      // Render Grades & Calculate Average
+      document.getElementById('detail-title').innerText = sub.name; document.getElementById('subject-notes').value = sub.notes;
+      document.getElementById('detail-statuses').innerHTML = statuses.map((stat, i) => `<div class="status-row" onclick="setStatus('${sub.id}', ${i})" style="cursor: pointer;"><div class="box ${sub.status === i ? 'active' : ''}"></div><div style="font-weight: 600;">${stat.label}</div></div>`).join('');
+      
       let totalScore = 0; let totalOut = 0;
       document.getElementById('grades-list').innerHTML = sub.grades.map(g => {
         totalScore += parseFloat(g.score); totalOut += parseFloat(g.outOf);
-        const p = Math.round((g.score / g.outOf) * 100);
-        return `<div class="list-item" style="background: var(--card); color: var(--text); border: 1px solid var(--border);">
-          <div><div style="font-weight: 600;">${g.name}</div><div class="date-badge">${g.score} / ${g.outOf}</div></div>
-          <div style="display:flex; align-items:center; gap: 10px;">
-            <div class="grade-badge" style="color: var(--accent); background: var(--border);">${p}%</div>
-            <button class="delete-btn" onclick="deleteGrade('${g.id}')">×</button>
-          </div>
-        </div>`
+        return `<div class="list-item" style="background: var(--card); color: var(--text); border: 1px solid var(--border);"><div><div style="font-weight: 600;">${g.name}</div><div class="date-badge">${g.score} / ${g.outOf}</div></div><div style="display:flex; align-items:center; gap: 10px;"><div class="grade-badge" style="color: var(--accent); background: var(--border);">${Math.round((g.score/g.outOf)*100)}%</div><button class="delete-btn" onclick="deleteGrade('${g.id}')">×</button></div></div>`
       }).join('');
-      
-      const banner = document.getElementById('average-banner');
-      if (totalOut > 0) {
-        banner.innerText = `Current Average: ${Math.round((totalScore/totalOut)*100)}%`;
-      } else { banner.innerText = "No Grades Logged"; }
+      document.getElementById('average-banner').innerText = totalOut > 0 ? `Current Average: ${Math.round((totalScore/totalOut)*100)}%` : "No Grades Logged";
 
       document.getElementById('hw-list').innerHTML = sub.homework.map(hw => {
         const overdueClass = isOverdue(hw.date) ? 'overdue' : '';
-        return `
-        <div class="list-item ${overdueClass}">
-          <div><div style="font-weight: 600; font-size: 17px;">${hw.text} ${overdueClass ? '⚠️' : ''}</div><div class="date-badge" style="${overdueClass ? 'color: #FFF;' : ''}">Due: ${formatDate(hw.date)}</div></div>
-          <button class="delete-btn" onclick="deleteHomework('${hw.id}')">×</button>
-        </div>`
+        return `<div class="list-item ${overdueClass}"><div><div style="font-weight: 600; font-size: 17px;">${hw.text} ${overdueClass ? '⚠️' : ''}</div><div class="date-badge" style="${overdueClass ? 'color: #FFF;' : ''}">Due: ${formatDate(hw.date)}</div></div><button class="delete-btn" onclick="deleteHomework('${hw.id}')">×</button></div>`
       }).join('');
     }
 
-    function addGrade() {
-      playSound('pop');
-      const name = document.getElementById('grade-name'); const score = document.getElementById('grade-score'); const outOf = document.getElementById('grade-out-of');
-      if (!name.value || !score.value || !outOf.value) return alert("Please fill all grade fields!");
-      const sub = subjectsData.find(s => s.id === currentSubjectId);
-      sub.grades.push({ id: Date.now().toString(), name: name.value, score: score.value, outOf: outOf.value });
-      name.value = ''; score.value = ''; outOf.value = ''; saveData(); renderDetail();
-    }
-    function deleteGrade(gId) {
-      playSound('tick'); const sub = subjectsData.find(s => s.id === currentSubjectId);
-      sub.grades = sub.grades.filter(g => g.id !== gId); saveData(); renderDetail();
-    }
-
-    // --- HOMEWORK & GLOBALS ---
-    function addHomework() {
-      playSound('pop'); const desc = document.getElementById('hw-desc'); const date = document.getElementById('hw-date');
-      if (!desc.value || !date.value) return alert("Please enter both!");
-      subjectsData.find(s => s.id === currentSubjectId).homework.push({ id: Date.now().toString(), text: desc.value, date: date.value });
-      desc.value = ''; date.value = ''; saveData(); renderDetail();
-    }
+    function addGrade() { playSound('pop'); const n = document.getElementById('grade-name'); const s = document.getElementById('grade-score'); const o = document.getElementById('grade-out-of'); if(!n.value||!s.value||!o.value) return; subjectsData.find(sub => sub.id === currentSubjectId).grades.push({ id: Date.now().toString(), name: n.value, score: s.value, outOf: o.value }); n.value=''; s.value=''; o.value=''; saveData(); renderDetail(); }
+    function deleteGrade(gId) { playSound('tick'); const sub = subjectsData.find(s => s.id === currentSubjectId); sub.grades = sub.grades.filter(g => g.id !== gId); saveData(); renderDetail(); }
+    function addHomework() { playSound('pop'); const d = document.getElementById('hw-desc'); const dt = document.getElementById('hw-date'); if(!d.value||!dt.value) return; subjectsData.find(s => s.id === currentSubjectId).homework.push({ id: Date.now().toString(), text: d.value, date: dt.value }); d.value=''; dt.value=''; saveData(); renderDetail(); }
     function deleteHomework(hwId) { playSound('tick'); const sub = subjectsData.find(s => s.id === currentSubjectId); sub.homework = sub.homework.filter(h => h.id !== hwId); saveData(); renderDetail(); }
-    
-    function addGlobalNote() {
-      playSound('pop'); const text = document.getElementById('global-task'); const date = document.getElementById('global-date');
-      if (!text.value || !date.value) return alert("Please enter both!");
-      globalNotes.push({ id: Date.now().toString(), text: text.value, date: date.value });
-      text.value = ''; date.value = ''; saveData(); renderHome(false);
-    }
+    function addGlobalNote() { playSound('pop'); const t = document.getElementById('global-task'); const d = document.getElementById('global-date'); if(!t.value||!d.value) return; globalNotes.push({ id: Date.now().toString(), text: t.value, date: d.value }); t.value=''; d.value=''; saveData(); renderHome(false); }
     function deleteGlobal(id) { playSound('tick'); globalNotes = globalNotes.filter(n => n.id !== id); saveData(); renderHome(false); }
     function saveNotes() { subjectsData.find(s => s.id === currentSubjectId).notes = document.getElementById('subject-notes').value; saveData(); }
 
-    // --- POMODORO TIMER ---
     let timerInterval; let timeLeft = 25 * 60; let isRunning = false;
-    function updateTimerDisplay() {
-      let m = Math.floor(timeLeft / 60); let s = timeLeft % 60;
-      document.getElementById('timer-display').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
-    }
     function toggleTimer() {
       const btn = document.getElementById('timer-toggle'); playSound('tick');
-      if (isRunning) {
-        clearInterval(timerInterval); isRunning = false; btn.innerText = "▶";
-      } else {
-        isRunning = true; btn.innerText = "⏸";
-        timerInterval = setInterval(() => {
-          timeLeft--; updateTimerDisplay();
-          if (timeLeft <= 0) { clearInterval(timerInterval); isRunning = false; btn.innerText = "▶"; timeLeft = 25*60; playSound('alarm'); alert("Time for a break!"); }
-        }, 1000);
-      }
+      if (isRunning) { clearInterval(timerInterval); isRunning = false; btn.innerText = "▶"; } 
+      else { isRunning = true; btn.innerText = "⏸"; timerInterval = setInterval(() => { timeLeft--; let m = Math.floor(timeLeft/60); let s = timeLeft%60; document.getElementById('timer-display').innerText = `${m}:${s<10?'0':''}${s}`; if (timeLeft <= 0) { clearInterval(timerInterval); isRunning = false; btn.innerText = "▶"; timeLeft = 25*60; playSound('alarm'); alert("Time for a break!"); } }, 1000); }
     }
 
-    // --- SETTINGS (CUSTOM SUBJECTS & SIMON) ---
-    function renderSettings() {
-      document.getElementById('settings-subjects-list').innerHTML = subjectsData.map(sub => `
-        <div class="list-item" style="background: var(--card); color: var(--text); border: 1px solid var(--border);">
-          <div style="font-weight: 600;">${sub.name}</div>
-          <button class="delete-btn" onclick="deleteSubject('${sub.id}')">×</button>
-        </div>
-      `).join('');
-    }
-    function addSubject() {
-      playSound('pop'); const input = document.getElementById('new-subject');
-      if (!input.value) return;
-      subjectsData.push({ id: Date.now().toString(), name: input.value, status: 2, homework: [], notes: "", grades: []});
-      input.value = ''; saveData(); renderSettings();
-    }
-    function deleteSubject(id) {
-      playSound('tick'); if(confirm("Delete this subject and all its data?")) {
-        subjectsData = subjectsData.filter(s => s.id !== id); saveData(); renderSettings();
-      }
-    }
-    async function syncCalendar() {
-      playSound('pop');
-      const url = document.getElementById('ics-link').value;
-      if (!url) return alert("Please paste an .ics link");
-      try {
-        const response = await fetch(url);
-        if(!response.ok) throw new Error("CORS Block");
-        alert("Sync Successful! (In a full backend setup, classes would appear here)");
-      } catch(e) {
-        alert("Sync Failed: Simon's security (CORS) blocks direct downloads to your phone. You will need to use the Quick Launch widget instead!");
-      }
-    }
-
+    function renderSettings() { document.getElementById('settings-subjects-list').innerHTML = subjectsData.map(sub => `<div class="list-item" style="background: var(--card); color: var(--text); border: 1px solid var(--border);"><div style="font-weight: 600;">${sub.name}</div><button class="delete-btn" onclick="deleteSubject('${sub.id}')">×</button></div>`).join(''); }
+    function addSubject() { playSound('pop'); const input = document.getElementById('new-subject'); if (!input.value) return; subjectsData.push({ id: Date.now().toString(), name: input.value, status: 2, homework: [], notes: "", grades: []}); input.value = ''; saveData(); renderSettings(); }
+    function deleteSubject(id) { playSound('tick'); if(confirm("Delete subject?")) { subjectsData = subjectsData.filter(s => s.id !== id); saveData(); renderSettings(); } }
     function formatDate(dateString) { const options = { weekday: 'short', month: 'short', day: 'numeric' }; const [y, m, d] = dateString.split('-'); return new Date(y, m - 1, d).toLocaleDateString('en-US', options); }
   </script>
 </body>
