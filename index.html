@@ -34,16 +34,10 @@
 
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg-base: #000000;
-        --card-bg: #1C1C1E;
-        --card-border: rgba(255, 255, 255, 0.08);
+        --bg-base: #000000; --card-bg: #1C1C1E; --card-border: rgba(255, 255, 255, 0.08);
         --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-        
-        --text-primary: #F5F5F5;
-        --text-secondary: #98989D;
-        
-        --accent: #8D99AE;
-        --accent-grad: linear-gradient(135deg, #4A5D70, #1E293B);
+        --text-primary: #F5F5F5; --text-secondary: #98989D;
+        --accent: #8D99AE; --accent-grad: linear-gradient(135deg, #4A5D70, #1E293B);
         --rich-blue: linear-gradient(135deg, #1E3A5F, #0F172A);
       }
     }
@@ -51,17 +45,14 @@
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     
     body {
-      background-color: var(--bg-base);
-      color: var(--text-primary);
+      background-color: var(--bg-base); color: var(--text-primary);
       margin: 0; padding: 0; overflow-x: hidden;
-      -webkit-user-select: none;
-      font-family: -apple-system, 'Inter', sans-serif;
+      -webkit-user-select: none; font-family: -apple-system, 'Inter', sans-serif;
       font-size: 15px; line-height: 1.4;
     }
 
     h1, h2, h3, .subject-title { font-family: 'Outfit', sans-serif; letter-spacing: -0.4px; }
 
-    /* SPLASH SCREEN */
     #splash {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; 
       background: var(--bg-base); color: var(--text-primary); z-index: 9999;
@@ -70,180 +61,121 @@
       transition: opacity 0.4s ease;
     }
 
-    /* SCREEN TRANSITIONS */
+    /* FLUID SCREEN TRANSITIONS */
     .screen { padding: 16px; padding-top: calc(env(safe-area-inset-top) + 16px); padding-bottom: 40px; display: none; }
     .screen.active { display: block; animation: screenFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-    
     @keyframes screenFadeIn {
       0% { opacity: 0; transform: scale(0.98) translateY(10px); }
       100% { opacity: 1; transform: scale(1) translateY(0); }
     }
 
-    /* TOP BAR & TYPOGRAPHY */
+    /* STAGGERED CASCADING LIST ENTRIES */
+    .cascade-item { animation: cascadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+    @keyframes cascadeIn {
+      from { opacity: 0; transform: translateY(12px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    /* Simple loop to stagger the first 10 items natively */
+    .cascade-item:nth-child(1) { animation-delay: 0.05s; } .cascade-item:nth-child(2) { animation-delay: 0.10s; }
+    .cascade-item:nth-child(3) { animation-delay: 0.15s; } .cascade-item:nth-child(4) { animation-delay: 0.20s; }
+    .cascade-item:nth-child(5) { animation-delay: 0.25s; } .cascade-item:nth-child(6) { animation-delay: 0.30s; }
+
     .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
     h1 { font-size: clamp(28px, 6vw, 34px); font-weight: 800; margin: 0; color: var(--text-primary); }
     h2 { font-size: 19px; font-weight: 700; margin-top: 24px; margin-bottom: 12px; color: var(--text-primary); }
     h3 { font-size: 13px; font-weight: 700; margin-top: 20px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-secondary); }
 
     .icon-btn {
-      background: var(--card-bg); border: 1px solid var(--card-border);
-      border-radius: 50%; width: 38px; height: 38px;
-      display: flex; align-items: center; justify-content: center;
-      color: var(--text-primary); cursor: pointer;
+      background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 50%; width: 38px; height: 38px;
+      display: flex; align-items: center; justify-content: center; color: var(--text-primary); cursor: pointer;
       box-shadow: var(--card-shadow); transition: transform 0.15s ease;
     }
     .icon-btn:active { transform: scale(0.9); }
 
-    /* REUSABLE CARD SYSTEM */
-    .app-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      box-shadow: var(--card-shadow);
-      border-radius: 18px;
-    }
+    .app-card { background: var(--card-bg); border: 1px solid var(--card-border); box-shadow: var(--card-shadow); border-radius: 18px; }
 
-    /* DASHBOARD GRID */
+    /* DASHBOARD */
     .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
     .widget { padding: 14px; display: flex; flex-direction: column; justify-content: space-between; height: 100%; min-height: 94px; }
-    
-    .simon-widget {
-      background: var(--accent-grad); color: #FFFFFF; text-decoration: none; border: none;
-      transition: transform 0.15s ease; cursor: pointer;
-    }
+    .simon-widget { background: var(--accent-grad); color: #FFFFFF; text-decoration: none; border: none; transition: transform 0.15s ease; cursor: pointer; }
     .simon-widget:active { transform: scale(0.97); }
     .simon-title { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.5px; }
     .simon-action { font-size: 16px; font-weight: 700; font-family: 'Outfit', sans-serif; display: flex; justify-content: space-between; align-items: center; width: 100%; }
 
     .widget-title { font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
-    
     .ring-container { display: flex; align-items: center; gap: 10px; margin-top: auto; }
     .circular-chart { width: 40px; height: 40px; flex-shrink: 0; }
     .circle-bg { fill: none; stroke: rgba(0,0,0,0.06); stroke-width: 3.8; }
-    .circle { fill: none; stroke-width: 3.8; stroke-linecap: round; transition: stroke-dasharray 0.4s ease; stroke: var(--accent); }
+    .circle { fill: none; stroke-width: 3.8; stroke-linecap: round; transition: stroke-dasharray 0.5s cubic-bezier(0.16, 1, 0.3, 1); stroke: var(--accent); }
     .ring-text { font-size: 17px; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--text-primary); }
 
-    /* HEALTH BAR */
     .health-bar-container { padding: 14px; margin-bottom: 20px; }
     .health-bar { display: flex; height: 10px; border-radius: 5px; overflow: hidden; background: rgba(0,0,0,0.05); margin-top: 8px; }
-    .health-segment { height: 100%; transition: width 0.4s ease; }
+    .health-segment { height: 100%; transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
 
-    /* HORIZONTAL SCROLL CONTAINERS */
-    .horizontal-scroll {
-      display: flex; gap: 10px; overflow-x: auto;
-      padding-bottom: 8px; margin-right: -16px; padding-right: 16px;
-      scroll-snap-type: x mandatory; scrollbar-width: none;
-    }
+    .horizontal-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px; margin-right: -16px; padding-right: 16px; scroll-snap-type: x mandatory; scrollbar-width: none; }
     .horizontal-scroll::-webkit-scrollbar { display: none; }
-    
     .deadline-card { flex: 0 0 130px; scroll-snap-align: start; background: var(--accent-grad); color: #FFFFFF; border-radius: 16px; padding: 12px 14px; position: relative; }
     .deadline-card.warning { background: linear-gradient(135deg, var(--warning), #D97706); }
     .deadline-card.critical { background: linear-gradient(135deg, var(--critical), #DC2626); }
     .dl-days { font-size: 26px; font-weight: 800; font-family: 'Outfit', sans-serif; line-height: 1; }
     .dl-label { font-size: 12px; font-weight: 500; opacity: 0.9; margin-top: 4px; }
-
     .timetable-card { flex: 0 0 125px; scroll-snap-align: start; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; cursor: pointer; transition: transform 0.15s ease; }
     .timetable-card:active { transform: scale(0.95); }
     .tt-session { font-size: 10px; color: var(--text-secondary); font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
     .tt-subject { font-size: 14px; font-weight: 700; color: var(--text-primary); line-height: 1.2; }
 
-    /* SUBJECT CARDS */
+    /* SUBJECT CARDS & BOXES */
     #subjects-list { display: flex; flex-direction: column; position: relative; }
-    .card { 
-      padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; 
-      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; 
-    }
-    .card:active { transform: scale(0.98); }
-    
+    .card { padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; cursor: pointer; }
     .boxes-container { display: flex; gap: 5px; flex-shrink: 0; }
-    .box { 
-      width: 22px; height: 22px; border-radius: 6px; 
-      border: 1.5px solid rgba(0,0,0,0.12); 
-      background: rgba(255,255,255,0.8); 
-      transition: all 0.2s ease; 
-    }
+    .box { width: 22px; height: 22px; border-radius: 6px; border: 1.5px solid rgba(0,0,0,0.12); background: rgba(255,255,255,0.8); transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
     .box:active { transform: scale(0.7); }
-    .box.active { 
-      background-color: var(--box-color); 
-      border-color: var(--box-color); 
-      transform: scale(1.1); 
-      box-shadow: 0 2px 8px var(--box-color); 
-    }
+    .box.active { background-color: var(--box-color); border-color: var(--box-color); transform: scale(1.1); box-shadow: 0 2px 8px var(--box-color); }
     .subject-title { font-size: 17px; font-weight: 600; flex: 1; line-height: 1.2; color: var(--text-primary); }
 
     /* DETAILS SCREEN */
     .header-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-    .back-btn {
-      display: flex; align-items: center; gap: 4px; color: var(--text-primary);
-      padding: 6px 12px; font-size: 14px; font-weight: 600; cursor: pointer;
-      transition: transform 0.15s ease;
-    }
+    .back-btn { display: flex; align-items: center; gap: 4px; color: var(--text-primary); padding: 6px 12px; font-size: 14px; font-weight: 600; cursor: pointer; transition: transform 0.15s ease; }
     .back-btn:active { transform: scale(0.92); }
-    
-    #detail-title { 
-      font-size: clamp(20px, 5vw, 26px); font-weight: 800; line-height: 1.15; margin: 0; 
-      flex: 1; white-space: normal; word-break: break-word; 
-    }
+    #detail-title { font-size: clamp(20px, 5vw, 26px); font-weight: 800; line-height: 1.15; margin: 0; flex: 1; white-space: normal; word-break: break-word; }
 
-    /* STATUS ROWS */
-    .status-row { 
-      display: flex; align-items: center; gap: 12px; padding: 11px 14px; 
-      border-radius: 14px; margin-bottom: 6px; 
-      transition: transform 0.15s ease, background-color 0.2s ease; cursor: pointer;
-    }
+    /* STATUS ROWS (FLUID NO-DOM-WIPE UPDATES) */
+    .status-row { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 14px; margin-bottom: 6px; transition: transform 0.15s ease, background-color 0.3s ease, border-color 0.3s ease; cursor: pointer; }
     .status-row:active { transform: scale(0.98); }
     .status-row.active-status { background-color: var(--status-bg); border-color: var(--box-color); }
-    .status-label { font-size: 14px; font-weight: 600; color: var(--text-secondary); }
+    .status-label { font-size: 14px; font-weight: 600; color: var(--text-secondary); transition: color 0.3s ease; }
     .status-row.active-status .status-label { color: var(--text-primary); }
 
-    /* INPUT GROUPS */
+    /* INPUTS & BUTTONS */
     .input-group { display: flex; gap: 8px; margin-bottom: 12px; width: 100%; }
-    input[type="text"], input[type="date"], input[type="number"], textarea { 
-      flex: 1; min-width: 0; padding: 11px 13px; border-radius: 12px; 
-      border: 1px solid var(--card-border); background: var(--card-bg);
-      color: var(--text-primary); font-size: 14px; font-family: inherit;
-      outline: none; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
-    }
+    input[type="text"], input[type="date"], input[type="number"], textarea { flex: 1; min-width: 0; padding: 11px 13px; border-radius: 12px; border: 1px solid var(--card-border); background: var(--card-bg); color: var(--text-primary); font-size: 14px; font-family: inherit; outline: none; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02); }
     textarea { height: 85px; resize: none; width: 100%; margin-top: 2px; line-height: 1.4; }
-    
-    button.add-btn {
-      background: var(--accent-grad); color: #FFFFFF; border: none;
-      padding: 0 16px; border-radius: 12px; font-weight: 600; font-size: 14px;
-      flex-shrink: 0; transition: transform 0.15s ease; cursor: pointer;
-    }
+    button.add-btn { background: var(--accent-grad); color: #FFFFFF; border: none; padding: 0 16px; border-radius: 12px; font-weight: 600; font-size: 14px; flex-shrink: 0; transition: transform 0.15s ease; cursor: pointer; }
     button.add-btn:active { transform: scale(0.92); }
 
-    /* LIST ITEMS */
-    .list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-radius: 14px; margin-bottom: 6px; }
+    /* TASKS & LIST ITEMS */
+    .list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-radius: 14px; margin-bottom: 6px; transform-origin: top; overflow: hidden; }
     
-    /* RICH DARK BLUE TASKS */
     .task-card { background: var(--rich-blue) !important; color: #FFFFFF !important; border: none !important; }
     .task-card.overdue { background: linear-gradient(135deg, var(--critical), #DC2626) !important; }
     .task-card .date-badge { color: rgba(255,255,255,0.75) !important; }
     .task-card .delete-btn { color: rgba(255,255,255,0.85) !important; }
 
     .date-badge { font-size: 12px; color: var(--text-secondary); font-weight: 500; margin-top: 2px; }
-    .delete-btn { color: var(--critical); background: none; border: none; font-weight: 400; font-size: 22px; padding: 0 6px; cursor: pointer; }
+    .delete-btn { color: var(--critical); background: none; border: none; font-weight: 400; font-size: 22px; padding: 0 6px; cursor: pointer; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
     .delete-btn:active { transform: scale(0.8); }
     .grade-badge { font-size: 13px; font-weight: 700; background: rgba(0,0,0,0.05); padding: 3px 8px; border-radius: 6px; color: var(--text-primary); }
     .average-banner { padding: 12px; text-align: center; font-weight: 700; font-size: 15px; margin-bottom: 12px; }
 
-    /* SMOOTH GREEN FADE-OUT ANIMATION */
-    .completing { animation: completeTaskAnim 0.35s ease forwards; pointer-events: none; }
-    @keyframes completeTaskAnim {
-      0% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.6; background: #10B981 !important; transform: scale(0.97); }
-      100% { opacity: 0; transform: scale(0.92) translateY(-4px); }
-    }
-
-    /* SMART CAPTURE GALLERY */
+    /* PHOTOS & TIMER */
     .photo-gallery { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory; scrollbar-width: none; }
     .photo-gallery::-webkit-scrollbar { display: none; }
     .photo-card { flex: 0 0 120px; height: 85px; scroll-snap-align: start; border-radius: 12px; background-size: cover; background-position: center; border: 1px solid var(--card-border); position: relative; }
     .del-photo { position: absolute; top: -5px; right: -5px; background: var(--critical); color: #FFFFFF; border: none; width: 20px; height: 20px; border-radius: 50%; font-weight: bold; font-size: 11px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
-    /* COMPACT TIMER */
     .timer-card { display: flex; align-items: center; gap: 14px; padding: 10px 14px; margin-bottom: 12px; }
-    .timer-ring-container { position: relative; width: 40px; height: 40px; cursor: pointer; flex-shrink: 0; }
+    .timer-ring-container { position: relative; width: 40px; height: 40px; cursor: pointer; flex-shrink: 0; transition: transform 0.15s ease; }
     .timer-ring-container:active { transform: scale(0.92); }
     .timer-circular-chart { width: 100%; height: 100%; transform: rotate(-90deg); }
     .timer-circle-bg { fill: none; stroke: rgba(0,0,0,0.06); stroke-width: 3.5; }
@@ -265,7 +197,7 @@
     </div>
 
     <div class="dashboard-grid">
-      <div class="widget app-card">
+      <div class="widget app-card cascade-item">
         <div class="widget-title">Daily Activity</div>
         <div class="ring-container">
           <svg viewBox="0 0 36 36" class="circular-chart">
@@ -276,7 +208,7 @@
         </div>
       </div>
       
-      <a href="https://simon.iona.vic.edu.au/" target="_blank" class="widget simon-widget app-card">
+      <a href="https://simon.iona.vic.edu.au/" target="_blank" class="widget simon-widget app-card cascade-item">
         <div class="simon-title">Portal</div>
         <div class="simon-action">
           Open Simon
@@ -285,23 +217,23 @@
       </a>
     </div>
 
-    <div class="health-bar-container app-card">
+    <div class="health-bar-container app-card cascade-item">
       <div class="widget-title" style="margin-bottom: 0;">Subject Health</div>
       <div class="health-bar" id="health-bar"></div>
     </div>
 
-    <div id="deadline-section" style="display: none;">
+    <div id="deadline-section" style="display: none;" class="cascade-item">
       <h2>Major Deadlines</h2>
       <div class="horizontal-scroll" id="deadline-list"></div>
     </div>
 
-    <div id="dynamic-timetable-section"></div>
+    <div id="dynamic-timetable-section" class="cascade-item"></div>
 
-    <h2>Subjects</h2>
+    <h2 class="cascade-item">Subjects</h2>
     <div id="subjects-list"></div>
 
-    <h2>Global Tasks</h2>
-    <div class="input-group">
+    <h2 class="cascade-item">Global Tasks</h2>
+    <div class="input-group cascade-item">
       <input type="text" id="global-task" placeholder="Task description...">
       <input type="date" id="global-date">
       <button class="add-btn" onclick="addGlobalNote()">Add</button>
@@ -313,32 +245,31 @@
   <div id="detail-screen" class="screen">
     <div class="header-bar">
       <button class="back-btn app-card" onclick="goHome()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-        Back
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Back
       </button>
       <h1 id="detail-title"></h1>
     </div>
     
-    <div id="detail-statuses"></div>
+    <div id="detail-statuses" class="cascade-item"></div>
 
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; margin-bottom: 6px;">
+    <div class="cascade-item" style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; margin-bottom: 6px;">
       <h3 style="margin: 0;">Smart Capture</h3>
       <button class="add-btn" style="padding: 5px 12px; font-size: 12px; display: flex; align-items: center; gap: 4px;" onclick="document.getElementById('camera-input').click()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Scan
       </button>
     </div>
     <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none" onchange="processPhoto(event)">
-    <div class="photo-gallery" id="photo-gallery"></div>
+    <div class="photo-gallery cascade-item" id="photo-gallery"></div>
 
-    <h3>Homework</h3>
-    <div class="input-group">
+    <h3 class="cascade-item">Homework</h3>
+    <div class="input-group cascade-item">
       <input type="text" id="hw-desc" placeholder="Homework description...">
       <input type="date" id="hw-date">
       <button class="add-btn" onclick="addHomework()">Add</button>
     </div>
     <div id="hw-list"></div>
 
-    <div class="timer-card app-card">
+    <div class="timer-card app-card cascade-item">
       <div class="timer-ring-container" onclick="toggleTimer()">
         <svg viewBox="0 0 36 36" class="timer-circular-chart">
           <path class="timer-circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
@@ -354,9 +285,9 @@
       </div>
     </div>
 
-    <h3>Grades & Assessments</h3>
-    <div id="average-banner" class="average-banner app-card">No Grades Logged</div>
-    <div class="input-group">
+    <h3 class="cascade-item">Grades & Assessments</h3>
+    <div id="average-banner" class="average-banner app-card cascade-item">No Grades Logged</div>
+    <div class="input-group cascade-item">
       <input type="text" id="grade-name" placeholder="Name">
       <input type="number" id="grade-score" placeholder="Score" style="flex: 0.4;">
       <input type="number" id="grade-out-of" placeholder="Out of" style="flex: 0.4;">
@@ -364,8 +295,8 @@
     </div>
     <div id="grades-list"></div>
 
-    <h3>Notes</h3>
-    <textarea id="subject-notes" placeholder="Add additional information here..." onblur="saveNotes()"></textarea>
+    <h3 class="cascade-item">Notes</h3>
+    <textarea class="cascade-item" id="subject-notes" placeholder="Add additional information here..." onblur="saveNotes()"></textarea>
   </div>
 
   <!-- SETTINGS SCREEN -->
@@ -411,11 +342,10 @@
       const today = new Date(); today.setHours(0,0,0,0);
       const diffDays = Math.floor((today - anchor) / (1000 * 60 * 60 * 24));
       if (diffDays < 0) return null; 
-      const cycleDay = diffDays % 14; 
-      return timetableCycle[cycleDay] || null; 
+      return timetableCycle[diffDays % 14] || null; 
     }
 
-    // --- AUDIO SYSTEM ---
+    // --- AUDIO ENGINE ---
     let audioCtx;
     function playSound(type) {
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -441,21 +371,17 @@
       }
     }
 
-    // --- COLOR PALETTE DATA ---
+    // --- DATA STORE ---
     const statuses = [
-      { color: "rgba(239, 68, 68, 0.15)", hex: "#EF4444", label: "Falling behind" }, 
-      { color: "rgba(245, 158, 11, 0.15)", hex: "#F59E0B", label: "Behind" },          
+      { color: "rgba(239, 68, 68, 0.12)", hex: "#EF4444", label: "Falling behind" }, 
+      { color: "rgba(245, 158, 11, 0.12)", hex: "#F59E0B", label: "Behind" },          
       { color: "var(--card-bg)", hex: "#94A3B8", label: "Up to date" },      
-      { color: "rgba(16, 185, 129, 0.15)", hex: "#10B981", label: "Ahead" },           
-      { color: "rgba(5, 150, 105, 0.2)", hex: "#059669", label: "Well ahead" }         
+      { color: "rgba(16, 185, 129, 0.12)", hex: "#10B981", label: "Ahead" },           
+      { color: "rgba(5, 150, 105, 0.15)", hex: "#059669", label: "Well ahead" }         
     ];
 
-    let subjectsData = JSON.parse(localStorage.getItem('org_subjects'));
-    if (!subjectsData || subjectsData.length === 0) {
-      subjectsData = ["English", "General Mathematics", "Economics", "Legal studies", "Pre mathematical methods", "Religious education", "Physics", "Wellbeing"].map(name => ({
-        id: name.replace(/\s+/g, '-').toLowerCase(), name: name, status: 2, homework: [], notes: "", grades: [], photos: []
-      }));
-    } else { subjectsData.forEach(s => { if (!s.photos) s.photos = []; }); }
+    let subjectsData = JSON.parse(localStorage.getItem('org_subjects')) || ["English", "General Mathematics", "Economics", "Legal studies", "Pre mathematical methods", "Religious education", "Physics", "Wellbeing"].map(name => ({ id: name.replace(/\s+/g, '-').toLowerCase(), name: name, status: 2, homework: [], notes: "", grades: [], photos: [] }));
+    subjectsData.forEach(s => { if (!s.photos) s.photos = []; });
     
     let globalNotes = JSON.parse(localStorage.getItem('org_global')) || [];
     let deadlines = JSON.parse(localStorage.getItem('org_deadlines')) || [];
@@ -479,25 +405,23 @@
       updateRingUI();
     }
 
-    // STRICT SCORE CAP AT 5/5
-    function addRingScore() { 
-      if (ringStats.score < 5) {
-        ringStats.score++; 
-        saveData(); 
-      }
-    }
-
+    function addRingScore() { if (ringStats.score < 5) { ringStats.score++; saveData(); } }
     function updateRingUI() {
       const percentage = Math.min((ringStats.score / 5) * 100, 100);
       document.getElementById('study-ring').style.strokeDasharray = `${percentage}, 100`;
       document.getElementById('ring-score').innerText = `${ringStats.score}/5`;
     }
 
+    function updateHealthBarUI() {
+      let counts = [0,0,0,0,0]; subjectsData.forEach(s => counts[s.status]++);
+      document.getElementById('health-bar').innerHTML = counts.map((count, i) => count > 0 ? `<div class="health-segment" style="width: ${(count/subjectsData.length)*100}%; background-color: ${statuses[i].hex};"></div>` : '').join('');
+    }
+
     function isOverdue(dateString) { const today = new Date(); today.setHours(0,0,0,0); const [y, m, d] = dateString.split('-'); return new Date(y, m - 1, d) < today; }
     function getDaysDiff(dateString) { const today = new Date(); today.setHours(0,0,0,0); const [y, m, d] = dateString.split('-'); const target = new Date(y, m - 1, d); return Math.ceil((target - today) / (1000 * 60 * 60 * 24)); }
 
     function renderHome(initialLoad = false) {
-      updateRingUI();
+      updateRingUI(); updateHealthBarUI();
 
       const dlSection = document.getElementById('deadline-section');
       if (deadlines.length > 0) {
@@ -505,7 +429,7 @@
         deadlines.sort((a, b) => getDaysDiff(a.date) - getDaysDiff(b.date));
         document.getElementById('deadline-list').innerHTML = deadlines.map(dl => {
           const days = getDaysDiff(dl.date); let stateClass = ''; if (days <= 2) stateClass = 'critical'; else if (days <= 7) stateClass = 'warning';
-          return `<div class="deadline-card ${stateClass}"><div class="dl-days">${days < 0 ? '0' : days}</div><div class="dl-label">Days until<br>${dl.name}</div><button class="icon-btn" style="position:absolute; top:6px; right:6px; width:22px; height:22px; font-size:12px; color:white; background:rgba(0,0,0,0.15);" onclick="deleteDeadline('${dl.id}')">×</button></div>`;
+          return `<div class="deadline-card ${stateClass}"><div class="dl-days">${days < 0 ? '0' : days}</div><div class="dl-label">Days until<br>${dl.name}</div><button class="icon-btn" style="position:absolute; top:6px; right:6px; width:22px; height:22px; font-size:12px; color:white; background:rgba(0,0,0,0.15); border:none;" onclick="deleteDeadline('${dl.id}')">×</button></div>`;
         }).join('');
       } else { dlSection.style.display = 'none'; }
 
@@ -515,30 +439,28 @@
         ttSection.innerHTML = `<h2>Today's Schedule</h2><div class="horizontal-scroll" style="margin-bottom: 16px;">${todaysClasses.map((className, index) => {
           const matchingSub = subjectsData.find(s => s.name.toLowerCase() === className.toLowerCase());
           const isSession = sessionLabels[index].includes('Session');
-          const cCol = matchingSub ? statuses[matchingSub.status].color : (isSession ? 'var(--darker-glass)' : 'var(--card-bg)');
+          const cCol = matchingSub ? statuses[matchingSub.status].color : (isSession ? 'var(--card-border)' : 'var(--card-bg)');
           const bCol = matchingSub ? statuses[matchingSub.status].hex : 'var(--card-border)';
           const act = matchingSub ? `onclick="openDetail('${matchingSub.id}')"` : '';
           return `<div class="timetable-card app-card" style="background-color: ${cCol}; border-color: ${bCol};" ${act}><div class="tt-session">${sessionLabels[index]}</div><div class="tt-subject">${className}</div></div>`;
         }).join('')}</div>`;
       } else { ttSection.innerHTML = ''; }
 
-      if (initialLoad) subjectsData.sort((a, b) => a.status - b.status);
-      
-      let counts = [0,0,0,0,0]; subjectsData.forEach(s => counts[s.status]++);
-      document.getElementById('health-bar').innerHTML = counts.map((count, i) => count > 0 ? `<div class="health-segment" style="width: ${(count/subjectsData.length)*100}%; background-color: ${statuses[i].hex};"></div>` : '').join('');
-
-      document.getElementById('subjects-list').innerHTML = subjectsData.map(sub => `
-        <div class="card app-card" data-id="${sub.id}" style="background-color: ${statuses[sub.status].color}; border-color: ${statuses[sub.status].hex};" onclick="openDetail('${sub.id}')">
-          <div class="boxes-container">
-            ${[0, 1, 2, 3, 4].map(i => `<div class="box ${sub.status === i ? 'active' : ''}" style="--box-color: ${statuses[i].hex};" onclick="event.stopPropagation(); setStatus('${sub.id}', ${i})"></div>`).join('')}
+      if (initialLoad) {
+        subjectsData.sort((a, b) => a.status - b.status);
+        document.getElementById('subjects-list').innerHTML = subjectsData.map((sub, i) => `
+          <div class="card app-card cascade-item" data-id="${sub.id}" style="background-color: ${statuses[sub.status].color}; border-color: ${statuses[sub.status].hex}; animation-delay: ${0.05 * i}s;" onclick="openDetail('${sub.id}')">
+            <div class="boxes-container">
+              ${[0, 1, 2, 3, 4].map(j => `<div class="box ${sub.status === j ? 'active' : ''}" style="--box-color: ${statuses[j].hex};" onclick="event.stopPropagation(); setStatus('${sub.id}', ${j})"></div>`).join('')}
+            </div>
+            <div class="subject-title">${sub.name}</div>
           </div>
-          <div class="subject-title">${sub.name}</div>
-        </div>
-      `).join('');
+        `).join('');
+      }
 
-      document.getElementById('global-notes-list').innerHTML = globalNotes.map(n => {
+      document.getElementById('global-notes-list').innerHTML = globalNotes.map((n, i) => {
         const overdueClass = isOverdue(n.date) ? 'overdue' : '';
-        return `<div id="global-item-${n.id}" class="list-item app-card task-card ${overdueClass}"><div><div style="font-weight: 600; font-size: 15px;">${n.text}</div><div class="date-badge">Due: ${formatDate(n.date)}</div></div><button class="delete-btn" onclick="completeGlobalAnim('${n.id}')">×</button></div>`
+        return `<div id="global-item-${n.id}" class="list-item app-card task-card cascade-item ${overdueClass}" style="animation-delay: ${0.05 * i}s;"><div><div style="font-weight: 600; font-size: 15px;">${n.text}</div><div class="date-badge">Due: ${formatDate(n.date)}</div></div><button class="delete-btn" onclick="completeGlobalAnim('${n.id}')">×</button></div>`
       }).join('');
     }
 
@@ -561,6 +483,7 @@
     }
     function deletePhoto(id) { playSound('tick'); const sub = subjectsData.find(s => s.id === currentSubjectId); sub.photos = sub.photos.filter(p => p.id !== id); saveData(); renderDetail(); }
 
+    // --- FLUID ZOOM-SLIDE PHYSICS ---
     function animateReorder(clickedSubId) {
       const list = document.getElementById('subjects-list'); const cards = Array.from(list.children);
       const firstPositions = {}; cards.forEach(card => firstPositions[card.dataset.id] = card.getBoundingClientRect());
@@ -583,9 +506,9 @@
           card.style.transition = 'none'; card.style.transform = `translateY(${deltaY}px)`; card.style.zIndex = isClicked ? '1' : '10';
           
           requestAnimationFrame(() => requestAnimationFrame(() => {
-            card.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)'; card.style.transform = `translateY(0) scale(0.97)`;
+            card.style.transition = 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)'; card.style.transform = `translateY(0) scale(0.97)`;
             setTimeout(() => { 
-              card.style.transition = 'transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275)'; card.style.transform = `translateY(0) scale(1)`;
+              card.style.transition = 'transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)'; card.style.transform = `translateY(0) scale(1)`;
               setTimeout(() => { card.style.transition = ''; card.style.zIndex = ''; }, 250); 
             }, 300); 
           }));
@@ -593,7 +516,27 @@
       });
     }
 
-    function setStatus(subId, statusIndex) { playSound('tick'); subjectsData.find(s => s.id === subId).status = statusIndex; saveData(); if (currentSubjectId === null) { animateReorder(subId); renderHome(false); } else { renderDetail(); } }
+    function setStatus(subId, statusIndex) { 
+      playSound('tick'); subjectsData.find(s => s.id === subId).status = statusIndex; saveData(); 
+      if (currentSubjectId === null) { 
+        animateReorder(subId); updateHealthBarUI(); 
+      } else { 
+        // INSTANT IN-PLACE DOM UPDATE (No detail screen flash)
+        const rows = document.querySelectorAll('.status-row');
+        rows.forEach((row, i) => {
+          const box = row.querySelector('.box');
+          if (i === statusIndex) {
+            row.classList.add('active-status'); box.classList.add('active');
+            row.style.setProperty('--status-bg', statuses[i].color); row.style.setProperty('--box-color', statuses[i].hex);
+            box.style.setProperty('--box-color', statuses[i].hex);
+          } else {
+            row.classList.remove('active-status'); box.classList.remove('active');
+          }
+        });
+        updateHealthBarUI();
+      } 
+    }
+
     function openScreen(screenId) { playSound('swoosh'); document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); const activeScreen = document.getElementById(screenId); void activeScreen.offsetWidth; activeScreen.classList.add('active'); window.scrollTo(0, 0); if (screenId === 'settings-screen') renderSettings(); }
     function openDetail(subId) { currentSubjectId = subId; openScreen('detail-screen'); renderDetail(); }
     function goHome() { currentSubjectId = null; subjectsData.sort((a, b) => a.status - b.status); renderHome(true); openScreen('home-screen'); }
@@ -603,7 +546,7 @@
       document.getElementById('detail-title').innerText = sub.name; document.getElementById('subject-notes').value = sub.notes;
       
       document.getElementById('detail-statuses').innerHTML = statuses.map((stat, i) => `
-        <div class="status-row app-card ${sub.status === i ? 'active-status' : ''}" style="--status-bg: ${stat.color}; --box-color: ${stat.hex};" onclick="setStatus('${sub.id}', ${i})">
+        <div class="status-row app-card cascade-item ${sub.status === i ? 'active-status' : ''}" style="--status-bg: ${stat.color}; --box-color: ${stat.hex}; animation-delay: ${0.03 * i}s;" onclick="setStatus('${sub.id}', ${i})">
           <div class="box ${sub.status === i ? 'active' : ''}" style="--box-color: ${stat.hex};"></div>
           <div class="status-label">${stat.label}</div>
         </div>
@@ -613,82 +556,87 @@
       if(sub.photos.length > 0) { pGal.style.display = 'flex'; pGal.innerHTML = sub.photos.map(p => `<div class="photo-card" style="background-image: url('${p.img}')"><button class="del-photo" onclick="deletePhoto('${p.id}')">×</button></div>`).join(''); } else { pGal.style.display = 'none'; pGal.innerHTML = ''; }
 
       let totalScore = 0; let totalOut = 0;
-      document.getElementById('grades-list').innerHTML = sub.grades.map(g => {
+      document.getElementById('grades-list').innerHTML = sub.grades.map((g, i) => {
         totalScore += parseFloat(g.score); totalOut += parseFloat(g.outOf);
-        return `<div class="list-item app-card"><div><div style="font-weight: 600;">${g.name}</div><div class="date-badge">${g.score} / ${g.outOf}</div></div><div style="display:flex; align-items:center; gap: 8px;"><div class="grade-badge">${Math.round((g.score/g.outOf)*100)}%</div><button class="delete-btn" onclick="deleteGrade('${g.id}')">×</button></div></div>`
+        return `<div class="list-item app-card cascade-item" style="animation-delay: ${0.05 * i}s;"><div><div style="font-weight: 600;">${g.name}</div><div class="date-badge">${g.score} / ${g.outOf}</div></div><div style="display:flex; align-items:center; gap: 8px;"><div class="grade-badge">${Math.round((g.score/g.outOf)*100)}%</div><button class="delete-btn" onclick="deleteGrade('${g.id}')">×</button></div></div>`
       }).join('');
       document.getElementById('average-banner').innerText = totalOut > 0 ? `Current Average: ${Math.round((totalScore/totalOut)*100)}%` : "No Grades Logged";
 
-      document.getElementById('hw-list').innerHTML = sub.homework.map(hw => {
+      document.getElementById('hw-list').innerHTML = sub.homework.map((hw, i) => {
         const overdueClass = isOverdue(hw.date) ? 'overdue' : '';
-        return `<div id="hw-item-${hw.id}" class="list-item app-card task-card ${overdueClass}"><div><div style="font-weight: 600; font-size: 15px;">${hw.text}</div><div class="date-badge">Due: ${formatDate(hw.date)}</div></div><button class="delete-btn" onclick="completeHomeworkAnim('${hw.id}')">×</button></div>`
+        return `<div id="hw-item-${hw.id}" class="list-item app-card task-card cascade-item ${overdueClass}" style="animation-delay: ${0.05 * i}s;"><div><div style="font-weight: 600; font-size: 15px;">${hw.text}</div><div class="date-badge">Due: ${formatDate(hw.date)}</div></div><button class="delete-btn" onclick="completeHomeworkAnim('${hw.id}')">×</button></div>`
       }).join('');
     }
 
-    // DEDICATED SINGLE AUDIO & SMOOTH FADE TO GREEN
-    function completeGlobalAnim(id) {
-      playSound('success'); // Plays exactly ONCE
-      const el = document.getElementById(`global-item-${id}`);
-      if (el) {
-        el.classList.add('completing');
-        const btn = el.querySelector('.delete-btn'); if(btn) { btn.innerHTML = '✓'; btn.style.color = '#FFFFFF'; }
-        setTimeout(() => { deleteGlobal(id); }, 350);
-      } else { deleteGlobal(id); }
+    // --- FLUID HEIGHT-COLLAPSE TASK DELETION ---
+    function performCompletionAnim(el, deleteCallback) {
+      playSound('success');
+      el.style.transition = 'all 0.3s ease';
+      el.style.background = 'var(--success)';
+      el.style.transform = 'scale(0.96) translateX(15px)';
+      const textDiv = el.querySelector('div > div:first-child'); if(textDiv) textDiv.style.color = '#FFFFFF';
+      const badge = el.querySelector('.date-badge'); if(badge) badge.style.color = 'rgba(255,255,255,0.85)';
+      const btn = el.querySelector('.delete-btn'); if(btn) { btn.innerHTML = '✓'; btn.style.color = '#FFFFFF'; btn.style.transform = 'scale(1.1)'; }
+
+      setTimeout(() => {
+        el.style.transition = 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+        el.style.transform = 'scale(0.9) translateX(30px)';
+        el.style.opacity = '0';
+        el.style.maxHeight = el.offsetHeight + 'px';
+        
+        requestAnimationFrame(() => {
+          el.style.maxHeight = '0px'; el.style.paddingTop = '0px'; el.style.paddingBottom = '0px'; el.style.marginBottom = '0px'; el.style.borderWidth = '0px';
+        });
+
+        setTimeout(deleteCallback, 380);
+      }, 300);
     }
 
+    function completeGlobalAnim(id) {
+      const el = document.getElementById(`global-item-${id}`);
+      if (el) performCompletionAnim(el, () => deleteGlobal(id)); else deleteGlobal(id);
+    }
     function completeHomeworkAnim(hwId) {
-      playSound('success'); // Plays exactly ONCE
       const el = document.getElementById(`hw-item-${hwId}`);
-      if (el) {
-        el.classList.add('completing');
-        const btn = el.querySelector('.delete-btn'); if(btn) { btn.innerHTML = '✓'; btn.style.color = '#FFFFFF'; }
-        setTimeout(() => { deleteHomework(hwId); }, 350);
-      } else { deleteHomework(hwId); }
+      if (el) performCompletionAnim(el, () => deleteHomework(hwId)); else deleteHomework(hwId);
     }
 
     function deleteGlobal(id) { addRingScore(); globalNotes = globalNotes.filter(n => n.id !== id); saveData(); renderHome(false); }
-    function deleteHomework(hwId) { addRingScore(); const sub = subjectsData.find(s => s.id === currentSubjectId); sub.homework = sub.homework.filter(h => h.id !== hwId); saveData(); renderDetail(); }
+    function deleteHomework(hwId) { addRingScore(); const sub = subjectsData.find(s => s.id === currentSubjectId); sub.homework = sub.homework.filter(h => h.id !== hwId); saveData(); 
+      // Do not re-render detail, item is already removed from DOM!
+      const el = document.getElementById(`hw-item-${hwId}`); if(el) el.remove(); 
+    }
     
     function addGrade() { playSound('pop'); const n = document.getElementById('grade-name'); const s = document.getElementById('grade-score'); const o = document.getElementById('grade-out-of'); if(!n.value||!s.value||!o.value) return; subjectsData.find(sub => sub.id === currentSubjectId).grades.push({ id: Date.now().toString(), name: n.value, score: s.value, outOf: o.value }); n.value=''; s.value=''; o.value=''; saveData(); renderDetail(); }
     function deleteGrade(gId) { playSound('tick'); const sub = subjectsData.find(s => s.id === currentSubjectId); sub.grades = sub.grades.filter(g => g.id !== gId); saveData(); renderDetail(); }
     function addHomework() { playSound('pop'); const d = document.getElementById('hw-desc'); const dt = document.getElementById('hw-date'); if(!d.value||!dt.value) return; subjectsData.find(s => s.id === currentSubjectId).homework.push({ id: Date.now().toString(), text: d.value, date: dt.value }); d.value=''; dt.value=''; saveData(); renderDetail(); }
     function addGlobalNote() { playSound('pop'); const t = document.getElementById('global-task'); const d = document.getElementById('global-date'); if(!t.value||!d.value) return; globalNotes.push({ id: Date.now().toString(), text: t.value, date: d.value }); t.value=''; d.value=''; saveData(); renderHome(false); }
     function saveNotes() { subjectsData.find(s => s.id === currentSubjectId).notes = document.getElementById('subject-notes').value; saveData(); }
-    function addDeadline() { playSound('pop'); const n = document.getElementById('dl-name'); const d = document.getElementById('dl-date'); if(!n.value||!d.value) return; deadlines.push({ id: Date.now().toString(), name: n.value, date: d.value }); n.value=''; d.value=''; saveData(); alert("Major Deadline Added!"); }
+    function addDeadline() { playSound('pop'); const n = document.getElementById('dl-name'); const d = document.getElementById('dl-date'); if(!n.value||!d.value) return; deadlines.push({ id: Date.now().toString(), name: n.value, date: d.value }); n.value=''; d.value=''; saveData(); renderHome(false); alert("Major Deadline Added!"); }
     function deleteDeadline(id) { playSound('tick'); deadlines = deadlines.filter(d => d.id !== id); saveData(); renderHome(false); }
 
-    // TIMER
     let timerInterval; let timeLeft = 25 * 60; let isRunning = false;
-    const playIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`;
-    const pauseIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
+    const playIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`;
+    const pauseIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
 
     function toggleTimer() {
-      const iconWrap = document.getElementById('timer-icon');
-      const progressRing = document.getElementById('timer-progress');
-      playSound('tick');
-      
-      if (isRunning) { 
-        clearInterval(timerInterval); isRunning = false; iconWrap.innerHTML = playIcon; 
-      } else { 
+      const iconWrap = document.getElementById('timer-icon'); const progressRing = document.getElementById('timer-progress'); playSound('tick');
+      if (isRunning) { clearInterval(timerInterval); isRunning = false; iconWrap.innerHTML = playIcon; } 
+      else { 
         isRunning = true; iconWrap.innerHTML = pauseIcon; 
         timerInterval = setInterval(() => { 
           timeLeft--; let m = Math.floor(timeLeft/60); let s = timeLeft%60; 
           document.getElementById('timer-display').innerText = `${m}:${s<10?'0':''}${s}`; 
-          
-          let percent = (timeLeft / (25 * 60)) * 100;
-          progressRing.style.strokeDasharray = `${percent}, 100`;
-
+          let percent = (timeLeft / (25 * 60)) * 100; progressRing.style.strokeDasharray = `${percent}, 100`;
           if (timeLeft <= 0) { 
-            clearInterval(timerInterval); isRunning = false; iconWrap.innerHTML = playIcon; 
-            timeLeft = 25*60; progressRing.style.strokeDasharray = `100, 100`; 
-            document.getElementById('timer-display').innerText = `25:00`;
+            clearInterval(timerInterval); isRunning = false; iconWrap.innerHTML = playIcon; timeLeft = 25*60; progressRing.style.strokeDasharray = `100, 100`; document.getElementById('timer-display').innerText = `25:00`;
             playSound('success'); addRingScore(); alert("Focus session complete!"); 
           } 
         }, 1000); 
       }
     }
 
-    function renderSettings() { document.getElementById('settings-subjects-list').innerHTML = subjectsData.map(sub => `<div class="list-item app-card"><div style="font-weight: 500;">${sub.name}</div><button class="delete-btn" onclick="deleteSubject('${sub.id}')">×</button></div>`).join(''); }
+    function renderSettings() { document.getElementById('settings-subjects-list').innerHTML = subjectsData.map(sub => `<div class="list-item app-card"><div style="font-weight: 600;">${sub.name}</div><button class="delete-btn" onclick="deleteSubject('${sub.id}')">×</button></div>`).join(''); }
     function addSubject() { playSound('pop'); const input = document.getElementById('new-subject'); if (!input.value) return; subjectsData.push({ id: Date.now().toString(), name: input.value, status: 2, homework: [], notes: "", grades: [], photos: []}); input.value = ''; saveData(); renderSettings(); }
     function deleteSubject(id) { playSound('tick'); if(confirm("Delete subject?")) { subjectsData = subjectsData.filter(s => s.id !== id); saveData(); renderSettings(); } }
     function formatDate(dateString) { const options = { weekday: 'short', month: 'short', day: 'numeric' }; const [y, m, d] = dateString.split('-'); return new Date(y, m - 1, d).toLocaleDateString('en-US', options); }
