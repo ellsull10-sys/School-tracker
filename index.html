@@ -19,7 +19,7 @@
       --bg-base: #F2F4F7; 
       
       --glass-bg: rgba(255, 255, 255, 0.65);
-      --darker-glass: rgba(0, 0, 0, 0.06); /* For middle periods */
+      --darker-glass: rgba(0, 0, 0, 0.06); 
       --glass-border: rgba(255, 255, 255, 0.8);
       --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.05);
       
@@ -28,7 +28,7 @@
       
       --accent: #2C3E50; 
       --accent-grad: linear-gradient(135deg, #34495E, #1E293B);
-      --rich-blue: linear-gradient(135deg, #2A4365, #1A365D); /* Rich dark blue for tasks */
+      --rich-blue: linear-gradient(135deg, #2A4365, #1A365D); 
       --warning: #F59E0B;
       --critical: #EF4444;
     }
@@ -74,7 +74,9 @@
     .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
     h1 { font-size: 34px; font-weight: 800; margin: 0; color: var(--text); text-shadow: 0 2px 10px rgba(0,0,0,0.02); }
     h2 { font-size: 20px; font-weight: 700; margin-top: 32px; margin-bottom: 16px; color: var(--text); }
-    h3 { font-size: 18px; font-weight: 600; margin-top: 24px; margin-bottom: 12px; }
+    
+    /* Reduced margin for headings to save vertical space */
+    h3 { font-size: 16px; font-weight: 600; margin-top: 18px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); }
     
     .icon-btn { background: none; border: none; color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s; padding: 0; }
     .icon-btn:active { transform: scale(0.7); }
@@ -85,7 +87,7 @@
       backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
       border: 1px solid var(--glass-border);
       box-shadow: var(--glass-shadow);
-      border-radius: 20px;
+      border-radius: 18px;
     }
 
     /* DASHBOARD WIDGETS */
@@ -131,60 +133,60 @@
     /* SUBJECT CARDS (LIQUID GLASS) */
     #subjects-list { display: flex; flex-direction: column; position: relative; }
     .card { 
-      padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 14px; 
+      padding: 14px; margin-bottom: 10px; display: flex; align-items: center; gap: 14px; 
       transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); cursor: pointer; 
     }
     .card:active { transform: scale(0.96); }
     
     .boxes-container { display: flex; gap: 6px; flex-shrink: 0; }
     .box { 
-      width: 24px; height: 24px; border-radius: 7px; 
-      border: 2px solid rgba(0,0,0,0.1); 
-      background: rgba(255,255,255,0.7); 
-      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
+      width: 24px; height: 24px; border-radius: 7px; border: 2px solid rgba(0,0,0,0.1); 
+      background: rgba(255,255,255,0.7); transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
     }
     .box:active { transform: scale(0.6); }
     .box.active { 
-      background-color: var(--box-color); 
-      border-color: var(--box-color); 
-      transform: scale(1.15); 
-      box-shadow: 0 4px 12px var(--box-color); 
-      opacity: 0.95;
+      background-color: var(--box-color); border-color: var(--box-color); 
+      transform: scale(1.15); box-shadow: 0 4px 12px var(--box-color); opacity: 0.95;
     }
     .subject-title { font-size: 18px; font-weight: 600; flex: 1; line-height: 1.2; }
 
     /* DETAILS SCREEN NAVIGATION */
-    .header-bar { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
-    .back-btn { display: flex; align-items: center; gap: 6px; color: var(--text); padding: 8px 16px; font-size: 15px; font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer; transition: transform 0.2s; }
+    .header-bar { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+    .back-btn { flex-shrink: 0; display: flex; align-items: center; gap: 6px; color: var(--text); padding: 8px 16px; font-size: 15px; font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer; transition: transform 0.2s; }
     .back-btn:active { transform: scale(0.85); }
     
+    /* ADAPTIVE TITLE: Fits long names gracefully */
+    #detail-title { 
+      font-size: 24px; font-weight: 700; line-height: 1.15; margin: 0; 
+      flex: 1; white-space: normal; word-wrap: break-word; 
+    }
+
     /* STATUS ROWS */
     .status-row { 
-      display: flex; align-items: center; gap: 14px; padding: 14px; 
-      border-radius: 16px; margin-bottom: 8px; 
-      transition: transform 0.2s, background-color 0.3s, border-color 0.3s; 
-      cursor: pointer;
+      display: flex; align-items: center; gap: 14px; padding: 12px 14px; 
+      border-radius: 16px; margin-bottom: 6px; 
+      transition: transform 0.2s, background-color 0.3s, border-color 0.3s; cursor: pointer;
     }
     .status-row:active { transform: scale(0.97); }
     .status-row.active-status { background-color: var(--status-bg); border-color: var(--box-color); }
     .status-label { font-weight: 600; color: var(--text-muted); transition: color 0.3s; }
     .status-row.active-status .status-label { color: var(--text); }
 
-    /* INPUT GROUPS */
-    .input-group { display: flex; gap: 8px; margin-bottom: 16px; width: 100%; }
+    /* REDUCED SPACING INPUT GROUPS */
+    .input-group { display: flex; gap: 8px; margin-bottom: 10px; width: 100%; }
     input[type="text"], input[type="date"], input[type="number"], textarea { 
-      flex: 1; min-width: 0; padding: 14px 16px; border-radius: 14px; 
+      flex: 1; min-width: 0; padding: 12px 14px; border-radius: 14px; 
       border: 1px solid var(--glass-border); 
       background: rgba(255,255,255,0.5); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
       color: var(--text); font-size: 15px; font-family: 'Inter', sans-serif; 
       box-shadow: inset 0 2px 4px rgba(0,0,0,0.01);
     }
-    textarea { height: 120px; resize: none; width: 100%; margin-top: 4px; line-height: 1.5; }
-    button.add-btn { background: var(--accent-grad); color: white; border: none; padding: 0 18px; border-radius: 14px; font-weight: 600; font-family: 'Inter', sans-serif; font-size: 15px; flex-shrink: 0; transition: transform 0.2s; box-shadow: 0 6px 16px rgba(30, 41, 59, 0.2); }
+    textarea { height: 90px; resize: none; width: 100%; margin-top: 2px; line-height: 1.5; }
+    button.add-btn { background: var(--accent-grad); color: white; border: none; padding: 0 16px; border-radius: 14px; font-weight: 600; font-family: 'Inter', sans-serif; font-size: 15px; flex-shrink: 0; transition: transform 0.2s; box-shadow: 0 6px 16px rgba(30, 41, 59, 0.2); }
     button.add-btn:active { transform: scale(0.85); }
 
-    /* LIST ITEMS (BOUNCE ANIMATION REMOVED SO THEY DON'T REPEAT) */
-    .list-item { display: flex; justify-content: space-between; align-items: center; padding: 16px; border-radius: 16px; margin-bottom: 8px; }
+    /* LIST ITEMS */
+    .list-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-radius: 16px; margin-bottom: 6px; }
     
     /* RICH DARK BLUE TASKS */
     .task-card { background: var(--rich-blue) !important; color: white !important; border: none !important; box-shadow: 0 4px 12px rgba(26, 54, 93, 0.2); }
@@ -196,7 +198,15 @@
     .delete-btn { color: var(--critical); background: none; border: none; font-weight: 300; font-size: 26px; padding: 0 10px; transition: transform 0.2s; cursor: pointer; }
     .delete-btn:active { transform: scale(0.7); }
     .grade-badge { font-size: 14px; font-weight: 700; background: rgba(0,0,0,0.05); padding: 4px 10px; border-radius: 8px; color: var(--text); }
-    .average-banner { padding: 16px; text-align: center; font-weight: 700; font-size: 18px; margin-bottom: 16px; }
+    .average-banner { padding: 14px; text-align: center; font-weight: 700; font-size: 16px; margin-bottom: 12px; }
+
+    /* VISUAL FEEDBACK COMPLETION ANIMATION */
+    .completing { animation: completeTaskAnim 0.4s forwards; pointer-events: none; }
+    @keyframes completeTaskAnim {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(0.96); opacity: 0.8; background: rgba(16, 185, 129, 0.3) !important; box-shadow: 0 0 16px rgba(16, 185, 129, 0.5); }
+      100% { transform: scale(0.9); opacity: 0; }
+    }
 
     /* SMART CAPTURE GALLERY */
     .photo-gallery { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 12px; scroll-snap-type: x mandatory; scrollbar-width: none; }
@@ -204,10 +214,15 @@
     .photo-card { flex: 0 0 140px; height: 100px; scroll-snap-align: start; border-radius: 14px; background-size: cover; background-position: center; border: 1px solid var(--glass-border); position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
     .del-photo { position: absolute; top: -6px; right: -6px; background: var(--critical); color: white; border: none; width: 24px; height: 24px; border-radius: 12px; font-weight: bold; font-size: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
-    /* TIMER CARD */
-    .timer-card { display: flex; justify-content: space-between; align-items: center; padding: 18px; margin-bottom: 24px; }
-    .timer-info { display: flex; align-items: center; gap: 14px; }
-    .timer-display { font-size: 28px; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--text); letter-spacing: 1px; }
+    /* SLEEK CIRCULAR FOCUS TIMER CARD */
+    .timer-card { display: flex; align-items: center; gap: 16px; padding: 12px 16px; margin-bottom: 16px; }
+    .timer-ring-container { position: relative; width: 44px; height: 44px; cursor: pointer; transition: transform 0.2s; }
+    .timer-ring-container:active { transform: scale(0.9); }
+    .timer-circular-chart { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .timer-circle-bg { fill: none; stroke: rgba(0,0,0,0.05); stroke-width: 3; }
+    .timer-circle { fill: none; stroke: var(--accent); stroke-width: 3; stroke-linecap: round; transition: stroke-dasharray 1s linear; }
+    .timer-icon-wrap { position: absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; color: var(--accent); }
+    .timer-display-group { display: flex; flex-direction: column; justify-content: center; }
   </style>
 </head>
 <body>
@@ -273,20 +288,44 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
         Back
       </button>
-      <h1 id="detail-title" style="margin:0;"></h1>
+      <h1 id="detail-title"></h1>
     </div>
     
-    <h3>Current Status</h3>
     <div id="detail-statuses"></div>
 
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; margin-bottom: 12px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; margin-bottom: 8px;">
       <h3 style="margin: 0;">Smart Capture</h3>
-      <button class="add-btn" style="padding: 6px 14px; font-size: 14px; display: flex; align-items: center; gap: 6px;" onclick="document.getElementById('camera-input').click()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Scan
+      <button class="add-btn" style="padding: 6px 14px; font-size: 13px; display: flex; align-items: center; gap: 6px;" onclick="document.getElementById('camera-input').click()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Scan
       </button>
     </div>
     <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none" onchange="processPhoto(event)">
     <div class="photo-gallery" id="photo-gallery"></div>
+
+    <h3>Homework</h3>
+    <div class="input-group">
+      <input type="text" id="hw-desc" placeholder="Homework description...">
+      <input type="date" id="hw-date">
+      <button class="add-btn" onclick="addHomework()">Add</button>
+    </div>
+    <div id="hw-list"></div>
+
+    <!-- NEW SLEEK PROGRESS RING TIMER -->
+    <div class="timer-card glass-card">
+      <div class="timer-ring-container" onclick="toggleTimer()">
+        <svg viewBox="0 0 36 36" class="timer-circular-chart">
+          <path class="timer-circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+          <path class="timer-circle" id="timer-progress" stroke-dasharray="100, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+        </svg>
+        <div class="timer-icon-wrap" id="timer-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        </div>
+      </div>
+      <div class="timer-display-group">
+        <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Focus Timer</div>
+        <div style="font-size: 26px; font-weight: 800; font-family: 'Outfit', sans-serif; line-height: 1.1; color: var(--text);" id="timer-display">25:00</div>
+      </div>
+    </div>
 
     <h3>Grades & Assessments</h3>
     <div id="average-banner" class="average-banner glass-card">No Grades Logged</div>
@@ -297,25 +336,6 @@
       <button class="add-btn" onclick="addGrade()">Add</button>
     </div>
     <div id="grades-list"></div>
-
-    <h3>Homework</h3>
-    <div class="input-group">
-      <input type="text" id="hw-desc" placeholder="Homework description...">
-      <input type="date" id="hw-date">
-      <button class="add-btn" onclick="addHomework()">Add</button>
-    </div>
-    <div id="hw-list"></div>
-    
-    <h3>Focus Timer</h3>
-    <div class="timer-card glass-card">
-      <div class="timer-info">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-        <div class="timer-display" id="timer-display">25:00</div>
-      </div>
-      <button class="add-btn" style="padding: 10px 20px;" onclick="toggleTimer()" id="timer-toggle">
-        <svg id="icon-play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-      </button>
-    </div>
 
     <h3>Notes</h3>
     <textarea id="subject-notes" placeholder="Add additional information here..." onblur="saveNotes()"></textarea>
@@ -457,9 +477,8 @@
       const todaysClasses = getTodaysTimetable();
       const ttSection = document.getElementById('dynamic-timetable-section');
       if (todaysClasses) {
-        ttSection.innerHTML = `<h2>Today's Schedule</h2><div class="horizontal-scroll" style="margin-bottom: 24px;">${todaysClasses.map((className, index) => {
+        ttSection.innerHTML = `<h2>Today's Schedule</h2><div class="horizontal-scroll" style="margin-bottom: 20px;">${todaysClasses.map((className, index) => {
           const matchingSub = subjectsData.find(s => s.name.toLowerCase() === className.toLowerCase());
-          // Make sessions darker grey, Community Groups normal glass
           const isSession = sessionLabels[index].includes('Session');
           const cCol = matchingSub ? statuses[matchingSub.status].color : (isSession ? 'var(--darker-glass)' : 'var(--glass-bg)');
           const bCol = matchingSub ? statuses[matchingSub.status].hex : 'var(--glass-border)';
@@ -476,21 +495,20 @@
       document.getElementById('subjects-list').innerHTML = subjectsData.map(sub => `
         <div class="card glass-card" data-id="${sub.id}" style="background-color: ${statuses[sub.status].color}; border-color: ${statuses[sub.status].hex}; opacity: 0.9;" onclick="openDetail('${sub.id}')">
           <div class="boxes-container">
-            ${[0, 1, 2, 3, 4].map(i => `
-              <div class="box ${sub.status === i ? 'active' : ''}" style="--box-color: ${statuses[i].hex};" onclick="event.stopPropagation(); setStatus('${sub.id}', ${i})"></div>
-            `).join('')}
+            ${[0, 1, 2, 3, 4].map(i => `<div class="box ${sub.status === i ? 'active' : ''}" style="--box-color: ${statuses[i].hex};" onclick="event.stopPropagation(); setStatus('${sub.id}', ${i})"></div>`).join('')}
           </div>
           <div class="subject-title">${sub.name}</div>
         </div>
       `).join('');
 
-      // Global Tasks with Rich Dark Blue
+      // Global Tasks with IDs for animation
       document.getElementById('global-notes-list').innerHTML = globalNotes.map(n => {
         const overdueClass = isOverdue(n.date) ? 'overdue' : '';
-        return `<div class="list-item glass-card task-card ${overdueClass}"><div><div style="font-weight: 500; font-size: 16px;">${n.text}</div><div class="date-badge">Due: ${formatDate(n.date)}</div></div><button class="delete-btn" onclick="deleteGlobal('${n.id}')">×</button></div>`
+        return `<div id="global-item-${n.id}" class="list-item glass-card task-card ${overdueClass}"><div><div style="font-weight: 500; font-size: 16px;">${n.text}</div><div class="date-badge">Due: ${formatDate(n.date)}</div></div><button class="delete-btn" onclick="completeGlobalAnim('${n.id}')">×</button></div>`
       }).join('');
     }
 
+    // --- SMART CAPTURE ---
     function processPhoto(event) {
       const file = event.target.files[0]; if (!file) return; playSound('pop');
       const reader = new FileReader();
@@ -510,7 +528,7 @@
     }
     function deletePhoto(id) { playSound('tick'); const sub = subjectsData.find(s => s.id === currentSubjectId); sub.photos = sub.photos.filter(p => p.id !== id); saveData(); renderDetail(); }
 
-    // --- NEW ZOOM-OUT, SLIDE, ZOOM-IN FLIP ANIMATION ---
+    // --- ZOOM-OUT, SLIDE, ZOOM-IN ANIMATION ---
     function animateReorder(clickedSubId) {
       const list = document.getElementById('subjects-list'); const cards = Array.from(list.children);
       const firstPositions = {}; cards.forEach(card => firstPositions[card.dataset.id] = card.getBoundingClientRect());
@@ -530,20 +548,12 @@
         const deltaY = prevRect.top - currentRect.top;
         if (deltaY !== 0) {
           const isClicked = (id === clickedSubId);
-          // Step 1: Snap back to original position
-          card.style.transition = 'none'; 
-          card.style.transform = `translateY(${deltaY}px)`;
-          card.style.zIndex = isClicked ? '1' : '10';
+          card.style.transition = 'none'; card.style.transform = `translateY(${deltaY}px)`; card.style.zIndex = isClicked ? '1' : '10';
           
           requestAnimationFrame(() => requestAnimationFrame(() => {
-            // Step 2: Zoom out & slide fluidly
-            card.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-            card.style.transform = `translateY(0) scale(0.95)`;
-            
-            // Step 3: Zoom back in
+            card.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)'; card.style.transform = `translateY(0) scale(0.95)`;
             setTimeout(() => { 
-              card.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-              card.style.transform = `translateY(0) scale(1)`;
+              card.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'; card.style.transform = `translateY(0) scale(1)`;
               setTimeout(() => { card.style.transition = 'all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)'; card.style.zIndex = ''; }, 300); 
             }, 400); 
           }));
@@ -577,15 +587,36 @@
       }).join('');
       document.getElementById('average-banner').innerText = totalOut > 0 ? `Current Average: ${Math.round((totalScore/totalOut)*100)}%` : "No Grades Logged";
 
+      // Homework items with IDs for animation
       document.getElementById('hw-list').innerHTML = sub.homework.map(hw => {
         const overdueClass = isOverdue(hw.date) ? 'overdue' : '';
-        // Homework uses the rich blue task card
-        return `<div class="list-item glass-card task-card ${overdueClass}"><div><div style="font-weight: 500; font-size: 16px;">${hw.text}</div><div class="date-badge">Due: ${formatDate(hw.date)}</div></div><button class="delete-btn" onclick="deleteHomework('${hw.id}')">×</button></div>`
+        return `<div id="hw-item-${hw.id}" class="list-item glass-card task-card ${overdueClass}"><div><div style="font-weight: 500; font-size: 16px;">${hw.text}</div><div class="date-badge">Due: ${formatDate(hw.date)}</div></div><button class="delete-btn" onclick="completeHomeworkAnim('${hw.id}')">×</button></div>`
       }).join('');
     }
 
-    function deleteGlobal(id) { playSound('tick'); addRingScore(); globalNotes = globalNotes.filter(n => n.id !== id); saveData(); renderHome(false); }
-    function deleteHomework(hwId) { playSound('tick'); addRingScore(); const sub = subjectsData.find(s => s.id === currentSubjectId); sub.homework = sub.homework.filter(h => h.id !== hwId); saveData(); renderDetail(); }
+    // --- VISUAL FEEDBACK COMPLETION ---
+    function completeGlobalAnim(id) {
+      playSound('success');
+      const el = document.getElementById(`global-item-${id}`);
+      if (el) {
+        el.classList.add('completing');
+        const btn = el.querySelector('.delete-btn'); if(btn) { btn.innerHTML = '✓'; btn.style.color = '#10B981'; }
+        setTimeout(() => { deleteGlobal(id); }, 400);
+      } else { deleteGlobal(id); }
+    }
+
+    function completeHomeworkAnim(hwId) {
+      playSound('success');
+      const el = document.getElementById(`hw-item-${hwId}`);
+      if (el) {
+        el.classList.add('completing');
+        const btn = el.querySelector('.delete-btn'); if(btn) { btn.innerHTML = '✓'; btn.style.color = '#10B981'; }
+        setTimeout(() => { deleteHomework(hwId); }, 400);
+      } else { deleteHomework(hwId); }
+    }
+
+    function deleteGlobal(id) { addRingScore(); globalNotes = globalNotes.filter(n => n.id !== id); saveData(); renderHome(false); }
+    function deleteHomework(hwId) { addRingScore(); const sub = subjectsData.find(s => s.id === currentSubjectId); sub.homework = sub.homework.filter(h => h.id !== hwId); saveData(); renderDetail(); }
     
     function addGrade() { playSound('pop'); const n = document.getElementById('grade-name'); const s = document.getElementById('grade-score'); const o = document.getElementById('grade-out-of'); if(!n.value||!s.value||!o.value) return; subjectsData.find(sub => sub.id === currentSubjectId).grades.push({ id: Date.now().toString(), name: n.value, score: s.value, outOf: o.value }); n.value=''; s.value=''; o.value=''; saveData(); renderDetail(); }
     function deleteGrade(gId) { playSound('tick'); const sub = subjectsData.find(s => s.id === currentSubjectId); sub.grades = sub.grades.filter(g => g.id !== gId); saveData(); renderDetail(); }
@@ -595,19 +626,33 @@
     function addDeadline() { playSound('pop'); const n = document.getElementById('dl-name'); const d = document.getElementById('dl-date'); if(!n.value||!d.value) return; deadlines.push({ id: Date.now().toString(), name: n.value, date: d.value }); n.value=''; d.value=''; saveData(); alert("Major Deadline Added!"); }
     function deleteDeadline(id) { playSound('tick'); deadlines = deadlines.filter(d => d.id !== id); saveData(); renderHome(false); }
 
+    // --- CIRCULAR PROGRESS TIMER ---
     let timerInterval; let timeLeft = 25 * 60; let isRunning = false;
     const playIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`;
     const pauseIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
 
     function toggleTimer() {
-      const btn = document.getElementById('timer-toggle'); playSound('tick');
-      if (isRunning) { clearInterval(timerInterval); isRunning = false; btn.innerHTML = playIcon; } 
-      else { 
-        isRunning = true; btn.innerHTML = pauseIcon; 
+      const iconWrap = document.getElementById('timer-icon');
+      const progressRing = document.getElementById('timer-progress');
+      playSound('tick');
+      
+      if (isRunning) { 
+        clearInterval(timerInterval); isRunning = false; iconWrap.innerHTML = playIcon; 
+      } else { 
+        isRunning = true; iconWrap.innerHTML = pauseIcon; 
         timerInterval = setInterval(() => { 
           timeLeft--; let m = Math.floor(timeLeft/60); let s = timeLeft%60; 
           document.getElementById('timer-display').innerText = `${m}:${s<10?'0':''}${s}`; 
-          if (timeLeft <= 0) { clearInterval(timerInterval); isRunning = false; btn.innerHTML = playIcon; timeLeft = 25*60; playSound('success'); addRingScore(); alert("Focus session complete!"); } 
+          
+          let percent = (timeLeft / (25 * 60)) * 100;
+          progressRing.style.strokeDasharray = `${percent}, 100`;
+
+          if (timeLeft <= 0) { 
+            clearInterval(timerInterval); isRunning = false; iconWrap.innerHTML = playIcon; 
+            timeLeft = 25*60; progressRing.style.strokeDasharray = `100, 100`; 
+            document.getElementById('timer-display').innerText = `25:00`;
+            playSound('success'); addRingScore(); alert("Focus session complete!"); 
+          } 
         }, 1000); 
       }
     }
