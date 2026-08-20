@@ -18,8 +18,9 @@
     :root {
       --bg-base: #F2F2F7;
       --card-bg: #FFFFFF;
-      --card-border: rgba(0, 0, 0, 0.06);
-      --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.02);
+      --card-border: rgba(0, 0, 0, 0.04);
+      --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.02);
+      --input-bg: rgba(0, 0, 0, 0.04);
       
       --text-primary: #1C1C1E;
       --text-secondary: #8E8E93;
@@ -36,8 +37,9 @@
       :root {
         --bg-base: #000000;
         --card-bg: #1C1C1E;
-        --card-border: rgba(255, 255, 255, 0.08);
-        --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        --card-border: rgba(255, 255, 255, 0.05);
+        --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
+        --input-bg: rgba(255, 255, 255, 0.08);
         
         --text-primary: #F5F5F5;
         --text-secondary: #98989D;
@@ -79,7 +81,7 @@
       100% { opacity: 1; transform: scale(1) translateY(0); }
     }
 
-    /* STAGGERED CASCADING LIST ENTRIES */
+    /* STAGGERED CASCADING */
     .cascade-item { animation: cascadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
     @keyframes cascadeIn {
       from { opacity: 0; transform: translateY(12px) scale(0.98); }
@@ -93,7 +95,7 @@
     .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
     h1 { font-size: clamp(28px, 6vw, 34px); font-weight: 800; margin: 0; color: var(--text-primary); }
     h2 { font-size: 19px; font-weight: 700; margin-top: 24px; margin-bottom: 12px; color: var(--text-primary); }
-    h3 { font-size: 13px; font-weight: 700; margin-top: 20px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-secondary); }
+    h3 { font-size: 14px; font-weight: 700; margin-top: 20px; margin-bottom: 8px; color: var(--text-secondary); }
 
     .icon-btn {
       background: var(--card-bg); border: 1px solid var(--card-border);
@@ -109,33 +111,34 @@
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       box-shadow: var(--card-shadow);
-      border-radius: 18px;
+      border-radius: 20px; /* Smoother, premium radius */
     }
 
     /* DASHBOARD GRID */
     .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-    .widget { padding: 14px; display: flex; flex-direction: column; justify-content: space-between; height: 100%; min-height: 94px; }
+    .widget { padding: 16px; display: flex; flex-direction: column; justify-content: space-between; height: 100%; min-height: 100px; }
     
     .simon-widget {
       background: var(--accent-grad); color: #FFFFFF; text-decoration: none; border: none;
       transition: transform 0.15s ease; cursor: pointer;
     }
     .simon-widget:active { transform: scale(0.97); }
-    .simon-title { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.5px; }
-    .simon-action { font-size: 16px; font-weight: 700; font-family: 'Outfit', sans-serif; display: flex; justify-content: space-between; align-items: center; width: 100%; }
+    .simon-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
+    .simon-action { font-size: 17px; font-weight: 700; font-family: 'Outfit', sans-serif; display: flex; justify-content: space-between; align-items: center; width: 100%; }
 
-    .widget-title { font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+    .widget-title { font-size: 13px; font-weight: 600; color: var(--text-secondary); }
     
     .ring-container { display: flex; align-items: center; gap: 10px; margin-top: auto; }
-    .circular-chart { width: 40px; height: 40px; flex-shrink: 0; }
-    .circle-bg { fill: none; stroke: rgba(0,0,0,0.06); stroke-width: 3.8; }
-    .circle { fill: none; stroke-width: 3.8; stroke-linecap: round; transition: stroke-dasharray 0.4s ease; stroke: var(--accent); }
-    .ring-text { font-size: 17px; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--text-primary); }
+    .circular-chart { width: 44px; height: 44px; flex-shrink: 0; }
+    /* Thickened rings for a premium feel */
+    .circle-bg { fill: none; stroke: rgba(0,0,0,0.06); stroke-width: 5; }
+    .circle { fill: none; stroke-width: 5; stroke-linecap: round; transition: stroke-dasharray 0.4s cubic-bezier(0.16, 1, 0.3, 1); stroke: var(--accent); }
+    .ring-text { font-size: 18px; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--text-primary); }
 
     /* HEALTH BAR */
-    .health-bar-container { padding: 14px; margin-bottom: 20px; }
-    .health-bar { display: flex; height: 10px; border-radius: 5px; overflow: hidden; background: rgba(0,0,0,0.05); margin-top: 8px; }
-    .health-segment { height: 100%; transition: width 0.4s ease; }
+    .health-bar-container { padding: 16px; margin-bottom: 20px; }
+    .health-bar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; background: var(--input-bg); margin-top: 8px; }
+    .health-segment { height: 100%; transition: width 0.4s ease; border-radius: 7px; }
 
     /* HORIZONTAL SCROLL CONTAINERS */
     .horizontal-scroll {
@@ -145,26 +148,27 @@
     }
     .horizontal-scroll::-webkit-scrollbar { display: none; }
     
-    .deadline-card { flex: 0 0 130px; scroll-snap-align: start; background: var(--accent-grad); color: #FFFFFF; border-radius: 16px; padding: 12px 14px; position: relative; }
+    .deadline-card { flex: 0 0 135px; scroll-snap-align: start; background: var(--accent-grad); color: #FFFFFF; border-radius: 18px; padding: 14px; position: relative; }
     .deadline-card.warning { background: linear-gradient(135deg, var(--warning), #D97706); }
     .deadline-card.critical { background: linear-gradient(135deg, var(--critical), #DC2626); }
-    .dl-days { font-size: 26px; font-weight: 800; font-family: 'Outfit', sans-serif; line-height: 1; }
-    .dl-label { font-size: 12px; font-weight: 500; opacity: 0.9; margin-top: 4px; }
+    .dl-days { font-size: 28px; font-weight: 800; font-family: 'Outfit', sans-serif; line-height: 1; }
+    .dl-label { font-size: 13px; font-weight: 500; opacity: 0.9; margin-top: 4px; }
 
-    .timetable-card { flex: 0 0 125px; scroll-snap-align: start; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; cursor: pointer; transition: transform 0.15s ease; }
+    .timetable-card { flex: 0 0 130px; scroll-snap-align: start; padding: 14px; display: flex; flex-direction: column; gap: 6px; cursor: pointer; transition: transform 0.15s ease; }
     .timetable-card:active { transform: scale(0.95); }
-    .tt-session { font-size: 10px; color: var(--text-secondary); font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
-    .tt-subject { font-size: 14px; font-weight: 700; color: var(--text-primary); line-height: 1.2; }
+    /* Humanized formatting */
+    .tt-session { font-size: 12px; color: var(--text-secondary); font-weight: 600; }
+    .tt-subject { font-size: 15px; font-weight: 700; color: var(--text-primary); line-height: 1.2; }
 
     /* SUBJECT CARDS */
     #subjects-list { display: flex; flex-direction: column; position: relative; }
     .card { 
-      padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; 
+      padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 14px; 
       transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; 
     }
-    .card:active { transform: scale(0.98); }
+    .card:active { transform: scale(0.97); }
     
-    .boxes-container { display: flex; gap: 5px; flex-shrink: 0; }
+    .boxes-container { display: flex; gap: 6px; flex-shrink: 0; }
     .box { 
       width: 22px; height: 22px; border-radius: 6px; 
       border: 1.5px solid rgba(0,0,0,0.12); 
@@ -175,7 +179,7 @@
     .box.active { 
       background-color: var(--box-color); 
       border-color: var(--box-color); 
-      transform: scale(1.1); 
+      transform: scale(1.15); 
       box-shadow: 0 2px 8px var(--box-color); 
     }
     .subject-title { font-size: 17px; font-weight: 600; flex: 1; line-height: 1.2; color: var(--text-primary); }
@@ -184,46 +188,48 @@
     .header-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
     .back-btn {
       display: flex; align-items: center; gap: 4px; color: var(--text-primary);
-      padding: 6px 12px; font-size: 14px; font-weight: 600; cursor: pointer;
-      transition: transform 0.15s ease;
+      padding: 8px 14px; font-size: 14px; font-weight: 600; cursor: pointer;
+      transition: transform 0.15s ease; border-radius: 16px;
     }
     .back-btn:active { transform: scale(0.92); }
     
+    /* Text wrap balance prevents awkward line breaks */
     #detail-title { 
-      font-size: clamp(20px, 5vw, 26px); font-weight: 800; line-height: 1.15; margin: 0; 
-      flex: 1; white-space: normal; word-break: break-word; 
+      font-size: clamp(22px, 6vw, 28px); font-weight: 800; line-height: 1.1; margin: 0; 
+      flex: 1; text-wrap: balance;
     }
 
     /* STATUS ROWS */
     .status-row { 
-      display: flex; align-items: center; gap: 12px; padding: 11px 14px; 
-      border-radius: 14px; margin-bottom: 6px; 
+      display: flex; align-items: center; gap: 14px; padding: 12px 16px; 
+      border-radius: 16px; margin-bottom: 8px; 
       transition: transform 0.15s ease, background-color 0.2s ease; cursor: pointer;
     }
-    .status-row:active { transform: scale(0.98); }
+    .status-row:active { transform: scale(0.97); }
     .status-row.active-status { background-color: var(--status-bg); border-color: var(--box-color); }
-    .status-label { font-size: 14px; font-weight: 600; color: var(--text-secondary); }
+    .status-label { font-size: 15px; font-weight: 600; color: var(--text-secondary); transition: color 0.2s ease; }
     .status-row.active-status .status-label { color: var(--text-primary); }
 
-    /* INPUT GROUPS */
-    .input-group { display: flex; gap: 8px; margin-bottom: 12px; width: 100%; }
+    /* SOFT INPUT GROUPS */
+    .input-group { display: flex; gap: 8px; margin-bottom: 16px; width: 100%; }
     input[type="text"], input[type="date"], input[type="number"], textarea { 
-      flex: 1; min-width: 0; padding: 11px 13px; border-radius: 12px; 
-      border: 1px solid var(--card-border); background: var(--card-bg);
-      color: var(--text-primary); font-size: 14px; font-family: inherit;
-      outline: none; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
+      flex: 1; min-width: 0; padding: 14px 16px; border-radius: 14px; 
+      border: none; background: var(--input-bg);
+      color: var(--text-primary); font-size: 15px; font-family: inherit;
+      outline: none; transition: background-color 0.2s ease;
     }
-    textarea { height: 85px; resize: none; width: 100%; margin-top: 2px; line-height: 1.4; }
+    input:focus, textarea:focus { background: rgba(0,0,0,0.08); }
+    textarea { height: 90px; resize: none; width: 100%; margin-top: 2px; line-height: 1.5; }
     
     button.add-btn {
       background: var(--accent-grad); color: #FFFFFF; border: none;
-      padding: 0 16px; border-radius: 12px; font-weight: 600; font-size: 14px;
+      padding: 0 18px; border-radius: 14px; font-weight: 600; font-size: 15px;
       flex-shrink: 0; transition: transform 0.15s ease; cursor: pointer;
     }
     button.add-btn:active { transform: scale(0.92); }
 
     /* LIST ITEMS */
-    .list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-radius: 14px; margin-bottom: 6px; transform-origin: top; overflow: hidden; }
+    .list-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-radius: 16px; margin-bottom: 8px; transform-origin: top; overflow: hidden; }
     
     /* RICH DARK BLUE TASKS */
     .task-card { background: var(--rich-blue) !important; color: #FFFFFF !important; border: none !important; }
@@ -231,25 +237,34 @@
     .task-card .date-badge { color: rgba(255,255,255,0.75) !important; }
     .task-card .delete-btn { color: rgba(255,255,255,0.85) !important; }
 
-    .date-badge { font-size: 12px; color: var(--text-secondary); font-weight: 500; margin-top: 2px; }
-    .delete-btn { color: var(--critical); background: none; border: none; font-weight: 400; font-size: 22px; padding: 0 6px; cursor: pointer; }
+    .date-badge { font-size: 13px; color: var(--text-secondary); font-weight: 500; margin-top: 4px; }
+    .delete-btn { color: var(--critical); background: none; border: none; font-weight: 400; font-size: 24px; padding: 0 8px; cursor: pointer; transition: transform 0.15s ease; }
     .delete-btn:active { transform: scale(0.8); }
-    .grade-badge { font-size: 13px; font-weight: 700; background: rgba(0,0,0,0.05); padding: 3px 8px; border-radius: 6px; color: var(--text-primary); }
-    .average-banner { padding: 12px; text-align: center; font-weight: 700; font-size: 15px; margin-bottom: 12px; }
+    
+    .grade-badge { font-size: 14px; font-weight: 700; background: rgba(0,0,0,0.05); padding: 4px 10px; border-radius: 8px; color: var(--text-primary); }
+    .average-banner { padding: 16px; text-align: center; font-weight: 700; font-size: 16px; margin-bottom: 16px; }
+
+    /* SMOOTH GREEN FADE-OUT ANIMATION */
+    .completing { animation: completeTaskAnim 0.35s ease forwards; pointer-events: none; }
+    @keyframes completeTaskAnim {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; background: #10B981 !important; transform: scale(0.97); }
+      100% { opacity: 0; transform: scale(0.92) translateY(-4px); }
+    }
 
     /* SMART CAPTURE GALLERY */
-    .photo-gallery { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory; scrollbar-width: none; }
+    .photo-gallery { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; scroll-snap-type: x mandatory; scrollbar-width: none; }
     .photo-gallery::-webkit-scrollbar { display: none; }
-    .photo-card { flex: 0 0 120px; height: 85px; scroll-snap-align: start; border-radius: 12px; background-size: cover; background-position: center; border: 1px solid var(--card-border); position: relative; }
-    .del-photo { position: absolute; top: -5px; right: -5px; background: var(--critical); color: #FFFFFF; border: none; width: 20px; height: 20px; border-radius: 50%; font-weight: bold; font-size: 11px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .photo-card { flex: 0 0 130px; height: 95px; scroll-snap-align: start; border-radius: 14px; background-size: cover; background-position: center; border: 1px solid var(--card-border); position: relative; }
+    .del-photo { position: absolute; top: -6px; right: -6px; background: var(--critical); color: #FFFFFF; border: none; width: 22px; height: 22px; border-radius: 50%; font-weight: bold; font-size: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
     /* COMPACT TIMER */
-    .timer-card { display: flex; align-items: center; gap: 14px; padding: 10px 14px; margin-bottom: 12px; }
-    .timer-ring-container { position: relative; width: 40px; height: 40px; cursor: pointer; flex-shrink: 0; }
+    .timer-card { display: flex; align-items: center; gap: 16px; padding: 14px 16px; margin-bottom: 16px; }
+    .timer-ring-container { position: relative; width: 44px; height: 44px; cursor: pointer; flex-shrink: 0; transition: transform 0.15s ease; }
     .timer-ring-container:active { transform: scale(0.92); }
     .timer-circular-chart { width: 100%; height: 100%; transform: rotate(-90deg); }
-    .timer-circle-bg { fill: none; stroke: rgba(0,0,0,0.06); stroke-width: 3.5; }
-    .timer-circle { fill: none; stroke: var(--accent); stroke-width: 3.5; stroke-linecap: round; transition: stroke-dasharray 1s linear; }
+    .timer-circle-bg { fill: none; stroke: rgba(0,0,0,0.06); stroke-width: 5; }
+    .timer-circle { fill: none; stroke: var(--accent); stroke-width: 5; stroke-linecap: round; transition: stroke-dasharray 1s linear; }
     .timer-icon-wrap { position: absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; color: var(--accent); }
   </style>
 </head>
@@ -262,13 +277,13 @@
     <div class="top-bar">
       <h1>Dashboard</h1>
       <button class="icon-btn" onclick="openScreen('settings-screen')">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
       </button>
     </div>
 
     <div class="dashboard-grid">
       <div class="widget app-card cascade-item">
-        <div class="widget-title">Daily Activity</div>
+        <div class="widget-title">Today's Goal</div>
         <div class="ring-container">
           <svg viewBox="0 0 36 36" class="circular-chart">
             <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
@@ -282,18 +297,18 @@
         <div class="simon-title">Portal</div>
         <div class="simon-action">
           Open Simon
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
         </div>
       </a>
     </div>
 
     <div class="health-bar-container app-card cascade-item">
-      <div class="widget-title" style="margin-bottom: 0;">Subject Health</div>
+      <div class="widget-title" style="margin-bottom: 0;">Overall Progress</div>
       <div class="health-bar" id="health-bar"></div>
     </div>
 
     <div id="deadline-section" style="display: none;" class="cascade-item">
-      <h2>Major Deadlines</h2>
+      <h2>Upcoming Deadlines</h2>
       <div class="horizontal-scroll" id="deadline-list"></div>
     </div>
 
@@ -302,7 +317,7 @@
     <h2 class="cascade-item">Subjects</h2>
     <div id="subjects-list"></div>
 
-    <h2 class="cascade-item">Global Tasks</h2>
+    <h2 class="cascade-item">My Tasks</h2>
     <div class="input-group cascade-item">
       <input type="text" id="global-task" placeholder="Task description...">
       <input type="date" id="global-date">
@@ -315,17 +330,17 @@
   <div id="detail-screen" class="screen">
     <div class="header-bar">
       <button class="back-btn app-card" onclick="goHome()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Back
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Back
       </button>
       <h1 id="detail-title"></h1>
     </div>
     
     <div id="detail-statuses" class="cascade-item"></div>
 
-    <div class="cascade-item" style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; margin-bottom: 6px;">
-      <h3 style="margin: 0;">Smart Capture</h3>
-      <button class="add-btn" style="padding: 5px 12px; font-size: 12px; display: flex; align-items: center; gap: 4px;" onclick="document.getElementById('camera-input').click()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Scan
+    <div class="cascade-item" style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; margin-bottom: 8px;">
+      <h3 style="margin: 0;">Captured Notes</h3>
+      <button class="add-btn" style="padding: 6px 14px; font-size: 13px; display: flex; align-items: center; gap: 6px;" onclick="document.getElementById('camera-input').click()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Scan
       </button>
     </div>
     <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none" onchange="processPhoto(event)">
@@ -346,16 +361,16 @@
           <path class="timer-circle" id="timer-progress" stroke-dasharray="100, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
         </svg>
         <div class="timer-icon-wrap" id="timer-icon">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
         </div>
       </div>
       <div>
-        <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">Focus Timer</div>
-        <div style="font-size: 22px; font-weight: 800; font-family: 'Outfit', sans-serif; line-height: 1; color: var(--text-primary);" id="timer-display">25:00</div>
+        <div style="font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">Study Timer</div>
+        <div style="font-size: 24px; font-weight: 800; font-family: 'Outfit', sans-serif; line-height: 1.1; color: var(--text-primary);" id="timer-display">25:00</div>
       </div>
     </div>
 
-    <h3 class="cascade-item">Grades & Assessments</h3>
+    <h3 class="cascade-item">My Grades</h3>
     <div id="average-banner" class="average-banner app-card cascade-item">No Grades Logged</div>
     <div class="input-group cascade-item">
       <input type="text" id="grade-name" placeholder="Name">
@@ -405,7 +420,7 @@
       10: ["Community Group", "English", "English", "General Mathematics", "General Mathematics", "Economics", "Economics", "Community Group"], 
       11: ["Community Group", "Physics", "Physics", "Legal studies", "Legal studies", "Pre mathematical methods", "Pre mathematical methods", "Community Group"] 
     };
-    const sessionLabels = ["AM Group", "Session 1", "Session 2", "Session 3", "Session 4", "Session 5", "Session 6", "PM Group"];
+    const sessionLabels = ["Morning Group", "Session 1", "Session 2", "Session 3", "Session 4", "Session 5", "Session 6", "Afternoon Group"];
 
     function getTodaysTimetable() {
       const anchor = new Date(2026, 7, 10); anchor.setHours(0,0,0,0);
@@ -499,17 +514,17 @@
         deadlines.sort((a, b) => getDaysDiff(a.date) - getDaysDiff(b.date));
         document.getElementById('deadline-list').innerHTML = deadlines.map(dl => {
           const days = getDaysDiff(dl.date); let stateClass = ''; if (days <= 2) stateClass = 'critical'; else if (days <= 7) stateClass = 'warning';
-          return `<div class="deadline-card ${stateClass}"><div class="dl-days">${days < 0 ? '0' : days}</div><div class="dl-label">Days until<br>${dl.name}</div><button class="icon-btn" style="position:absolute; top:6px; right:6px; width:22px; height:22px; font-size:12px; color:white; background:rgba(0,0,0,0.15); border:none;" onclick="deleteDeadline('${dl.id}')">×</button></div>`;
+          return `<div class="deadline-card ${stateClass}"><div class="dl-days">${days < 0 ? '0' : days}</div><div class="dl-label">Days until<br>${dl.name}</div><button class="icon-btn" style="position:absolute; top:8px; right:8px; width:26px; height:26px; font-size:14px; color:white; background:rgba(0,0,0,0.15); border:none;" onclick="deleteDeadline('${dl.id}')">×</button></div>`;
         }).join('');
       } else { dlSection.style.display = 'none'; }
 
       const todaysClasses = getTodaysTimetable();
       const ttSection = document.getElementById('dynamic-timetable-section');
       if (todaysClasses) {
-        ttSection.innerHTML = `<h2>Today's Schedule</h2><div class="horizontal-scroll" style="margin-bottom: 16px;">${todaysClasses.map((className, index) => {
+        ttSection.innerHTML = `<h2>Today's Schedule</h2><div class="horizontal-scroll" style="margin-bottom: 20px;">${todaysClasses.map((className, index) => {
           const matchingSub = subjectsData.find(s => s.name.toLowerCase() === className.toLowerCase());
           const isSession = sessionLabels[index].includes('Session');
-          const cCol = matchingSub ? statuses[matchingSub.status].color : (isSession ? 'var(--card-border)' : 'var(--card-bg)');
+          const cCol = matchingSub ? statuses[matchingSub.status].color : (isSession ? 'rgba(0,0,0,0.03)' : 'var(--card-bg)');
           const bCol = matchingSub ? statuses[matchingSub.status].hex : 'var(--card-border)';
           const act = matchingSub ? `onclick="openDetail('${matchingSub.id}')"` : '';
           return `<div class="timetable-card app-card" style="background-color: ${cCol}; border-color: ${bCol};" ${act}><div class="tt-session">${sessionLabels[index]}</div><div class="tt-subject">${className}</div></div>`;
@@ -553,24 +568,17 @@
     }
     function deletePhoto(id) { playSound('tick'); const sub = subjectsData.find(s => s.id === currentSubjectId); sub.photos = sub.photos.filter(p => p.id !== id); saveData(); renderDetail(); }
 
-    // --- TRUE 3-STEP FLIP ANIMATION ---
+    // --- FLUID ZOOM-SLIDE PHYSICS ---
     function animateReorder(clickedSubId) {
-      const list = document.getElementById('subjects-list'); 
-      const cards = Array.from(list.children);
-      
-      // Stop cascade animations from replaying when DOM updates
-      cards.forEach(c => c.style.animation = 'none');
-      
-      const firstPositions = {}; 
-      cards.forEach(card => firstPositions[card.dataset.id] = card.getBoundingClientRect());
+      const list = document.getElementById('subjects-list'); const cards = Array.from(list.children);
+      const firstPositions = {}; cards.forEach(card => firstPositions[card.dataset.id] = card.getBoundingClientRect());
       
       subjectsData.sort((a, b) => a.status - b.status);
       subjectsData.forEach(sub => {
         const card = list.querySelector(`.card[data-id="${sub.id}"]`);
         if (card) {
           list.appendChild(card); 
-          card.style.backgroundColor = statuses[sub.status].color; 
-          card.style.borderColor = statuses[sub.status].hex;
+          card.style.backgroundColor = statuses[sub.status].color; card.style.borderColor = statuses[sub.status].hex;
           card.querySelectorAll('.box').forEach((box, i) => { if (i === sub.status) box.classList.add('active'); else box.classList.remove('active'); });
         }
       });
@@ -578,33 +586,16 @@
       cards.forEach(card => {
         const id = card.dataset.id; const currentRect = card.getBoundingClientRect(); const prevRect = firstPositions[id];
         const deltaY = prevRect.top - currentRect.top;
-        
         if (deltaY !== 0) {
           const isClicked = (id === clickedSubId);
-          
-          // 1. Invert (Snap back visually to start position)
-          card.style.transition = 'none'; 
-          card.style.transform = `translateY(${deltaY}px) scale(1)`; 
-          card.style.zIndex = isClicked ? '1' : '10';
+          card.style.transition = 'none'; card.style.transform = `translateY(${deltaY}px)`; card.style.zIndex = isClicked ? '1' : '10';
           
           requestAnimationFrame(() => requestAnimationFrame(() => {
-            if (isClicked) {
-              // 2. Dive and Glide (Shrink down and slide behind)
-              card.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)'; 
-              card.style.transform = `translateY(0) scale(0.88)`;
-              
-              // 3. Pop Up (Return to full size once settled)
-              setTimeout(() => { 
-                card.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'; 
-                card.style.transform = `translateY(0) scale(1)`;
-                setTimeout(() => { card.style.transition = ''; card.style.zIndex = ''; }, 300); 
-              }, 350); 
-            } else {
-              // Other cards just glide over the top smoothly
-              card.style.transition = 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'; 
-              card.style.transform = `translateY(0) scale(1)`;
-              setTimeout(() => { card.style.transition = ''; card.style.zIndex = ''; }, 500); 
-            }
+            card.style.transition = 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)'; card.style.transform = `translateY(0) scale(0.97)`;
+            setTimeout(() => { 
+              card.style.transition = 'transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)'; card.style.transform = `translateY(0) scale(1)`;
+              setTimeout(() => { card.style.transition = ''; card.style.zIndex = ''; }, 250); 
+            }, 300); 
           }));
         }
       });
@@ -615,7 +606,6 @@
       if (currentSubjectId === null) { 
         animateReorder(subId); updateHealthBarUI(); 
       } else { 
-        // INSTANT IN-PLACE DOM UPDATE (No detail screen flash)
         const rows = document.querySelectorAll('.status-row');
         rows.forEach((row, i) => {
           const box = row.querySelector('.box');
@@ -709,8 +699,8 @@
     function deleteDeadline(id) { playSound('tick'); deadlines = deadlines.filter(d => d.id !== id); saveData(); renderHome(false); }
 
     let timerInterval; let timeLeft = 25 * 60; let isRunning = false;
-    const playIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`;
-    const pauseIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
+    const playIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`;
+    const pauseIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
 
     function toggleTimer() {
       const iconWrap = document.getElementById('timer-icon'); const progressRing = document.getElementById('timer-progress'); playSound('tick');
