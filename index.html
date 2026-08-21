@@ -74,18 +74,22 @@
     .back-btn { display: flex; align-items: center; gap: 4px; padding: 8px 14px; font-size: 14px; font-weight: 600; border-radius: 16px; }
     .icon-btn:active, .back-btn:active { transform: scale(0.92); }
     
-    /* STANDARD APP CARD - Fixes Safari shadow issues without jumping layers */
     .app-card { 
+      position: relative; 
       background: var(--card-bg); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); 
-      border: 1px solid var(--card-border); box-shadow: var(--card-shadow); border-radius: 20px; 
-      transition: box-shadow 0.3s ease; 
+      border: 1px solid var(--card-border); border-radius: 20px; 
+    }
+    .app-card::before {
+      content: ''; position: absolute; inset: 0; border-radius: inherit;
+      box-shadow: var(--card-shadow); z-index: -1; pointer-events: none; transition: box-shadow 0.3s ease;
     }
 
     .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
     .widget { padding: 16px; display: flex; flex-direction: column; justify-content: space-between; height: 100%; min-height: 100px; text-decoration: none; cursor: pointer; transition: transform 0.15s ease; }
     .widget:active { transform: scale(0.97); }
     
-    .simon-widget { background: var(--accent-grad) !important; color: #FFFFFF !important; border: none !important; box-shadow: 0 10px 24px rgba(30, 41, 59, 0.3) !important; }
+    .simon-widget { background: var(--accent-grad) !important; color: #FFFFFF !important; border: none !important; }
+    .simon-widget::before { box-shadow: 0 10px 24px rgba(30, 41, 59, 0.3) !important; }
     .simon-widget .simon-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
     .simon-widget .simon-action { font-size: 17px; font-weight: 700; font-family: 'Outfit'; display: flex; justify-content: space-between; align-items: center; width: 100%; }
 
@@ -107,9 +111,12 @@
     .horizontal-scroll::-webkit-scrollbar { display: none; }
     .horizontal-scroll::after { content: ''; flex: 0 0 4px; }
     
-    .deadline-card { flex: 0 0 135px; scroll-snap-align: start; background: var(--accent-grad); color: #FFFFFF; border-radius: 18px; padding: 14px; position: relative; box-shadow: 0 8px 24px rgba(30, 41, 59, 0.25); }
-    .deadline-card.warning { background: linear-gradient(135deg, var(--warning), #D97706); box-shadow: 0 8px 24px rgba(245, 158, 11, 0.25); }
-    .deadline-card.critical { background: linear-gradient(135deg, var(--critical), #DC2626); box-shadow: 0 8px 24px rgba(239, 68, 68, 0.25); animation: pulseAlert 2s infinite; }
+    .deadline-card { flex: 0 0 135px; scroll-snap-align: start; background: var(--accent-grad); color: #FFFFFF; border-radius: 18px; padding: 14px; position: relative; }
+    .deadline-card::before { content: ''; position: absolute; inset: 0; border-radius: inherit; z-index: -1; box-shadow: 0 8px 24px rgba(30, 41, 59, 0.25); }
+    .deadline-card.warning { background: linear-gradient(135deg, var(--warning), #D97706); }
+    .deadline-card.warning::before { box-shadow: 0 8px 24px rgba(245, 158, 11, 0.25); }
+    .deadline-card.critical { background: linear-gradient(135deg, var(--critical), #DC2626); animation: pulseAlert 2s infinite; }
+    .deadline-card.critical::before { box-shadow: 0 8px 24px rgba(239, 68, 68, 0.25); }
     
     .dl-days { font-size: 28px; font-weight: 800; font-family: 'Outfit'; line-height: 1; }
     .dl-label { font-size: 13px; font-weight: 500; opacity: 0.9; margin-top: 4px; }
@@ -121,18 +128,18 @@
     .tt-subject { font-size: 15px; font-weight: 700; line-height: 1.2; }
 
     #subjects-list { display: flex; flex-direction: column; position: relative; }
-    .card { padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 14px; transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; }
+    .card { padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 14px; transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; position: relative; }
     .card:active { transform: scale(0.97); }
     .boxes-container { display: flex; gap: 6px; flex-shrink: 0; }
     .box { width: 24px; height: 24px; border-radius: 8px; border: 2px solid rgba(0,0,0,0.15); background: rgba(255,255,255,0.95); box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); transition: all 0.2s ease; }
     .box:active { transform: scale(0.7); }
-    .box.active { background-color: var(--box-color); border-color: var(--box-color); transform: scale(1.15); box-shadow: 0 4px 12px var(--box-color); }
-    .subject-title { font-size: 17px; font-weight: 600; flex: 1; line-height: 1.2; }
+    .box.active { background-color: var(--box-color); border-color: var(--box-color); transform: scale(1.15); box-shadow: 0 4px 16px var(--box-color); }
+    .subject-title { font-size: 17px; font-weight: 600; flex: 1; line-height: 1.2; color: var(--text-primary); }
 
     .header-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
     #detail-title { font-size: clamp(22px, 6vw, 28px); font-weight: 800; line-height: 1.1; margin: 0; flex: 1; text-wrap: balance; text-shadow: 0 2px 12px rgba(0,0,0,0.05); }
 
-    .status-row { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-radius: 16px; margin-bottom: 8px; transition: transform 0.15s ease, background-color 0.2s ease; cursor: pointer; }
+    .status-row { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-radius: 16px; margin-bottom: 8px; transition: transform 0.15s ease, background-color 0.2s ease; cursor: pointer; position: relative; }
     .status-row:active { transform: scale(0.97); }
     .status-row.active-status { background-color: var(--status-bg); border-color: var(--box-color); }
     .status-label { font-size: 15px; font-weight: 600; color: var(--text-secondary); transition: color 0.2s ease; }
@@ -145,9 +152,11 @@
     button.add-btn { background: var(--accent-grad); color: #FFFFFF; border: none; padding: 0 18px; border-radius: 14px; font-weight: 600; font-size: 15px; flex-shrink: 0; transition: transform 0.15s ease; cursor: pointer; box-shadow: 0 6px 16px rgba(30, 41, 59, 0.2); }
     button.add-btn:active { transform: scale(0.92); }
 
-    .list-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-radius: 16px; margin-bottom: 8px; transform-origin: top; }
-    .task-card { background: var(--rich-blue) !important; color: #FFFFFF !important; border: none !important; box-shadow: 0 8px 24px rgba(26, 54, 93, 0.25); }
-    .task-card.overdue { background: linear-gradient(135deg, var(--critical), #DC2626) !important; box-shadow: 0 8px 24px rgba(239, 68, 68, 0.25); }
+    .list-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-radius: 16px; margin-bottom: 8px; transform-origin: top; position: relative; }
+    .task-card { background: var(--rich-blue) !important; color: #FFFFFF !important; border: none !important; }
+    .task-card::before { box-shadow: 0 8px 24px rgba(26, 54, 93, 0.25) !important; }
+    .task-card.overdue { background: linear-gradient(135deg, var(--critical), #DC2626) !important; }
+    .task-card.overdue::before { box-shadow: 0 8px 24px rgba(239, 68, 68, 0.25) !important; }
     .task-card .date-badge { color: rgba(255,255,255,0.75) !important; }
     .task-card .delete-btn { color: rgba(255,255,255,0.85) !important; }
     .date-badge { font-size: 13px; color: var(--text-secondary); font-weight: 500; margin-top: 4px; }
@@ -161,7 +170,8 @@
 
     .photo-gallery { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 24px; margin-bottom: -16px; scroll-snap-type: x mandatory; scrollbar-width: none; }
     .photo-gallery::-webkit-scrollbar { display: none; }
-    .photo-card { flex: 0 0 130px; height: 95px; scroll-snap-align: start; border-radius: 14px; background-size: cover; background-position: center; border: 1px solid var(--card-border); position: relative; box-shadow: var(--card-shadow); }
+    .photo-card { flex: 0 0 130px; height: 95px; scroll-snap-align: start; border-radius: 14px; background-size: cover; background-position: center; border: 1px solid var(--card-border); position: relative; }
+    .photo-card::before { content: ''; position: absolute; inset: 0; border-radius: inherit; z-index: -1; box-shadow: var(--card-shadow); }
     .del-photo { position: absolute; top: -6px; right: -6px; background: var(--critical); color: #FFFFFF; border: none; width: 22px; height: 22px; border-radius: 50%; font-weight: bold; font-size: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
     .timer-card { display: flex; align-items: center; gap: 16px; padding: 14px 16px; margin-bottom: 16px; }
@@ -204,7 +214,7 @@
           <div class="ring-text" id="ring-score">0/5</div>
         </div>
       </div>
-      <a href="https://simon.iona.vic.edu.au/" target="_blank" id="home-simon-card" class="widget simon-widget cascade-item" style="border-radius: 20px;">
+      <a href="https://simon.iona.vic.edu.au/" target="_blank" id="home-simon-card" class="widget simon-widget cascade-item" style="border-radius: 20px; box-shadow: 0 10px 24px rgba(30, 41, 59, 0.3);">
         <div class="simon-title">Portal</div>
         <div class="simon-action">Open Simon<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></div>
       </a>
@@ -317,13 +327,18 @@
     const documentById = id => document.getElementById(id);
     const getSub = id => subjectsData.find(s => s.id === id);
 
-    // Restored the original default Unsplash Background
     let appSettings = JSON.parse(localStorage.getItem('org_settings')) || { 
       bgEnabled: true, 
       bgImage: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop', 
       bgOpacity: 70 
     };
     
+    // Auto-repair script: If background is broken or 'default', force it back to Unsplash
+    if (appSettings.bgImage === 'default' || (!appSettings.bgImage.startsWith('data:image') && !appSettings.bgImage.startsWith('http'))) { 
+      appSettings.bgImage = 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop'; 
+      localStorage.setItem('org_settings', JSON.stringify(appSettings)); 
+    }
+
     function applySettings() {
       const b = documentById('app-background');
       if (appSettings.bgEnabled) { 
@@ -477,8 +492,10 @@
       }
 
       if (isInitial) subjectsData.sort((a, b) => a.status - b.status);
+      
+      // STRICT DESCENDING Z-INDEX TO PREVENT SHADOW CLIPPING
       documentById('subjects-list').innerHTML = subjectsData.map((sub, i) => `
-        <div class="card app-card ${anim}" data-id="${sub.id}" style="background-color: ${statuses[sub.status].color}; border-color: ${statuses[sub.status].hex}; animation-delay: ${0.05*i}s;" onclick="openDetail('${sub.id}')">
+        <div class="card app-card ${anim}" data-id="${sub.id}" style="background-color: ${statuses[sub.status].color}; border-color: ${statuses[sub.status].hex}; animation-delay: ${0.05*i}s; z-index: ${100 - i};" onclick="openDetail('${sub.id}')">
           <div class="boxes-container">
             ${[0,1,2,3,4].map(j => `<div class="box ${sub.status===j?'active':''}" style="--box-color: ${statuses[j].hex};" onclick="event.stopPropagation(); setStatus('${sub.id}', ${j})"></div>`).join('')}
           </div>
@@ -517,11 +534,10 @@
       saveData(); renderDetail(true); 
     }
 
-    // STRICT Z-INDEX ENGINE (Fixes the overlapping shadow bug permanently)
+    // STRICT Z-INDEX PHYSICS ENGINE
     function animateReorder(subId) {
       const cards = Array.from(documentById('subjects-list').children);
       
-      // Stop cascade animations immediately
       cards.forEach(c => { 
         c.style.animation = 'none'; 
         c.classList.remove('cascade-item'); 
@@ -531,7 +547,7 @@
       
       subjectsData.sort((a,b) => a.status - b.status);
       
-      // Re-append and mathematically assign descending Z-index
+      // Re-append and assign new mathematical Z-index
       subjectsData.forEach((s, idx) => { 
         const c = documentById('subjects-list').querySelector(`.card[data-id="${s.id}"]`); 
         if(c) { 
@@ -539,6 +555,7 @@
           c.style.backgroundColor=statuses[s.status].color; 
           c.style.borderColor=statuses[s.status].hex; 
           c.querySelectorAll('.box').forEach((b,i)=>{ if(i===s.status) b.classList.add('active'); else b.classList.remove('active'); }); 
+          c.dataset.targetZ = 100 - idx;
         } 
       });
       
@@ -549,7 +566,7 @@
           c.style.transition = 'none'; 
           c.style.transform = `translateY(${dY}px)`; 
           
-          // The clicked card drops to z-index 1. Everyone else stays at 10.
+          // Clicked card drops to z-index 1. Others remain high.
           c.style.zIndex = isC ? '1' : '10'; 
           
           requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -561,7 +578,7 @@
                 c.style.transform = `translateY(0) scale(1)`; 
                 setTimeout(() => { 
                   c.style.transition = ''; 
-                  c.style.zIndex = ''; 
+                  c.style.zIndex = c.dataset.targetZ; 
                 }, 300); 
               }, 350); 
             } else { 
@@ -569,12 +586,12 @@
               c.style.transform = `translateY(0)`; 
               setTimeout(() => { 
                 c.style.transition = ''; 
-                c.style.zIndex = ''; 
+                c.style.zIndex = c.dataset.targetZ; 
               }, 500); 
             }
           }));
         } else {
-          c.style.zIndex = '';
+          c.style.zIndex = c.dataset.targetZ;
         }
       });
     }
