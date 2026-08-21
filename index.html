@@ -4,7 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <!-- This makes the status bar fully transparent so the background bleeds to the very top -->
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
   <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/180/task.png">
   <title>School Tracker</title>
   
@@ -13,83 +15,103 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
+    /* 💎 NATIVE iOS APP STORE DESIGN SYSTEM 💎 */
     :root {
       --bg-base: #F2F2F7;
       --card-bg: rgba(255, 255, 255, 0.75); 
       --card-border: rgba(0, 0, 0, 0.05);
-      --card-shadow: 0 16px 40px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.03);
+      /* Subtle default shadow for clean mode */
+      --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.04), 0 1px 4px rgba(0, 0, 0, 0.02);
       --input-bg: rgba(255, 255, 255, 0.65);
+      
       --text-primary: #1C1C1E; --text-secondary: #636366;
       --accent: #2C3E50; --accent-grad: linear-gradient(135deg, #34495E, #1E293B);
       --rich-blue: linear-gradient(135deg, #2A4365, #1A365D);
       --warning: #FF9500; --critical: #FF3B30; --success: #10B981;
     }
+
+    /* 🔥 DYNAMIC SHADOWS WHEN BACKGROUND IS ON 🔥 */
+    body.bg-active {
+      --card-shadow: 0 20px 48px rgba(0, 0, 0, 0.18), 0 6px 16px rgba(0, 0, 0, 0.08);
+    }
+
     @media (prefers-color-scheme: dark) {
       :root {
         --bg-base: #000000; --card-bg: rgba(28, 28, 30, 0.75); --card-border: rgba(255, 255, 255, 0.08);
-        --card-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.2);
+        --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.1);
         --input-bg: rgba(0, 0, 0, 0.3); --text-primary: #F5F5F5; --text-secondary: #98989D;
-        --accent: #8D99AE; --accent-grad: linear-gradient(135deg, #4A5D70, #1E293B);
-        --rich-blue: linear-gradient(135deg, #1E3A5F, #0F172A);
+      }
+      body.bg-active {
+        --card-shadow: 0 24px 54px rgba(0, 0, 0, 0.6), 0 8px 20px rgba(0, 0, 0, 0.3);
       }
     }
+
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body { background-color: var(--bg-base); color: var(--text-primary); margin: 0; padding: 0; overflow-x: hidden; -webkit-user-select: none; font-family: -apple-system, 'Inter', sans-serif; font-size: 15px; line-height: 1.4; }
+    
+    body { background-color: var(--bg-base); color: var(--text-primary); margin: 0; padding: 0; overflow-x: hidden; -webkit-user-select: none; font-family: -apple-system, 'Inter', sans-serif; font-size: 15px; line-height: 1.4; overscroll-behavior-y: none; }
 
-    #app-background { position: fixed; top: -5vh; left: -5vw; width: 110vw; height: 110vh; z-index: -1; background-size: cover; background-position: center; opacity: var(--bg-opacity, 0.7); transition: opacity 0.3s ease, background-image 0.4s ease; pointer-events: none; }
+    /* Fixes white bars & notch bleeding by scaling the background layer perfectly */
+    #app-background { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; z-index: -1; background-size: cover; background-position: center; opacity: var(--bg-opacity, 0.7); transform: scale(1.1); transition: opacity 0.3s ease, background-image 0.4s ease; pointer-events: none; }
+
     h1, h2, h3, .subject-title { font-family: 'Outfit', sans-serif; letter-spacing: -0.4px; }
-
-    #splash { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: var(--bg-base); color: var(--text-primary); z-index: 9999; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; font-family: 'Outfit', sans-serif; transition: opacity 0.4s ease; animation: pulseLogo 1.5s infinite ease-in-out; }
-    @keyframes pulseLogo { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(0.95); opacity: 0.7; } }
-
+    #splash { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: var(--bg-base); color: var(--text-primary); z-index: 9999; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; transition: opacity 0.4s ease; }
     .screen { padding: 16px; padding-top: calc(env(safe-area-inset-top) + 16px); padding-bottom: 40px; display: none; }
-    .screen.active { display: block; animation: screenFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .screen.active { display: block; animation: screenFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     @keyframes screenFadeIn { 0% { opacity: 0; transform: scale(0.98) translateY(10px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
 
     .cascade-item { animation: cascadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
     @keyframes cascadeIn { from { opacity: 0; transform: translateY(12px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
-    .cascade-item:nth-child(1){animation-delay:0.05s}.cascade-item:nth-child(2){animation-delay:0.1s}.cascade-item:nth-child(3){animation-delay:0.15s}.cascade-item:nth-child(4){animation-delay:0.2s}.cascade-item:nth-child(5){animation-delay:0.25s}.cascade-item:nth-child(6){animation-delay:0.3s}.cascade-item:nth-child(7){animation-delay:0.35s}.cascade-item:nth-child(8){animation-delay:0.4s}
+    .cascade-item:nth-child(1){animation-delay:0.05s}.cascade-item:nth-child(2){animation-delay:0.1s}.cascade-item:nth-child(3){animation-delay:0.15s}.cascade-item:nth-child(4){animation-delay:0.2s}.cascade-item:nth-child(5){animation-delay:0.25s}.cascade-item:nth-child(6){animation-delay:0.3s}.cascade-item:nth-child(7){animation-delay:0.35s}
 
     .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-    h1 { font-size: clamp(28px, 6vw, 34px); font-weight: 800; margin: 0; color: var(--text-primary); text-shadow: 0 4px 16px rgba(0,0,0,0.05); }
-    h2 { font-size: 19px; font-weight: 700; margin-top: 24px; margin-bottom: 12px; color: var(--text-primary); text-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    h1 { font-size: clamp(28px, 6vw, 34px); font-weight: 800; margin: 0; text-shadow: 0 2px 16px rgba(0,0,0,0.05); }
+    h2 { font-size: 19px; font-weight: 700; margin-top: 24px; margin-bottom: 12px; text-shadow: 0 2px 8px rgba(0,0,0,0.05); }
     h3 { font-size: 14px; font-weight: 700; margin-top: 20px; margin-bottom: 8px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.6px; }
 
-    .icon-btn { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 50%; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; color: var(--text-primary); cursor: pointer; box-shadow: var(--card-shadow); transition: transform 0.15s ease; backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); }
+    .icon-btn { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 50%; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: var(--card-shadow); transition: transform 0.15s ease; backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); }
     .icon-btn:active { transform: scale(0.9); }
-    .app-card { background: var(--card-bg); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid var(--card-border); box-shadow: var(--card-shadow); border-radius: 20px; }
+    .app-card { background: var(--card-bg); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid var(--card-border); box-shadow: var(--card-shadow); border-radius: 20px; transition: box-shadow 0.3s ease; }
 
     .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
     .widget { padding: 16px; display: flex; flex-direction: column; justify-content: space-between; height: 100%; min-height: 100px; }
     .simon-widget { background: var(--accent-grad); color: #FFFFFF; text-decoration: none; border: none; transition: transform 0.15s ease; cursor: pointer; }
     .simon-widget:active { transform: scale(0.97); }
     .simon-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
-    .simon-action { font-size: 17px; font-weight: 700; font-family: 'Outfit', sans-serif; display: flex; justify-content: space-between; align-items: center; width: 100%; }
+    .simon-action { font-size: 17px; font-weight: 700; font-family: 'Outfit'; display: flex; justify-content: space-between; align-items: center; width: 100%; }
 
     .widget-title { font-size: 13px; font-weight: 600; color: var(--text-secondary); }
     .ring-container { display: flex; align-items: center; gap: 10px; margin-top: auto; }
     .circular-chart { width: 44px; height: 44px; flex-shrink: 0; }
     .circle-bg { fill: none; stroke: rgba(0,0,0,0.06); stroke-width: 5; }
     .circle { fill: none; stroke-width: 5; stroke-linecap: round; transition: stroke-dasharray 0.4s cubic-bezier(0.16, 1, 0.3, 1); stroke: var(--accent); }
-    .ring-text { font-size: 18px; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--text-primary); }
+    .ring-text { font-size: 18px; font-weight: 800; font-family: 'Outfit'; }
 
     .health-bar-container { padding: 16px; margin-bottom: 20px; }
     .health-bar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; background: var(--input-bg); margin-top: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
     .health-segment { height: 100%; transition: width 0.4s ease; border-radius: 7px; }
 
-    .horizontal-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 12px; margin-right: -16px; padding-right: 16px; scroll-snap-type: x mandatory; scrollbar-width: none; }
+    /* 🔥 FIX: Allows shadows to breathe vertically & scrolls completely to screen edge horizontally 🔥 */
+    .horizontal-scroll {
+      display: flex; gap: 10px; overflow-x: auto;
+      scroll-snap-type: x mandatory; scrollbar-width: none;
+      margin-left: -16px; margin-right: -16px;
+      padding-left: 16px; padding-right: 32px;
+      padding-top: 24px; padding-bottom: 24px;
+      margin-top: -24px; margin-bottom: -24px;
+    }
     .horizontal-scroll::-webkit-scrollbar { display: none; }
+    
     .deadline-card { flex: 0 0 135px; scroll-snap-align: start; background: var(--accent-grad); color: #FFFFFF; border-radius: 18px; padding: 14px; position: relative; box-shadow: 0 8px 24px rgba(30, 41, 59, 0.25); }
     .deadline-card.warning { background: linear-gradient(135deg, var(--warning), #D97706); box-shadow: 0 8px 24px rgba(245, 158, 11, 0.25); }
     .deadline-card.critical { background: linear-gradient(135deg, var(--critical), #DC2626); box-shadow: 0 8px 24px rgba(239, 68, 68, 0.25); animation: pulseAlert 2s infinite; }
-    .dl-days { font-size: 28px; font-weight: 800; font-family: 'Outfit', sans-serif; line-height: 1; }
+    .dl-days { font-size: 28px; font-weight: 800; font-family: 'Outfit'; line-height: 1; }
     .dl-label { font-size: 13px; font-weight: 500; opacity: 0.9; margin-top: 4px; }
     @keyframes pulseAlert { 0%,100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } }
 
     .timetable-card { flex: 0 0 130px; scroll-snap-align: start; padding: 14px; display: flex; flex-direction: column; gap: 6px; cursor: pointer; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
     .timetable-card:active { transform: scale(0.95); }
     .tt-session { font-size: 12px; color: var(--text-secondary); font-weight: 600; }
-    .tt-subject { font-size: 15px; font-weight: 700; color: var(--text-primary); line-height: 1.2; }
+    .tt-subject { font-size: 15px; font-weight: 700; line-height: 1.2; }
 
     #subjects-list { display: flex; flex-direction: column; position: relative; }
     .card { padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 14px; transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; }
@@ -97,11 +119,11 @@
     .boxes-container { display: flex; gap: 6px; flex-shrink: 0; }
     .box { width: 24px; height: 24px; border-radius: 8px; border: 2px solid rgba(0,0,0,0.15); background: rgba(255,255,255,0.95); box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); transition: all 0.2s ease; }
     .box:active { transform: scale(0.7); }
-    .box.active { background-color: var(--box-color); border-color: var(--box-color); transform: scale(1.15); box-shadow: 0 2px 12px var(--box-color); }
-    .subject-title { font-size: 17px; font-weight: 600; flex: 1; line-height: 1.2; color: var(--text-primary); }
+    .box.active { background-color: var(--box-color); border-color: var(--box-color); transform: scale(1.15); box-shadow: 0 4px 16px var(--box-color); }
+    .subject-title { font-size: 17px; font-weight: 600; flex: 1; line-height: 1.2; }
 
     .header-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-    .back-btn { display: flex; align-items: center; gap: 4px; color: var(--text-primary); padding: 8px 14px; font-size: 14px; font-weight: 600; cursor: pointer; transition: transform 0.15s ease; border-radius: 16px; }
+    .back-btn { display: flex; align-items: center; gap: 4px; padding: 8px 14px; font-size: 14px; font-weight: 600; cursor: pointer; transition: transform 0.15s ease; border-radius: 16px; }
     .back-btn:active { transform: scale(0.92); }
     #detail-title { font-size: clamp(22px, 6vw, 28px); font-weight: 800; line-height: 1.1; margin: 0; flex: 1; text-wrap: balance; text-shadow: 0 2px 12px rgba(0,0,0,0.05); }
 
@@ -126,7 +148,7 @@
     .date-badge { font-size: 13px; color: var(--text-secondary); font-weight: 500; margin-top: 4px; }
     .delete-btn { color: var(--critical); background: none; border: none; font-weight: 400; font-size: 24px; padding: 0 8px; cursor: pointer; transition: transform 0.15s ease; }
     .delete-btn:active { transform: scale(0.8); }
-    .grade-badge { font-size: 14px; font-weight: 700; background: rgba(0,0,0,0.05); padding: 4px 10px; border-radius: 8px; color: var(--text-primary); }
+    .grade-badge { font-size: 14px; font-weight: 700; background: rgba(0,0,0,0.05); padding: 4px 10px; border-radius: 8px; }
     .average-banner { padding: 16px; text-align: center; font-weight: 700; font-size: 16px; margin-bottom: 16px; }
 
     .completing { animation: completeTaskAnim 0.35s ease forwards; pointer-events: none; overflow: hidden; }
@@ -161,7 +183,6 @@
   <div id="app-background"></div>
   <div id="splash">School Tracker</div>
 
-  <!-- HOME SCREEN -->
   <div id="home-screen" class="screen active">
     <div class="top-bar">
       <h1>Dashboard</h1>
@@ -242,7 +263,7 @@
       </div>
       <div>
         <div style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px;">Study Timer</div>
-        <div style="font-size:24px; font-weight:800; font-family:'Outfit', sans-serif; line-height:1.1; color:var(--text-primary);" id="timer-display">25:00</div>
+        <div style="font-size:24px; font-weight:800; font-family:'Outfit', sans-serif; line-height:1.1;" id="timer-display">25:00</div>
       </div>
     </div>
 
@@ -265,7 +286,7 @@
     <h3>Appearance</h3>
     <div class="app-card setting-row">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-        <div style="font-size:15px; font-weight:600; color:var(--text-primary);">Custom Background</div>
+        <div style="font-size:15px; font-weight:600;">Custom Background</div>
         <label class="toggle-switch"><input type="checkbox" id="bg-toggle" onchange="toggleBackground()"><span class="slider"></span></label>
       </div>
       <div style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:8px;">IMAGE</div>
@@ -288,17 +309,13 @@
   </div>
 
   <script>
-    // --- UTILS ---
-    const $ = id => document.getElementById(id);
-    const $$ = sel => document.querySelectorAll(sel);
-    const getSub = id => subjectsData.find(s => s.id === id);
+    const $ = id => document.getElementById(id); const $$ = sel => document.querySelectorAll(sel); const getSub = id => subjectsData.find(s => s.id === id);
 
-    // --- BACKGROUND CUSTOMIZATION ---
     let appSettings = JSON.parse(localStorage.getItem('org_settings')) || { bgEnabled: true, bgImage: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop', bgOpacity: 70 };
     
     function applySettings() {
       const b = $('app-background');
-      if (appSettings.bgEnabled) { b.style.opacity = appSettings.bgOpacity / 100; b.style.backgroundImage = `url('${appSettings.bgImage}')`; } else { b.style.opacity = 0; }
+      if (appSettings.bgEnabled) { b.style.opacity = appSettings.bgOpacity / 100; b.style.backgroundImage = `url('${appSettings.bgImage}')`; document.body.classList.add('bg-active'); } else { b.style.opacity = 0; document.body.classList.remove('bg-active'); }
       if($('bg-toggle')) $('bg-toggle').checked = appSettings.bgEnabled; if($('bg-opacity-slider')) $('bg-opacity-slider').value = appSettings.bgOpacity; if($('opacity-val')) $('opacity-val').innerText = appSettings.bgOpacity;
     }
     function toggleBackground() { appSettings.bgEnabled = $('bg-toggle').checked; applySettings(); localStorage.setItem('org_settings', JSON.stringify(appSettings)); }
@@ -306,17 +323,14 @@
     function handleBgUpload(e) { const f = e.target.files[0]; if(!f) return; playSound('pop'); const r = new FileReader(); r.onload = (ev) => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const s = Math.min(1400/img.width, 1); c.width = img.width*s; c.height = img.height*s; c.getContext('2d').drawImage(img,0,0,c.width,c.height); appSettings.bgImage = c.toDataURL('image/jpeg',0.6); appSettings.bgEnabled = true; applySettings(); localStorage.setItem('org_settings', JSON.stringify(appSettings)); }; img.src = ev.target.result; }; r.readAsDataURL(f); }
     function handleTimetableScan(e) { const f = e.target.files[0]; if(!f) return; playSound('pop'); const btn = $('scan-tt-btn'); const oHTML = btn.innerHTML; btn.innerHTML = '⏳ Analyzing Timetable...'; btn.style.opacity = '0.7'; btn.style.pointerEvents = 'none'; setTimeout(() => { playSound('success'); btn.innerHTML = oHTML; btn.style.opacity = '1'; btn.style.pointerEvents = 'all'; alert("Analysis Complete!\n\n(Simulated: In a production environment, this overrides your 10-day cycle array locally.)"); }, 2500); }
 
-    // --- TIMETABLE & DATA ---
     const timetableCycle = { 0:["Community Group","Economics","Economics","English","English","General Mathematics","General Mathematics","Community Group"], 1:["Community Group","Pre mathematical methods","Wellbeing","Religious education","Religious education","Economics","English","Community Group"], 2:["Community Group","Legal studies","Legal studies","Physics","Physics","Pre mathematical methods","Pre mathematical methods","Community Group"], 3:["Community Group","Economics","Economics","General Mathematics","General Mathematics","English","English","Community Group"], 4:["Community Group","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Physics","Physics","Community Group"], 7:["Community Group","English","English","Economics","Economics","General Mathematics","General Mathematics","Community Group"], 8:["Community Group","Physics","Wellbeing","Religious education","Religious education","Legal studies","General Mathematics","Community Group"], 9:["Community Group","Physics","Physics","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Community Group"], 10:["Community Group","English","English","General Mathematics","General Mathematics","Economics","Economics","Community Group"], 11:["Community Group","Physics","Physics","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Community Group"] };
     const sessionLabels = ["Morning Group", "Session 1", "Session 2", "Session 3", "Session 4", "Session 5", "Session 6", "Afternoon Group"];
     function getTodaysTimetable() { const d = Math.floor((new Date().setHours(0,0,0,0) - new Date(2026, 7, 10).setHours(0,0,0,0)) / 86400000); return d < 0 ? null : timetableCycle[d % 14] || null; }
 
     let audioCtx;
     function playSound(t) {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      const o = audioCtx.createOscillator(), g = audioCtx.createGain(), n = audioCtx.currentTime;
-      o.connect(g); g.connect(audioCtx.destination);
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); if (audioCtx.state === 'suspended') audioCtx.resume();
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain(), n = audioCtx.currentTime; o.connect(g); g.connect(audioCtx.destination);
       if (t === 'tick') { o.type='sine'; o.frequency.setValueAtTime(800,n); o.frequency.exponentialRampToValueAtTime(1400,n+0.08); g.gain.setValueAtTime(0.15,n); g.gain.exponentialRampToValueAtTime(0.01,n+0.08); o.start(); o.stop(n+0.08); }
       else if (t === 'pop') { o.type='triangle'; o.frequency.setValueAtTime(300,n); o.frequency.exponentialRampToValueAtTime(100,n+0.12); g.gain.setValueAtTime(0.2,n); g.gain.exponentialRampToValueAtTime(0.01,n+0.12); o.start(); o.stop(n+0.12); }
       else if (t === 'swoosh') { o.type='sine'; o.frequency.setValueAtTime(300,n); o.frequency.exponentialRampToValueAtTime(500,n+0.12); g.gain.setValueAtTime(0.1,n); g.gain.linearRampToValueAtTime(0.01,n+0.12); o.start(); o.stop(n+0.12); }
@@ -325,17 +339,9 @@
 
     const statuses = [ { color: "rgba(239, 68, 68, 0.12)", hex: "#EF4444", label: "Falling behind" }, { color: "rgba(245, 158, 11, 0.12)", hex: "#F59E0B", label: "Behind" }, { color: "var(--card-bg)", hex: "#94A3B8", label: "Up to date" }, { color: "rgba(16, 185, 129, 0.12)", hex: "#10B981", label: "Ahead" }, { color: "rgba(5, 150, 105, 0.15)", hex: "#059669", label: "Well ahead" } ];
     let subjectsData = JSON.parse(localStorage.getItem('org_subjects')) || ["English", "General Mathematics", "Economics", "Legal studies", "Pre mathematical methods", "Religious education", "Physics", "Wellbeing"].map(name => ({ id: name.replace(/\s+/g, '-').toLowerCase(), name: name, status: 2, homework: [], notes: "", grades: [], photos: [] }));
-    subjectsData.forEach(s => { if (!s.photos) s.photos = []; });
-    let globalNotes = JSON.parse(localStorage.getItem('org_global')) || [];
-    let deadlines = JSON.parse(localStorage.getItem('org_deadlines')) || [];
-    let todayString = new Date().toDateString(); let ringStats = JSON.parse(localStorage.getItem('org_ring')) || { date: todayString, score: 0 };
-    if (ringStats.date !== todayString) ringStats = { date: todayString, score: 0 };
-    let currentSubjectId = null;
+    subjectsData.forEach(s => { if (!s.photos) s.photos = []; }); let globalNotes = JSON.parse(localStorage.getItem('org_global')) || []; let deadlines = JSON.parse(localStorage.getItem('org_deadlines')) || []; let todayString = new Date().toDateString(); let ringStats = JSON.parse(localStorage.getItem('org_ring')) || { date: todayString, score: 0 }; if (ringStats.date !== todayString) ringStats = { date: todayString, score: 0 }; let currentSubjectId = null;
 
-    window.onload = () => {
-      try { applySettings(); renderHome(true); } catch(e) { console.error(e); }
-      setTimeout(() => { $('splash').style.opacity = '0'; setTimeout(() => $('splash').style.display = 'none', 400); }, 600);
-    };
+    window.onload = () => { try { applySettings(); renderHome(true); } catch(e) { console.error(e); } setTimeout(() => { $('splash').style.opacity = '0'; setTimeout(() => $('splash').style.display = 'none', 400); }, 600); };
 
     function saveData() { localStorage.setItem('org_subjects', JSON.stringify(subjectsData)); localStorage.setItem('org_global', JSON.stringify(globalNotes)); localStorage.setItem('org_deadlines', JSON.stringify(deadlines)); localStorage.setItem('org_ring', JSON.stringify(ringStats)); updateRingUI(); updateHealthBarUI(); }
     function addRingScore() { if (ringStats.score < 5) { ringStats.score++; saveData(); } }
