@@ -29,9 +29,9 @@
       --warning: #FF9500; --critical: #FF3B30; --success: #10B981;
     }
 
-    /* 🔥 PURE BLACK BASE ELIMINATES WHITE FOG WHEN BG IS ACTIVE 🔥 */
+    /* 🔥 PURE WHITE BASE WHEN BG IS ACTIVE 🔥 */
     html.bg-active, body.bg-active {
-      background-color: #000000 !important;
+      background-color: #FFFFFF !important;
     }
     body.bg-active {
       --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.25), 0 8px 16px rgba(0, 0, 0, 0.15);
@@ -42,6 +42,9 @@
         --bg-base: #000000; --card-bg: rgba(28, 28, 30, 0.75); --card-border: rgba(255, 255, 255, 0.08);
         --card-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
         --input-bg: rgba(0, 0, 0, 0.3); --text-primary: #F5F5F5; --text-secondary: #98989D;
+      }
+      html.bg-active, body.bg-active {
+        background-color: #000000 !important;
       }
       body.bg-active {
         --card-shadow: 0 24px 54px rgba(0, 0, 0, 0.8), 0 8px 24px rgba(0, 0, 0, 0.6);
@@ -335,15 +338,21 @@
 
     let appSettings = JSON.parse(localStorage.getItem('org_settings')) || { 
       bgEnabled: true, 
-      bgImage: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop', 
-      bgOpacity: 70 
+      bgOpacity: 70,
+      bgImage: null 
     };
     
+    // Ensure image works. If empty, give the valid Unsplash URL.
+    if (!appSettings.bgImage || appSettings.bgImage === 'default') {
+      appSettings.bgImage = 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop';
+      localStorage.setItem('org_settings', JSON.stringify(appSettings));
+    }
+
     function applySettings() {
       const b = documentById('app-background');
       if (appSettings.bgEnabled) { 
         b.style.opacity = appSettings.bgOpacity / 100; 
-        b.style.backgroundImage = `url('${appSettings.bgImage}')`; 
+        if (appSettings.bgImage) b.style.backgroundImage = `url('${appSettings.bgImage}')`; 
         document.body.classList.add('bg-active'); 
         document.documentElement.classList.add('bg-active');
       } else { 
