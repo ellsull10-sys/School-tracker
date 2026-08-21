@@ -15,127 +15,73 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    /* 💎 NATIVE iOS APP STORE DESIGN SYSTEM 💎 */
     :root {
-      --bg-base: #F2F2F7;
-      --card-bg: rgba(255, 255, 255, 0.75); 
-      --card-border: rgba(0, 0, 0, 0.05);
+      --bg-base: #F2F2F7; --card-bg: rgba(255, 255, 255, 0.75); --card-border: rgba(0, 0, 0, 0.05);
       --card-shadow: 0 12px 28px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
-      --input-bg: rgba(255, 255, 255, 0.65);
-      
-      --text-primary: #1C1C1E; --text-secondary: #636366;
+      --input-bg: rgba(255, 255, 255, 0.65); --text-primary: #1C1C1E; --text-secondary: #636366;
       --accent: #2C3E50; --accent-grad: linear-gradient(135deg, #34495E, #1E293B);
-      --rich-blue: linear-gradient(135deg, #2A4365, #1A365D);
-      --warning: #FF9500; --critical: #FF3B30; --success: #10B981;
+      --rich-blue: linear-gradient(135deg, #2A4365, #1A365D); --warning: #FF9500; --critical: #FF3B30; --success: #10B981;
     }
-
-    /* 🔥 PURE WHITE BASE WHEN BG IS ACTIVE 🔥 */
-    html.bg-active, body.bg-active {
-      background-color: #FFFFFF !important;
-    }
-    body.bg-active {
-      --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.25), 0 8px 16px rgba(0, 0, 0, 0.15);
-    }
-
+    html.bg-active, body.bg-active { background-color: #FFFFFF !important; }
+    body.bg-active { --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.25), 0 8px 16px rgba(0, 0, 0, 0.15); }
     @media (prefers-color-scheme: dark) {
-      :root {
-        --bg-base: #000000; --card-bg: rgba(28, 28, 30, 0.75); --card-border: rgba(255, 255, 255, 0.08);
-        --card-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
-        --input-bg: rgba(0, 0, 0, 0.3); --text-primary: #F5F5F5; --text-secondary: #98989D;
-      }
-      html.bg-active, body.bg-active {
-        background-color: #000000 !important;
-      }
-      body.bg-active {
-        --card-shadow: 0 24px 54px rgba(0, 0, 0, 0.8), 0 8px 24px rgba(0, 0, 0, 0.6);
-      }
+      :root { --bg-base: #000000; --card-bg: rgba(28, 28, 30, 0.75); --card-border: rgba(255, 255, 255, 0.08); --card-shadow: 0 12px 32px rgba(0, 0, 0, 0.4); --input-bg: rgba(0, 0, 0, 0.3); --text-primary: #F5F5F5; --text-secondary: #98989D; }
+      html.bg-active, body.bg-active { background-color: #000000 !important; }
+      body.bg-active { --card-shadow: 0 24px 54px rgba(0, 0, 0, 0.8), 0 8px 24px rgba(0, 0, 0, 0.6); }
     }
-
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    
     html, body { background-color: var(--bg-base); color: var(--text-primary); margin: 0; padding: 0; overflow-x: hidden; -webkit-user-select: none; font-family: -apple-system, 'Inter', sans-serif; font-size: 15px; line-height: 1.4; overscroll-behavior-y: none; min-height: 100vh; transition: background-color 0.3s ease; }
-
-    /* Fix: z-index 0 forces the image ABOVE the body background but BELOW the app content */
     #app-background { position: fixed; top: -50vh; left: -50vw; width: 200vw; height: 200vh; z-index: 0; background-size: cover; background-position: center; opacity: var(--bg-opacity, 0.7); transition: opacity 0.3s ease, background-image 0.4s ease; pointer-events: none; }
-
-    h1, h2, h3, .subject-title { font-family: 'Outfit', sans-serif; letter-spacing: -0.4px; }
+    h1, h2, h3, .subject-title, .simon-action, .ring-text, .dl-days { font-family: 'Outfit', sans-serif; letter-spacing: -0.4px; }
     #splash { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: var(--bg-base); color: var(--text-primary); z-index: 9999; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; transition: opacity 0.4s ease; }
-    
-    /* Fix: z-index 1 hoists all content above the background layer securely */
     .screen { position: relative; z-index: 1; padding: 16px; padding-top: calc(env(safe-area-inset-top) + 16px); padding-bottom: 40px; display: none; }
     .screen.active { display: block; animation: screenFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     @keyframes screenFadeIn { 0% { opacity: 0; transform: scale(0.98) translateY(10px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
-
     .cascade-item { animation: cascadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
     @keyframes cascadeIn { from { opacity: 0; transform: translateY(12px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
     .cascade-item:nth-child(1){animation-delay:0.05s}.cascade-item:nth-child(2){animation-delay:0.1s}.cascade-item:nth-child(3){animation-delay:0.15s}.cascade-item:nth-child(4){animation-delay:0.2s}.cascade-item:nth-child(5){animation-delay:0.25s}.cascade-item:nth-child(6){animation-delay:0.3s}.cascade-item:nth-child(7){animation-delay:0.35s}
-
     .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
     h1 { font-size: clamp(28px, 6vw, 34px); font-weight: 800; margin: 0; text-shadow: 0 2px 16px rgba(0,0,0,0.05); }
     h2 { font-size: 19px; font-weight: 700; margin-top: 24px; margin-bottom: 12px; text-shadow: 0 2px 8px rgba(0,0,0,0.05); }
     h3 { font-size: 14px; font-weight: 700; margin-top: 20px; margin-bottom: 8px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.6px; }
-
-    .icon-btn, .back-btn { 
-      background: var(--accent-grad) !important; color: #FFFFFF !important; border: none !important; 
-      cursor: pointer; box-shadow: 0 6px 16px rgba(30, 41, 59, 0.3); transition: transform 0.15s ease; 
-    }
+    .icon-btn, .back-btn { background: var(--accent-grad) !important; color: #FFFFFF !important; border: none !important; cursor: pointer; box-shadow: 0 6px 16px rgba(30, 41, 59, 0.3); transition: transform 0.15s ease; }
     .icon-btn { border-radius: 50%; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; }
     .back-btn { display: flex; align-items: center; gap: 4px; padding: 8px 14px; font-size: 14px; font-weight: 600; border-radius: 16px; }
     .icon-btn:active, .back-btn:active { transform: scale(0.92); }
-    
-    .app-card { 
-      position: relative; 
-      background: var(--card-bg); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); 
-      border: 1px solid var(--card-border); border-radius: 20px; 
-    }
-    .app-card::before {
-      content: ''; position: absolute; inset: 0; border-radius: inherit;
-      box-shadow: var(--card-shadow); z-index: -1; pointer-events: none; transition: box-shadow 0.3s ease;
-    }
-
+    .app-card { position: relative; background: var(--card-bg); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid var(--card-border); border-radius: 20px; }
+    .app-card::before { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: var(--card-shadow); z-index: -1; pointer-events: none; transition: box-shadow 0.3s ease; }
     .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
     .widget { padding: 16px; display: flex; flex-direction: column; justify-content: space-between; height: 100%; min-height: 100px; text-decoration: none; cursor: pointer; transition: transform 0.15s ease; }
     .widget:active { transform: scale(0.97); }
-    
     .simon-widget { background: var(--accent-grad) !important; color: #FFFFFF !important; border: none !important; }
     .simon-widget::before { box-shadow: 0 10px 24px rgba(30, 41, 59, 0.3) !important; }
-    .simon-widget .simon-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
-    .simon-widget .simon-action { font-size: 17px; font-weight: 700; font-family: 'Outfit'; display: flex; justify-content: space-between; align-items: center; width: 100%; }
-
+    .simon-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
+    .simon-action { font-size: 17px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; width: 100%; }
     .widget-title { font-size: 13px; font-weight: 600; color: var(--text-secondary); }
     .ring-container { display: flex; align-items: center; gap: 10px; margin-top: auto; }
     .circular-chart { width: 44px; height: 44px; flex-shrink: 0; }
     .circle-bg { fill: none; stroke: rgba(0,0,0,0.06); stroke-width: 5; }
     .circle { fill: none; stroke-width: 5; stroke-linecap: round; transition: stroke-dasharray 0.4s cubic-bezier(0.16, 1, 0.3, 1); stroke: var(--accent); }
-    .ring-text { font-size: 18px; font-weight: 800; font-family: 'Outfit'; }
-
+    .ring-text { font-size: 18px; font-weight: 800; }
     .health-bar-container { padding: 16px; margin-bottom: 20px; }
     .health-bar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; background: var(--input-bg); margin-top: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
     .health-segment { height: 100%; transition: width 0.4s ease; border-radius: 7px; }
-
-    .horizontal-scroll {
-      display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
-      margin-left: -16px; margin-right: -16px; padding-top: 20px; padding-bottom: 40px; margin-top: -20px; margin-bottom: -40px; padding-left: 16px;
-    }
+    .horizontal-scroll { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin-left: -16px; margin-right: -16px; padding-top: 20px; padding-bottom: 40px; margin-top: -20px; margin-bottom: -40px; padding-left: 16px; }
     .horizontal-scroll::-webkit-scrollbar { display: none; }
     .horizontal-scroll::after { content: ''; flex: 0 0 4px; }
-    
     .deadline-card { flex: 0 0 135px; scroll-snap-align: start; background: var(--accent-grad); color: #FFFFFF; border-radius: 18px; padding: 14px; position: relative; }
     .deadline-card::before { content: ''; position: absolute; inset: 0; border-radius: inherit; z-index: -1; box-shadow: 0 8px 24px rgba(30, 41, 59, 0.25); }
     .deadline-card.warning { background: linear-gradient(135deg, var(--warning), #D97706); }
     .deadline-card.warning::before { box-shadow: 0 8px 24px rgba(245, 158, 11, 0.25); }
     .deadline-card.critical { background: linear-gradient(135deg, var(--critical), #DC2626); animation: pulseAlert 2s infinite; }
     .deadline-card.critical::before { box-shadow: 0 8px 24px rgba(239, 68, 68, 0.25); }
-    
-    .dl-days { font-size: 28px; font-weight: 800; font-family: 'Outfit'; line-height: 1; }
+    .dl-days { font-size: 28px; font-weight: 800; line-height: 1; }
     .dl-label { font-size: 13px; font-weight: 500; opacity: 0.9; margin-top: 4px; }
     @keyframes pulseAlert { 0%,100% { transform: scale(1); } 50% { transform: scale(0.98); } }
-
     .timetable-card { flex: 0 0 130px; scroll-snap-align: start; padding: 14px; display: flex; flex-direction: column; gap: 6px; cursor: pointer; transition: transform 0.15s ease; }
     .timetable-card:active { transform: scale(0.95); }
     .tt-session { font-size: 12px; color: var(--text-secondary); font-weight: 600; }
     .tt-subject { font-size: 15px; font-weight: 700; line-height: 1.2; }
-
     #subjects-list { display: flex; flex-direction: column; position: relative; }
     .card { padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 14px; transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; }
     .card:active { transform: scale(0.97); }
@@ -144,23 +90,19 @@
     .box:active { transform: scale(0.7); }
     .box.active { background-color: var(--box-color); border-color: var(--box-color); transform: scale(1.15); box-shadow: 0 4px 16px var(--box-color); }
     .subject-title { font-size: 17px; font-weight: 600; flex: 1; line-height: 1.2; }
-
     .header-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
     #detail-title { font-size: clamp(22px, 6vw, 28px); font-weight: 800; line-height: 1.1; margin: 0; flex: 1; text-wrap: balance; text-shadow: 0 2px 12px rgba(0,0,0,0.05); }
-
     .status-row { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-radius: 16px; margin-bottom: 8px; transition: transform 0.15s ease, background-color 0.2s ease; cursor: pointer; }
     .status-row:active { transform: scale(0.97); }
     .status-row.active-status { background-color: var(--status-bg); border-color: var(--box-color); }
     .status-label { font-size: 15px; font-weight: 600; color: var(--text-secondary); transition: color 0.2s ease; }
     .status-row.active-status .status-label { color: var(--text-primary); }
-
     .input-group { display: flex; gap: 8px; margin-bottom: 16px; width: 100%; }
     input[type="text"], input[type="date"], input[type="number"], textarea { flex: 1; min-width: 0; padding: 14px 16px; border-radius: 14px; border: 1px solid rgba(0,0,0,0.08); background: var(--input-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text-primary); font-size: 15px; font-family: inherit; outline: none; transition: background-color 0.2s ease; box-shadow: inset 0 2px 6px rgba(0,0,0,0.02); }
     input:focus, textarea:focus { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.15); }
     textarea { height: 90px; resize: none; width: 100%; margin-top: 2px; line-height: 1.5; }
     button.add-btn { background: var(--accent-grad); color: #FFFFFF; border: none; padding: 0 18px; border-radius: 14px; font-weight: 600; font-size: 15px; flex-shrink: 0; transition: transform 0.15s ease; cursor: pointer; box-shadow: 0 6px 16px rgba(30, 41, 59, 0.2); }
     button.add-btn:active { transform: scale(0.92); }
-
     .list-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-radius: 16px; margin-bottom: 8px; transform-origin: top; }
     .task-card { background: var(--rich-blue) !important; color: #FFFFFF !important; border: none !important; }
     .task-card::before { box-shadow: 0 8px 24px rgba(26, 54, 93, 0.25) !important; }
@@ -173,16 +115,13 @@
     .delete-btn:active { transform: scale(0.8); }
     .grade-badge { font-size: 14px; font-weight: 700; background: rgba(0,0,0,0.05); padding: 4px 10px; border-radius: 8px; }
     .average-banner { padding: 16px; text-align: center; font-weight: 700; font-size: 16px; margin-bottom: 16px; }
-
     .completing { animation: completeTaskAnim 0.35s ease forwards; pointer-events: none; overflow: hidden; }
     @keyframes completeTaskAnim { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; background: #10B981 !important; transform: scale(0.97); } 100% { opacity: 0; transform: scale(0.92) translateY(-4px); } }
-
     .photo-gallery { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 24px; margin-bottom: -16px; scroll-snap-type: x mandatory; scrollbar-width: none; }
     .photo-gallery::-webkit-scrollbar { display: none; }
     .photo-card { flex: 0 0 130px; height: 95px; scroll-snap-align: start; border-radius: 14px; background-size: cover; background-position: center; border: 1px solid var(--card-border); position: relative; }
     .photo-card::before { content: ''; position: absolute; inset: 0; border-radius: inherit; z-index: -1; box-shadow: var(--card-shadow); }
     .del-photo { position: absolute; top: -6px; right: -6px; background: var(--critical); color: #FFFFFF; border: none; width: 22px; height: 22px; border-radius: 50%; font-weight: bold; font-size: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-
     .timer-card { display: flex; align-items: center; gap: 16px; padding: 14px 16px; margin-bottom: 16px; }
     .timer-ring-container { position: relative; width: 44px; height: 44px; cursor: pointer; flex-shrink: 0; transition: transform 0.15s ease; }
     .timer-ring-container:active { transform: scale(0.92); }
@@ -190,7 +129,6 @@
     .timer-circle-bg { fill: none; stroke: rgba(0,0,0,0.06); stroke-width: 5; }
     .timer-circle { fill: none; stroke: var(--accent); stroke-width: 5; stroke-linecap: round; transition: stroke-dasharray 1s linear; }
     .timer-icon-wrap { position: absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; color: var(--accent); }
-
     .setting-row { padding: 16px; display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
     .toggle-switch { position: relative; display: inline-block; width: 50px; height: 28px; }
     .toggle-switch input { opacity: 0; width: 0; height: 0; }
@@ -210,8 +148,8 @@
   <div id="home-screen" class="screen active">
     <div class="top-bar">
       <h1>Dashboard</h1>
-      <button class="icon-btn" onclick="openScreen('settings-screen')">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      <button class="icon-btn" onclick="openSc('settings-screen')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
       </button>
     </div>
 
@@ -248,7 +186,7 @@
     <div id="task-input-card" class="input-group cascade-item">
       <input type="text" id="global-task" placeholder="Task description...">
       <input type="date" id="global-date">
-      <button class="add-btn" onclick="addGlobalNote()">Add</button>
+      <button class="add-btn" onclick="addGN()">Add</button>
     </div>
     <div id="global-notes-list"></div>
 
@@ -256,7 +194,7 @@
     <div id="add-dl-card" class="input-group cascade-item">
       <input type="text" id="dl-name" placeholder="E.g., Legal SAC...">
       <input type="date" id="dl-date">
-      <button class="add-btn" onclick="addDeadline()">Add</button>
+      <button class="add-btn" onclick="addDL()">Add</button>
     </div>
   </div>
 
@@ -271,17 +209,17 @@
 
     <div class="cascade-item" style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; margin-bottom:8px;">
       <h3 style="margin:0;">Captured Notes</h3>
-      <button class="add-btn" style="padding:6px 14px; font-size:13px; display:flex; align-items:center; gap:6px;" onclick="document.getElementById('camera-input').click()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Scan</button>
+      <button class="add-btn" style="padding:6px 14px; font-size:13px; display:flex; align-items:center; gap:6px;" onclick="$('camera-input').click()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Scan</button>
     </div>
     <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none" onchange="processPhoto(event)">
     <div class="photo-gallery cascade-item" id="photo-gallery"></div>
 
     <h3 class="cascade-item">Homework</h3>
-    <div class="input-group cascade-item"><input type="text" id="hw-desc" placeholder="Homework description..."><input type="date" id="hw-date"><button class="add-btn" onclick="addHomework()">Add</button></div>
+    <div class="input-group cascade-item"><input type="text" id="hw-desc" placeholder="Homework description..."><input type="date" id="hw-date"><button class="add-btn" onclick="addHW()">Add</button></div>
     <div id="hw-list"></div>
 
     <div class="timer-card app-card cascade-item">
-      <div class="timer-ring-container" onclick="toggleTimer()">
+      <div class="timer-ring-container" onclick="toggleTmr()">
         <svg viewBox="0 0 36 36" class="timer-circular-chart"><path class="timer-circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path><path class="timer-circle" id="timer-progress" stroke-dasharray="100, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path></svg>
         <div class="timer-icon-wrap" id="timer-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></div>
       </div>
@@ -311,441 +249,178 @@
     <div class="app-card setting-row">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
         <div style="font-size:15px; font-weight:600;">Custom Background</div>
-        <label class="toggle-switch"><input type="checkbox" id="bg-toggle" onchange="toggleBackground()"><span class="slider"></span></label>
+        <label class="toggle-switch"><input type="checkbox" id="bg-toggle" onchange="toggleBg()"><span class="slider"></span></label>
       </div>
       <div style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:8px;">IMAGE</div>
-      <input type="file" id="bg-upload" accept="image/*" style="display:none;" onchange="handleBgUpload(event)">
-      <button class="add-btn" style="width:100%; padding:12px; margin-bottom:12px; background:var(--input-bg); color:var(--text-primary); box-shadow:none;" onclick="document.getElementById('bg-upload').click()">Upload Photo</button>
+      <input type="file" id="bg-upload" accept="image/*" style="display:none;" onchange="handleBgUp(event)">
+      <div style="display:flex; gap:8px; margin-bottom:12px;">
+        <button class="add-btn" style="flex:1; padding:12px; background:var(--input-bg); color:var(--text-primary); box-shadow:none;" onclick="$('bg-upload').click()">Upload Photo</button>
+        <button class="add-btn" style="padding:12px; background:var(--input-bg); color:var(--text-primary); box-shadow:none;" onclick="resetBg()">Reset</button>
+      </div>
       <div style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:8px; display:flex; justify-content:space-between;"><span>TRANSPARENCY</span><span><span id="opacity-val">70</span>%</span></div>
-      <input type="range" id="bg-opacity-slider" min="0" max="100" value="70" oninput="updateBgOpacity(this.value)">
+      <input type="range" id="bg-opacity-slider" min="0" max="100" value="70" oninput="updBgOpac(this.value)">
     </div>
 
     <h3>Timetable Scanner</h3>
     <div class="app-card setting-row">
       <p style="font-size:14px; color:var(--text-secondary); margin-top:0; margin-bottom:12px; line-height:1.4;">Upload a screenshot of your timetable to automatically populate your 10-day cycle.</p>
-      <input type="file" id="tt-upload" accept="image/*" style="display:none;" onchange="handleTimetableScan(event)">
-      <button id="scan-tt-btn" class="add-btn" style="width:100%; padding:12px; display:flex; justify-content:center; align-items:center; gap:8px;" onclick="document.getElementById('tt-upload').click()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Scan Timetable</button>
+      <input type="file" id="tt-upload" accept="image/*" style="display:none;" onchange="handleTTScan(event)">
+      <button id="scan-tt-btn" class="add-btn" style="width:100%; padding:12px; display:flex; justify-content:center; align-items:center; gap:8px;" onclick="$('tt-upload').click()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Scan Timetable</button>
     </div>
 
     <h3>Subject Manager</h3>
-    <div class="input-group"><input type="text" id="new-subject" placeholder="New Subject Name..."><button class="add-btn" onclick="addSubject()">Create</button></div>
+    <div class="input-group"><input type="text" id="new-subject" placeholder="New Subject Name..."><button class="add-btn" onclick="addSub()">Create</button></div>
     <div id="settings-subjects-list"></div>
   </div>
 
   <script>
-    const documentById = id => document.getElementById(id);
-    const getSub = id => subjectsData.find(s => s.id === id);
+    // JS Optimization: Aliases
+    const $ = id => document.getElementById(id);
+    const $$ = sel => document.querySelectorAll(sel);
+    const getSub = id => sData.find(s => s.id === id);
 
-    let appSettings = JSON.parse(localStorage.getItem('org_settings')) || { 
-      bgEnabled: true, 
-      bgOpacity: 70,
-      bgImage: null 
-    };
+    let sData = JSON.parse(localStorage.getItem('org_subjects')) || ["English", "General Mathematics", "Economics", "Legal studies", "Pre mathematical methods", "Religious education", "Physics", "Wellbeing"].map(n => ({ id: n.replace(/\s+/g, '-').toLowerCase(), name: n, status: 2, homework: [], notes: "", grades: [], photos: [] }));
+    sData.forEach(s => { if(!s.photos) s.photos=[]; }); 
+    let gNotes = JSON.parse(localStorage.getItem('org_global')) || []; 
+    let dlData = JSON.parse(localStorage.getItem('org_deadlines')) || []; 
+    let tStr = new Date().toDateString(); 
+    let ring = JSON.parse(localStorage.getItem('org_ring')) || { date: tStr, score: 0 }; 
+    if(ring.date !== tStr) ring = { date: tStr, score: 0 }; 
+    let cSubId = null;
+
+    let appSet = JSON.parse(localStorage.getItem('org_settings')) || { bgEnabled: true, bgOpacity: 70, bgImage: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop' };
     
-    // Ensure image works. If empty, give the valid Unsplash URL.
-    if (!appSettings.bgImage || appSettings.bgImage === 'default') {
-      appSettings.bgImage = 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop';
-      localStorage.setItem('org_settings', JSON.stringify(appSettings));
-    }
-
-    function applySettings() {
-      const b = documentById('app-background');
-      if (appSettings.bgEnabled) { 
-        b.style.opacity = appSettings.bgOpacity / 100; 
-        if (appSettings.bgImage) b.style.backgroundImage = `url('${appSettings.bgImage}')`; 
-        document.body.classList.add('bg-active'); 
-        document.documentElement.classList.add('bg-active');
+    function appSetApply() {
+      const b = $('app-background');
+      if(appSet.bgEnabled) { 
+        b.style.opacity = appSet.bgOpacity / 100; b.style.backgroundImage = `url('${appSet.bgImage}')`; 
+        document.body.classList.add('bg-active'); document.documentElement.classList.add('bg-active');
       } else { 
-        b.style.opacity = 0; 
-        document.body.classList.remove('bg-active'); 
-        document.documentElement.classList.remove('bg-active');
+        b.style.opacity = 0; document.body.classList.remove('bg-active'); document.documentElement.classList.remove('bg-active');
       }
-      if(documentById('bg-toggle')) documentById('bg-toggle').checked = appSettings.bgEnabled; 
-      if(documentById('bg-opacity-slider')) documentById('bg-opacity-slider').value = appSettings.bgOpacity; 
-      if(documentById('opacity-val')) documentById('opacity-val').innerText = appSettings.bgOpacity;
+      if($('bg-toggle')) $('bg-toggle').checked = appSet.bgEnabled; 
+      if($('bg-opacity-slider')) $('bg-opacity-slider').value = appSet.bgOpacity; 
+      if($('opacity-val')) $('opacity-val').innerText = appSet.bgOpacity;
     }
 
-    function toggleBackground() { appSettings.bgEnabled = documentById('bg-toggle').checked; applySettings(); localStorage.setItem('org_settings', JSON.stringify(appSettings)); }
-    function updateBgOpacity(val) { appSettings.bgOpacity = val; if(appSettings.bgEnabled) documentById('app-background').style.opacity = val/100; documentById('opacity-val').innerText = val; localStorage.setItem('org_settings', JSON.stringify(appSettings)); }
-    function handleBgUpload(e) { const f = e.target.files[0]; if(!f) return; playSound('pop'); const r = new FileReader(); r.onload = (ev) => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const s = Math.min(1400/img.width, 1); c.width = img.width*s; c.height = img.height*s; c.getContext('2d').drawImage(img,0,0,c.width,c.height); appSettings.bgImage = c.toDataURL('image/jpeg',0.6); appSettings.bgEnabled = true; applySettings(); localStorage.setItem('org_settings', JSON.stringify(appSettings)); }; img.src = ev.target.result; }; r.readAsDataURL(f); }
-    function handleTimetableScan(e) { const f = e.target.files[0]; if(!f) return; playSound('pop'); const btn = documentById('scan-tt-btn'); const oHTML = btn.innerHTML; btn.innerHTML = '⏳ Analyzing Timetable...'; btn.style.opacity = '0.7'; btn.style.pointerEvents = 'none'; setTimeout(() => { playSound('success'); btn.innerHTML = oHTML; btn.style.opacity = '1'; btn.style.pointerEvents = 'all'; alert("Analysis Complete!\n\n(Simulated: In a production environment, this overrides your 10-day cycle array locally.)"); }, 2500); }
+    function toggleBg() { appSet.bgEnabled = $('bg-toggle').checked; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }
+    function updBgOpac(v) { appSet.bgOpacity = v; if(appSet.bgEnabled) $('app-background').style.opacity = v/100; $('opacity-val').innerText = v; localStorage.setItem('org_settings', JSON.stringify(appSet)); }
+    function handleBgUp(e) { const f = e.target.files[0]; if(!f) return; pSnd('pop'); const r = new FileReader(); r.onload = (ev) => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const s = Math.min(1400/img.width, 1); c.width = img.width*s; c.height = img.height*s; c.getContext('2d').drawImage(img,0,0,c.width,c.height); appSet.bgImage = c.toDataURL('image/jpeg',0.6); appSet.bgEnabled = true; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }; img.src = ev.target.result; }; r.readAsDataURL(f); }
+    function resetBg() { pSnd('tick'); appSet.bgImage = 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop'; appSet.bgEnabled = true; appSet.bgOpacity = 70; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }
+    function handleTTScan(e) { const f = e.target.files[0]; if(!f) return; pSnd('pop'); const b = $('scan-tt-btn'); const oHTML = b.innerHTML; b.innerHTML = '⏳ Analyzing...'; b.style.opacity = '0.7'; b.style.pointerEvents = 'none'; setTimeout(() => { pSnd('success'); b.innerHTML = oHTML; b.style.opacity = '1'; b.style.pointerEvents = 'all'; alert("Analysis Complete!\n\n(Simulated: Overrides 10-day array locally.)"); }, 2500); }
 
-    const timetableCycle = { 
-      0:["Community Group","Economics","Economics","English","English","General Mathematics","General Mathematics","Community Group"], 
-      1:["Community Group","Pre mathematical methods","Wellbeing","Religious education","Religious education","Economics","English","Community Group"], 
-      2:["Community Group","Legal studies","Legal studies","Physics","Physics","Pre mathematical methods","Pre mathematical methods","Community Group"], 
-      3:["Community Group","Economics","Economics","General Mathematics","General Mathematics","English","English","Community Group"], 
-      4:["Community Group","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Physics","Physics","Community Group"], 
-      7:["Community Group","English","English","Economics","Economics","General Mathematics","General Mathematics","Community Group"], 
-      8:["Community Group","Physics","Wellbeing","Religious education","Religious education","Legal studies","General Mathematics","Community Group"], 
-      9:["Community Group","Physics","Physics","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Community Group"], 
-      10:["Community Group","English","English","General Mathematics","General Mathematics","Economics","Economics","Community Group"], 
-      11:["Community Group","Physics","Physics","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Community Group"] 
-    };
-    const sessionLabels = ["Morning Group", "Session 1", "Session 2", "Session 3", "Session 4", "Session 5", "Session 6", "Afternoon Group"];
-    
-    function getTodaysTimetable() { 
-      const d = Math.floor((new Date().setHours(0,0,0,0) - new Date(2026, 7, 10).setHours(0,0,0,0)) / 86400000); 
-      return d < 0 ? null : timetableCycle[d % 14] || null; 
+    const ttCyc = { 0:["Community Group","Economics","Economics","English","English","General Mathematics","General Mathematics","Community Group"], 1:["Community Group","Pre mathematical methods","Wellbeing","Religious education","Religious education","Economics","English","Community Group"], 2:["Community Group","Legal studies","Legal studies","Physics","Physics","Pre mathematical methods","Pre mathematical methods","Community Group"], 3:["Community Group","Economics","Economics","General Mathematics","General Mathematics","English","English","Community Group"], 4:["Community Group","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Physics","Physics","Community Group"], 7:["Community Group","English","English","Economics","Economics","General Mathematics","General Mathematics","Community Group"], 8:["Community Group","Physics","Wellbeing","Religious education","Religious education","Legal studies","General Mathematics","Community Group"], 9:["Community Group","Physics","Physics","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Community Group"], 10:["Community Group","English","English","General Mathematics","General Mathematics","Economics","Economics","Community Group"], 11:["Community Group","Physics","Physics","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Community Group"] };
+    const sLab = ["Morning Group", "Session 1", "Session 2", "Session 3", "Session 4", "Session 5", "Session 6", "Afternoon Group"];
+    function getTT() { const d = Math.floor((new Date().setHours(0,0,0,0) - new Date(2026, 7, 10).setHours(0,0,0,0)) / 86400000); return d < 0 ? null : ttCyc[d % 14] || null; }
+
+    let aCtx;
+    function pSnd(t) {
+      if(!aCtx) aCtx = new (window.AudioContext || window.webkitAudioContext)(); if(aCtx.state === 'suspended') aCtx.resume();
+      const o = aCtx.createOscillator(), g = aCtx.createGain(), n = aCtx.currentTime; o.connect(g); g.connect(aCtx.destination);
+      if(t==='tick') { o.type='sine'; o.frequency.setValueAtTime(800,n); o.frequency.exponentialRampToValueAtTime(1400,n+.08); g.gain.setValueAtTime(.15,n); g.gain.exponentialRampToValueAtTime(.01,n+.08); o.start(); o.stop(n+.08); }
+      else if(t==='pop') { o.type='triangle'; o.frequency.setValueAtTime(300,n); o.frequency.exponentialRampToValueAtTime(100,n+.12); g.gain.setValueAtTime(.2,n); g.gain.exponentialRampToValueAtTime(.01,n+.12); o.start(); o.stop(n+.12); }
+      else if(t==='swoosh') { o.type='sine'; o.frequency.setValueAtTime(300,n); o.frequency.exponentialRampToValueAtTime(500,n+.12); g.gain.setValueAtTime(.1,n); g.gain.linearRampToValueAtTime(.01,n+.12); o.start(); o.stop(n+.12); }
+      else if(t==='success') { o.type='sine'; o.frequency.setValueAtTime(523.25,n); o.frequency.setValueAtTime(659.25,n+.08); g.gain.setValueAtTime(.15,n); g.gain.linearRampToValueAtTime(.01,n+.25); o.start(); o.stop(n+.25); }
     }
 
-    let audioCtx;
-    function playSound(t) {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); 
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      const o = audioCtx.createOscillator(), g = audioCtx.createGain(), n = audioCtx.currentTime; 
-      o.connect(g); g.connect(audioCtx.destination);
-      if (t === 'tick') { o.type='sine'; o.frequency.setValueAtTime(800,n); o.frequency.exponentialRampToValueAtTime(1400,n+0.08); g.gain.setValueAtTime(0.15,n); g.gain.exponentialRampToValueAtTime(0.01,n+0.08); o.start(); o.stop(n+0.08); }
-      else if (t === 'pop') { o.type='triangle'; o.frequency.setValueAtTime(300,n); o.frequency.exponentialRampToValueAtTime(100,n+0.12); g.gain.setValueAtTime(0.2,n); g.gain.exponentialRampToValueAtTime(0.01,n+0.12); o.start(); o.stop(n+0.12); }
-      else if (t === 'swoosh') { o.type='sine'; o.frequency.setValueAtTime(300,n); o.frequency.exponentialRampToValueAtTime(500,n+0.12); g.gain.setValueAtTime(0.1,n); g.gain.linearRampToValueAtTime(0.01,n+0.12); o.start(); o.stop(n+0.12); }
-      else if (t === 'success') { o.type='sine'; o.frequency.setValueAtTime(523.25,n); o.frequency.setValueAtTime(659.25,n+0.08); g.gain.setValueAtTime(0.15,n); g.gain.linearRampToValueAtTime(0.01,n+0.25); o.start(); o.stop(n+0.25); }
-    }
+    const stD = [ { c: "rgba(239, 68, 68, 0.12)", h: "#EF4444", l: "Falling behind" }, { c: "rgba(245, 158, 11, 0.12)", h: "#F59E0B", l: "Behind" }, { c: "var(--card-bg)", h: "#94A3B8", l: "Up to date" }, { c: "rgba(16, 185, 129, 0.12)", h: "#10B981", l: "Ahead" }, { c: "rgba(5, 150, 105, 0.15)", h: "#059669", l: "Well ahead" } ];
 
-    const statuses = [ 
-      { color: "rgba(239, 68, 68, 0.12)", hex: "#EF4444", label: "Falling behind" }, 
-      { color: "rgba(245, 158, 11, 0.12)", hex: "#F59E0B", label: "Behind" }, 
-      { color: "var(--card-bg)", hex: "#94A3B8", label: "Up to date" }, 
-      { color: "rgba(16, 185, 129, 0.12)", hex: "#10B981", label: "Ahead" }, 
-      { color: "rgba(5, 150, 105, 0.15)", hex: "#059669", label: "Well ahead" } 
-    ];
+    window.onload = () => { try { appSetApply(); renderHome(true); } catch(e) {} setTimeout(() => { $('splash').style.opacity = '0'; setTimeout(() => $('splash').style.display = 'none', 400); }, 500); };
 
-    let subjectsData = JSON.parse(localStorage.getItem('org_subjects')) || ["English", "General Mathematics", "Economics", "Legal studies", "Pre mathematical methods", "Religious education", "Physics", "Wellbeing"].map(name => ({ id: name.replace(/\s+/g, '-').toLowerCase(), name: name, status: 2, homework: [], notes: "", grades: [], photos: [] }));
-    subjectsData.forEach(s => { if (!s.photos) s.photos = []; }); 
-    
-    let globalNotes = JSON.parse(localStorage.getItem('org_global')) || []; 
-    let deadlines = JSON.parse(localStorage.getItem('org_deadlines')) || []; 
-    
-    let todayString = new Date().toDateString(); 
-    let ringStats = JSON.parse(localStorage.getItem('org_ring')) || { date: todayString, score: 0 }; 
-    if (ringStats.date !== todayString) ringStats = { date: todayString, score: 0 }; 
-    
-    let currentSubjectId = null;
+    function sDat() { localStorage.setItem('org_subjects', JSON.stringify(sData)); localStorage.setItem('org_global', JSON.stringify(gNotes)); localStorage.setItem('org_deadlines', JSON.stringify(dlData)); localStorage.setItem('org_ring', JSON.stringify(ring)); updRUI(); updHUI(); }
+    function addRSc() { if(ring.score < 5) { ring.score++; sDat(); } }
+    function updRUI() { $('study-ring').style.strokeDasharray = `${Math.min((ring.score/5)*100, 100)}, 100`; $('ring-score').innerText = `${ring.score}/5`; }
+    function updHUI() { let c = [0,0,0,0,0]; sData.forEach(s => c[s.status]++); $('health-bar').innerHTML = c.map((cnt, i) => cnt > 0 ? `<div class="health-segment" style="width: ${(cnt/sData.length)*100}%; background-color: ${stD[i].h};"></div>` : '').join(''); }
+    function isOD(ds) { return new Date(ds.split('-')[0], ds.split('-')[1]-1, ds.split('-')[2]) < new Date().setHours(0,0,0,0); }
+    function gDD(ds) { return Math.ceil((new Date(ds.split('-')[0], ds.split('-')[1]-1, ds.split('-')[2]) - new Date().setHours(0,0,0,0)) / 86400000); }
+    function fmtD(ds) { return new Date(ds.split('-')[0], ds.split('-')[1]-1, ds.split('-')[2]).toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'}); }
 
-    window.onload = () => { 
-      try { 
-        applySettings(); 
-        renderHome(true); 
-      } catch(e) { console.error(e); } 
-      setTimeout(() => { 
-        documentById('splash').style.opacity = '0'; 
-        setTimeout(() => documentById('splash').style.display = 'none', 400); 
-      }, 600); 
-    };
+    function renderHome(isInit = false) {
+      const a = isInit ? 'cascade-item' : '';
+      if(isInit) { ['home-ring-card','home-simon-card','home-health-card','dl-title','subj-title','task-title','task-input-card','add-dl-title','add-dl-card'].forEach(i => $(i).classList.add('cascade-item')); updRUI(); updHUI(); }
 
-    function saveData() { 
-      localStorage.setItem('org_subjects', JSON.stringify(subjectsData)); 
-      localStorage.setItem('org_global', JSON.stringify(globalNotes)); 
-      localStorage.setItem('org_deadlines', JSON.stringify(deadlines)); 
-      localStorage.setItem('org_ring', JSON.stringify(ringStats)); 
-      updateRingUI(); 
-      updateHealthBarUI(); 
-    }
+      if(dlData.length > 0) {
+        $('deadline-section').style.display = 'block'; dlData.sort((a,b) => gDD(a.date) - gDD(b.date));
+        $('deadline-list').innerHTML = dlData.map(d => { const ds = gDD(d.date); return `<div class="deadline-card ${ds<=2?'critical':(ds<=7?'warning':'')}"><div class="dl-days">${ds<0?'0':ds}</div><div class="dl-label">Days until<br>${d.name}</div><button class="icon-btn" style="position:absolute; top:8px; right:8px; width:26px; height:26px; font-size:14px; color:white; background:rgba(0,0,0,0.15); border:none; box-shadow:none;" onclick="delDL('${d.id}')">×</button></div>`; }).join('');
+      } else $('deadline-section').style.display = 'none';
 
-    function addRingScore() { if (ringStats.score < 5) { ringStats.score++; saveData(); } }
-    function updateRingUI() { 
-      documentById('study-ring').style.strokeDasharray = `${Math.min((ringStats.score/5)*100, 100)}, 100`; 
-      documentById('ring-score').innerText = `${ringStats.score}/5`; 
-    }
-
-    function updateHealthBarUI() { 
-      let counts = [0,0,0,0,0]; 
-      subjectsData.forEach(s => counts[s.status]++); 
-      documentById('health-bar').innerHTML = counts.map((c, i) => c > 0 ? `<div class="health-segment" style="width: ${(c/subjectsData.length)*100}%; background-color: ${statuses[i].hex};"></div>` : '').join(''); 
-    }
-
-    function isOverdue(dateString) { return new Date(dateString.split('-')[0], dateString.split('-')[1]-1, dateString.split('-')[2]) < new Date().setHours(0,0,0,0); }
-    function getDaysDiff(dateString) { return Math.ceil((new Date(dateString.split('-')[0], dateString.split('-')[1]-1, dateString.split('-')[2]) - new Date().setHours(0,0,0,0)) / 86400000); }
-    function formatDate(dateString) { return new Date(dateString.split('-')[0], dateString.split('-')[1]-1, dateString.split('-')[2]).toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'}); }
-
-    function renderHome(isInitial = false) {
-      const anim = isInitial ? 'cascade-item' : '';
-      if(isInitial) { 
-        documentById('home-ring-card').classList.add('cascade-item'); 
-        documentById('home-simon-card').classList.add('cascade-item'); 
-        documentById('home-health-card').classList.add('cascade-item'); 
-        documentById('dl-title').classList.add('cascade-item'); 
-        documentById('subj-title').classList.add('cascade-item'); 
-        documentById('task-title').classList.add('cascade-item'); 
-        documentById('task-input-card').classList.add('cascade-item'); 
-        documentById('add-dl-title').classList.add('cascade-item'); 
-        documentById('add-dl-card').classList.add('cascade-item'); 
-        updateRingUI(); updateHealthBarUI(); 
-      }
-
-      const dlSec = documentById('deadline-section');
-      if (deadlines.length > 0) {
-        dlSec.style.display = 'block'; deadlines.sort((a,b) => getDaysDiff(a.date) - getDaysDiff(b.date));
-        documentById('deadline-list').innerHTML = deadlines.map(dl => {
-          const days = getDaysDiff(dl.date); let stateClass = ''; if (days <= 2) stateClass = 'critical'; else if (days <= 7) stateClass = 'warning';
-          return `<div class="deadline-card ${stateClass}"><div class="dl-days">${days < 0 ? '0' : days}</div><div class="dl-label">Days until<br>${dl.name}</div><button class="icon-btn" style="position:absolute; top:8px; right:8px; width:26px; height:26px; font-size:14px; color:white; background:rgba(0,0,0,0.15); border:none; box-shadow:none;" onclick="deleteDeadline('${dl.id}')">×</button></div>`;
-        }).join('');
-      } else { dlSec.style.display = 'none'; }
-
-      const todaysClasses = getTodaysTimetable();
-      const ttSec = documentById('dynamic-timetable-section');
-      if (todaysClasses) {
-        ttSec.className = anim; 
-        ttSec.innerHTML = `<h2>Today's Schedule</h2><div class="horizontal-scroll" style="margin-bottom: 20px;">${todaysClasses.map((cName, i) => {
-          const matchingSub = subjectsData.find(s => s.name.toLowerCase() === cName.toLowerCase());
-          const isSession = sessionLabels[i].includes('Session');
-          const cCol = matchingSub ? statuses[matchingSub.status].color : (isSession ? 'rgba(0,0,0,0.03)' : 'var(--card-bg)');
-          const bCol = matchingSub ? statuses[matchingSub.status].hex : 'var(--card-border)';
-          const act = matchingSub ? `onclick="openDetail('${matchingSub.id}')"` : '';
-          return `<div class="timetable-card app-card" data-tt-sub="${matchingSub ? matchingSub.id : ''}" style="background-color: ${cCol}; border-color: ${bCol};" ${act}><div class="tt-session">${sessionLabels[i]}</div><div class="tt-subject">${cName}</div></div>`;
-        }).join('')}</div>`;
-      } else { 
-        ttSec.className = anim;
-        ttSec.innerHTML = `<h2>Today's Schedule</h2>
-          <div class="app-card" style="padding: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px;">
-            <span style="font-size: 28px;">🎉</span>
-            <span style="font-weight: 600; color: var(--text-secondary); text-align: center;">It's the weekend!<br>No classes scheduled today.</span>
-          </div>`;
-      }
-
-      if (isInitial) subjectsData.sort((a, b) => a.status - b.status);
-      
-      documentById('subjects-list').innerHTML = subjectsData.map((sub, i) => `
-        <div class="card app-card ${anim}" data-id="${sub.id}" style="background-color: ${statuses[sub.status].color}; border-color: ${statuses[sub.status].hex}; animation-delay: ${0.05*i}s; z-index: ${100 - i};" onclick="openDetail('${sub.id}')">
-          <div class="boxes-container">
-            ${[0,1,2,3,4].map(j => `<div class="box ${sub.status===j?'active':''}" style="--box-color: ${statuses[j].hex};" onclick="event.stopPropagation(); setStatus('${sub.id}', ${j})"></div>`).join('')}
-          </div>
-          <div class="subject-title">${sub.name}</div>
-        </div>
-      `).join('');
-      
-      documentById('global-notes-list').innerHTML = globalNotes.map((n, i) => `
-        <div id="global-item-${n.id}" class="list-item app-card task-card ${anim} ${isOverdue(n.date)?'overdue':''}" style="animation-delay: ${0.05*i}s;">
-          <div><div style="font-weight: 600; font-size: 15px;">${n.text}</div><div class="date-badge">Due: ${formatDate(n.date)}</div></div>
-          <button class="delete-btn" onclick="completeGlobalAnim('${n.id}')">×</button>
-        </div>
-      `).join('');
-    }
-
-    function processPhoto(e) { 
-      const f = e.target.files[0]; if(!f) return; playSound('pop'); 
-      const r = new FileReader(); 
-      r.onload = (ev) => { 
-        const img = new Image(); 
-        img.onload = () => { 
-          const c = document.createElement('canvas'); const s = Math.min(600/img.width, 1); 
-          c.width = img.width*s; c.height = img.height*s; 
-          c.getContext('2d').drawImage(img,0,0,c.width,c.height); 
-          getSub(currentSubjectId).photos.push({ id: Date.now().toString(), img: c.toDataURL('image/jpeg', 0.5) }); 
-          saveData(); renderDetail(true); 
-        }; 
-        img.src = ev.target.result; 
-      }; 
-      r.readAsDataURL(f); 
-    }
-
-    function deletePhoto(id) { 
-      playSound('tick'); 
-      getSub(currentSubjectId).photos = getSub(currentSubjectId).photos.filter(p => p.id !== id); 
-      saveData(); renderDetail(true); 
-    }
-
-    function animateReorder(subId) {
-      const cards = Array.from(documentById('subjects-list').children);
-      
-      cards.forEach(c => { 
-        c.style.animation = 'none'; 
-        c.classList.remove('cascade-item'); 
-      });
-      
-      const pos = {}; cards.forEach(c => pos[c.dataset.id] = c.getBoundingClientRect());
-      
-      subjectsData.sort((a,b) => a.status - b.status);
-      
-      subjectsData.forEach((s, idx) => { 
-        const c = documentById('subjects-list').querySelector(`.card[data-id="${s.id}"]`); 
-        if(c) { 
-          documentById('subjects-list').appendChild(c); 
-          c.style.backgroundColor=statuses[s.status].color; 
-          c.style.borderColor=statuses[s.status].hex; 
-          c.querySelectorAll('.box').forEach((b,i)=>{ if(i===s.status) b.classList.add('active'); else b.classList.remove('active'); }); 
-          c.dataset.targetZ = 100 - idx;
-        } 
-      });
-      
-      cards.forEach(c => {
-        const dY = pos[c.dataset.id].top - c.getBoundingClientRect().top;
-        if (dY !== 0) {
-          const isC = (c.dataset.id === subId); 
-          c.style.transition = 'none'; 
-          c.style.transform = `translateY(${dY}px)`; 
-          
-          c.style.zIndex = isC ? '1' : '10'; 
-          
-          requestAnimationFrame(() => requestAnimationFrame(() => {
-            if(isC) { 
-              c.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)'; 
-              c.style.transform = `translateY(0) scale(0.95)`; 
-              setTimeout(() => { 
-                c.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'; 
-                c.style.transform = `translateY(0) scale(1)`; 
-                setTimeout(() => { 
-                  c.style.transition = ''; 
-                  c.style.zIndex = c.dataset.targetZ; 
-                }, 300); 
-              }, 350); 
-            } else { 
-              c.style.transition = 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'; 
-              c.style.transform = `translateY(0)`; 
-              setTimeout(() => { 
-                c.style.transition = ''; 
-                c.style.zIndex = c.dataset.targetZ; 
-              }, 500); 
-            }
-          }));
-        } else {
-          c.style.zIndex = c.dataset.targetZ;
-        }
-      });
-    }
-
-    function setStatus(subId, sIdx) { 
-      playSound('tick'); 
-      getSub(subId).status = sIdx; 
-      saveData(); 
-      if (currentSubjectId === null) { 
-        animateReorder(subId); 
-        document.querySelectorAll(`.timetable-card[data-tt-sub="${subId}"]`).forEach(c => { 
-          c.style.backgroundColor = statuses[sIdx].color; 
-          c.style.borderColor = statuses[sIdx].hex; 
-          c.style.transform = 'scale(1.04)'; 
-          setTimeout(() => c.style.transform='', 200); 
-        });
-      } else { 
-        document.querySelectorAll('.status-row').forEach((r,i) => { 
-          const b = r.querySelector('.box'); 
-          if(i===sIdx) { 
-            r.classList.add('active-status'); b.classList.add('active'); 
-            r.style.setProperty('--status-bg', statuses[i].color); 
-            r.style.setProperty('--box-color', statuses[i].hex); 
-            b.style.setProperty('--box-color', statuses[i].hex); 
-          } else { 
-            r.classList.remove('active-status'); b.classList.remove('active'); 
-          } 
-        }); 
-      } 
-      updateHealthBarUI();
-    }
-
-    function openScreen(sId) { 
-      playSound('swoosh'); 
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); 
-      const scr = documentById(sId); 
-      void scr.offsetWidth; 
-      scr.classList.add('active'); 
-      window.scrollTo(0,0); 
-      if (sId === 'settings-screen') { applySettings(); renderSettings(); } 
-    }
-    
-    function openDetail(subId) { currentSubjectId = subId; openScreen('detail-screen'); renderDetail(); }
-    function goHome() { currentSubjectId = null; subjectsData.sort((a,b) => a.status - b.status); renderHome(false); openScreen('home-screen'); }
-
-    function renderDetail(isUpdate = false) {
-      const sub = getSub(currentSubjectId); const anim = isUpdate ? '' : 'cascade-item';
-      documentById('detail-title').innerText = sub.name; 
-      documentById('subject-notes').value = sub.notes;
-      
-      if(!isUpdate) {
-        documentById('detail-statuses').innerHTML = statuses.map((st, i) => `
-          <div class="status-row app-card cascade-item ${sub.status===i?'active-status':''}" style="--status-bg: ${st.color}; --box-color: ${st.hex}; animation-delay: ${0.03*i}s;" onclick="setStatus('${sub.id}', ${i})">
-            <div class="box ${sub.status===i?'active':''}" style="--box-color: ${st.hex};"></div>
-            <div class="status-label">${st.label}</div>
-          </div>
-        `).join('');
-      }
-      
-      const pGal = documentById('photo-gallery'); 
-      if(sub.photos.length>0) { 
-        pGal.style.display='flex'; 
-        pGal.innerHTML = sub.photos.map(p => `<div class="photo-card ${anim}" style="background-image: url('${p.img}')"><button class="del-photo" onclick="deletePhoto('${p.id}')">×</button></div>`).join(''); 
-      } else { 
-        pGal.style.display='none'; pGal.innerHTML=''; 
-      }
-      
-      let tS=0, tO=0; 
-      documentById('grades-list').innerHTML = sub.grades.map((g,i) => { 
-        tS+=parseFloat(g.score); tO+=parseFloat(g.outOf); 
-        return `<div class="list-item app-card ${anim}" style="animation-delay:${0.05*i}s;"><div><div style="font-weight: 600;">${g.name}</div><div class="date-badge">${g.score} / ${g.outOf}</div></div><div style="display:flex; align-items:center; gap: 8px;"><div class="grade-badge">${Math.round((g.score/g.outOf)*100)}%</div><button class="delete-btn" onclick="deleteGrade('${g.id}')">×</button></div></div>`; 
-      }).join('');
-      
-      documentById('average-banner').innerText = tO>0 ? `Current Average: ${Math.round((tS/tO)*100)}%` : "No Grades Logged";
-      
-      documentById('hw-list').innerHTML = sub.homework.map((hw,i) => `
-        <div id="hw-item-${hw.id}" class="list-item app-card task-card ${anim} ${isOverdue(hw.date)?'overdue':''}" style="animation-delay:${0.05*i}s;">
-          <div><div style="font-weight: 600; font-size: 15px;">${hw.text}</div><div class="date-badge">Due: ${formatDate(hw.date)}</div></div>
-          <button class="delete-btn" onclick="completeHomeworkAnim('${hw.id}')">×</button>
-        </div>
-      `).join('');
-    }
-
-    function perfComp(el, cb) { 
-      playSound('success'); 
-      el.style.transition='all 0.3s ease'; 
-      el.style.background='var(--success)'; 
-      el.style.transform='scale(0.96) translateX(15px)'; 
-      const d=el.querySelector('div>div:first-child'), b=el.querySelector('.date-badge'), x=el.querySelector('.delete-btn'); 
-      if(d) d.style.color='#FFF'; 
-      if(b) b.style.color='rgba(255,255,255,0.85)'; 
-      if(x) { x.innerHTML='✓'; x.style.color='#FFF'; x.style.transform='scale(1.1)'; } 
-      
-      setTimeout(()=>{
-        el.style.transition='all 0.4s cubic-bezier(0.16,1,0.3,1)';
-        el.style.transform='scale(0.9) translateX(30px)';
-        el.style.opacity='0';
-        el.style.maxHeight=el.offsetHeight+'px'; 
-        requestAnimationFrame(()=>{
-          el.style.maxHeight='0px';el.style.paddingTop='0';el.style.paddingBottom='0';el.style.marginBottom='0';el.style.borderWidth='0';
-        }); 
-        setTimeout(cb, 380); 
-      }, 300); 
-    }
-
-    function completeGlobalAnim(id) { const el=documentById(`global-item-${id}`); if(el) perfComp(el,()=>deleteGlobal(id)); else deleteGlobal(id); }
-    function completeHomeworkAnim(id) { const el=documentById(`hw-item-${id}`); if(el) perfComp(el,()=>deleteHomework(id)); else deleteHomework(id); }
-
-    function deleteGlobal(id) { addRingScore(); globalNotes = globalNotes.filter(n => n.id !== id); saveData(); renderHome(false); }
-    function deleteHomework(hwId) { addRingScore(); getSub(currentSubjectId).homework = getSub(currentSubjectId).homework.filter(h => h.id !== hwId); saveData(); const el=documentById(`hw-item-${hwId}`); if(el) el.remove(); }
-    
-    function addGrade() { playSound('pop'); const n=documentById('grade-name'),s=documentById('grade-score'),o=documentById('grade-out-of'); if(!n.value||!s.value||!o.value) return; getSub(currentSubjectId).grades.push({ id: Date.now().toString(), name: n.value, score: s.value, outOf: o.value }); n.value=''; s.value=''; o.value=''; saveData(); renderDetail(true); }
-    function deleteGrade(id) { playSound('tick'); getSub(currentSubjectId).grades = getSub(currentSubjectId).grades.filter(g => g.id !== id); saveData(); renderDetail(true); }
-    function addHomework() { playSound('pop'); const d=documentById('hw-desc'), dt=documentById('hw-date'); if(!d.value||!dt.value) return; getSub(currentSubjectId).homework.push({ id: Date.now().toString(), text: d.value, date: dt.value }); d.value=''; dt.value=''; saveData(); renderDetail(true); }
-    function addGlobalNote() { playSound('pop'); const t=documentById('global-task'),d=documentById('global-date'); if(!t.value||!d.value) return; globalNotes.push({ id: Date.now().toString(), text: t.value, date: d.value }); t.value=''; d.value=''; saveData(); renderHome(false); }
-    function saveNotes() { getSub(currentSubjectId).notes = documentById('subject-notes').value; saveData(); }
-    function addDeadline() { playSound('pop'); const n=documentById('dl-name'), d=documentById('dl-date'); if(!n.value||!d.value) return; deadlines.push({ id: Date.now().toString(), name: n.value, date: d.value }); n.value=''; d.value=''; saveData(); renderHome(false); alert("Deadline Added!"); }
-    function deleteDeadline(id) { playSound('tick'); deadlines = deadlines.filter(d => d.id !== id); saveData(); renderHome(false); }
-
-    let tInt; let tLeft = 25*60; let isRun = false; 
-    const pI = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`;
-    const psI = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
-    
-    function toggleTimer() { 
-      const w = documentById('timer-icon'), r = documentById('timer-progress'); 
-      playSound('tick'); 
-      if(isRun){
-        clearInterval(tInt); isRun=false; w.innerHTML=pI;
+      const tt = getTT(); const ts = $('dynamic-timetable-section');
+      if(tt) {
+        ts.className = a; ts.innerHTML = `<h2>Today's Schedule</h2><div class="horizontal-scroll" style="margin-bottom: 20px;">${tt.map((cN, i) => { const m = sData.find(s => s.name.toLowerCase() === cN.toLowerCase()); const iS = sLab[i].includes('Session'); return `<div class="timetable-card app-card" data-tt-sub="${m?m.id:''}" style="background-color: ${m?stD[m.status].c:(iS?'rgba(0,0,0,0.03)':'var(--card-bg)')}; border-color: ${m?stD[m.status].h:'var(--card-border)'};" ${m?`onclick="openDet('${m.id}')"`:''}><div class="tt-session">${sLab[i]}</div><div class="tt-subject">${cN}</div></div>`; }).join('')}</div>`;
       } else {
-        isRun=true; w.innerHTML=psI; 
-        tInt=setInterval(()=>{
-          tLeft--;
-          let m=Math.floor(tLeft/60),s=tLeft%60; 
-          documentById('timer-display').innerText=`${m}:${s<10?'0':''}${s}`; 
-          r.style.strokeDasharray=`${(tLeft/(25*60))*100}, 100`; 
-          if(tLeft<=0){
-            clearInterval(tInt); isRun=false; w.innerHTML=pI; tLeft=25*60; 
-            r.style.strokeDasharray=`100, 100`; documentById('timer-display').innerText=`25:00`; 
-            playSound('success'); addRingScore(); alert("Focus complete!");
-          }
-        }, 1000);
-      } 
+        ts.className = a; ts.innerHTML = `<h2>Today's Schedule</h2><div class="app-card" style="padding: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px;"><span style="font-size: 28px;">🎉</span><span style="font-weight: 600; color: var(--text-secondary); text-align: center;">It's the weekend!<br>No classes scheduled today.</span></div>`;
+      }
+
+      if(isInit) sData.sort((a, b) => a.status - b.status);
+      $('subjects-list').innerHTML = sData.map((s, i) => `<div class="card app-card ${a}" data-id="${s.id}" style="background-color: ${stD[s.status].c}; border-color: ${stD[s.status].h}; animation-delay: ${0.05*i}s; z-index: ${100-i};" onclick="openDet('${s.id}')"><div class="boxes-container">${[0,1,2,3,4].map(j => `<div class="box ${s.status===j?'active':''}" style="--box-color: ${stD[j].h};" onclick="event.stopPropagation(); setSt('${s.id}', ${j})"></div>`).join('')}</div><div class="subject-title">${s.name}</div></div>`).join('');
+      $('global-notes-list').innerHTML = gNotes.map((n, i) => `<div id="global-item-${n.id}" class="list-item app-card task-card ${a} ${isOD(n.date)?'overdue':''}" style="animation-delay: ${0.05*i}s;"><div><div style="font-weight: 600; font-size: 15px;">${n.text}</div><div class="date-badge">Due: ${fmtD(n.date)}</div></div><button class="delete-btn" onclick="compGAnim('${n.id}')">×</button></div>`).join('');
     }
 
-    function renderSettings() { documentById('settings-subjects-list').innerHTML = subjectsData.map(s => `<div class="list-item app-card"><div style="font-weight: 500;">${s.name}</div><button class="delete-btn" onclick="deleteSubject('${s.id}')">×</button></div>`).join(''); }
-    function addSubject() { playSound('pop'); const i=documentById('new-subject'); if(!i.value)return; subjectsData.push({ id: Date.now().toString(), name: i.value, status: 2, homework: [], notes: "", grades: [], photos: []}); i.value=''; saveData(); renderSettings(); }
-    function deleteSubject(id) { playSound('tick'); if(confirm("Delete?")) { subjectsData = subjectsData.filter(s => s.id !== id); saveData(); renderSettings(); } }
+    function processPhoto(e) { const f = e.target.files[0]; if(!f) return; pSnd('pop'); const r = new FileReader(); r.onload = ev => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const s = Math.min(600/img.width, 1); c.width = img.width*s; c.height = img.height*s; c.getContext('2d').drawImage(img,0,0,c.width,c.height); getSub(cSubId).photos.push({ id: Date.now().toString(), img: c.toDataURL('image/jpeg', 0.5) }); sDat(); renderDet(true); }; img.src = ev.target.result; }; r.readAsDataURL(f); }
+    function delPhoto(id) { pSnd('tick'); getSub(cSubId).photos = getSub(cSubId).photos.filter(p => p.id !== id); sDat(); renderDet(true); }
+
+    function animRO(id) {
+      const crd = Array.from($('subjects-list').children);
+      crd.forEach(c => { c.style.animation='none'; c.classList.remove('cascade-item'); });
+      const pos = {}; crd.forEach(c => pos[c.dataset.id] = c.getBoundingClientRect());
+      sData.sort((a,b) => a.status - b.status);
+      sData.forEach((s, idx) => { const c = $('subjects-list').querySelector(`.card[data-id="${s.id}"]`); if(c) { $('subjects-list').appendChild(c); c.style.backgroundColor=stD[s.status].c; c.style.borderColor=stD[s.status].h; c.querySelectorAll('.box').forEach((b,i)=>{ b.classList.toggle('active', i===s.status); }); c.dataset.tZ = 100-idx; } });
+      crd.forEach(c => {
+        const dY = pos[c.dataset.id].top - c.getBoundingClientRect().top;
+        if(dY !== 0) {
+          const isC = (c.dataset.id === id); c.style.transition='none'; c.style.transform=`translateY(${dY}px)`; c.style.zIndex = isC?'1':'10';
+          requestAnimationFrame(() => requestAnimationFrame(() => {
+            if(isC) { c.style.transition='transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)'; c.style.transform=`translateY(0) scale(0.95)`; setTimeout(() => { c.style.transition='transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'; c.style.transform=`translateY(0) scale(1)`; setTimeout(() => { c.style.transition=''; c.style.zIndex=c.dataset.tZ; }, 300); }, 350); }
+            else { c.style.transition='transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'; c.style.transform=`translateY(0)`; setTimeout(() => { c.style.transition=''; c.style.zIndex=c.dataset.tZ; }, 500); }
+          }));
+        } else c.style.zIndex = c.dataset.tZ;
+      });
+    }
+
+    function setSt(id, idx) { 
+      pSnd('tick'); getSub(id).status = idx; sDat(); 
+      if(!cSubId) { 
+        animRO(id); $$(`.timetable-card[data-tt-sub="${id}"]`).forEach(c => { c.style.backgroundColor = stD[idx].c; c.style.borderColor = stD[idx].h; c.style.transform = 'scale(1.04)'; setTimeout(() => c.style.transform='', 200); });
+      } else { 
+        $$('.status-row').forEach((r,i) => { const b = r.querySelector('.box'); if(i===idx) { r.classList.add('active-status'); b.classList.add('active'); r.style.setProperty('--status-bg', stD[i].c); r.style.setProperty('--box-color', stD[i].h); b.style.setProperty('--box-color', stD[i].h); } else { r.classList.remove('active-status'); b.classList.remove('active'); } }); 
+      } updHUI();
+    }
+
+    function openSc(id) { pSnd('swoosh'); $$('.screen').forEach(s => s.classList.remove('active')); const scr = $(id); void scr.offsetWidth; scr.classList.add('active'); window.scrollTo(0,0); if(id === 'settings-screen') { appSetApply(); rendSet(); } }
+    function openDet(id) { cSubId = id; openSc('detail-screen'); renderDet(); }
+    function goHome() { cSubId = null; sData.sort((a,b) => a.status - b.status); renderHome(false); openSc('home-screen'); }
+
+    function renderDet(isUpd = false) {
+      const s = getSub(cSubId); const a = isUpd ? '' : 'cascade-item';
+      $('detail-title').innerText = s.name; $('subject-notes').value = s.notes;
+      if(!isUpd) $('detail-statuses').innerHTML = stD.map((st, i) => `<div class="status-row app-card cascade-item ${s.status===i?'active-status':''}" style="--status-bg: ${st.c}; --box-color: ${st.h}; animation-delay: ${0.03*i}s;" onclick="setSt('${s.id}', ${i})"><div class="box ${s.status===i?'active':''}" style="--box-color: ${st.h};"></div><div class="status-label">${st.l}</div></div>`).join('');
+      const pG = $('photo-gallery'); if(s.photos.length>0) { pG.style.display='flex'; pG.innerHTML = s.photos.map(p => `<div class="photo-card ${a}" style="background-image: url('${p.img}')"><button class="del-photo" onclick="delPhoto('${p.id}')">×</button></div>`).join(''); } else { pG.style.display='none'; pG.innerHTML=''; }
+      let tS=0, tO=0; $('grades-list').innerHTML = s.grades.map((g,i) => { tS+=parseFloat(g.score); tO+=parseFloat(g.outOf); return `<div class="list-item app-card ${a}" style="animation-delay:${0.05*i}s;"><div><div style="font-weight: 600;">${g.name}</div><div class="date-badge">${g.score} / ${g.outOf}</div></div><div style="display:flex; align-items:center; gap: 8px;"><div class="grade-badge">${Math.round((g.score/g.outOf)*100)}%</div><button class="delete-btn" onclick="delGrade('${g.id}')">×</button></div></div>`; }).join('');
+      $('average-banner').innerText = tO>0 ? `Current Average: ${Math.round((tS/tO)*100)}%` : "No Grades Logged";
+      $('hw-list').innerHTML = s.homework.map((hw,i) => `<div id="hw-item-${hw.id}" class="list-item app-card task-card ${a} ${isOD(hw.date)?'overdue':''}" style="animation-delay:${0.05*i}s;"><div><div style="font-weight: 600; font-size: 15px;">${hw.text}</div><div class="date-badge">Due: ${fmtD(hw.date)}</div></div><button class="delete-btn" onclick="compHWAnim('${hw.id}')">×</button></div>`).join('');
+    }
+
+    function perfC(el, cb) { pSnd('success'); el.style.transition='all 0.3s ease'; el.style.background='var(--success)'; el.style.transform='scale(0.96) translateX(15px)'; const d=el.querySelector('div>div:first-child'), b=el.querySelector('.date-badge'), x=el.querySelector('.delete-btn'); if(d) d.style.color='#FFF'; if(b) b.style.color='rgba(255,255,255,0.85)'; if(x) { x.innerHTML='✓'; x.style.color='#FFF'; x.style.transform='scale(1.1)'; } setTimeout(()=>{ el.style.transition='all 0.4s cubic-bezier(0.16,1,0.3,1)'; el.style.transform='scale(0.9) translateX(30px)'; el.style.opacity='0'; el.style.maxHeight=el.offsetHeight+'px'; requestAnimationFrame(()=>{ el.style.maxHeight='0px';el.style.paddingTop='0';el.style.paddingBottom='0';el.style.marginBottom='0';el.style.borderWidth='0'; }); setTimeout(cb, 380); }, 300); }
+    function compGAnim(id) { const el=$(`global-item-${id}`); if(el) perfC(el,()=>delGN(id)); else delGN(id); }
+    function compHWAnim(id) { const el=$(`hw-item-${id}`); if(el) perfC(el,()=>delHW(id)); else delHW(id); }
+
+    function delGN(id) { addRSc(); gNotes = gNotes.filter(n => n.id !== id); sDat(); renderHome(false); }
+    function delHW(id) { addRSc(); getSub(cSubId).homework = getSub(cSubId).homework.filter(h => h.id !== id); sDat(); const el=$(`hw-item-${id}`); if(el) el.remove(); }
+    
+    function addGrade() { pSnd('pop'); const n=$('grade-name'),s=$('grade-score'),o=$('grade-out-of'); if(!n.value||!s.value||!o.value) return; getSub(cSubId).grades.push({ id: Date.now().toString(), name: n.value, score: s.value, outOf: o.value }); n.value=''; s.value=''; o.value=''; sDat(); renderDet(true); }
+    function delGrade(id) { pSnd('tick'); getSub(cSubId).grades = getSub(cSubId).grades.filter(g => g.id !== id); sDat(); renderDet(true); }
+    function addHW() { pSnd('pop'); const d=$('hw-desc'), dt=$('hw-date'); if(!d.value||!dt.value) return; getSub(cSubId).homework.push({ id: Date.now().toString(), text: d.value, date: dt.value }); d.value=''; dt.value=''; sDat(); renderDet(true); }
+    function addGN() { pSnd('pop'); const t=$('global-task'),d=$('global-date'); if(!t.value||!d.value) return; gNotes.push({ id: Date.now().toString(), text: t.value, date: d.value }); t.value=''; d.value=''; sDat(); renderHome(false); }
+    function saveNotes() { getSub(cSubId).notes = $('subject-notes').value; sDat(); }
+    function addDL() { pSnd('pop'); const n=$('dl-name'), d=$('dl-date'); if(!n.value||!d.value) return; dlData.push({ id: Date.now().toString(), name: n.value, date: d.value }); n.value=''; d.value=''; sDat(); renderHome(false); alert("Deadline Added!"); }
+    function delDL(id) { pSnd('tick'); dlData = dlData.filter(d => d.id !== id); sDat(); renderHome(false); }
+
+    let tI; let tL = 25*60; let isR = false; const pI = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`, psI = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
+    function toggleTmr() { const w = $('timer-icon'), r = $('timer-progress'); pSnd('tick'); if(isR){ clearInterval(tI); isR=false; w.innerHTML=pI; } else { isR=true; w.innerHTML=psI; tI=setInterval(()=>{ tL--; let m=Math.floor(tL/60),s=tL%60; $('timer-display').innerText=`${m}:${s<10?'0':''}${s}`; r.style.strokeDasharray=`${(tL/(25*60))*100}, 100`; if(tL<=0){ clearInterval(tI); isR=false; w.innerHTML=pI; tL=25*60; r.style.strokeDasharray=`100, 100`; $('timer-display').innerText=`25:00`; pSnd('success'); addRSc(); alert("Focus complete!"); } }, 1000); } }
+
+    function rendSet() { $('settings-subjects-list').innerHTML = sData.map(s => `<div class="list-item app-card"><div style="font-weight: 500;">${s.name}</div><button class="delete-btn" onclick="delSub('${s.id}')">×</button></div>`).join(''); }
+    function addSub() { pSnd('pop'); const i=$('new-subject'); if(!i.value)return; sData.push({ id: Date.now().toString(), name: i.value, status: 2, homework: [], notes: "", grades: [], photos: []}); i.value=''; sDat(); rendSet(); }
+    function delSub(id) { pSnd('tick'); if(confirm("Delete?")) { sData = sData.filter(s => s.id !== id); sDat(); rendSet(); } }
   </script>
 </body>
 </html>
