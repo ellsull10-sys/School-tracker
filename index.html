@@ -74,8 +74,9 @@
     .back-btn { display: flex; align-items: center; gap: 4px; padding: 8px 14px; font-size: 14px; font-weight: 600; border-radius: 16px; }
     .icon-btn:active, .back-btn:active { transform: scale(0.92); }
     
+    /* Safely decoupled shadows to prevent Safari clipping */
     .app-card { 
-      position: relative; z-index: 1;
+      position: relative; 
       background: var(--card-bg); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); 
       border: 1px solid var(--card-border); border-radius: 20px; 
     }
@@ -122,14 +123,13 @@
     .dl-label { font-size: 13px; font-weight: 500; opacity: 0.9; margin-top: 4px; }
     @keyframes pulseAlert { 0%,100% { transform: scale(1); } 50% { transform: scale(0.98); } }
 
-    .timetable-card { flex: 0 0 130px; scroll-snap-align: start; padding: 14px; display: flex; flex-direction: column; gap: 6px; cursor: pointer; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+    .timetable-card { flex: 0 0 130px; scroll-snap-align: start; padding: 14px; display: flex; flex-direction: column; gap: 6px; cursor: pointer; transition: transform 0.15s ease; }
     .timetable-card:active { transform: scale(0.95); }
     .tt-session { font-size: 12px; color: var(--text-secondary); font-weight: 600; }
     .tt-subject { font-size: 15px; font-weight: 700; line-height: 1.2; }
 
     #subjects-list { display: flex; flex-direction: column; position: relative; }
-    .card { padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 14px; transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; }
-    .card:active { transform: scale(0.97); }
+    .card { padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 14px; cursor: pointer; }
     .boxes-container { display: flex; gap: 6px; flex-shrink: 0; }
     .box { width: 24px; height: 24px; border-radius: 8px; border: 2px solid rgba(0,0,0,0.15); background: rgba(255,255,255,0.95); box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); transition: all 0.2s ease; }
     .box:active { transform: scale(0.7); }
@@ -214,7 +214,7 @@
           <div class="ring-text" id="ring-score">0/5</div>
         </div>
       </div>
-      <a href="https://simon.iona.vic.edu.au/" target="_blank" id="home-simon-card" class="widget simon-widget cascade-item" style="border-radius: 20px;">
+      <a href="https://simon.iona.vic.edu.au/" target="_blank" id="home-simon-card" class="widget simon-widget cascade-item" style="border-radius: 20px; box-shadow: 0 10px 24px rgba(30, 41, 59, 0.3);">
         <div class="simon-title">Portal</div>
         <div class="simon-action">Open Simon<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></div>
       </a>
@@ -326,17 +326,19 @@
   <script>
     const getSub = id => subjectsData.find(s => s.id === id);
 
-    let appSettings = JSON.parse(localStorage.getItem('org_settings')) || { 
-      bgEnabled: true, 
-      bgImage: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop', 
-      bgOpacity: 70 
-    };
+    // Hard fallback to built-in mesh gradient to permanently fix Unsplash bugs
+    let appSettings = JSON.parse(localStorage.getItem('org_settings')) || { bgEnabled: true, bgImage: 'default', bgOpacity: 70 };
+    if (appSettings.bgImage && appSettings.bgImage.includes('unsplash')) { appSettings.bgImage = 'default'; localStorage.setItem('org_settings', JSON.stringify(appSettings)); }
     
     function applySettings() {
       const b = document.getElementById('app-background');
       if (appSettings.bgEnabled) { 
         b.style.opacity = appSettings.bgOpacity / 100; 
-        b.style.backgroundImage = `url('${appSettings.bgImage}')`; 
+        if (appSettings.bgImage === 'default') {
+          b.style.backgroundImage = 'radial-gradient(circle at 15% 50%, rgba(120, 115, 245, 0.8), transparent 50%), radial-gradient(circle at 85% 30%, rgba(250, 112, 154, 0.8), transparent 50%), radial-gradient(circle at 50% 80%, rgba(254, 209, 100, 0.8), transparent 50%), radial-gradient(circle at 50% 20%, rgba(100, 220, 200, 0.8), transparent 50%)';
+        } else {
+          b.style.backgroundImage = `url('${appSettings.bgImage}')`; 
+        }
         document.body.classList.add('bg-active'); 
       } else { 
         b.style.opacity = 0; 
@@ -347,58 +349,10 @@
       if(document.getElementById('opacity-val')) document.getElementById('opacity-val').innerText = appSettings.bgOpacity;
     }
 
-    function toggleBackground() { 
-      appSettings.bgEnabled = document.getElementById('bg-toggle').checked; 
-      applySettings(); 
-      localStorage.setItem('org_settings', JSON.stringify(appSettings)); 
-    }
-
-    function updateBgOpacity(val) { 
-      appSettings.bgOpacity = val; 
-      if(appSettings.bgEnabled) document.getElementById('app-background').style.opacity = val/100; 
-      document.getElementById('opacity-val').innerText = val; 
-      localStorage.setItem('org_settings', JSON.stringify(appSettings)); 
-    }
-
-    function handleBgUpload(e) { 
-      const f = e.target.files[0]; 
-      if(!f) return; 
-      playSound('pop'); 
-      const r = new FileReader(); 
-      r.onload = (ev) => { 
-        const img = new Image(); 
-        img.onload = () => { 
-          const c = document.createElement('canvas'); 
-          const s = Math.min(1400/img.width, 1); 
-          c.width = img.width*s; 
-          c.height = img.height*s; 
-          c.getContext('2d').drawImage(img,0,0,c.width,c.height); 
-          appSettings.bgImage = c.toDataURL('image/jpeg',0.6); 
-          appSettings.bgEnabled = true; 
-          applySettings(); 
-          localStorage.setItem('org_settings', JSON.stringify(appSettings)); 
-        }; 
-        img.src = ev.target.result; 
-      }; 
-      r.readAsDataURL(f); 
-    }
-
-    function handleTimetableScan(e) { 
-      const f = e.target.files[0]; 
-      if(!f) return; 
-      playSound('pop'); 
-      const btn = document.getElementById('scan-tt-btn'); 
-      const oHTML = btn.innerHTML; 
-      btn.innerHTML = '⏳ Analyzing Timetable...'; 
-      btn.style.opacity = '0.7'; btn.style.pointerEvents = 'none'; 
-      setTimeout(() => { 
-        playSound('success'); 
-        btn.innerHTML = oHTML; 
-        btn.style.opacity = '1'; 
-        btn.style.pointerEvents = 'all'; 
-        alert("Analysis Complete!\n\n(Simulated: In a production environment, this overrides your 10-day cycle array locally.)"); 
-      }, 2500); 
-    }
+    function toggleBackground() { appSettings.bgEnabled = document.getElementById('bg-toggle').checked; applySettings(); localStorage.setItem('org_settings', JSON.stringify(appSettings)); }
+    function updateBgOpacity(val) { appSettings.bgOpacity = val; if(appSettings.bgEnabled) document.getElementById('app-background').style.opacity = val/100; document.getElementById('opacity-val').innerText = val; localStorage.setItem('org_settings', JSON.stringify(appSettings)); }
+    function handleBgUpload(e) { const f = e.target.files[0]; if(!f) return; playSound('pop'); const r = new FileReader(); r.onload = (ev) => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const s = Math.min(1400/img.width, 1); c.width = img.width*s; c.height = img.height*s; c.getContext('2d').drawImage(img,0,0,c.width,c.height); appSettings.bgImage = c.toDataURL('image/jpeg',0.6); appSettings.bgEnabled = true; applySettings(); localStorage.setItem('org_settings', JSON.stringify(appSettings)); }; img.src = ev.target.result; }; r.readAsDataURL(f); }
+    function handleTimetableScan(e) { const f = e.target.files[0]; if(!f) return; playSound('pop'); const btn = document.getElementById('scan-tt-btn'); const oHTML = btn.innerHTML; btn.innerHTML = '⏳ Analyzing Timetable...'; btn.style.opacity = '0.7'; btn.style.pointerEvents = 'none'; setTimeout(() => { playSound('success'); btn.innerHTML = oHTML; btn.style.opacity = '1'; btn.style.pointerEvents = 'all'; alert("Analysis Complete!\n\n(Simulated: In a production environment, this overrides your 10-day cycle array locally.)"); }, 2500); }
 
     const timetableCycle = { 
       0:["Community Group","Economics","Economics","English","English","General Mathematics","General Mathematics","Community Group"], 
@@ -507,7 +461,7 @@
         dlSec.style.display = 'block'; deadlines.sort((a,b) => getDaysDiff(a.date) - getDaysDiff(b.date));
         document.getElementById('deadline-list').innerHTML = deadlines.map(dl => {
           const days = getDaysDiff(dl.date); let stateClass = ''; if (days <= 2) stateClass = 'critical'; else if (days <= 7) stateClass = 'warning';
-          return `<div class="deadline-card ${stateClass}"><div class="dl-days">${days < 0 ? '0' : days}</div><div class="dl-label">Days until<br>${dl.name}</div><button class="icon-btn" style="position:absolute; top:8px; right:8px; width:26px; height:26px; font-size:14px; color:white; background:rgba(0,0,0,0.15); border:none;" onclick="deleteDeadline('${dl.id}')">×</button></div>`;
+          return `<div class="deadline-card ${stateClass}"><div class="dl-days">${days < 0 ? '0' : days}</div><div class="dl-label">Days until<br>${dl.name}</div><button class="icon-btn" style="position:absolute; top:8px; right:8px; width:26px; height:26px; font-size:14px; color:white; background:rgba(0,0,0,0.15); border:none; box-shadow:none;" onclick="deleteDeadline('${dl.id}')">×</button></div>`;
         }).join('');
       } else { dlSec.style.display = 'none'; }
 
@@ -534,7 +488,7 @@
 
       if (isInitial) subjectsData.sort((a, b) => a.status - b.status);
       document.getElementById('subjects-list').innerHTML = subjectsData.map((sub, i) => `
-        <div class="card app-card ${anim}" data-id="${sub.id}" style="background-color: ${statuses[sub.status].color}; border-color: ${statuses[sub.status].hex}; animation-delay: ${0.05*i}s;" onclick="openDetail('${sub.id}')">
+        <div class="card app-card ${anim}" data-id="${sub.id}" style="background-color: ${statuses[sub.status].color}; border-color: ${statuses[sub.status].hex}; animation-delay: ${0.05*i}s; z-index: ${100 - i};" onclick="openDetail('${sub.id}')">
           <div class="boxes-container">
             ${[0,1,2,3,4].map(j => `<div class="box ${sub.status===j?'active':''}" style="--box-color: ${statuses[j].hex};" onclick="event.stopPropagation(); setStatus('${sub.id}', ${j})"></div>`).join('')}
           </div>
@@ -576,24 +530,25 @@
     function animateReorder(subId) {
       const cards = Array.from(document.getElementById('subjects-list').children);
       
+      // Stop cascade animations
       cards.forEach(c => { 
         c.style.animation = 'none'; 
         c.classList.remove('cascade-item'); 
-        c.style.zIndex = '';
-        c.style.transform = '';
-        c.style.transition = 'none';
       });
       
       const pos = {}; cards.forEach(c => pos[c.dataset.id] = c.getBoundingClientRect());
       
       subjectsData.sort((a,b) => a.status - b.status);
-      subjectsData.forEach(s => { 
+      
+      // Re-append to DOM and mathematically assign descending Z-index to completely stop Safari shadow overlap clipping
+      subjectsData.forEach((s, idx) => { 
         const c = document.getElementById('subjects-list').querySelector(`.card[data-id="${s.id}"]`); 
         if(c) { 
           document.getElementById('subjects-list').appendChild(c); 
           c.style.backgroundColor=statuses[s.status].color; 
           c.style.borderColor=statuses[s.status].hex; 
           c.querySelectorAll('.box').forEach((b,i)=>{ if(i===s.status) b.classList.add('active'); else b.classList.remove('active'); }); 
+          c.dataset.targetZ = 100 - idx;
         } 
       });
       
@@ -603,7 +558,9 @@
           const isC = (c.dataset.id === subId); 
           c.style.transition = 'none'; 
           c.style.transform = `translateY(${dY}px)`; 
-          c.style.zIndex = isC ? '1' : '10';
+          
+          // Clicked card drops to z-index 0 to slide safely BEHIND the others. 
+          c.style.zIndex = isC ? '0' : c.dataset.targetZ; 
           
           requestAnimationFrame(() => requestAnimationFrame(() => {
             if(isC) { 
@@ -614,8 +571,7 @@
                 c.style.transform = `translateY(0) scale(1)`; 
                 setTimeout(() => { 
                   c.style.transition = ''; 
-                  c.style.zIndex = ''; 
-                  c.style.transform = ''; 
+                  c.style.zIndex = c.dataset.targetZ; 
                 }, 300); 
               }, 350); 
             } else { 
@@ -623,11 +579,12 @@
               c.style.transform = `translateY(0)`; 
               setTimeout(() => { 
                 c.style.transition = ''; 
-                c.style.zIndex = ''; 
-                c.style.transform = ''; 
+                c.style.zIndex = c.dataset.targetZ; 
               }, 500); 
             }
           }));
+        } else {
+          c.style.zIndex = c.dataset.targetZ;
         }
       });
     }
