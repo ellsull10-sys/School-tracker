@@ -20,7 +20,6 @@
       --bg-base: #F2F2F7;
       --card-bg: rgba(255, 255, 255, 0.75); 
       --card-border: rgba(0, 0, 0, 0.05);
-      /* Deepened default shadow */
       --card-shadow: 0 12px 28px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
       --input-bg: rgba(255, 255, 255, 0.65);
       
@@ -30,7 +29,6 @@
       --warning: #FF9500; --critical: #FF3B30; --success: #10B981;
     }
 
-    /* 🔥 WAY DARKER DYNAMIC SHADOWS WHEN BG IS ACTIVE 🔥 */
     body.bg-active {
       --card-shadow: 0 24px 48px rgba(0, 0, 0, 0.35), 0 8px 24px rgba(0, 0, 0, 0.2);
     }
@@ -50,7 +48,6 @@
     
     html, body { background-color: var(--bg-base); color: var(--text-primary); margin: 0; padding: 0; overflow-x: hidden; -webkit-user-select: none; font-family: -apple-system, 'Inter', sans-serif; font-size: 15px; line-height: 1.4; overscroll-behavior-y: none; min-height: 100vh; }
 
-    /* Expanded massively to guarantee no white edges anywhere */
     #app-background { position: fixed; top: -50vh; left: -50vw; width: 200vw; height: 200vh; z-index: -1; background-size: cover; background-position: center; opacity: var(--bg-opacity, 0.7); transition: opacity 0.3s ease, background-image 0.4s ease; pointer-events: none; }
 
     h1, h2, h3, .subject-title { font-family: 'Outfit', sans-serif; letter-spacing: -0.4px; }
@@ -69,7 +66,6 @@
     h2 { font-size: 19px; font-weight: 700; margin-top: 24px; margin-bottom: 12px; text-shadow: 0 2px 8px rgba(0,0,0,0.05); }
     h3 { font-size: 14px; font-weight: 700; margin-top: 20px; margin-bottom: 8px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.6px; }
 
-    /* RESTORED STANDARD NAVY ICONS (Removed glass interference) */
     .icon-btn, .back-btn { 
       background: var(--accent-grad) !important; 
       color: #FFFFFF !important; 
@@ -80,14 +76,12 @@
     .back-btn { display: flex; align-items: center; gap: 4px; padding: 8px 14px; font-size: 14px; font-weight: 600; border-radius: 16px; }
     .icon-btn:active, .back-btn:active { transform: scale(0.92); }
     
-    /* REUSABLE GLASS CARD SYSTEM (translateZ removed to fix shadow clipping) */
     .app-card { background: var(--card-bg); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid var(--card-border); box-shadow: var(--card-shadow); border-radius: 20px; transition: box-shadow 0.3s ease; }
 
     .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
     .widget { padding: 16px; display: flex; flex-direction: column; justify-content: space-between; height: 100%; min-height: 100px; text-decoration: none; cursor: pointer; transition: transform 0.15s ease; }
     .widget:active { transform: scale(0.97); }
     
-    /* RESTORED NAVY SIMON WIDGET */
     .simon-widget { background: var(--accent-grad) !important; color: #FFFFFF !important; border: none !important; box-shadow: 0 10px 24px rgba(30, 41, 59, 0.3) !important; }
     .simon-widget .simon-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
     .simon-widget .simon-action { font-size: 17px; font-weight: 700; font-family: 'Outfit'; display: flex; justify-content: space-between; align-items: center; width: 100%; }
@@ -103,20 +97,15 @@
     .health-bar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; background: var(--input-bg); margin-top: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
     .health-segment { height: 100%; transition: width 0.4s ease; border-radius: 7px; }
 
-    /* 🔥 FIX: Perfect horizontal scrolling with no clipping 🔥 */
     .horizontal-scroll {
       display: flex; gap: 12px; overflow-x: auto;
       scroll-snap-type: x mandatory; scrollbar-width: none;
-      /* Pull out to screen edge */
       margin-left: -16px; margin-right: -16px;
-      /* Give shadows massive vertical space */
       padding-top: 20px; padding-bottom: 40px;
       margin-top: -20px; margin-bottom: -40px;
-      /* Push first item back inwards */
       padding-left: 16px;
     }
     .horizontal-scroll::-webkit-scrollbar { display: none; }
-    /* This invisible block creates the perfect gap at the right edge when fully scrolled */
     .horizontal-scroll::after { content: ''; flex: 0 0 4px; }
     
     .deadline-card { flex: 0 0 135px; scroll-snap-align: start; background: var(--accent-grad); color: #FFFFFF; border-radius: 18px; padding: 14px; position: relative; box-shadow: 0 8px 24px rgba(30, 41, 59, 0.25); }
@@ -126,7 +115,7 @@
     .dl-label { font-size: 13px; font-weight: 500; opacity: 0.9; margin-top: 4px; }
     @keyframes pulseAlert { 0%,100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } }
 
-    .timetable-card { flex: 0 0 130px; scroll-snap-align: start; padding: 14px; display: flex; flex-direction: column; gap: 6px; cursor: pointer; transition: transform 0.15s ease; }
+    .timetable-card { flex: 0 0 130px; scroll-snap-align: start; padding: 14px; display: flex; flex-direction: column; gap: 6px; cursor: pointer; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
     .timetable-card:active { transform: scale(0.95); }
     .tt-session { font-size: 12px; color: var(--text-secondary); font-weight: 600; }
     .tt-subject { font-size: 15px; font-weight: 700; line-height: 1.2; }
@@ -266,7 +255,7 @@
 
     <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; margin-bottom:8px;">
       <h3 style="margin:0;">Captured Notes</h3>
-      <button class="add-btn" style="padding:6px 14px; font-size:13px; display:flex; align-items:center; gap:6px;" onclick="$('camera-input').click()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Scan</button>
+      <button class="add-btn" style="padding:6px 14px; font-size:13px; display:flex; align-items:center; gap:6px;" onclick="document.getElementById('camera-input').click()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Scan</button>
     </div>
     <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none" onchange="processPhoto(event)">
     <div class="photo-gallery" id="photo-gallery"></div>
@@ -311,7 +300,7 @@
       </div>
       <div style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:8px;">IMAGE</div>
       <input type="file" id="bg-upload" accept="image/*" style="display:none;" onchange="handleBgUpload(event)">
-      <button class="add-btn" style="width:100%; padding:12px; margin-bottom:12px; background:var(--card-border); color:var(--text-primary); box-shadow:none;" onclick="$('bg-upload').click()">Upload Photo</button>
+      <button class="add-btn" style="width:100%; padding:12px; margin-bottom:12px; background:var(--card-border); color:var(--text-primary); box-shadow:none;" onclick="document.getElementById('bg-upload').click()">Upload Photo</button>
       <div style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:8px; display:flex; justify-content:space-between;"><span>TRANSPARENCY</span><span><span id="opacity-val">70</span>%</span></div>
       <input type="range" id="bg-opacity-slider" min="0" max="100" value="70" oninput="updateBgOpacity(this.value)">
     </div>
@@ -320,7 +309,7 @@
     <div class="app-card setting-row">
       <p style="font-size:14px; color:var(--text-secondary); margin-top:0; margin-bottom:12px; line-height:1.4;">Upload a screenshot of your timetable to automatically populate your 10-day cycle.</p>
       <input type="file" id="tt-upload" accept="image/*" style="display:none;" onchange="handleTimetableScan(event)">
-      <button id="scan-tt-btn" class="add-btn" style="width:100%; padding:12px; display:flex; justify-content:center; align-items:center; gap:8px;" onclick="$('tt-upload').click()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Scan Timetable</button>
+      <button id="scan-tt-btn" class="add-btn" style="width:100%; padding:12px; display:flex; justify-content:center; align-items:center; gap:8px;" onclick="document.getElementById('tt-upload').click()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Scan Timetable</button>
     </div>
 
     <h3>Subject Manager</h3>
@@ -329,146 +318,434 @@
   </div>
 
   <script>
-    const $ = id => document.getElementById(id); const $$ = sel => document.querySelectorAll(sel); const getSub = id => subjectsData.find(s => s.id === id);
+    // --- VARIABLES FIX & UN-MINIFIED FOR SAFETY ---
+    const getSub = id => subjectsData.find(s => s.id === id);
 
-    let appSettings = JSON.parse(localStorage.getItem('org_settings')) || { bgEnabled: true, bgImage: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop', bgOpacity: 70 };
+    let appSettings = JSON.parse(localStorage.getItem('org_settings')) || { 
+      bgEnabled: true, 
+      bgImage: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop', 
+      bgOpacity: 70 
+    };
     
     function applySettings() {
-      const b = $('app-background');
-      if (appSettings.bgEnabled) { b.style.opacity = appSettings.bgOpacity / 100; b.style.backgroundImage = `url('${appSettings.bgImage}')`; document.body.classList.add('bg-active'); } else { b.style.opacity = 0; document.body.classList.remove('bg-active'); }
-      if($('bg-toggle')) $('bg-toggle').checked = appSettings.bgEnabled; if($('bg-opacity-slider')) $('bg-opacity-slider').value = appSettings.bgOpacity; if($('opacity-val')) $('opacity-val').innerText = appSettings.bgOpacity;
+      const b = document.getElementById('app-background');
+      if (appSettings.bgEnabled) { 
+        b.style.opacity = appSettings.bgOpacity / 100; 
+        b.style.backgroundImage = `url('${appSettings.bgImage}')`; 
+        document.body.classList.add('bg-active'); 
+      } else { 
+        b.style.opacity = 0; 
+        document.body.classList.remove('bg-active'); 
+      }
+      if(document.getElementById('bg-toggle')) document.getElementById('bg-toggle').checked = appSettings.bgEnabled; 
+      if(document.getElementById('bg-opacity-slider')) document.getElementById('bg-opacity-slider').value = appSettings.bgOpacity; 
+      if(document.getElementById('opacity-val')) document.getElementById('opacity-val').innerText = appSettings.bgOpacity;
     }
-    function toggleBackground() { appSettings.bgEnabled = $('bg-toggle').checked; applySettings(); localStorage.setItem('org_settings', JSON.stringify(appSettings)); }
-    function updateBgOpacity(val) { appSettings.bgOpacity = val; if(appSettings.bgEnabled) $('app-background').style.opacity = val/100; $('opacity-val').innerText = val; localStorage.setItem('org_settings', JSON.stringify(appSettings)); }
-    function handleBgUpload(e) { const f = e.target.files[0]; if(!f) return; playSound('pop'); const r = new FileReader(); r.onload = (ev) => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const s = Math.min(1400/img.width, 1); c.width = img.width*s; c.height = img.height*s; c.getContext('2d').drawImage(img,0,0,c.width,c.height); appSettings.bgImage = c.toDataURL('image/jpeg',0.6); appSettings.bgEnabled = true; applySettings(); localStorage.setItem('org_settings', JSON.stringify(appSettings)); }; img.src = ev.target.result; }; r.readAsDataURL(f); }
-    function handleTimetableScan(e) { const f = e.target.files[0]; if(!f) return; playSound('pop'); const btn = $('scan-tt-btn'); const oHTML = btn.innerHTML; btn.innerHTML = '⏳ Analyzing Timetable...'; btn.style.opacity = '0.7'; btn.style.pointerEvents = 'none'; setTimeout(() => { playSound('success'); btn.innerHTML = oHTML; btn.style.opacity = '1'; btn.style.pointerEvents = 'all'; alert("Analysis Complete!\n\n(Simulated: In a production environment, this overrides your 10-day cycle array locally.)"); }, 2500); }
 
-    const timetableCycle = { 0:["Community Group","Economics","Economics","English","English","General Mathematics","General Mathematics","Community Group"], 1:["Community Group","Pre mathematical methods","Wellbeing","Religious education","Religious education","Economics","English","Community Group"], 2:["Community Group","Legal studies","Legal studies","Physics","Physics","Pre mathematical methods","Pre mathematical methods","Community Group"], 3:["Community Group","Economics","Economics","General Mathematics","General Mathematics","English","English","Community Group"], 4:["Community Group","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Physics","Physics","Community Group"], 7:["Community Group","English","English","Economics","Economics","General Mathematics","General Mathematics","Community Group"], 8:["Community Group","Physics","Wellbeing","Religious education","Religious education","Legal studies","General Mathematics","Community Group"], 9:["Community Group","Physics","Physics","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Community Group"], 10:["Community Group","English","English","General Mathematics","General Mathematics","Economics","Economics","Community Group"], 11:["Community Group","Physics","Physics","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Community Group"] };
+    function toggleBackground() { 
+      appSettings.bgEnabled = document.getElementById('bg-toggle').checked; 
+      applySettings(); 
+      localStorage.setItem('org_settings', JSON.stringify(appSettings)); 
+    }
+
+    function updateBgOpacity(val) { 
+      appSettings.bgOpacity = val; 
+      if(appSettings.bgEnabled) document.getElementById('app-background').style.opacity = val/100; 
+      document.getElementById('opacity-val').innerText = val; 
+      localStorage.setItem('org_settings', JSON.stringify(appSettings)); 
+    }
+
+    function handleBgUpload(e) { 
+      const f = e.target.files[0]; 
+      if(!f) return; 
+      playSound('pop'); 
+      const r = new FileReader(); 
+      r.onload = (ev) => { 
+        const img = new Image(); 
+        img.onload = () => { 
+          const c = document.createElement('canvas'); 
+          const s = Math.min(1400/img.width, 1); 
+          c.width = img.width*s; 
+          c.height = img.height*s; 
+          c.getContext('2d').drawImage(img,0,0,c.width,c.height); 
+          appSettings.bgImage = c.toDataURL('image/jpeg',0.6); 
+          appSettings.bgEnabled = true; 
+          applySettings(); 
+          localStorage.setItem('org_settings', JSON.stringify(appSettings)); 
+        }; 
+        img.src = ev.target.result; 
+      }; 
+      r.readAsDataURL(f); 
+    }
+
+    function handleTimetableScan(e) { 
+      const f = e.target.files[0]; 
+      if(!f) return; 
+      playSound('pop'); 
+      const btn = document.getElementById('scan-tt-btn'); 
+      const oHTML = btn.innerHTML; 
+      btn.innerHTML = '⏳ Analyzing Timetable...'; 
+      btn.style.opacity = '0.7'; btn.style.pointerEvents = 'none'; 
+      setTimeout(() => { 
+        playSound('success'); 
+        btn.innerHTML = oHTML; 
+        btn.style.opacity = '1'; 
+        btn.style.pointerEvents = 'all'; 
+        alert("Analysis Complete!\n\n(Simulated: In a production environment, this overrides your 10-day cycle array locally.)"); 
+      }, 2500); 
+    }
+
+    const timetableCycle = { 
+      0:["Community Group","Economics","Economics","English","English","General Mathematics","General Mathematics","Community Group"], 
+      1:["Community Group","Pre mathematical methods","Wellbeing","Religious education","Religious education","Economics","English","Community Group"], 
+      2:["Community Group","Legal studies","Legal studies","Physics","Physics","Pre mathematical methods","Pre mathematical methods","Community Group"], 
+      3:["Community Group","Economics","Economics","General Mathematics","General Mathematics","English","English","Community Group"], 
+      4:["Community Group","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Physics","Physics","Community Group"], 
+      7:["Community Group","English","English","Economics","Economics","General Mathematics","General Mathematics","Community Group"], 
+      8:["Community Group","Physics","Wellbeing","Religious education","Religious education","Legal studies","General Mathematics","Community Group"], 
+      9:["Community Group","Physics","Physics","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Community Group"], 
+      10:["Community Group","English","English","General Mathematics","General Mathematics","Economics","Economics","Community Group"], 
+      11:["Community Group","Physics","Physics","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Community Group"] 
+    };
     const sessionLabels = ["Morning Group", "Session 1", "Session 2", "Session 3", "Session 4", "Session 5", "Session 6", "Afternoon Group"];
-    function getTodaysTimetable() { const d = Math.floor((new Date().setHours(0,0,0,0) - new Date(2026, 7, 10).setHours(0,0,0,0)) / 86400000); return d < 0 ? null : timetableCycle[d % 14] || null; }
+    
+    function getTodaysTimetable() { 
+      const d = Math.floor((new Date().setHours(0,0,0,0) - new Date(2026, 7, 10).setHours(0,0,0,0)) / 86400000); 
+      return d < 0 ? null : timetableCycle[d % 14] || null; 
+    }
 
     let audioCtx;
     function playSound(t) {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); if (audioCtx.state === 'suspended') audioCtx.resume();
-      const o = audioCtx.createOscillator(), g = audioCtx.createGain(), n = audioCtx.currentTime; o.connect(g); g.connect(audioCtx.destination);
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); 
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain(), n = audioCtx.currentTime; 
+      o.connect(g); g.connect(audioCtx.destination);
       if (t === 'tick') { o.type='sine'; o.frequency.setValueAtTime(800,n); o.frequency.exponentialRampToValueAtTime(1400,n+0.08); g.gain.setValueAtTime(0.15,n); g.gain.exponentialRampToValueAtTime(0.01,n+0.08); o.start(); o.stop(n+0.08); }
       else if (t === 'pop') { o.type='triangle'; o.frequency.setValueAtTime(300,n); o.frequency.exponentialRampToValueAtTime(100,n+0.12); g.gain.setValueAtTime(0.2,n); g.gain.exponentialRampToValueAtTime(0.01,n+0.12); o.start(); o.stop(n+0.12); }
       else if (t === 'swoosh') { o.type='sine'; o.frequency.setValueAtTime(300,n); o.frequency.exponentialRampToValueAtTime(500,n+0.12); g.gain.setValueAtTime(0.1,n); g.gain.linearRampToValueAtTime(0.01,n+0.12); o.start(); o.stop(n+0.12); }
       else if (t === 'success') { o.type='sine'; o.frequency.setValueAtTime(523.25,n); o.frequency.setValueAtTime(659.25,n+0.08); g.gain.setValueAtTime(0.15,n); g.gain.linearRampToValueAtTime(0.01,n+0.25); o.start(); o.stop(n+0.25); }
     }
 
-    const statuses = [ { color: "rgba(239, 68, 68, 0.12)", hex: "#EF4444", label: "Falling behind" }, { color: "rgba(245, 158, 11, 0.12)", hex: "#F59E0B", label: "Behind" }, { color: "var(--card-bg)", hex: "#94A3B8", label: "Up to date" }, { color: "rgba(16, 185, 129, 0.12)", hex: "#10B981", label: "Ahead" }, { color: "rgba(5, 150, 105, 0.15)", hex: "#059669", label: "Well ahead" } ];
+    const statuses = [ 
+      { color: "rgba(239, 68, 68, 0.12)", hex: "#EF4444", label: "Falling behind" }, 
+      { color: "rgba(245, 158, 11, 0.12)", hex: "#F59E0B", label: "Behind" }, 
+      { color: "var(--card-bg)", hex: "#94A3B8", label: "Up to date" }, 
+      { color: "rgba(16, 185, 129, 0.12)", hex: "#10B981", label: "Ahead" }, 
+      { color: "rgba(5, 150, 105, 0.15)", hex: "#059669", label: "Well ahead" } 
+    ];
+
     let subjectsData = JSON.parse(localStorage.getItem('org_subjects')) || ["English", "General Mathematics", "Economics", "Legal studies", "Pre mathematical methods", "Religious education", "Physics", "Wellbeing"].map(name => ({ id: name.replace(/\s+/g, '-').toLowerCase(), name: name, status: 2, homework: [], notes: "", grades: [], photos: [] }));
-    subjectsData.forEach(s => { if (!s.photos) s.photos = []; }); let globalNotes = JSON.parse(localStorage.getItem('org_global')) || []; let deadlines = JSON.parse(localStorage.getItem('org_deadlines')) || []; let todayString = new Date().toDateString(); let ringStats = JSON.parse(localStorage.getItem('org_ring')) || { date: todayString, score: 0 }; if (ringStats.date !== todayString) ringStats = { date: todayString, score: 0 }; let currentSubjectId = null;
+    subjectsData.forEach(s => { if (!s.photos) s.photos = []; }); 
+    
+    let globalNotes = JSON.parse(localStorage.getItem('org_global')) || []; 
+    let deadlines = JSON.parse(localStorage.getItem('org_deadlines')) || []; 
+    
+    let todayString = new Date().toDateString(); 
+    let ringStats = JSON.parse(localStorage.getItem('org_ring')) || { date: todayString, score: 0 }; 
+    if (ringStats.date !== todayString) ringStats = { date: todayString, score: 0 }; 
+    
+    let currentSubjectId = null;
 
-    window.onload = () => { try { applySettings(); renderHome(true); } catch(e) { console.error(e); } setTimeout(() => { $('splash').style.opacity = '0'; setTimeout(() => $('splash').style.display = 'none', 400); }, 600); };
+    window.onload = () => { 
+      try { 
+        applySettings(); 
+        renderHome(true); 
+      } catch(e) { console.error(e); } 
+      setTimeout(() => { 
+        document.getElementById('splash').style.opacity = '0'; 
+        setTimeout(() => document.getElementById('splash').style.display = 'none', 400); 
+      }, 600); 
+    };
 
-    function saveData() { localStorage.setItem('org_subjects', JSON.stringify(subjectsData)); localStorage.setItem('org_global', JSON.stringify(globalNotes)); localStorage.setItem('org_deadlines', JSON.stringify(deadlines)); localStorage.setItem('org_ring', JSON.stringify(ringStats)); updateRingUI(); updateHealthBarUI(); }
+    function saveData() { 
+      localStorage.setItem('org_subjects', JSON.stringify(subjectsData)); 
+      localStorage.setItem('org_global', JSON.stringify(globalNotes)); 
+      localStorage.setItem('org_deadlines', JSON.stringify(deadlines)); 
+      localStorage.setItem('org_ring', JSON.stringify(ringStats)); 
+      updateRingUI(); 
+      updateHealthBarUI(); 
+    }
+
     function addRingScore() { if (ringStats.score < 5) { ringStats.score++; saveData(); } }
-    function updateRingUI() { $('study-ring').style.strokeDasharray = `${Math.min((ringStats.score/5)*100, 100)}, 100`; $('ring-score').innerText = `${ringStats.score}/5`; }
-    function updateHealthBarUI() { let counts = [0,0,0,0,0]; subjectsData.forEach(s => counts[s.status]++); $('health-bar').innerHTML = counts.map((c, i) => c > 0 ? `<div class="health-segment" style="width: ${(c/subjectsData.length)*100}%; background-color: ${statuses[i].hex};"></div>` : '').join(''); }
+    function updateRingUI() { 
+      document.getElementById('study-ring').style.strokeDasharray = `${Math.min((ringStats.score/5)*100, 100)}, 100`; 
+      document.getElementById('ring-score').innerText = `${ringStats.score}/5`; 
+    }
+
+    function updateHealthBarUI() { 
+      let counts = [0,0,0,0,0]; 
+      subjectsData.forEach(s => counts[s.status]++); 
+      document.getElementById('health-bar').innerHTML = counts.map((c, i) => c > 0 ? `<div class="health-segment" style="width: ${(c/subjectsData.length)*100}%; background-color: ${statuses[i].hex};"></div>` : '').join(''); 
+    }
+
     function isOverdue(dateString) { return new Date(dateString.split('-')[0], dateString.split('-')[1]-1, dateString.split('-')[2]) < new Date().setHours(0,0,0,0); }
     function getDaysDiff(dateString) { return Math.ceil((new Date(dateString.split('-')[0], dateString.split('-')[1]-1, dateString.split('-')[2]) - new Date().setHours(0,0,0,0)) / 86400000); }
     function formatDate(dateString) { return new Date(dateString.split('-')[0], dateString.split('-')[1]-1, dateString.split('-')[2]).toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'}); }
 
     function renderHome(isInitial = false) {
       const anim = isInitial ? 'cascade-item' : '';
-      if(isInitial) { $('home-ring-card').classList.add('cascade-item'); $('home-simon-card').classList.add('cascade-item'); $('home-health-card').classList.add('cascade-item'); $('dl-title').classList.add('cascade-item'); $('subj-title').classList.add('cascade-item'); $('task-title').classList.add('cascade-item'); $('task-input-card').classList.add('cascade-item'); $('add-dl-title').classList.add('cascade-item'); $('add-dl-card').classList.add('cascade-item'); updateRingUI(); updateHealthBarUI(); }
+      if(isInitial) { 
+        document.getElementById('home-ring-card').classList.add('cascade-item'); 
+        document.getElementById('home-simon-card').classList.add('cascade-item'); 
+        document.getElementById('home-health-card').classList.add('cascade-item'); 
+        document.getElementById('dl-title').classList.add('cascade-item'); 
+        document.getElementById('subj-title').classList.add('cascade-item'); 
+        document.getElementById('task-title').classList.add('cascade-item'); 
+        document.getElementById('task-input-card').classList.add('cascade-item'); 
+        document.getElementById('add-dl-title').classList.add('cascade-item'); 
+        document.getElementById('add-dl-card').classList.add('cascade-item'); 
+        updateRingUI(); updateHealthBarUI(); 
+      }
 
-      const dlSec = $('deadline-section');
+      const dlSec = document.getElementById('deadline-section');
       if (deadlines.length > 0) {
         dlSec.style.display = 'block'; deadlines.sort((a,b) => getDaysDiff(a.date) - getDaysDiff(b.date));
-        $('deadline-list').innerHTML = deadlines.map(dl => {
+        document.getElementById('deadline-list').innerHTML = deadlines.map(dl => {
           const days = getDaysDiff(dl.date); let stateClass = ''; if (days <= 2) stateClass = 'critical'; else if (days <= 7) stateClass = 'warning';
           return `<div class="deadline-card ${stateClass}"><div class="dl-days">${days < 0 ? '0' : days}</div><div class="dl-label">Days until<br>${dl.name}</div><button class="icon-btn" style="position:absolute; top:8px; right:8px; width:26px; height:26px; font-size:14px; color:white; background:rgba(0,0,0,0.15); border:none;" onclick="deleteDeadline('${dl.id}')">×</button></div>`;
         }).join('');
       } else { dlSec.style.display = 'none'; }
 
       const todaysClasses = getTodaysTimetable();
-      const ttSec = $('dynamic-timetable-section');
+      const ttSec = document.getElementById('dynamic-timetable-section');
       if (todaysClasses) {
-        ttSec.className = anim; ttSec.innerHTML = `<h2>Today's Schedule</h2><div class="horizontal-scroll" style="margin-bottom: 20px;">${todaysClasses.map((cName, i) => {
+        ttSec.className = anim; 
+        ttSec.innerHTML = `<h2>Today's Schedule</h2><div class="horizontal-scroll" style="margin-bottom: 20px;">${todaysClasses.map((cName, i) => {
           const matchingSub = subjectsData.find(s => s.name.toLowerCase() === cName.toLowerCase());
-          const isSession = sessionLabels[index].includes('Session');
+          const isSession = sessionLabels[i].includes('Session');
           const cCol = matchingSub ? statuses[matchingSub.status].color : (isSession ? 'rgba(0,0,0,0.03)' : 'var(--card-bg)');
           const bCol = matchingSub ? statuses[matchingSub.status].hex : 'var(--card-border)';
           const act = matchingSub ? `onclick="openDetail('${matchingSub.id}')"` : '';
-          return `<div class="timetable-card app-card" data-tt-sub="${s?s.id:''}" style="background-color: ${cCol}; border-color: ${bCol};" ${act}><div class="tt-session">${sessionLabels[i]}</div><div class="tt-subject">${cName}</div></div>`;
+          return `<div class="timetable-card app-card" data-tt-sub="${matchingSub ? matchingSub.id : ''}" style="background-color: ${cCol}; border-color: ${bCol};" ${act}><div class="tt-session">${sessionLabels[i]}</div><div class="tt-subject">${cName}</div></div>`;
         }).join('')}</div>`;
       } else { ttSec.innerHTML = ''; }
 
-      if (initialLoad) subjectsData.sort((a, b) => a.status - b.status);
-      $('subjects-list').innerHTML = subjectsData.map((sub, i) => `<div class="card app-card ${anim}" data-id="${sub.id}" style="background-color: ${statuses[sub.status].color}; border-color: ${statuses[sub.status].hex}; animation-delay: ${0.05*i}s;" onclick="openDetail('${sub.id}')"><div class="boxes-container">${[0,1,2,3,4].map(j => `<div class="box ${sub.status===j?'active':''}" style="--box-color: ${statuses[j].hex};" onclick="event.stopPropagation(); setStatus('${sub.id}', ${j})"></div>`).join('')}</div><div class="subject-title">${sub.name}</div></div>`).join('');
+      if (isInitial) subjectsData.sort((a, b) => a.status - b.status);
+      document.getElementById('subjects-list').innerHTML = subjectsData.map((sub, i) => `
+        <div class="card app-card ${anim}" data-id="${sub.id}" style="background-color: ${statuses[sub.status].color}; border-color: ${statuses[sub.status].hex}; animation-delay: ${0.05*i}s;" onclick="openDetail('${sub.id}')">
+          <div class="boxes-container">
+            ${[0,1,2,3,4].map(j => `<div class="box ${sub.status===j?'active':''}" style="--box-color: ${statuses[j].hex};" onclick="event.stopPropagation(); setStatus('${sub.id}', ${j})"></div>`).join('')}
+          </div>
+          <div class="subject-title">${sub.name}</div>
+        </div>
+      `).join('');
       
-      $('global-notes-list').innerHTML = globalNotes.map((n, i) => `<div id="global-item-${n.id}" class="list-item app-card task-card ${anim} ${isOverdue(n.date)?'overdue':''}" style="animation-delay: ${0.05*i}s;"><div><div style="font-weight: 600; font-size: 15px;">${n.text}</div><div class="date-badge">Due: ${formatDate(n.date)}</div></div><button class="delete-btn" onclick="completeGlobalAnim('${n.id}')">×</button></div>`).join('');
+      document.getElementById('global-notes-list').innerHTML = globalNotes.map((n, i) => `
+        <div id="global-item-${n.id}" class="list-item app-card task-card ${anim} ${isOverdue(n.date)?'overdue':''}" style="animation-delay: ${0.05*i}s;">
+          <div><div style="font-weight: 600; font-size: 15px;">${n.text}</div><div class="date-badge">Due: ${formatDate(n.date)}</div></div>
+          <button class="delete-btn" onclick="completeGlobalAnim('${n.id}')">×</button>
+        </div>
+      `).join('');
     }
 
-    function processPhoto(e) { const f = e.target.files[0]; if(!f) return; playSound('pop'); const r = new FileReader(); r.onload = (ev) => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const s = Math.min(600/img.width, 1); c.width = img.width*s; c.height = img.height*s; c.getContext('2d').drawImage(img,0,0,c.width,c.height); getSub(currentSubjectId).photos.push({ id: Date.now().toString(), img: c.toDataURL('image/jpeg', 0.5) }); saveData(); renderDetail(true); }; img.src = ev.target.result; }; r.readAsDataURL(f); }
-    function deletePhoto(id) { playSound('tick'); getSub(currentSubjectId).photos = getSub(currentSubjectId).photos.filter(p => p.id !== id); saveData(); renderDetail(true); }
+    function processPhoto(e) { 
+      const f = e.target.files[0]; if(!f) return; playSound('pop'); 
+      const r = new FileReader(); 
+      r.onload = (ev) => { 
+        const img = new Image(); 
+        img.onload = () => { 
+          const c = document.createElement('canvas'); const s = Math.min(600/img.width, 1); 
+          c.width = img.width*s; c.height = img.height*s; 
+          c.getContext('2d').drawImage(img,0,0,c.width,c.height); 
+          getSub(currentSubjectId).photos.push({ id: Date.now().toString(), img: c.toDataURL('image/jpeg', 0.5) }); 
+          saveData(); renderDetail(true); 
+        }; 
+        img.src = ev.target.result; 
+      }; 
+      r.readAsDataURL(f); 
+    }
+
+    function deletePhoto(id) { 
+      playSound('tick'); 
+      getSub(currentSubjectId).photos = getSub(currentSubjectId).photos.filter(p => p.id !== id); 
+      saveData(); renderDetail(true); 
+    }
 
     function animateReorder(subId) {
-      const cards = Array.from($('subjects-list').children);
+      const cards = Array.from(document.getElementById('subjects-list').children);
       cards.forEach(c => { c.style.animation = 'none'; c.classList.remove('cascade-item'); });
       const pos = {}; cards.forEach(c => pos[c.dataset.id] = c.getBoundingClientRect());
+      
       subjectsData.sort((a,b) => a.status - b.status);
-      subjectsData.forEach(s => { const c = $('subjects-list').querySelector(`.card[data-id="${s.id}"]`); if(c) { $('subjects-list').appendChild(c); c.style.backgroundColor=statuses[s.status].color; c.style.borderColor=statuses[s.status].hex; c.querySelectorAll('.box').forEach((b,i)=>{ if(i===s.status) b.classList.add('active'); else b.classList.remove('active'); }); } });
+      subjectsData.forEach(s => { 
+        const c = document.getElementById('subjects-list').querySelector(`.card[data-id="${s.id}"]`); 
+        if(c) { 
+          document.getElementById('subjects-list').appendChild(c); 
+          c.style.backgroundColor=statuses[s.status].color; 
+          c.style.borderColor=statuses[s.status].hex; 
+          c.querySelectorAll('.box').forEach((b,i)=>{ if(i===s.status) b.classList.add('active'); else b.classList.remove('active'); }); 
+        } 
+      });
+      
       cards.forEach(c => {
         const dY = pos[c.dataset.id].top - c.getBoundingClientRect().top;
         if (dY !== 0) {
-          const isC = (c.dataset.id === subId); c.style.transition = 'none'; c.style.transform = `translateY(${dY}px)`; c.style.zIndex = isC?'1':'10';
+          const isC = (c.dataset.id === subId); 
+          c.style.transition = 'none'; 
+          c.style.transform = `translateY(${dY}px)`; 
+          c.style.zIndex = isC ? '1' : '10';
+          
           requestAnimationFrame(() => requestAnimationFrame(() => {
-            if(isC) { c.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)'; c.style.transform = `translateY(0) scale(0.95)`; setTimeout(() => { c.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'; c.style.transform = `translateY(0) scale(1)`; setTimeout(() => { c.style.transition = ''; c.style.zIndex = ''; }, 300); }, 350); }
-            else { c.style.transition = 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'; c.style.transform = `translateY(0)`; setTimeout(() => { c.style.transition = ''; c.style.zIndex = ''; }, 500); }
+            if(isC) { 
+              c.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)'; 
+              c.style.transform = `translateY(0) scale(0.95)`; 
+              setTimeout(() => { 
+                c.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'; 
+                c.style.transform = `translateY(0) scale(1)`; 
+                setTimeout(() => { c.style.transition = ''; c.style.zIndex = ''; }, 300); 
+              }, 350); 
+            } else { 
+              c.style.transition = 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'; 
+              c.style.transform = `translateY(0)`; 
+              setTimeout(() => { c.style.transition = ''; c.style.zIndex = ''; }, 500); 
+            }
           }));
         }
       });
     }
 
     function setStatus(subId, sIdx) { 
-      playSound('tick'); getSub(subId).status = sIdx; saveData(); 
+      playSound('tick'); 
+      getSub(subId).status = sIdx; 
+      saveData(); 
       if (currentSubjectId === null) { 
         animateReorder(subId); 
-        $$(`.timetable-card[data-tt-sub="${subId}"]`).forEach(c => { c.style.backgroundColor = statuses[sIdx].color; c.style.borderColor = statuses[sIdx].hex; c.style.transform = 'scale(1.04)'; setTimeout(() => c.style.transform='', 200); });
+        document.querySelectorAll(`.timetable-card[data-tt-sub="${subId}"]`).forEach(c => { 
+          c.style.backgroundColor = statuses[sIdx].color; 
+          c.style.borderColor = statuses[sIdx].hex; 
+          c.style.transform = 'scale(1.04)'; 
+          setTimeout(() => c.style.transform='', 200); 
+        });
       } else { 
-        $$('.status-row').forEach((r,i) => { const b = r.querySelector('.box'); if(i===sIdx) { r.classList.add('active-status'); b.classList.add('active'); r.style.setProperty('--status-bg', statuses[i].color); r.style.setProperty('--box-color', statuses[i].hex); b.style.setProperty('--box-color', statuses[i].hex); } else { r.classList.remove('active-status'); b.classList.remove('active'); } }); 
+        document.querySelectorAll('.status-row').forEach((r,i) => { 
+          const b = r.querySelector('.box'); 
+          if(i===sIdx) { 
+            r.classList.add('active-status'); b.classList.add('active'); 
+            r.style.setProperty('--status-bg', statuses[i].color); 
+            r.style.setProperty('--box-color', statuses[i].hex); 
+            b.style.setProperty('--box-color', statuses[i].hex); 
+          } else { 
+            r.classList.remove('active-status'); b.classList.remove('active'); 
+          } 
+        }); 
       } 
       updateHealthBarUI();
     }
 
-    function openScreen(sId) { playSound('swoosh'); $$('.screen').forEach(s => s.classList.remove('active')); const scr = $(sId); void scr.offsetWidth; scr.classList.add('active'); window.scrollTo(0,0); if (sId === 'settings-screen') { applySettings(); renderSettings(); } }
+    function openScreen(sId) { 
+      playSound('swoosh'); 
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); 
+      const scr = document.getElementById(sId); 
+      void scr.offsetWidth; 
+      scr.classList.add('active'); 
+      window.scrollTo(0,0); 
+      if (sId === 'settings-screen') { applySettings(); renderSettings(); } 
+    }
+    
     function openDetail(subId) { currentSubjectId = subId; openScreen('detail-screen'); renderDetail(); }
     function goHome() { currentSubjectId = null; subjectsData.sort((a,b) => a.status - b.status); renderHome(true); openScreen('home-screen'); }
 
     function renderDetail(isUpdate = false) {
       const sub = getSub(currentSubjectId); const anim = isUpdate ? '' : 'cascade-item';
-      $('detail-title').innerText = sub.name; $('subject-notes').value = sub.notes;
-      if(!isUpdate) $('detail-statuses').innerHTML = statuses.map((st, i) => `<div class="status-row app-card cascade-item ${sub.status===i?'active-status':''}" style="--status-bg: ${st.color}; --box-color: ${st.hex}; animation-delay: ${0.03*i}s;" onclick="setStatus('${sub.id}', ${i})"><div class="box ${sub.status===i?'active':''}" style="--box-color: ${st.hex};"></div><div class="status-label">${st.label}</div></div>`).join('');
-      const pGal = $('photo-gallery'); if(sub.photos.length>0) { pGal.style.display='flex'; pGal.innerHTML = sub.photos.map(p => `<div class="photo-card ${anim}" style="background-image: url('${p.img}')"><button class="del-photo" onclick="deletePhoto('${p.id}')">×</button></div>`).join(''); } else { pGal.style.display='none'; pGal.innerHTML=''; }
-      let tS=0, tO=0; $('grades-list').innerHTML = sub.grades.map((g,i) => { tS+=parseFloat(g.score); tO+=parseFloat(g.outOf); return `<div class="list-item app-card ${anim}" style="animation-delay:${0.05*i}s;"><div><div style="font-weight: 600;">${g.name}</div><div class="date-badge">${g.score} / ${g.outOf}</div></div><div style="display:flex; align-items:center; gap: 8px;"><div class="grade-badge">${Math.round((g.score/g.outOf)*100)}%</div><button class="delete-btn" onclick="deleteGrade('${g.id}')">×</button></div></div>`; }).join('');
-      $('average-banner').innerText = tO>0 ? `Current Average: ${Math.round((tS/tO)*100)}%` : "No Grades Logged";
-      $('hw-list').innerHTML = sub.homework.map((hw,i) => `<div id="hw-item-${hw.id}" class="list-item app-card task-card ${anim} ${isOverdue(hw.date)?'overdue':''}" style="animation-delay:${0.05*i}s;"><div><div style="font-weight: 600; font-size: 15px;">${hw.text}</div><div class="date-badge">Due: ${formatDate(hw.date)}</div></div><button class="delete-btn" onclick="completeHomeworkAnim('${hw.id}')">×</button></div>`).join('');
+      document.getElementById('detail-title').innerText = sub.name; 
+      document.getElementById('subject-notes').value = sub.notes;
+      
+      if(!isUpdate) {
+        document.getElementById('detail-statuses').innerHTML = statuses.map((st, i) => `
+          <div class="status-row app-card cascade-item ${sub.status===i?'active-status':''}" style="--status-bg: ${st.color}; --box-color: ${st.hex}; animation-delay: ${0.03*i}s;" onclick="setStatus('${sub.id}', ${i})">
+            <div class="box ${sub.status===i?'active':''}" style="--box-color: ${st.hex};"></div>
+            <div class="status-label">${st.label}</div>
+          </div>
+        `).join('');
+      }
+      
+      const pGal = document.getElementById('photo-gallery'); 
+      if(sub.photos.length>0) { 
+        pGal.style.display='flex'; 
+        pGal.innerHTML = sub.photos.map(p => `<div class="photo-card ${anim}" style="background-image: url('${p.img}')"><button class="del-photo" onclick="deletePhoto('${p.id}')">×</button></div>`).join(''); 
+      } else { 
+        pGal.style.display='none'; pGal.innerHTML=''; 
+      }
+      
+      let tS=0, tO=0; 
+      document.getElementById('grades-list').innerHTML = sub.grades.map((g,i) => { 
+        tS+=parseFloat(g.score); tO+=parseFloat(g.outOf); 
+        return `<div class="list-item app-card ${anim}" style="animation-delay:${0.05*i}s;"><div><div style="font-weight: 600;">${g.name}</div><div class="date-badge">${g.score} / ${g.outOf}</div></div><div style="display:flex; align-items:center; gap: 8px;"><div class="grade-badge">${Math.round((g.score/g.outOf)*100)}%</div><button class="delete-btn" onclick="deleteGrade('${g.id}')">×</button></div></div>`; 
+      }).join('');
+      
+      document.getElementById('average-banner').innerText = tO>0 ? `Current Average: ${Math.round((tS/tO)*100)}%` : "No Grades Logged";
+      
+      document.getElementById('hw-list').innerHTML = sub.homework.map((hw,i) => `
+        <div id="hw-item-${hw.id}" class="list-item app-card task-card ${anim} ${isOverdue(hw.date)?'overdue':''}" style="animation-delay:${0.05*i}s;">
+          <div><div style="font-weight: 600; font-size: 15px;">${hw.text}</div><div class="date-badge">Due: ${formatDate(hw.date)}</div></div>
+          <button class="delete-btn" onclick="completeHomeworkAnim('${hw.id}')">×</button>
+        </div>
+      `).join('');
     }
 
-    function perfComp(el, cb) { playSound('success'); el.style.transition='all 0.3s ease'; el.style.background='var(--success)'; el.style.transform='scale(0.96) translateX(15px)'; const d=el.querySelector('div>div:first-child'),b=el.querySelector('.date-badge'),x=el.querySelector('.delete-btn'); if(d)d.style.color='#FFF'; if(b)b.style.color='rgba(255,255,255,0.85)'; if(x){x.innerHTML='✓';x.style.color='#FFF';x.style.transform='scale(1.1)';} setTimeout(()=>{el.style.transition='all 0.4s cubic-bezier(0.16,1,0.3,1)';el.style.transform='scale(0.9) translateX(30px)';el.style.opacity='0';el.style.maxHeight=el.offsetHeight+'px'; requestAnimationFrame(()=>{el.style.maxHeight='0px';el.style.paddingTop='0';el.style.paddingBottom='0';el.style.marginBottom='0';el.style.borderWidth='0';}); setTimeout(cb, 380); }, 300); }
-    function completeGlobalAnim(id) { const el=$(`global-item-${id}`); if(el) perfComp(el,()=>deleteGlobal(id)); else deleteGlobal(id); }
-    function completeHomeworkAnim(id) { const el=$(`hw-item-${id}`); if(el) perfComp(el,()=>deleteHomework(id)); else deleteHomework(id); }
+    function perfComp(el, cb) { 
+      playSound('success'); 
+      el.style.transition='all 0.3s ease'; 
+      el.style.background='var(--success)'; 
+      el.style.transform='scale(0.96) translateX(15px)'; 
+      const d=el.querySelector('div>div:first-child'), b=el.querySelector('.date-badge'), x=el.querySelector('.delete-btn'); 
+      if(d) d.style.color='#FFF'; 
+      if(b) b.style.color='rgba(255,255,255,0.85)'; 
+      if(x) { x.innerHTML='✓'; x.style.color='#FFF'; x.style.transform='scale(1.1)'; } 
+      
+      setTimeout(()=>{
+        el.style.transition='all 0.4s cubic-bezier(0.16,1,0.3,1)';
+        el.style.transform='scale(0.9) translateX(30px)';
+        el.style.opacity='0';
+        el.style.maxHeight=el.offsetHeight+'px'; 
+        requestAnimationFrame(()=>{
+          el.style.maxHeight='0px';el.style.paddingTop='0';el.style.paddingBottom='0';el.style.marginBottom='0';el.style.borderWidth='0';
+        }); 
+        setTimeout(cb, 380); 
+      }, 300); 
+    }
+
+    function completeGlobalAnim(id) { const el=document.getElementById(`global-item-${id}`); if(el) perfComp(el,()=>deleteGlobal(id)); else deleteGlobal(id); }
+    function completeHomeworkAnim(id) { const el=document.getElementById(`hw-item-${id}`); if(el) perfComp(el,()=>deleteHomework(id)); else deleteHomework(id); }
 
     function deleteGlobal(id) { addRingScore(); globalNotes = globalNotes.filter(n => n.id !== id); saveData(); renderHome(true); }
-    function deleteHomework(hwId) { addRingScore(); getSub(currentSubjectId).homework = getSub(currentSubjectId).homework.filter(h => h.id !== hwId); saveData(); const el=$(`hw-item-${hwId}`); if(el) el.remove(); }
+    function deleteHomework(hwId) { addRingScore(); getSub(currentSubjectId).homework = getSub(currentSubjectId).homework.filter(h => h.id !== hwId); saveData(); const el=document.getElementById(`hw-item-${hwId}`); if(el) el.remove(); }
     
-    function addGrade() { playSound('pop'); const n=$('grade-name'),s=$('grade-score'),o=$('grade-out-of'); if(!n.value||!s.value||!o.value) return; getSub(currentSubjectId).grades.push({ id: Date.now().toString(), name: n.value, score: s.value, outOf: o.value }); n.value=''; s.value=''; o.value=''; saveData(); renderDetail(true); }
+    function addGrade() { playSound('pop'); const n=document.getElementById('grade-name'),s=document.getElementById('grade-score'),o=document.getElementById('grade-out-of'); if(!n.value||!s.value||!o.value) return; getSub(currentSubjectId).grades.push({ id: Date.now().toString(), name: n.value, score: s.value, outOf: o.value }); n.value=''; s.value=''; o.value=''; saveData(); renderDetail(true); }
     function deleteGrade(id) { playSound('tick'); getSub(currentSubjectId).grades = getSub(currentSubjectId).grades.filter(g => g.id !== id); saveData(); renderDetail(true); }
-    function addHomework() { playSound('pop'); const d=$('hw-desc'), dt=$('hw-date'); if(!d.value||!dt.value) return; getSub(currentSubjectId).homework.push({ id: Date.now().toString(), text: d.value, date: dt.value }); d.value=''; dt.value=''; saveData(); renderDetail(true); }
-    function addGlobalNote() { playSound('pop'); const t=$('global-task'),d=$('global-date'); if(!t.value||!d.value) return; globalNotes.push({ id: Date.now().toString(), text: t.value, date: d.value }); t.value=''; d.value=''; saveData(); renderHome(true); }
-    function saveNotes() { getSub(currentSubjectId).notes = $('subject-notes').value; saveData(); }
-    function addDeadline() { playSound('pop'); const n=$('dl-name'), d=$('dl-date'); if(!n.value||!d.value) return; deadlines.push({ id: Date.now().toString(), name: n.value, date: d.value }); n.value=''; d.value=''; saveData(); renderHome(true); alert("Deadline Added!"); }
+    function addHomework() { playSound('pop'); const d=document.getElementById('hw-desc'), dt=document.getElementById('hw-date'); if(!d.value||!dt.value) return; getSub(currentSubjectId).homework.push({ id: Date.now().toString(), text: d.value, date: dt.value }); d.value=''; dt.value=''; saveData(); renderDetail(true); }
+    function addGlobalNote() { playSound('pop'); const t=document.getElementById('global-task'),d=document.getElementById('global-date'); if(!t.value||!d.value) return; globalNotes.push({ id: Date.now().toString(), text: t.value, date: d.value }); t.value=''; d.value=''; saveData(); renderHome(true); }
+    function saveNotes() { getSub(currentSubjectId).notes = document.getElementById('subject-notes').value; saveData(); }
+    function addDeadline() { playSound('pop'); const n=document.getElementById('dl-name'), d=document.getElementById('dl-date'); if(!n.value||!d.value) return; deadlines.push({ id: Date.now().toString(), name: n.value, date: d.value }); n.value=''; d.value=''; saveData(); renderHome(true); alert("Deadline Added!"); }
     function deleteDeadline(id) { playSound('tick'); deadlines = deadlines.filter(d => d.id !== id); saveData(); renderHome(true); }
 
-    let tInt; let tLeft = 25*60; let isRun = false; const pI = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`, psI = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
-    function toggleTimer() { const w = $('timer-icon'), r = $('timer-progress'); playSound('tick'); if(isRun){clearInterval(tInt); isRun=false; w.innerHTML=pI;}else{isRun=true; w.innerHTML=psI; tInt=setInterval(()=>{tLeft--;let m=Math.floor(tLeft/60),s=tLeft%60; $('timer-display').innerText=`${m}:${s<10?'0':''}${s}`; r.style.strokeDasharray=`${(tLeft/(25*60))*100}, 100`; if(tLeft<=0){clearInterval(tInt); isRun=false; w.innerHTML=pI; tLeft=25*60; r.style.strokeDasharray=`100, 100`; $('timer-display').innerText=`25:00`; playSound('success'); addRingScore(); alert("Focus complete!");}}, 1000);} }
+    let tInt; let tLeft = 25*60; let isRun = false; 
+    const pI = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`;
+    const psI = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
+    
+    function toggleTimer() { 
+      const w = document.getElementById('timer-icon'), r = document.getElementById('timer-progress'); 
+      playSound('tick'); 
+      if(isRun){
+        clearInterval(tInt); isRun=false; w.innerHTML=pI;
+      } else {
+        isRun=true; w.innerHTML=psI; 
+        tInt=setInterval(()=>{
+          tLeft--;
+          let m=Math.floor(tLeft/60),s=tLeft%60; 
+          document.getElementById('timer-display').innerText=`${m}:${s<10?'0':''}${s}`; 
+          r.style.strokeDasharray=`${(tLeft/(25*60))*100}, 100`; 
+          if(tLeft<=0){
+            clearInterval(tInt); isRun=false; w.innerHTML=pI; tLeft=25*60; 
+            r.style.strokeDasharray=`100, 100`; document.getElementById('timer-display').innerText=`25:00`; 
+            playSound('success'); addRingScore(); alert("Focus complete!");
+          }
+        }, 1000);
+      } 
+    }
 
-    function renderSettings() { $('settings-subjects-list').innerHTML = subjectsData.map(s => `<div class="list-item app-card"><div style="font-weight: 500;">${s.name}</div><button class="delete-btn" onclick="deleteSubject('${s.id}')">×</button></div>`).join(''); }
-    function addSubject() { playSound('pop'); const i=$('new-subject'); if(!i.value)return; subjectsData.push({ id: Date.now().toString(), name: i.value, status: 2, homework: [], notes: "", grades: [], photos: []}); i.value=''; saveData(); renderSettings(); }
+    function renderSettings() { document.getElementById('settings-subjects-list').innerHTML = subjectsData.map(s => `<div class="list-item app-card"><div style="font-weight: 500;">${s.name}</div><button class="delete-btn" onclick="deleteSubject('${s.id}')">×</button></div>`).join(''); }
+    function addSubject() { playSound('pop'); const i=document.getElementById('new-subject'); if(!i.value)return; subjectsData.push({ id: Date.now().toString(), name: i.value, status: 2, homework: [], notes: "", grades: [], photos: []}); i.value=''; saveData(); renderSettings(); }
     function deleteSubject(id) { playSound('tick'); if(confirm("Delete?")) { subjectsData = subjectsData.filter(s => s.id !== id); saveData(); renderSettings(); } }
   </script>
 </body>
