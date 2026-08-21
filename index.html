@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#1C2B39">
   
   <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/180/task.png">
   <title>School Tracker</title>
@@ -19,37 +20,38 @@
       --bg-base: #F2F2F7;
       --card-bg: rgba(255, 255, 255, 0.75); 
       --card-border: rgba(0, 0, 0, 0.05);
-      /* Subtle default shadow for clean mode */
-      --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.02);
+      /* Deepened default shadow */
+      --card-shadow: 0 12px 28px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
       --input-bg: rgba(255, 255, 255, 0.65);
       
       --text-primary: #1C1C1E; --text-secondary: #636366;
       --accent: #2C3E50; --accent-grad: linear-gradient(135deg, #34495E, #1E293B);
+      --rich-blue: linear-gradient(135deg, #2A4365, #1A365D);
       --warning: #FF9500; --critical: #FF3B30; --success: #10B981;
     }
 
-    /* 🔥 DEEP DYNAMIC SHADOWS WHEN BACKGROUND IS ON 🔥 */
+    /* 🔥 WAY DARKER DYNAMIC SHADOWS WHEN BG IS ACTIVE 🔥 */
     body.bg-active {
-      --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.25), 0 8px 16px rgba(0, 0, 0, 0.15);
+      --card-shadow: 0 24px 48px rgba(0, 0, 0, 0.35), 0 8px 24px rgba(0, 0, 0, 0.2);
     }
 
     @media (prefers-color-scheme: dark) {
       :root {
         --bg-base: #000000; --card-bg: rgba(28, 28, 30, 0.75); --card-border: rgba(255, 255, 255, 0.08);
-        --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        --card-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
         --input-bg: rgba(0, 0, 0, 0.3); --text-primary: #F5F5F5; --text-secondary: #98989D;
       }
       body.bg-active {
-        --card-shadow: 0 24px 50px rgba(0, 0, 0, 0.7), 0 8px 24px rgba(0, 0, 0, 0.5);
+        --card-shadow: 0 24px 54px rgba(0, 0, 0, 0.8), 0 8px 24px rgba(0, 0, 0, 0.6);
       }
     }
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     
-    body { background-color: var(--bg-base); color: var(--text-primary); margin: 0; padding: 0; overflow-x: hidden; -webkit-user-select: none; font-family: -apple-system, 'Inter', sans-serif; font-size: 15px; line-height: 1.4; overscroll-behavior-y: none; }
+    html, body { background-color: var(--bg-base); color: var(--text-primary); margin: 0; padding: 0; overflow-x: hidden; -webkit-user-select: none; font-family: -apple-system, 'Inter', sans-serif; font-size: 15px; line-height: 1.4; overscroll-behavior-y: none; min-height: 100vh; }
 
-    /* Expanded to 130% to completely eliminate white edges on notch/scroll */
-    #app-background { position: fixed; top: -15vh; left: -15vw; width: 130vw; height: 130vh; z-index: -1; background-size: cover; background-position: center; opacity: var(--bg-opacity, 0.7); transition: opacity 0.3s ease, background-image 0.4s ease; pointer-events: none; }
+    /* Expanded massively to guarantee no white edges anywhere */
+    #app-background { position: fixed; top: -50vh; left: -50vw; width: 200vw; height: 200vh; z-index: -1; background-size: cover; background-position: center; opacity: var(--bg-opacity, 0.7); transition: opacity 0.3s ease, background-image 0.4s ease; pointer-events: none; }
 
     h1, h2, h3, .subject-title { font-family: 'Outfit', sans-serif; letter-spacing: -0.4px; }
     #splash { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: var(--bg-base); color: var(--text-primary); z-index: 9999; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; transition: opacity 0.4s ease; }
@@ -67,18 +69,30 @@
     h2 { font-size: 19px; font-weight: 700; margin-top: 24px; margin-bottom: 12px; text-shadow: 0 2px 8px rgba(0,0,0,0.05); }
     h3 { font-size: 14px; font-weight: 700; margin-top: 20px; margin-bottom: 8px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.6px; }
 
-    .icon-btn { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 50%; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: var(--card-shadow); transition: transform 0.15s ease; backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); transform: translateZ(0); -webkit-transform: translateZ(0); }
-    .icon-btn:active { transform: scale(0.9) translateZ(0); }
+    /* RESTORED STANDARD NAVY ICONS (Removed glass interference) */
+    .icon-btn, .back-btn { 
+      background: var(--accent-grad) !important; 
+      color: #FFFFFF !important; 
+      border: none !important; 
+      cursor: pointer; box-shadow: 0 6px 16px rgba(30, 41, 59, 0.3); transition: transform 0.15s ease; 
+    }
+    .icon-btn { border-radius: 50%; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; }
+    .back-btn { display: flex; align-items: center; gap: 4px; padding: 8px 14px; font-size: 14px; font-weight: 600; border-radius: 16px; }
+    .icon-btn:active, .back-btn:active { transform: scale(0.92); }
     
-    /* 🔥 FIX: hardware acceleration prevents Safari from rendering sharp square shadows 🔥 */
-    .app-card { background: var(--card-bg); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid var(--card-border); box-shadow: var(--card-shadow); border-radius: 20px; transition: box-shadow 0.3s ease; transform: translateZ(0); -webkit-transform: translateZ(0); }
+    /* REUSABLE GLASS CARD SYSTEM (translateZ removed to fix shadow clipping) */
+    .app-card { background: var(--card-bg); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid var(--card-border); box-shadow: var(--card-shadow); border-radius: 20px; transition: box-shadow 0.3s ease; }
 
     .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
     .widget { padding: 16px; display: flex; flex-direction: column; justify-content: space-between; height: 100%; min-height: 100px; text-decoration: none; cursor: pointer; transition: transform 0.15s ease; }
-    .widget:active { transform: scale(0.97) translateZ(0); }
-    .widget-title { font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; }
-    .simon-action { font-size: 17px; font-weight: 700; font-family: 'Outfit'; display: flex; justify-content: space-between; align-items: center; width: 100%; color: var(--text-primary); }
+    .widget:active { transform: scale(0.97); }
+    
+    /* RESTORED NAVY SIMON WIDGET */
+    .simon-widget { background: var(--accent-grad) !important; color: #FFFFFF !important; border: none !important; box-shadow: 0 10px 24px rgba(30, 41, 59, 0.3) !important; }
+    .simon-widget .simon-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
+    .simon-widget .simon-action { font-size: 17px; font-weight: 700; font-family: 'Outfit'; display: flex; justify-content: space-between; align-items: center; width: 100%; }
 
+    .widget-title { font-size: 13px; font-weight: 600; color: var(--text-secondary); }
     .ring-container { display: flex; align-items: center; gap: 10px; margin-top: auto; }
     .circular-chart { width: 44px; height: 44px; flex-shrink: 0; }
     .circle-bg { fill: none; stroke: rgba(0,0,0,0.06); stroke-width: 5; }
@@ -89,29 +103,37 @@
     .health-bar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; background: var(--input-bg); margin-top: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
     .health-segment { height: 100%; transition: width 0.4s ease; border-radius: 7px; }
 
-    /* 🔥 FIX: Bottom padding gives the deep shadow breathing room so it never clips 🔥 */
+    /* 🔥 FIX: Perfect horizontal scrolling with no clipping 🔥 */
     .horizontal-scroll {
       display: flex; gap: 12px; overflow-x: auto;
-      padding-bottom: 28px; margin-bottom: -16px;
       scroll-snap-type: x mandatory; scrollbar-width: none;
+      /* Pull out to screen edge */
+      margin-left: -16px; margin-right: -16px;
+      /* Give shadows massive vertical space */
+      padding-top: 20px; padding-bottom: 40px;
+      margin-top: -20px; margin-bottom: -40px;
+      /* Push first item back inwards */
+      padding-left: 16px;
     }
     .horizontal-scroll::-webkit-scrollbar { display: none; }
+    /* This invisible block creates the perfect gap at the right edge when fully scrolled */
+    .horizontal-scroll::after { content: ''; flex: 0 0 4px; }
     
-    .deadline-card { flex: 0 0 135px; scroll-snap-align: start; background: var(--accent-grad); color: #FFFFFF; border-radius: 18px; padding: 14px; position: relative; box-shadow: var(--card-shadow); transform: translateZ(0); -webkit-transform: translateZ(0); }
-    .deadline-card.warning { background: linear-gradient(135deg, var(--warning), #D97706); }
-    .deadline-card.critical { background: linear-gradient(135deg, var(--critical), #DC2626); animation: pulseAlert 2s infinite; }
+    .deadline-card { flex: 0 0 135px; scroll-snap-align: start; background: var(--accent-grad); color: #FFFFFF; border-radius: 18px; padding: 14px; position: relative; box-shadow: 0 8px 24px rgba(30, 41, 59, 0.25); }
+    .deadline-card.warning { background: linear-gradient(135deg, var(--warning), #D97706); box-shadow: 0 8px 24px rgba(245, 158, 11, 0.25); }
+    .deadline-card.critical { background: linear-gradient(135deg, var(--critical), #DC2626); box-shadow: 0 8px 24px rgba(239, 68, 68, 0.25); animation: pulseAlert 2s infinite; }
     .dl-days { font-size: 28px; font-weight: 800; font-family: 'Outfit'; line-height: 1; }
     .dl-label { font-size: 13px; font-weight: 500; opacity: 0.9; margin-top: 4px; }
-    @keyframes pulseAlert { 0%,100% { box-shadow: var(--card-shadow); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } }
+    @keyframes pulseAlert { 0%,100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } }
 
-    .timetable-card { flex: 0 0 130px; scroll-snap-align: start; padding: 14px; display: flex; flex-direction: column; gap: 6px; cursor: pointer; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
-    .timetable-card:active { transform: scale(0.95) translateZ(0); }
+    .timetable-card { flex: 0 0 130px; scroll-snap-align: start; padding: 14px; display: flex; flex-direction: column; gap: 6px; cursor: pointer; transition: transform 0.15s ease; }
+    .timetable-card:active { transform: scale(0.95); }
     .tt-session { font-size: 12px; color: var(--text-secondary); font-weight: 600; }
     .tt-subject { font-size: 15px; font-weight: 700; line-height: 1.2; }
 
     #subjects-list { display: flex; flex-direction: column; position: relative; }
     .card { padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 14px; transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; }
-    .card:active { transform: scale(0.97) translateZ(0); }
+    .card:active { transform: scale(0.97); }
     .boxes-container { display: flex; gap: 6px; flex-shrink: 0; }
     .box { width: 24px; height: 24px; border-radius: 8px; border: 2px solid rgba(0,0,0,0.15); background: rgba(255,255,255,0.95); box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); transition: all 0.2s ease; }
     .box:active { transform: scale(0.7); }
@@ -119,12 +141,10 @@
     .subject-title { font-size: 17px; font-weight: 600; flex: 1; line-height: 1.2; }
 
     .header-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-    .back-btn { display: flex; align-items: center; gap: 4px; padding: 8px 14px; font-size: 14px; font-weight: 600; cursor: pointer; transition: transform 0.15s ease; border-radius: 16px; }
-    .back-btn:active { transform: scale(0.92) translateZ(0); }
     #detail-title { font-size: clamp(22px, 6vw, 28px); font-weight: 800; line-height: 1.1; margin: 0; flex: 1; text-wrap: balance; text-shadow: 0 2px 12px rgba(0,0,0,0.05); }
 
     .status-row { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-radius: 16px; margin-bottom: 8px; transition: transform 0.15s ease, background-color 0.2s ease; cursor: pointer; }
-    .status-row:active { transform: scale(0.97) translateZ(0); }
+    .status-row:active { transform: scale(0.97); }
     .status-row.active-status { background-color: var(--status-bg); border-color: var(--box-color); }
     .status-label { font-size: 15px; font-weight: 600; color: var(--text-secondary); transition: color 0.2s ease; }
     .status-row.active-status .status-label { color: var(--text-primary); }
@@ -137,8 +157,10 @@
     button.add-btn:active { transform: scale(0.92); }
 
     .list-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-radius: 16px; margin-bottom: 8px; transform-origin: top; }
-    .list-item.overdue { background: rgba(255,59,48,0.1) !important; border-color: var(--critical) !important; }
-    
+    .task-card { background: var(--rich-blue) !important; color: #FFFFFF !important; border: none !important; box-shadow: 0 8px 24px rgba(26, 54, 93, 0.25); }
+    .task-card.overdue { background: linear-gradient(135deg, var(--critical), #DC2626) !important; box-shadow: 0 8px 24px rgba(239, 68, 68, 0.25); }
+    .task-card .date-badge { color: rgba(255,255,255,0.75) !important; }
+    .task-card .delete-btn { color: rgba(255,255,255,0.85) !important; }
     .date-badge { font-size: 13px; color: var(--text-secondary); font-weight: 500; margin-top: 4px; }
     .delete-btn { color: var(--critical); background: none; border: none; font-weight: 400; font-size: 24px; padding: 0 8px; cursor: pointer; transition: transform 0.15s ease; }
     .delete-btn:active { transform: scale(0.8); }
@@ -146,11 +168,11 @@
     .average-banner { padding: 16px; text-align: center; font-weight: 700; font-size: 16px; margin-bottom: 16px; }
 
     .completing { animation: completeTaskAnim 0.35s ease forwards; pointer-events: none; overflow: hidden; }
-    @keyframes completeTaskAnim { 0% { opacity: 1; transform: scale(1) translateZ(0); } 50% { opacity: 0.6; background: #10B981 !important; transform: scale(0.97) translateZ(0); } 100% { opacity: 0; transform: scale(0.92) translateY(-4px) translateZ(0); } }
+    @keyframes completeTaskAnim { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; background: #10B981 !important; transform: scale(0.97); } 100% { opacity: 0; transform: scale(0.92) translateY(-4px); } }
 
-    .photo-gallery { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 16px; margin-bottom: -8px; scroll-snap-type: x mandatory; scrollbar-width: none; }
+    .photo-gallery { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 24px; margin-bottom: -16px; scroll-snap-type: x mandatory; scrollbar-width: none; }
     .photo-gallery::-webkit-scrollbar { display: none; }
-    .photo-card { flex: 0 0 130px; height: 95px; scroll-snap-align: start; border-radius: 14px; background-size: cover; background-position: center; border: 1px solid var(--card-border); position: relative; box-shadow: var(--card-shadow); transform: translateZ(0); -webkit-transform: translateZ(0); }
+    .photo-card { flex: 0 0 130px; height: 95px; scroll-snap-align: start; border-radius: 14px; background-size: cover; background-position: center; border: 1px solid var(--card-border); position: relative; box-shadow: var(--card-shadow); }
     .del-photo { position: absolute; top: -6px; right: -6px; background: var(--critical); color: #FFFFFF; border: none; width: 22px; height: 22px; border-radius: 50%; font-weight: bold; font-size: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
     .timer-card { display: flex; align-items: center; gap: 16px; padding: 14px 16px; margin-bottom: 16px; }
@@ -180,7 +202,8 @@
   <div id="home-screen" class="screen active">
     <div class="top-bar">
       <h1>Dashboard</h1>
-      <button class="icon-btn app-card" onclick="openScreen('settings-screen')">
+      <!-- Navy settings button -->
+      <button class="icon-btn" onclick="openScreen('settings-screen')">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
       </button>
     </div>
@@ -193,8 +216,9 @@
           <div class="ring-text" id="ring-score">0/5</div>
         </div>
       </div>
-      <a href="https://simon.iona.vic.edu.au/" target="_blank" id="home-simon-card" class="widget app-card">
-        <div class="widget-title">Portal</div>
+      <!-- Navy Simon widget -->
+      <a href="https://simon.iona.vic.edu.au/" target="_blank" id="home-simon-card" class="widget simon-widget" style="border-radius: 20px;">
+        <div class="simon-title">Portal</div>
         <div class="simon-action">Open Simon<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></div>
       </a>
     </div>
@@ -233,7 +257,8 @@
   <!-- DETAIL SCREEN -->
   <div id="detail-screen" class="screen">
     <div class="header-bar">
-      <button class="back-btn app-card" onclick="goHome()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Back</button>
+      <!-- Navy back button -->
+      <button class="back-btn" onclick="goHome()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Back</button>
       <h1 id="detail-title"></h1>
     </div>
     
@@ -273,7 +298,8 @@
   <!-- SETTINGS SCREEN -->
   <div id="settings-screen" class="screen">
     <div class="header-bar">
-      <button class="back-btn app-card" onclick="goHome()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Dashboard</button>
+      <!-- Navy back button -->
+      <button class="back-btn" onclick="goHome()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Dashboard</button>
       <h1 style="margin:0;">Settings</h1>
     </div>
     
@@ -285,7 +311,7 @@
       </div>
       <div style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:8px;">IMAGE</div>
       <input type="file" id="bg-upload" accept="image/*" style="display:none;" onchange="handleBgUpload(event)">
-      <button class="add-btn" style="width:100%; padding:12px; margin-bottom:12px;" onclick="$('bg-upload').click()">Upload Photo</button>
+      <button class="add-btn" style="width:100%; padding:12px; margin-bottom:12px; background:var(--card-border); color:var(--text-primary); box-shadow:none;" onclick="$('bg-upload').click()">Upload Photo</button>
       <div style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:8px; display:flex; justify-content:space-between;"><span>TRANSPARENCY</span><span><span id="opacity-val">70</span>%</span></div>
       <input type="range" id="bg-opacity-slider" min="0" max="100" value="70" oninput="updateBgOpacity(this.value)">
     </div>
@@ -352,19 +378,29 @@
       const dlSec = $('deadline-section');
       if (deadlines.length > 0) {
         dlSec.style.display = 'block'; deadlines.sort((a,b) => getDaysDiff(a.date) - getDaysDiff(b.date));
-        $('deadline-list').innerHTML = deadlines.map(dl => { const d = getDaysDiff(dl.date); return `<div class="deadline-card ${d<=2?'critical':(d<=7?'warning':'')}"><div class="dl-days">${d<0?'0':d}</div><div class="dl-label">Days until<br>${dl.name}</div><button class="icon-btn" style="position:absolute; top:8px; right:8px; width:26px; height:26px; font-size:14px; color:white; background:rgba(0,0,0,0.15); border:none;" onclick="deleteDeadline('${dl.id}')">×</button></div>`; }).join('');
+        $('deadline-list').innerHTML = deadlines.map(dl => {
+          const days = getDaysDiff(dl.date); let stateClass = ''; if (days <= 2) stateClass = 'critical'; else if (days <= 7) stateClass = 'warning';
+          return `<div class="deadline-card ${stateClass}"><div class="dl-days">${days < 0 ? '0' : days}</div><div class="dl-label">Days until<br>${dl.name}</div><button class="icon-btn" style="position:absolute; top:8px; right:8px; width:26px; height:26px; font-size:14px; color:white; background:rgba(0,0,0,0.15); border:none;" onclick="deleteDeadline('${dl.id}')">×</button></div>`;
+        }).join('');
       } else { dlSec.style.display = 'none'; }
 
       const todaysClasses = getTodaysTimetable();
       const ttSec = $('dynamic-timetable-section');
       if (todaysClasses) {
-        ttSec.className = anim; ttSec.innerHTML = `<h2>Today's Schedule</h2><div class="horizontal-scroll" style="margin-bottom: 20px;">${todaysClasses.map((cName, i) => { const s = subjectsData.find(x => x.name.toLowerCase() === cName.toLowerCase()); return `<div class="timetable-card app-card" data-tt-sub="${s?s.id:''}" style="background-color: ${s ? statuses[s.status].color : 'var(--card-bg)'}; border-color: ${s ? statuses[s.status].hex : 'var(--card-border)'};" ${s ? `onclick="openDetail('${s.id}')"` : ''}><div class="tt-session">${sessionLabels[i]}</div><div class="tt-subject">${cName}</div></div>`; }).join('')}</div>`;
+        ttSec.className = anim; ttSec.innerHTML = `<h2>Today's Schedule</h2><div class="horizontal-scroll" style="margin-bottom: 20px;">${todaysClasses.map((cName, i) => {
+          const matchingSub = subjectsData.find(s => s.name.toLowerCase() === cName.toLowerCase());
+          const isSession = sessionLabels[index].includes('Session');
+          const cCol = matchingSub ? statuses[matchingSub.status].color : (isSession ? 'rgba(0,0,0,0.03)' : 'var(--card-bg)');
+          const bCol = matchingSub ? statuses[matchingSub.status].hex : 'var(--card-border)';
+          const act = matchingSub ? `onclick="openDetail('${matchingSub.id}')"` : '';
+          return `<div class="timetable-card app-card" data-tt-sub="${s?s.id:''}" style="background-color: ${cCol}; border-color: ${bCol};" ${act}><div class="tt-session">${sessionLabels[i]}</div><div class="tt-subject">${cName}</div></div>`;
+        }).join('')}</div>`;
       } else { ttSec.innerHTML = ''; }
 
-      if (isInitial) subjectsData.sort((a, b) => a.status - b.status);
+      if (initialLoad) subjectsData.sort((a, b) => a.status - b.status);
       $('subjects-list').innerHTML = subjectsData.map((sub, i) => `<div class="card app-card ${anim}" data-id="${sub.id}" style="background-color: ${statuses[sub.status].color}; border-color: ${statuses[sub.status].hex}; animation-delay: ${0.05*i}s;" onclick="openDetail('${sub.id}')"><div class="boxes-container">${[0,1,2,3,4].map(j => `<div class="box ${sub.status===j?'active':''}" style="--box-color: ${statuses[j].hex};" onclick="event.stopPropagation(); setStatus('${sub.id}', ${j})"></div>`).join('')}</div><div class="subject-title">${sub.name}</div></div>`).join('');
       
-      $('global-notes-list').innerHTML = globalNotes.map((n, i) => `<div id="global-item-${n.id}" class="list-item app-card ${anim} ${isOverdue(n.date)?'overdue':''}" style="animation-delay: ${0.05*i}s;"><div><div style="font-weight: 600; font-size: 15px;">${n.text}</div><div class="date-badge">Due: ${formatDate(n.date)}</div></div><button class="delete-btn" onclick="completeGlobalAnim('${n.id}')">×</button></div>`).join('');
+      $('global-notes-list').innerHTML = globalNotes.map((n, i) => `<div id="global-item-${n.id}" class="list-item app-card task-card ${anim} ${isOverdue(n.date)?'overdue':''}" style="animation-delay: ${0.05*i}s;"><div><div style="font-weight: 600; font-size: 15px;">${n.text}</div><div class="date-badge">Due: ${formatDate(n.date)}</div></div><button class="delete-btn" onclick="completeGlobalAnim('${n.id}')">×</button></div>`).join('');
     }
 
     function processPhoto(e) { const f = e.target.files[0]; if(!f) return; playSound('pop'); const r = new FileReader(); r.onload = (ev) => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const s = Math.min(600/img.width, 1); c.width = img.width*s; c.height = img.height*s; c.getContext('2d').drawImage(img,0,0,c.width,c.height); getSub(currentSubjectId).photos.push({ id: Date.now().toString(), img: c.toDataURL('image/jpeg', 0.5) }); saveData(); renderDetail(true); }; img.src = ev.target.result; }; r.readAsDataURL(f); }
@@ -379,10 +415,10 @@
       cards.forEach(c => {
         const dY = pos[c.dataset.id].top - c.getBoundingClientRect().top;
         if (dY !== 0) {
-          const isC = (c.dataset.id === subId); c.style.transition = 'none'; c.style.transform = `translateY(${dY}px) scale(1) translateZ(0)`; c.style.zIndex = isC?'1':'10';
+          const isC = (c.dataset.id === subId); c.style.transition = 'none'; c.style.transform = `translateY(${dY}px)`; c.style.zIndex = isC?'1':'10';
           requestAnimationFrame(() => requestAnimationFrame(() => {
-            if(isC) { c.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)'; c.style.transform = `translateY(0) scale(0.95) translateZ(0)`; setTimeout(() => { c.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'; c.style.transform = `translateY(0) scale(1) translateZ(0)`; setTimeout(() => { c.style.transition = ''; c.style.zIndex = ''; }, 300); }, 350); }
-            else { c.style.transition = 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'; c.style.transform = `translateY(0) scale(1) translateZ(0)`; setTimeout(() => { c.style.transition = ''; c.style.zIndex = ''; }, 500); }
+            if(isC) { c.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)'; c.style.transform = `translateY(0) scale(0.95)`; setTimeout(() => { c.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'; c.style.transform = `translateY(0) scale(1)`; setTimeout(() => { c.style.transition = ''; c.style.zIndex = ''; }, 300); }, 350); }
+            else { c.style.transition = 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'; c.style.transform = `translateY(0)`; setTimeout(() => { c.style.transition = ''; c.style.zIndex = ''; }, 500); }
           }));
         }
       });
@@ -392,7 +428,7 @@
       playSound('tick'); getSub(subId).status = sIdx; saveData(); 
       if (currentSubjectId === null) { 
         animateReorder(subId); 
-        $$(`.timetable-card[data-tt-sub="${subId}"]`).forEach(c => { c.style.backgroundColor = statuses[sIdx].color; c.style.borderColor = statuses[sIdx].hex; c.style.transform = 'scale(1.04) translateZ(0)'; setTimeout(() => c.style.transform='translateZ(0)', 200); });
+        $$(`.timetable-card[data-tt-sub="${subId}"]`).forEach(c => { c.style.backgroundColor = statuses[sIdx].color; c.style.borderColor = statuses[sIdx].hex; c.style.transform = 'scale(1.04)'; setTimeout(() => c.style.transform='', 200); });
       } else { 
         $$('.status-row').forEach((r,i) => { const b = r.querySelector('.box'); if(i===sIdx) { r.classList.add('active-status'); b.classList.add('active'); r.style.setProperty('--status-bg', statuses[i].color); r.style.setProperty('--box-color', statuses[i].hex); b.style.setProperty('--box-color', statuses[i].hex); } else { r.classList.remove('active-status'); b.classList.remove('active'); } }); 
       } 
@@ -410,10 +446,10 @@
       const pGal = $('photo-gallery'); if(sub.photos.length>0) { pGal.style.display='flex'; pGal.innerHTML = sub.photos.map(p => `<div class="photo-card ${anim}" style="background-image: url('${p.img}')"><button class="del-photo" onclick="deletePhoto('${p.id}')">×</button></div>`).join(''); } else { pGal.style.display='none'; pGal.innerHTML=''; }
       let tS=0, tO=0; $('grades-list').innerHTML = sub.grades.map((g,i) => { tS+=parseFloat(g.score); tO+=parseFloat(g.outOf); return `<div class="list-item app-card ${anim}" style="animation-delay:${0.05*i}s;"><div><div style="font-weight: 600;">${g.name}</div><div class="date-badge">${g.score} / ${g.outOf}</div></div><div style="display:flex; align-items:center; gap: 8px;"><div class="grade-badge">${Math.round((g.score/g.outOf)*100)}%</div><button class="delete-btn" onclick="deleteGrade('${g.id}')">×</button></div></div>`; }).join('');
       $('average-banner').innerText = tO>0 ? `Current Average: ${Math.round((tS/tO)*100)}%` : "No Grades Logged";
-      $('hw-list').innerHTML = sub.homework.map((hw,i) => `<div id="hw-item-${hw.id}" class="list-item app-card ${anim} ${isOverdue(hw.date)?'overdue':''}" style="animation-delay:${0.05*i}s;"><div><div style="font-weight: 600; font-size: 15px;">${hw.text}</div><div class="date-badge">Due: ${formatDate(hw.date)}</div></div><button class="delete-btn" onclick="completeHomeworkAnim('${hw.id}')">×</button></div>`).join('');
+      $('hw-list').innerHTML = sub.homework.map((hw,i) => `<div id="hw-item-${hw.id}" class="list-item app-card task-card ${anim} ${isOverdue(hw.date)?'overdue':''}" style="animation-delay:${0.05*i}s;"><div><div style="font-weight: 600; font-size: 15px;">${hw.text}</div><div class="date-badge">Due: ${formatDate(hw.date)}</div></div><button class="delete-btn" onclick="completeHomeworkAnim('${hw.id}')">×</button></div>`).join('');
     }
 
-    function perfComp(el, cb) { playSound('success'); el.style.transition='all 0.3s ease'; el.style.background='var(--success)'; el.style.transform='scale(0.96) translateX(15px) translateZ(0)'; const d=el.querySelector('div>div:first-child'),b=el.querySelector('.date-badge'),x=el.querySelector('.delete-btn'); if(d)d.style.color='#FFF'; if(b)b.style.color='rgba(255,255,255,0.85)'; if(x){x.innerHTML='✓';x.style.color='#FFF';x.style.transform='scale(1.1)';} setTimeout(()=>{el.style.transition='all 0.4s cubic-bezier(0.16,1,0.3,1)';el.style.transform='scale(0.9) translateX(30px) translateZ(0)';el.style.opacity='0';el.style.maxHeight=el.offsetHeight+'px'; requestAnimationFrame(()=>{el.style.maxHeight='0px';el.style.paddingTop='0';el.style.paddingBottom='0';el.style.marginBottom='0';el.style.borderWidth='0';}); setTimeout(cb, 380); }, 300); }
+    function perfComp(el, cb) { playSound('success'); el.style.transition='all 0.3s ease'; el.style.background='var(--success)'; el.style.transform='scale(0.96) translateX(15px)'; const d=el.querySelector('div>div:first-child'),b=el.querySelector('.date-badge'),x=el.querySelector('.delete-btn'); if(d)d.style.color='#FFF'; if(b)b.style.color='rgba(255,255,255,0.85)'; if(x){x.innerHTML='✓';x.style.color='#FFF';x.style.transform='scale(1.1)';} setTimeout(()=>{el.style.transition='all 0.4s cubic-bezier(0.16,1,0.3,1)';el.style.transform='scale(0.9) translateX(30px)';el.style.opacity='0';el.style.maxHeight=el.offsetHeight+'px'; requestAnimationFrame(()=>{el.style.maxHeight='0px';el.style.paddingTop='0';el.style.paddingBottom='0';el.style.marginBottom='0';el.style.borderWidth='0';}); setTimeout(cb, 380); }, 300); }
     function completeGlobalAnim(id) { const el=$(`global-item-${id}`); if(el) perfComp(el,()=>deleteGlobal(id)); else deleteGlobal(id); }
     function completeHomeworkAnim(id) { const el=$(`hw-item-${id}`); if(el) perfComp(el,()=>deleteHomework(id)); else deleteHomework(id); }
 
