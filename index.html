@@ -112,7 +112,7 @@
     .tt-subject { font-size: 15px; font-weight: 700; line-height: 1.2; }
     
     #subjects-list { display: flex; flex-direction: column; position: relative; }
-    .card { padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 14px; cursor: pointer; }
+    .card { padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 14px; transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; }
     .card:active { transform: scale(0.97); }
     .boxes-container { display: flex; gap: 6px; flex-shrink: 0; }
     .box { width: 24px; height: 24px; border-radius: 8px; border: 2px solid rgba(0,0,0,0.15); background: rgba(255,255,255,0.95); box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); transition: all 0.2s ease; }
@@ -129,8 +129,11 @@
     .status-label { font-size: 15px; font-weight: 600; color: var(--text-secondary); transition: color 0.2s ease; }
     .status-row.active-status .status-label { color: var(--text-primary); }
     
+    /* 🔥 PURE BOX-SIZING FIX FOR SAFARI INPUT OVERFLOW 🔥 */
     .input-group { display: flex; gap: 8px; margin-bottom: 16px; width: 100%; }
-    input[type="text"], input[type="date"], input[type="number"], textarea, select { flex: 1; min-width: 0; padding: 14px 16px; border-radius: 14px; border: 1px solid rgba(0,0,0,0.08); background: var(--input-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text-primary); font-size: 15px; font-family: inherit; outline: none; transition: background-color 0.2s ease; box-shadow: inset 0 2px 6px rgba(0,0,0,0.02); }
+    input[type="text"], input[type="date"], input[type="number"], textarea, select { 
+      flex: 1; min-width: 0; max-width: 100%; box-sizing: border-box !important; padding: 14px 16px; border-radius: 14px; border: 1px solid rgba(0,0,0,0.08); background: var(--input-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text-primary); font-size: 15px; font-family: inherit; outline: none; transition: background-color 0.2s ease; box-shadow: inset 0 2px 6px rgba(0,0,0,0.02); 
+    }
     input:focus, textarea:focus, select:focus { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.15); }
     textarea { height: 90px; resize: none; width: 100%; margin-top: 2px; line-height: 1.5; }
     select { -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23636366%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E"); background-repeat: no-repeat; background-position: right 14px center; background-size: 16px; padding-right: 40px !important; }
@@ -180,7 +183,6 @@
   </style>
 </head>
 <body>
-  <!-- ROTATION BLOCKER OVERLAY -->
   <div id="rotate-lock">
     <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 16px;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
     Please rotate your phone back to portrait mode.
@@ -214,8 +216,8 @@
       </a>
     </div>
 
-    <!-- 🔥 NEW ADD HOMEWORK BANNER 🔥 -->
-    <div class="app-card task-card cascade-item d-2" style="padding: 14px 16px; margin-top:-4px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; border-radius: 16px; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 700;" onclick="openAddHw()">
+    <!-- 🔥 CORRECTED ADD HOMEWORK BANNER STYLING 🔥 -->
+    <div class="app-card cascade-item d-2" style="background: var(--accent-grad); color: #FFFFFF; border: none; box-shadow: 0 10px 24px rgba(30, 41, 59, 0.3); padding: 14px 16px; margin-top:-4px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; border-radius: 16px; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 700;" onclick="openAddHw()">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
       Add Homework
     </div>
@@ -251,23 +253,21 @@
     </div>
   </div>
 
-  <!-- 🔥 NEW ADD HOMEWORK SCREEN 🔥 -->
+  <!-- 🔥 CORRECTED GLOBAL ADD HOMEWORK SCREEN 🔥 -->
   <div id="add-hw-screen" class="screen">
     <div class="header-bar cascade-item d-1">
       <button class="back-btn" onclick="goHome()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Back</button>
       <h1 style="margin:0;">New Task</h1>
     </div>
     
-    <div class="app-card setting-row cascade-item d-2">
-      <div style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:8px; text-transform:uppercase;">Homework Details</div>
+    <div class="app-card setting-row cascade-item d-2" style="gap: 12px;">
+      <div style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:4px; text-transform:uppercase;">Homework Details</div>
       
-      <input type="text" id="global-new-hw-desc" placeholder="Task description..." style="margin-bottom:12px; width:100%;">
+      <input type="text" id="global-new-hw-desc" placeholder="Task description..." style="width: 100%; max-width: 100%; margin: 0; display: block;">
+      <select id="global-new-hw-sub" style="width: 100%; max-width: 100%; margin: 0; display: block;"></select>
+      <input type="date" id="global-new-hw-date" style="width: 100%; max-width: 100%; margin: 0; display: block;">
       
-      <select id="global-new-hw-sub" style="margin-bottom:12px; width:100%;"></select>
-      
-      <input type="date" id="global-new-hw-date" style="margin-bottom:16px; width:100%;">
-      
-      <button class="add-btn" style="width:100%; padding:14px; display:flex; justify-content:center; align-items:center; gap:8px;" onclick="saveGlobalHw()">
+      <button class="add-btn" style="width: 100%; max-width: 100%; margin: 0; margin-top: 4px; padding: 14px; display: flex; justify-content: center; align-items: center; gap: 8px;" onclick="saveGlobalHw()">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
         Save Task
       </button>
@@ -285,7 +285,7 @@
 
     <div class="cascade-item d-3" style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; margin-bottom:8px;">
       <h3 style="margin:0;">Captured Notes</h3>
-      <button class="add-btn" style="padding:6px 14px; font-size:13px; display:flex; align-items:center; gap:6px;" onclick="$('camera-input').click()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Scan</button>
+      <button class="add-btn" style="padding:6px 14px; font-size:13px; display:flex; align-items:center; gap:6px;" onclick="document.getElementById('camera-input').click()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Scan</button>
     </div>
     <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none" onchange="processPhoto(event)">
     <div class="photo-gallery cascade-item d-4" id="photo-gallery"></div>
@@ -330,7 +330,7 @@
       <div style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:8px;">IMAGE</div>
       <input type="file" id="bg-upload" accept="image/*" style="display:none;" onchange="handleBgUp(event)">
       <div style="display:flex; gap:8px; margin-bottom:12px;">
-        <button class="add-btn" style="flex:1; padding:12px; background:var(--input-bg); color:var(--text-primary); box-shadow:none;" onclick="$('bg-upload').click()">Upload Photo</button>
+        <button class="add-btn" style="flex:1; padding:12px; background:var(--input-bg); color:var(--text-primary); box-shadow:none;" onclick="document.getElementById('bg-upload').click()">Upload Photo</button>
         <button class="add-btn" style="padding:12px; background:var(--input-bg); color:var(--text-primary); box-shadow:none;" onclick="resetBg()">Reset</button>
       </div>
       <div style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:8px; display:flex; justify-content:space-between;"><span>TRANSPARENCY</span><span><span id="opacity-val">70</span>%</span></div>
@@ -341,7 +341,7 @@
     <div class="app-card setting-row cascade-item d-5">
       <p style="font-size:14px; color:var(--text-secondary); margin-top:0; margin-bottom:12px; line-height:1.4;">Upload a screenshot of your timetable to automatically populate your 10-day cycle.</p>
       <input type="file" id="tt-upload" accept="image/*" style="display:none;" onchange="handleTTScan(event)">
-      <button id="scan-tt-btn" class="add-btn" style="width:100%; padding:12px; display:flex; justify-content:center; align-items:center; gap:8px;" onclick="$('tt-upload').click()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Scan Timetable</button>
+      <button id="scan-tt-btn" class="add-btn" style="width:100%; padding:12px; display:flex; justify-content:center; align-items:center; gap:8px;" onclick="document.getElementById('tt-upload').click()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Scan Timetable</button>
     </div>
 
     <h3 class="cascade-item d-6">Subject Manager</h3>
@@ -350,8 +350,7 @@
   </div>
 
   <script>
-    const $ = id => document.getElementById(id);
-    const $$ = sel => document.querySelectorAll(sel);
+    const documentById = id => document.getElementById(id);
     const getSub = id => sData.find(s => s.id === id);
 
     let sData = JSON.parse(localStorage.getItem('org_subjects')) || ["English", "General Mathematics", "Economics", "Legal studies", "Pre mathematical methods", "Religious education", "Physics", "Wellbeing"].map(n => ({ id: n.replace(/\s+/g, '-').toLowerCase(), name: n, status: 2, homework: [], notes: "", grades: [], photos: [] }));
@@ -366,8 +365,8 @@
     let appSet = JSON.parse(localStorage.getItem('org_settings')) || { bgEnabled: true, bgOpacity: 70, bgImage: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=100&w=1200&auto=format&fit=crop' };
     
     function appSetApply() {
-      const b = $('app-background');
-      const metaTheme = $('theme-color-meta');
+      const b = documentById('app-background');
+      const metaTheme = documentById('theme-color-meta');
       
       if(appSet.bgEnabled) { 
         b.style.opacity = appSet.bgOpacity / 100; b.style.backgroundImage = `url('${appSet.bgImage}')`; 
@@ -377,16 +376,16 @@
         b.style.opacity = 0; document.body.classList.remove('bg-active'); document.documentElement.classList.remove('bg-active');
         metaTheme.setAttribute('content', window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? '#000000' : '#F2F2F7');
       }
-      if($('bg-toggle')) $('bg-toggle').checked = appSet.bgEnabled; 
-      if($('bg-opacity-slider')) $('bg-opacity-slider').value = appSet.bgOpacity; 
-      if($('opacity-val')) $('opacity-val').innerText = appSet.bgOpacity;
+      if(documentById('bg-toggle')) documentById('bg-toggle').checked = appSet.bgEnabled; 
+      if(documentById('bg-opacity-slider')) documentById('bg-opacity-slider').value = appSet.bgOpacity; 
+      if(documentById('opacity-val')) documentById('opacity-val').innerText = appSet.bgOpacity;
     }
 
-    function toggleBg() { appSet.bgEnabled = $('bg-toggle').checked; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }
-    function updBgOpac(v) { appSet.bgOpacity = v; if(appSet.bgEnabled) $('app-background').style.opacity = v/100; $('opacity-val').innerText = v; localStorage.setItem('org_settings', JSON.stringify(appSet)); }
+    function toggleBg() { appSet.bgEnabled = documentById('bg-toggle').checked; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }
+    function updBgOpac(v) { appSet.bgOpacity = v; if(appSet.bgEnabled) documentById('app-background').style.opacity = v/100; documentById('opacity-val').innerText = v; localStorage.setItem('org_settings', JSON.stringify(appSet)); }
     function handleBgUp(e) { const f = e.target.files[0]; if(!f) return; pSnd('pop'); const r = new FileReader(); r.onload = (ev) => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const s = Math.min(1400/img.width, 1); c.width = img.width*s; c.height = img.height*s; c.getContext('2d').drawImage(img,0,0,c.width,c.height); appSet.bgImage = c.toDataURL('image/jpeg',0.6); appSet.bgEnabled = true; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }; img.src = ev.target.result; }; r.readAsDataURL(f); }
     function resetBg() { pSnd('tick'); appSet.bgImage = 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=100&w=1200&auto=format&fit=crop'; appSet.bgEnabled = true; appSet.bgOpacity = 70; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }
-    function handleTTScan(e) { const f = e.target.files[0]; if(!f) return; pSnd('pop'); const b = $('scan-tt-btn'); const oHTML = b.innerHTML; b.innerHTML = '⏳ Analyzing...'; b.style.opacity = '0.7'; b.style.pointerEvents = 'none'; setTimeout(() => { pSnd('success'); b.innerHTML = oHTML; b.style.opacity = '1'; b.style.pointerEvents = 'all'; alert("Analysis Complete!\n\n(Simulated: Overrides 10-day array locally.)"); }, 2500); }
+    function handleTTScan(e) { const f = e.target.files[0]; if(!f) return; pSnd('pop'); const b = documentById('scan-tt-btn'); const oHTML = b.innerHTML; b.innerHTML = '⏳ Analyzing...'; b.style.opacity = '0.7'; b.style.pointerEvents = 'none'; setTimeout(() => { pSnd('success'); b.innerHTML = oHTML; b.style.opacity = '1'; b.style.pointerEvents = 'all'; alert("Analysis Complete!\n\n(Simulated: Overrides 10-day array locally.)"); }, 2500); }
 
     const ttCyc = { 0:["Community Group","Economics","Economics","English","English","General Mathematics","General Mathematics","Community Group"], 1:["Community Group","Pre mathematical methods","Wellbeing","Religious education","Religious education","Economics","English","Community Group"], 2:["Community Group","Legal studies","Legal studies","Physics","Physics","Pre mathematical methods","Pre mathematical methods","Community Group"], 3:["Community Group","Economics","Economics","General Mathematics","General Mathematics","English","English","Community Group"], 4:["Community Group","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Physics","Physics","Community Group"], 7:["Community Group","English","English","Economics","Economics","General Mathematics","General Mathematics","Community Group"], 8:["Community Group","Physics","Wellbeing","Religious education","Religious education","Legal studies","General Mathematics","Community Group"], 9:["Community Group","Physics","Physics","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Community Group"], 10:["Community Group","English","English","General Mathematics","General Mathematics","Economics","Economics","Community Group"], 11:["Community Group","Physics","Physics","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Community Group"] };
     const sLab = ["Morning Group", "Session 1", "Session 2", "Session 3", "Session 4", "Session 5", "Session 6", "Afternoon Group"];
@@ -404,24 +403,24 @@
 
     const stD = [ { c: "rgba(239, 68, 68, 0.12)", h: "#EF4444", l: "Falling behind" }, { c: "rgba(245, 158, 11, 0.12)", h: "#F59E0B", l: "Behind" }, { c: "var(--card-bg)", h: "#94A3B8", l: "Up to date" }, { c: "rgba(16, 185, 129, 0.12)", h: "#10B981", l: "Ahead" }, { c: "rgba(5, 150, 105, 0.15)", h: "#059669", l: "Well ahead" } ];
 
-    window.onload = () => { try { appSetApply(); renderHome(true); } catch(e) {} setTimeout(() => { $('splash').style.opacity = '0'; setTimeout(() => $('splash').style.display = 'none', 400); }, 500); };
+    window.onload = () => { try { appSetApply(); renderHome(true); } catch(e) {} setTimeout(() => { documentById('splash').style.opacity = '0'; setTimeout(() => documentById('splash').style.display = 'none', 400); }, 500); };
 
     function sDat() { localStorage.setItem('org_subjects', JSON.stringify(sData)); localStorage.setItem('org_global', JSON.stringify(gNotes)); localStorage.setItem('org_deadlines', JSON.stringify(dlData)); localStorage.setItem('org_ring', JSON.stringify(ring)); updRUI(); updHUI(); }
     function addRSc() { if(ring.score < 5) { ring.score++; sDat(); } }
-    function updRUI() { $('study-ring').style.strokeDasharray = `${Math.min((ring.score/5)*100, 100)}, 100`; $('ring-score').innerText = `${ring.score}/5`; }
-    function updHUI() { let c = [0,0,0,0,0]; sData.forEach(s => c[s.status]++); $('health-bar').innerHTML = c.map((cnt, i) => cnt > 0 ? `<div class="health-segment" style="width: ${(cnt/sData.length)*100}%; background-color: ${stD[i].h};"></div>` : '').join(''); }
+    function updRUI() { documentById('study-ring').style.strokeDasharray = `${Math.min((ring.score/5)*100, 100)}, 100`; documentById('ring-score').innerText = `${ring.score}/5`; }
+    function updHUI() { let c = [0,0,0,0,0]; sData.forEach(s => c[s.status]++); documentById('health-bar').innerHTML = c.map((cnt, i) => cnt > 0 ? `<div class="health-segment" style="width: ${(cnt/sData.length)*100}%; background-color: ${stD[i].h};"></div>` : '').join(''); }
     function isOD(ds) { return new Date(ds.split('-')[0], ds.split('-')[1]-1, ds.split('-')[2]) < new Date().setHours(0,0,0,0); }
     function gDD(ds) { return Math.ceil((new Date(ds.split('-')[0], ds.split('-')[1]-1, ds.split('-')[2]) - new Date().setHours(0,0,0,0)) / 86400000); }
     function fmtD(ds) { return new Date(ds.split('-')[0], ds.split('-')[1]-1, ds.split('-')[2]).toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'}); }
 
     function openAddHw() {
-      $('global-new-hw-desc').value = ''; $('global-new-hw-date').value = '';
-      $('global-new-hw-sub').innerHTML = sData.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+      documentById('global-new-hw-desc').value = ''; documentById('global-new-hw-date').value = '';
+      documentById('global-new-hw-sub').innerHTML = sData.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
       openSc('add-hw-screen');
     }
 
     function saveGlobalHw() {
-      const d = $('global-new-hw-desc').value; const subId = $('global-new-hw-sub').value; const dt = $('global-new-hw-date').value;
+      const d = documentById('global-new-hw-desc').value; const subId = documentById('global-new-hw-sub').value; const dt = documentById('global-new-hw-date').value;
       if(!d || !dt || !subId) { pSnd('tick'); return; }
       pSnd('pop');
       const targetSub = getSub(subId);
@@ -434,11 +433,11 @@
       if(isInit) { updRUI(); updHUI(); }
 
       if(dlData.length > 0) {
-        $('deadline-section').style.display = 'block'; dlData.sort((a,b) => gDD(a.date) - gDD(b.date));
-        $('deadline-list').innerHTML = dlData.map(d => { const ds = gDD(d.date); return `<div class="deadline-card ${ds<=2?'critical':(ds<=7?'warning':'')}"><div class="dl-days">${ds<0?'0':ds}</div><div class="dl-label">Days until<br>${d.name}</div><button class="icon-btn" style="position:absolute; top:8px; right:8px; width:26px; height:26px; min-width:26px; min-height:26px; font-size:14px; color:white; background:rgba(0,0,0,0.15) !important; border:none; box-shadow:none;" onclick="delDL('${d.id}')">×</button></div>`; }).join('');
-      } else $('deadline-section').style.display = 'none';
+        documentById('deadline-section').style.display = 'block'; dlData.sort((a,b) => gDD(a.date) - gDD(b.date));
+        documentById('deadline-list').innerHTML = dlData.map(d => { const ds = gDD(d.date); return `<div class="deadline-card ${ds<=2?'critical':(ds<=7?'warning':'')}"><div class="dl-days">${ds<0?'0':ds}</div><div class="dl-label">Days until<br>${d.name}</div><button class="icon-btn" style="position:absolute; top:8px; right:8px; width:26px; height:26px; min-width:26px; min-height:26px; font-size:14px; color:white; background:rgba(0,0,0,0.15) !important; border:none; box-shadow:none;" onclick="delDL('${d.id}')">×</button></div>`; }).join('');
+      } else documentById('deadline-section').style.display = 'none';
 
-      const tt = getTT(); const ts = $('dynamic-timetable-section');
+      const tt = getTT(); const ts = documentById('dynamic-timetable-section');
       if(tt) {
         ts.innerHTML = `<h2>Today's Schedule</h2><div class="horizontal-scroll" style="margin-bottom: 20px;">${tt.map((cN, i) => { 
           const m = sData.find(s => s.name.toLowerCase() === cN.toLowerCase()); 
@@ -461,15 +460,15 @@
       }
 
       sData.sort((a, b) => a.status - b.status);
-      $('subjects-list').innerHTML = sData.map((s, i) => `<div class="card app-card ${a}" data-id="${s.id}" style="background-color: ${stD[s.status].c}; border-color: ${stD[s.status].h}; animation-delay: ${0.28 + (0.04*i)}s; z-index: ${100-i};" onclick="openDet('${s.id}')"><div class="boxes-container">${[0,1,2,3,4].map(j => `<div class="box ${s.status===j?'active':''}" style="--box-color: ${stD[j].h};" onclick="event.stopPropagation(); setSt('${s.id}', ${j})"></div>`).join('')}</div><div class="subject-title">${s.name}</div></div>`).join('');
-      $('global-notes-list').innerHTML = gNotes.map((n, i) => `<div id="global-item-${n.id}" class="list-item app-card task-card ${a} ${isOD(n.date)?'overdue':''}" style="animation-delay: ${0.40 + (0.04*i)}s;"><div><div style="font-weight: 600; font-size: 15px;">${n.text}</div><div class="date-badge">Due: ${fmtD(n.date)}</div></div><button class="delete-btn" onclick="compGAnim('${n.id}')">×</button></div>`).join('');
+      documentById('subjects-list').innerHTML = sData.map((s, i) => `<div class="card app-card ${a}" data-id="${s.id}" style="background-color: ${stD[s.status].c}; border-color: ${stD[s.status].h}; animation-delay: ${0.28 + (0.04*i)}s; z-index: ${100-i};" onclick="openDet('${s.id}')"><div class="boxes-container">${[0,1,2,3,4].map(j => `<div class="box ${s.status===j?'active':''}" style="--box-color: ${stD[j].h};" onclick="event.stopPropagation(); setSt('${s.id}', ${j})"></div>`).join('')}</div><div class="subject-title">${s.name}</div></div>`).join('');
+      documentById('global-notes-list').innerHTML = gNotes.map((n, i) => `<div id="global-item-${n.id}" class="list-item app-card task-card ${a} ${isOD(n.date)?'overdue':''}" style="animation-delay: ${0.40 + (0.04*i)}s;"><div><div style="font-weight: 600; font-size: 15px;">${n.text}</div><div class="date-badge">Due: ${fmtD(n.date)}</div></div><button class="delete-btn" onclick="compGAnim('${n.id}')">×</button></div>`).join('');
     }
 
     function processPhoto(e) { const f = e.target.files[0]; if(!f) return; pSnd('pop'); const r = new FileReader(); r.onload = ev => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const s = Math.min(600/img.width, 1); c.width = img.width*s; c.height = img.height*s; c.getContext('2d').drawImage(img,0,0,c.width,c.height); getSub(cSubId).photos.push({ id: Date.now().toString(), img: c.toDataURL('image/jpeg', 0.5) }); sDat(); renderDet(); }; img.src = ev.target.result; }; r.readAsDataURL(f); }
     function delPhoto(id) { pSnd('tick'); getSub(cSubId).photos = getSub(cSubId).photos.filter(p => p.id !== id); sDat(); renderDet(); }
 
     function animRO(id) {
-      const list = $('subjects-list');
+      const list = documentById('subjects-list');
       const crd = Array.from(list.children);
       crd.forEach(c => { c.style.animation='none'; c.classList.remove('cascade-item'); });
       const pos = {}; crd.forEach(c => pos[c.dataset.id] = c.getBoundingClientRect().top);
@@ -505,16 +504,16 @@
     function setSt(id, idx) { 
       pSnd('tick'); getSub(id).status = idx; sDat(); 
       if(!cSubId) { 
-        animRO(id); $$(`.timetable-card[data-tt-sub="${id}"]`).forEach(c => { c.style.backgroundColor = stD[idx].c; c.style.borderColor = stD[idx].h; c.style.transform = 'scale(1.04)'; setTimeout(() => c.style.transform='', 200); });
+        animRO(id); document.querySelectorAll(`.timetable-card[data-tt-sub="${id}"]`).forEach(c => { c.style.backgroundColor = stD[idx].c; c.style.borderColor = stD[idx].h; c.style.transform = 'scale(1.04)'; setTimeout(() => c.style.transform='', 200); });
       } else { 
-        $$('.status-row').forEach((r,i) => { const b = r.querySelector('.box'); if(i===idx) { r.classList.add('active-status'); b.classList.add('active'); r.style.setProperty('--status-bg', stD[i].c); r.style.setProperty('--box-color', stD[i].h); b.style.setProperty('--box-color', stD[i].h); } else { r.classList.remove('active-status'); b.classList.remove('active'); } }); 
+        document.querySelectorAll('.status-row').forEach((r,i) => { const b = r.querySelector('.box'); if(i===idx) { r.classList.add('active-status'); b.classList.add('active'); r.style.setProperty('--status-bg', stD[i].c); r.style.setProperty('--box-color', stD[i].h); b.style.setProperty('--box-color', stD[i].h); } else { r.classList.remove('active-status'); b.classList.remove('active'); } }); 
       } updHUI();
     }
 
     function openSc(id) { 
       pSnd('swoosh'); 
-      $$('.screen').forEach(s => { s.classList.remove('active'); void s.offsetWidth; }); 
-      const scr = $(id); 
+      document.querySelectorAll('.screen').forEach(s => { s.classList.remove('active'); void s.offsetWidth; }); 
+      const scr = documentById(id); 
       scr.classList.add('active'); 
       window.scrollTo(0,0); 
       if(id === 'settings-screen') { appSetApply(); rendSet(); } 
@@ -525,38 +524,38 @@
 
     function renderDet(isUpdate = false) {
       const s = getSub(cSubId);
-      $('detail-title').innerText = s.name; $('subject-notes').value = s.notes;
+      documentById('detail-title').innerText = s.name; documentById('subject-notes').value = s.notes;
       
       if(!isUpdate) {
-        $('detail-statuses').innerHTML = stD.map((st, i) => `<div class="status-row app-card cascade-item" style="--status-bg: ${st.c}; --box-color: ${st.h}; animation-delay: ${0.05 + (0.03*i)}s;" onclick="setSt('${s.id}', ${i})"><div class="box ${s.status===i?'active':''}" style="--box-color: ${st.h};"></div><div class="status-label">${st.l}</div></div>`).join('');
+        documentById('detail-statuses').innerHTML = stD.map((st, i) => `<div class="status-row app-card cascade-item" style="--status-bg: ${st.c}; --box-color: ${st.h}; animation-delay: ${0.05 + (0.03*i)}s;" onclick="setSt('${s.id}', ${i})"><div class="box ${s.status===i?'active':''}" style="--box-color: ${st.h};"></div><div class="status-label">${st.l}</div></div>`).join('');
       }
       
-      const pG = $('photo-gallery'); if(s.photos.length>0) { pG.style.display='flex'; pG.innerHTML = s.photos.map(p => `<div class="photo-card cascade-item" style="animation-delay: 0.15s; background-image: url('${p.img}')"><button class="del-photo" onclick="delPhoto('${p.id}')">×</button></div>`).join(''); } else { pG.style.display='none'; pG.innerHTML=''; }
-      let tS=0, tO=0; $('grades-list').innerHTML = s.grades.map((g,i) => { tS+=parseFloat(g.score); tO+=parseFloat(g.outOf); return `<div class="list-item app-card cascade-item" style="animation-delay:${0.40 + (0.04*i)}s;"><div><div style="font-weight: 600;">${g.name}</div><div class="date-badge">${g.score} / ${g.outOf}</div></div><div style="display:flex; align-items:center; gap: 8px;"><div class="grade-badge">${Math.round((g.score/g.outOf)*100)}%</div><button class="delete-btn" onclick="delGrade('${g.id}')">×</button></div></div>`; }).join('');
-      $('average-banner').innerText = tO>0 ? `Current Average: ${Math.round((tS/tO)*100)}%` : "No Grades Logged";
-      $('hw-list').innerHTML = s.homework.map((hw,i) => `<div id="hw-item-${hw.id}" class="list-item app-card task-card cascade-item ${isOD(hw.date)?'overdue':''}" style="animation-delay:${0.25 + (0.04*i)}s;"><div><div style="font-weight: 600; font-size: 15px;">${hw.text}</div><div class="date-badge">Due: ${fmtD(hw.date)}</div></div><button class="delete-btn" onclick="compHWAnim('${hw.id}')">×</button></div>`).join('');
+      const pG = documentById('photo-gallery'); if(s.photos.length>0) { pG.style.display='flex'; pG.innerHTML = s.photos.map(p => `<div class="photo-card cascade-item" style="animation-delay: 0.15s; background-image: url('${p.img}')"><button class="del-photo" onclick="delPhoto('${p.id}')">×</button></div>`).join(''); } else { pG.style.display='none'; pG.innerHTML=''; }
+      let tS=0, tO=0; documentById('grades-list').innerHTML = s.grades.map((g,i) => { tS+=parseFloat(g.score); tO+=parseFloat(g.outOf); return `<div class="list-item app-card cascade-item" style="animation-delay:${0.40 + (0.04*i)}s;"><div><div style="font-weight: 600;">${g.name}</div><div class="date-badge">${g.score} / ${g.outOf}</div></div><div style="display:flex; align-items:center; gap: 8px;"><div class="grade-badge">${Math.round((g.score/g.outOf)*100)}%</div><button class="delete-btn" onclick="delGrade('${g.id}')">×</button></div></div>`; }).join('');
+      documentById('average-banner').innerText = tO>0 ? `Current Average: ${Math.round((tS/tO)*100)}%` : "No Grades Logged";
+      documentById('hw-list').innerHTML = s.homework.map((hw,i) => `<div id="hw-item-${hw.id}" class="list-item app-card task-card cascade-item ${isOD(hw.date)?'overdue':''}" style="animation-delay:${0.25 + (0.04*i)}s;"><div><div style="font-weight: 600; font-size: 15px;">${hw.text}</div><div class="date-badge">Due: ${fmtD(hw.date)}</div></div><button class="delete-btn" onclick="compHWAnim('${hw.id}')">×</button></div>`).join('');
     }
 
     function perfC(el, cb) { pSnd('success'); el.style.transition='all 0.3s ease'; el.style.background='var(--success)'; el.style.transform='scale(0.96) translateX(15px)'; const d=el.querySelector('div>div:first-child'), b=el.querySelector('.date-badge'), x=el.querySelector('.delete-btn'); if(d) d.style.color='#FFF'; if(b) b.style.color='rgba(255,255,255,0.85)'; if(x) { x.innerHTML='✓'; x.style.color='#FFF'; x.style.transform='scale(1.1)'; } setTimeout(()=>{ el.style.transition='all 0.4s cubic-bezier(0.16,1,0.3,1)'; el.style.transform='scale(0.9) translateX(30px)'; el.style.opacity='0'; el.style.maxHeight=el.offsetHeight+'px'; requestAnimationFrame(()=>{ el.style.maxHeight='0px';el.style.paddingTop='0';el.style.paddingBottom='0';el.style.marginBottom='0';el.style.borderWidth='0'; }); setTimeout(cb, 380); }, 300); }
-    function compGAnim(id) { const el=$(`global-item-${id}`); if(el) perfC(el,()=>delGN(id)); else delGN(id); }
-    function compHWAnim(id) { const el=$(`hw-item-${id}`); if(el) perfC(el,()=>delHW(id)); else delHW(id); }
+    function compGAnim(id) { const el=documentById(`global-item-${id}`); if(el) perfC(el,()=>delGN(id)); else delGN(id); }
+    function compHWAnim(id) { const el=documentById(`hw-item-${id}`); if(el) perfC(el,()=>delHW(id)); else delHW(id); }
 
     function delGN(id) { addRSc(); gNotes = gNotes.filter(n => n.id !== id); sDat(); renderHome(false); }
-    function delHW(id) { addRSc(); getSub(cSubId).homework = getSub(cSubId).homework.filter(h => h.id !== id); sDat(); const el=$(`hw-item-${id}`); if(el) el.remove(); }
+    function delHW(id) { addRSc(); getSub(cSubId).homework = getSub(cSubId).homework.filter(h => h.id !== id); sDat(); const el=documentById(`hw-item-${id}`); if(el) el.remove(); }
     
-    function addGrade() { pSnd('pop'); const n=$('grade-name'),s=$('grade-score'),o=$('grade-out-of'); if(!n.value||!s.value||!o.value) return; getSub(cSubId).grades.push({ id: Date.now().toString(), name: n.value, score: s.value, outOf: o.value }); n.value=''; s.value=''; o.value=''; sDat(); renderDet(true); }
+    function addGrade() { pSnd('pop'); const n=documentById('grade-name'),s=documentById('grade-score'),o=documentById('grade-out-of'); if(!n.value||!s.value||!o.value) return; getSub(cSubId).grades.push({ id: Date.now().toString(), name: n.value, score: s.value, outOf: o.value }); n.value=''; s.value=''; o.value=''; sDat(); renderDet(true); }
     function delGrade(id) { pSnd('tick'); getSub(cSubId).grades = getSub(cSubId).grades.filter(g => g.id !== id); sDat(); renderDet(true); }
-    function addHW() { pSnd('pop'); const d=$('hw-desc'), dt=$('hw-date'); if(!d.value||!dt.value) return; getSub(cSubId).homework.push({ id: Date.now().toString(), text: d.value, date: dt.value }); d.value=''; dt.value=''; sDat(); renderDet(true); }
-    function addGN() { pSnd('pop'); const t=$('global-task'),d=$('global-date'); if(!t.value||!d.value) return; gNotes.push({ id: Date.now().toString(), text: t.value, date: d.value }); t.value=''; d.value=''; sDat(); renderHome(false); }
-    function saveNotes() { getSub(cSubId).notes = $('subject-notes').value; sDat(); }
-    function addDL() { pSnd('pop'); const n=$('dl-name'), d=$('dl-date'); if(!n.value||!d.value) return; dlData.push({ id: Date.now().toString(), name: n.value, date: d.value }); n.value=''; d.value=''; sDat(); renderHome(false); alert("Deadline Added!"); }
+    function addHW() { pSnd('pop'); const d=documentById('hw-desc'), dt=documentById('hw-date'); if(!d.value||!dt.value) return; getSub(cSubId).homework.push({ id: Date.now().toString(), text: d.value, date: dt.value }); d.value=''; dt.value=''; sDat(); renderDet(true); }
+    function addGN() { pSnd('pop'); const t=documentById('global-task'),d=documentById('global-date'); if(!t.value||!d.value) return; gNotes.push({ id: Date.now().toString(), text: t.value, date: d.value }); t.value=''; d.value=''; sDat(); renderHome(false); }
+    function saveNotes() { getSub(cSubId).notes = documentById('subject-notes').value; sDat(); }
+    function addDL() { pSnd('pop'); const n=documentById('dl-name'), d=documentById('dl-date'); if(!n.value||!d.value) return; deadlines.push({ id: Date.now().toString(), name: n.value, date: d.value }); n.value=''; d.value=''; sDat(); renderHome(false); alert("Deadline Added!"); }
     function delDL(id) { pSnd('tick'); dlData = dlData.filter(d => d.id !== id); sDat(); renderHome(false); }
 
     let tI; let tL = 25*60; let isR = false; const pI = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`, psI = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
-    function toggleTmr() { const w = $('timer-icon'), r = $('timer-progress'); pSnd('tick'); if(isR){ clearInterval(tI); isR=false; w.innerHTML=pI; } else { isR=true; w.innerHTML=psI; tI=setInterval(()=>{ tL--; let m=Math.floor(tL/60),s=tL%60; $('timer-display').innerText=`${m}:${s<10?'0':''}${s}`; r.style.strokeDasharray=`${(tL/(25*60))*100}, 100`; if(tL<=0){ clearInterval(tI); isR=false; w.innerHTML=pI; tL=25*60; r.style.strokeDasharray=`100, 100`; $('timer-display').innerText=`25:00`; pSnd('success'); addRSc(); alert("Focus complete!"); } }, 1000); } }
+    function toggleTmr() { const w = documentById('timer-icon'), r = documentById('timer-progress'); pSnd('tick'); if(isR){ clearInterval(tI); isR=false; w.innerHTML=pI; } else { isR=true; w.innerHTML=psI; tI=setInterval(()=>{ tL--; let m=Math.floor(tL/60),s=tL%60; documentById('timer-display').innerText=`${m}:${s<10?'0':''}${s}`; r.style.strokeDasharray=`${(tL/(25*60))*100}, 100`; if(tL<=0){ clearInterval(tI); isR=false; w.innerHTML=pI; tL=25*60; r.style.strokeDasharray=`100, 100`; documentById('timer-display').innerText=`25:00`; pSnd('success'); addRSc(); alert("Focus complete!"); } }, 1000); } }
 
-    function rendSet() { $('settings-subjects-list').innerHTML = sData.map((s,i) => `<div class="list-item app-card cascade-item" style="animation-delay: ${0.20 + (i*0.04)}s;"><div style="font-weight: 500;">${s.name}</div><button class="delete-btn" onclick="delSub('${s.id}')">×</button></div>`).join(''); }
-    function addSub() { pSnd('pop'); const i=$('new-subject'); if(!i.value)return; sData.push({ id: Date.now().toString(), name: i.value, status: 2, homework: [], notes: "", grades: [], photos: []}); i.value=''; sDat(); rendSet(); }
+    function rendSet() { documentById('settings-subjects-list').innerHTML = sData.map((s,i) => `<div class="list-item app-card cascade-item" style="animation-delay: ${0.20 + (i*0.04)}s;"><div style="font-weight: 500;">${s.name}</div><button class="delete-btn" onclick="delSub('${s.id}')">×</button></div>`).join(''); }
+    function addSub() { pSnd('pop'); const i=documentById('new-subject'); if(!i.value)return; sData.push({ id: Date.now().toString(), name: i.value, status: 2, homework: [], notes: "", grades: [], photos: []}); i.value=''; sDat(); rendSet(); }
     function delSub(id) { pSnd('tick'); if(confirm("Delete?")) { sData = sData.filter(s => s.id !== id); sDat(); rendSet(); } }
   </script>
 </body>
