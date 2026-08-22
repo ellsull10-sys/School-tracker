@@ -15,7 +15,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    /* 💎 NATIVE iOS APP STORE DESIGN SYSTEM 💎 */
     :root {
       --bg-base: #F2F2F7; --card-bg: rgba(255, 255, 255, 0.75); --card-border: rgba(0, 0, 0, 0.05);
       --card-shadow: 0 12px 28px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
@@ -41,9 +40,9 @@
     #app-background { position: fixed; top: -10vh; left: -10vw; width: 120vw; height: 120vh; z-index: 0; background-size: cover; background-position: center; opacity: var(--bg-opacity, 0.7); transition: opacity 0.3s ease, background-image 0.4s ease; pointer-events: none; }
     
     h1, h2, h3, .subject-title, .simon-action, .ring-text, .dl-days { font-family: 'Outfit', sans-serif; letter-spacing: -0.4px; }
-    #splash { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: var(--bg-base); color: var(--text-primary); z-index: 9999; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; transition: opacity 0.4s ease; }
+    #splash { position: fixed; inset: 0; background: var(--bg-base); color: var(--text-primary); z-index: 9999; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; transition: opacity 0.4s ease; }
     
-    #rotate-lock { display: none; position: fixed; inset: 0; z-index: 100000; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); color: #FFFFFF; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px; font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 700; line-height: 1.3; }
+    #rotate-lock { display: none; position: fixed; inset: 0; z-index: 100000; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); color: #FFFFFF; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px; font-weight: 700; font-size: 22px; line-height: 1.3; }
     @media screen and (orientation: landscape) and (max-height: 600px) { #rotate-lock { display: flex; } .screen, .top-bar { display: none !important; } }
 
     .screen { position: relative; z-index: 1; padding: 16px; padding-top: calc(env(safe-area-inset-top) + 16px); padding-bottom: 40px; display: none; }
@@ -53,24 +52,25 @@
     .screen.active .cascade-item { animation: cascadeIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) backwards; will-change: transform, opacity; transform: translate3d(0,0,0); }
     @keyframes cascadeIn { 0% { opacity: 0; transform: translate3d(0, 24px, 0) scale(0.94); } 100% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); } }
     
-    .d-1 { animation-delay: 0.04s !important; } .d-2 { animation-delay: 0.08s !important; }
-    .d-3 { animation-delay: 0.12s !important; } .d-4 { animation-delay: 0.16s !important; }
-    .d-5 { animation-delay: 0.20s !important; } .d-6 { animation-delay: 0.24s !important; }
-    .d-7 { animation-delay: 0.28s !important; } .d-8 { animation-delay: 0.32s !important; } .d-9 { animation-delay: 0.36s !important; }
+    .d-1 { animation-delay: 0.04s !important; } .d-2 { animation-delay: 0.08s !important; } .d-3 { animation-delay: 0.12s !important; } .d-4 { animation-delay: 0.16s !important; } .d-5 { animation-delay: 0.20s !important; } .d-6 { animation-delay: 0.24s !important; } .d-7 { animation-delay: 0.28s !important; } .d-8 { animation-delay: 0.32s !important; } .d-9 { animation-delay: 0.36s !important; }
 
     .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; width: 100%; }
     h1 { font-size: clamp(28px, 6vw, 34px); font-weight: 800; margin: 0; flex: 1; }
     h2 { font-size: 19px; font-weight: 700; margin-top: 24px; margin-bottom: 12px; }
     h3 { font-size: 14px; font-weight: 700; margin-top: 20px; margin-bottom: 8px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.6px; }
 
-    .icon-btn, .back-btn { background: var(--accent-grad) !important; color: #FFFFFF !important; border: none !important; cursor: pointer; box-shadow: 0 6px 16px rgba(30, 41, 59, 0.3); transition: transform 0.1s ease; flex-shrink: 0; }
+    .icon-btn, .back-btn, button.add-btn { background: var(--accent-grad) !important; color: #FFFFFF !important; border: none !important; cursor: pointer; box-shadow: 0 6px 16px rgba(30, 41, 59, 0.3); transition: transform 0.1s ease; flex-shrink: 0; }
     .icon-btn { border-radius: 50%; min-width: 42px; min-height: 42px; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; }
     .icon-btn svg { width: 22px; height: 22px; display: block; flex-shrink: 0; }
     .back-btn { display: flex; align-items: center; gap: 4px; padding: 8px 16px; height: 42px; font-size: 15px; font-weight: 600; border-radius: 16px; }
-    .icon-btn:active, .back-btn:active { transform: scale(0.92); }
+    button.add-btn { padding: 0 18px; border-radius: 14px; font-weight: 600; font-size: 15px; }
+    .icon-btn:active, .back-btn:active, button.add-btn:active { transform: scale(0.92); }
     
     .app-card { position: relative; background: var(--card-bg); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid var(--card-border); border-radius: 20px; }
     .app-card::before { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: var(--card-shadow); z-index: -1; pointer-events: none; }
+    
+    .flex-col { display: flex; flex-direction: column; }
+    .flex-between { display: flex; justify-content: space-between; align-items: center; }
     
     .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
     .widget { padding: 16px; display: flex; flex-direction: column; justify-content: space-between; height: 100%; min-height: 100px; text-decoration: none; cursor: pointer; transition: transform 0.1s ease; }
@@ -119,7 +119,6 @@
     .box.active { background-color: var(--box-color); border-color: var(--box-color); transform: scale(1.15); box-shadow: 0 4px 16px var(--box-color); }
     .subject-title { font-size: 17px; font-weight: 600; flex: 1; line-height: 1.2; }
     
-    .header-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
     #detail-title { font-size: clamp(22px, 6vw, 28px); font-weight: 800; line-height: 1.1; margin: 0; flex: 1; text-wrap: balance; text-shadow: 0 2px 12px rgba(0,0,0,0.05); }
     
     .status-row { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-radius: 16px; margin-bottom: 8px; transition: transform 0.1s ease, background-color 0.2s ease; cursor: pointer; }
@@ -129,25 +128,12 @@
     .status-row.active-status .status-label { color: var(--text-primary); }
     
     .input-group { display: flex; gap: 8px; margin-bottom: 16px; width: 100%; }
-    input[type="text"], input[type="date"], input[type="number"], textarea, select { flex: 1; min-width: 0; max-width: 100%; box-sizing: border-box !important; padding: 14px 16px; border-radius: 14px; border: 1px solid rgba(0,0,0,0.08); background: var(--input-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text-primary); font-size: 15px; font-family: inherit; outline: none; transition: background-color 0.2s ease; box-shadow: inset 0 2px 6px rgba(0,0,0,0.02); }
+    input[type="text"], input[type="date"], input[type="number"], textarea, select { flex: 1; min-width: 0; padding: 14px 16px; border-radius: 14px; border: 1px solid rgba(0,0,0,0.08); background: var(--input-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text-primary); font-size: 15px; font-family: inherit; outline: none; transition: background-color 0.2s ease; box-shadow: inset 0 2px 6px rgba(0,0,0,0.02); }
     input:focus, textarea:focus, select:focus { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.15); }
     textarea { height: 90px; resize: none; width: 100%; margin-top: 2px; line-height: 1.5; }
     select { -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23636366%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E"); background-repeat: no-repeat; background-position: right 14px center; background-size: 16px; padding-right: 40px !important; }
 
-    button.add-btn { background: var(--accent-grad); color: #FFFFFF; border: none; padding: 0 18px; border-radius: 14px; font-weight: 600; font-size: 15px; flex-shrink: 0; transition: transform 0.1s ease; cursor: pointer; box-shadow: 0 6px 16px rgba(30, 41, 59, 0.2); }
-    button.add-btn:active { transform: scale(0.92); }
-
-    /* 🔥 Safari Flexbox Bug Fix: Forces inputs to strictly obey parent bounds without overflowing 🔥 */
-    .full-w-input {
-      flex: none !important;
-      align-self: stretch !important;
-      width: auto !important;
-      box-sizing: border-box !important;
-      -webkit-box-sizing: border-box !important;
-      margin: 0 !important;
-    }
-
-    /* 🔥 Distinguishable Grey Buttons 🔥 */
+    .full-w-input { flex: none !important; align-self: stretch !important; width: auto !important; box-sizing: border-box !important; -webkit-box-sizing: border-box !important; margin: 0 !important; }
     .btn-grey { background: rgba(0, 0, 0, 0.08) !important; color: var(--text-primary) !important; box-shadow: none !important; }
     @media (prefers-color-scheme: dark) { .btn-grey { background: rgba(255, 255, 255, 0.15) !important; } }
     
@@ -158,6 +144,7 @@
     .task-card.overdue::before { box-shadow: 0 8px 24px rgba(239, 68, 68, 0.25) !important; }
     .task-card .date-badge { color: rgba(255,255,255,0.75) !important; }
     .task-card .delete-btn { color: rgba(255,255,255,0.85) !important; }
+    
     .date-badge { font-size: 13px; color: var(--text-secondary); font-weight: 500; margin-top: 4px; }
     .delete-btn { color: var(--critical); background: none; border: none; font-weight: 400; font-size: 24px; padding: 0 8px; cursor: pointer; transition: transform 0.15s ease; }
     .delete-btn:active { transform: scale(0.8); }
@@ -288,9 +275,9 @@
     
     <div id="detail-statuses" class="cascade-item d-2"></div>
 
-    <div class="cascade-item d-3" style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; margin-bottom:8px;">
+    <div class="cascade-item d-3 flex-between" style="margin-top:20px; margin-bottom:8px;">
       <h3 style="margin:0;">Captured Notes</h3>
-      <button class="add-btn" style="padding:6px 14px; font-size:13px; display:flex; align-items:center; gap:6px;" onclick="document.getElementById('camera-input').click()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Scan</button>
+      <button class="add-btn flex-between" style="padding:6px 14px; font-size:13px; gap:6px;" onclick="$('camera-input').click()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Scan</button>
     </div>
     <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none" onchange="processPhoto(event)">
     <div class="photo-gallery cascade-item d-4" id="photo-gallery"></div>
@@ -319,7 +306,6 @@
     <textarea class="cascade-item" style="animation-delay: 0.52s;" id="subject-notes" placeholder="Add additional information here..." onblur="saveNotes()"></textarea>
   </div>
 
-  <!-- SETTINGS SCREEN -->
   <div id="settings-screen" class="screen">
     <div class="header-bar cascade-item d-1">
       <button class="back-btn" onclick="goHome()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Dashboard</button>
@@ -328,17 +314,17 @@
     
     <h3 class="cascade-item d-2">Appearance</h3>
     <div class="app-card setting-row cascade-item d-3">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <div class="flex-between" style="margin-bottom:12px;">
         <div style="font-size:15px; font-weight:600;">Custom Background</div>
         <label class="toggle-switch"><input type="checkbox" id="bg-toggle" onchange="toggleBg()"><span class="slider"></span></label>
       </div>
       <div style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:8px;">IMAGE</div>
       <input type="file" id="bg-upload" accept="image/*" style="display:none;" onchange="handleBgUp(event)">
       <div style="display:flex; gap:8px; margin-bottom:12px;">
-        <button class="add-btn btn-grey" style="flex:1; padding:12px; border-radius: 12px; font-size: 14px;" onclick="document.getElementById('bg-upload').click()">Upload Photo</button>
+        <button class="add-btn btn-grey" style="flex:1; padding:12px; border-radius: 12px; font-size: 14px;" onclick="$('bg-upload').click()">Upload Photo</button>
         <button class="add-btn btn-grey" style="padding:12px; border-radius: 12px; font-size: 14px;" onclick="resetBg()">Reset</button>
       </div>
-      <div style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:8px; display:flex; justify-content:space-between;"><span>TRANSPARENCY</span><span><span id="opacity-val">50</span>%</span></div>
+      <div class="flex-between" style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:8px;"><span>TRANSPARENCY</span><span><span id="opacity-val">50</span>%</span></div>
       <input type="range" id="bg-opacity-slider" min="0" max="100" value="50" oninput="updBgOpac(this.value)">
     </div>
 
@@ -346,7 +332,7 @@
     <div class="app-card setting-row cascade-item d-5">
       <p style="font-size:14px; color:var(--text-secondary); margin-top:0; margin-bottom:12px; line-height:1.4;">Upload a screenshot of your timetable to automatically populate your 10-day cycle.</p>
       <input type="file" id="tt-upload" accept="image/*" style="display:none;" onchange="handleTTScan(event)">
-      <button id="scan-tt-btn" class="add-btn" style="width:100%; padding:12px; display:flex; justify-content:center; align-items:center; gap:8px;" onclick="document.getElementById('tt-upload').click()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Scan Timetable</button>
+      <button id="scan-tt-btn" class="add-btn" style="width:100%; padding:12px; display:flex; justify-content:center; align-items:center; gap:8px;" onclick="$('tt-upload').click()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Scan Timetable</button>
     </div>
 
     <h3 class="cascade-item d-6">Subject Manager</h3>
@@ -355,7 +341,8 @@
   </div>
 
   <script>
-    const documentById = id => document.getElementById(id);
+    const $ = id => document.getElementById(id);
+    const $$ = sel => document.querySelectorAll(sel);
     const getSub = id => sData.find(s => s.id === id);
 
     let sData = JSON.parse(localStorage.getItem('org_subjects')) || ["English", "General Mathematics", "Economics", "Legal studies", "Pre mathematical methods", "Religious education", "Physics", "Wellbeing"].map(n => ({ id: n.replace(/\s+/g, '-').toLowerCase(), name: n, status: 2, homework: [], notes: "", grades: [], photos: [] }));
@@ -370,27 +357,26 @@
     let appSet = JSON.parse(localStorage.getItem('org_settings')) || { bgEnabled: false, bgOpacity: 50, bgImage: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=100&w=1200&auto=format&fit=crop' };
     
     function appSetApply() {
-      const b = documentById('app-background');
-      const metaTheme = documentById('theme-color-meta');
-      
+      const b = $('app-background');
+      const mT = $('theme-color-meta');
       if(appSet.bgEnabled) { 
         b.style.opacity = appSet.bgOpacity / 100; b.style.backgroundImage = `url('${appSet.bgImage}')`; 
         document.body.classList.add('bg-active'); document.documentElement.classList.add('bg-active');
-        metaTheme.setAttribute('content', '#000000'); 
+        mT.setAttribute('content', '#000000'); 
       } else { 
         b.style.opacity = 0; document.body.classList.remove('bg-active'); document.documentElement.classList.remove('bg-active');
-        metaTheme.setAttribute('content', window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? '#000000' : '#F2F2F7');
+        mT.setAttribute('content', window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? '#000000' : '#F2F2F7');
       }
-      if(documentById('bg-toggle')) documentById('bg-toggle').checked = appSet.bgEnabled; 
-      if(documentById('bg-opacity-slider')) documentById('bg-opacity-slider').value = appSet.bgOpacity; 
-      if(documentById('opacity-val')) documentById('opacity-val').innerText = appSet.bgOpacity;
+      if($('bg-toggle')) $('bg-toggle').checked = appSet.bgEnabled; 
+      if($('bg-opacity-slider')) $('bg-opacity-slider').value = appSet.bgOpacity; 
+      if($('opacity-val')) $('opacity-val').innerText = appSet.bgOpacity;
     }
 
-    function toggleBg() { appSet.bgEnabled = documentById('bg-toggle').checked; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }
-    function updBgOpac(v) { appSet.bgOpacity = v; if(appSet.bgEnabled) documentById('app-background').style.opacity = v/100; documentById('opacity-val').innerText = v; localStorage.setItem('org_settings', JSON.stringify(appSet)); }
+    function toggleBg() { appSet.bgEnabled = $('bg-toggle').checked; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }
+    function updBgOpac(v) { appSet.bgOpacity = v; if(appSet.bgEnabled) $('app-background').style.opacity = v/100; $('opacity-val').innerText = v; localStorage.setItem('org_settings', JSON.stringify(appSet)); }
     function handleBgUp(e) { const f = e.target.files[0]; if(!f) return; pSnd('pop'); const r = new FileReader(); r.onload = (ev) => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const s = Math.min(1400/img.width, 1); c.width = img.width*s; c.height = img.height*s; c.getContext('2d').drawImage(img,0,0,c.width,c.height); appSet.bgImage = c.toDataURL('image/jpeg',0.6); appSet.bgEnabled = true; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }; img.src = ev.target.result; }; r.readAsDataURL(f); }
     function resetBg() { pSnd('tick'); appSet.bgImage = 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=100&w=1200&auto=format&fit=crop'; appSet.bgEnabled = false; appSet.bgOpacity = 50; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }
-    function handleTTScan(e) { const f = e.target.files[0]; if(!f) return; pSnd('pop'); const b = documentById('scan-tt-btn'); const oHTML = b.innerHTML; b.innerHTML = '⏳ Analyzing...'; b.style.opacity = '0.7'; b.style.pointerEvents = 'none'; setTimeout(() => { pSnd('success'); b.innerHTML = oHTML; b.style.opacity = '1'; b.style.pointerEvents = 'all'; alert("Analysis Complete!\n\n(Simulated: Overrides 10-day array locally.)"); }, 2500); }
+    function handleTTScan(e) { const f = e.target.files[0]; if(!f) return; pSnd('pop'); const b = $('scan-tt-btn'); const oH = b.innerHTML; b.innerHTML = '⏳ Analyzing...'; b.style.opacity = '0.7'; b.style.pointerEvents = 'none'; setTimeout(() => { pSnd('success'); b.innerHTML = oH; b.style.opacity = '1'; b.style.pointerEvents = 'all'; alert("Analysis Complete!\n\n(Simulated: Overrides 10-day array locally.)"); }, 2500); }
 
     const ttCyc = { 0:["Community Group","Economics","Economics","English","English","General Mathematics","General Mathematics","Community Group"], 1:["Community Group","Pre mathematical methods","Wellbeing","Religious education","Religious education","Economics","English","Community Group"], 2:["Community Group","Legal studies","Legal studies","Physics","Physics","Pre mathematical methods","Pre mathematical methods","Community Group"], 3:["Community Group","Economics","Economics","General Mathematics","General Mathematics","English","English","Community Group"], 4:["Community Group","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Physics","Physics","Community Group"], 7:["Community Group","English","English","Economics","Economics","General Mathematics","General Mathematics","Community Group"], 8:["Community Group","Physics","Wellbeing","Religious education","Religious education","Legal studies","General Mathematics","Community Group"], 9:["Community Group","Physics","Physics","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Community Group"], 10:["Community Group","English","English","General Mathematics","General Mathematics","Economics","Economics","Community Group"], 11:["Community Group","Physics","Physics","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Community Group"] };
     const sLab = ["Morning Group", "Session 1", "Session 2", "Session 3", "Session 4", "Session 5", "Session 6", "Afternoon Group"];
@@ -408,28 +394,27 @@
 
     const stD = [ { c: "rgba(239, 68, 68, 0.12)", h: "#EF4444", l: "Falling behind" }, { c: "rgba(245, 158, 11, 0.12)", h: "#F59E0B", l: "Behind" }, { c: "var(--card-bg)", h: "#94A3B8", l: "Up to date" }, { c: "rgba(16, 185, 129, 0.12)", h: "#10B981", l: "Ahead" }, { c: "rgba(5, 150, 105, 0.15)", h: "#059669", l: "Well ahead" } ];
 
-    window.onload = () => { try { appSetApply(); renderHome(true); } catch(e) {} setTimeout(() => { documentById('splash').style.opacity = '0'; setTimeout(() => documentById('splash').style.display = 'none', 400); }, 500); };
+    window.onload = () => { try { appSetApply(); renderHome(true); } catch(e) {} setTimeout(() => { $('splash').style.opacity = '0'; setTimeout(() => $('splash').style.display = 'none', 400); }, 500); };
 
     function sDat() { localStorage.setItem('org_subjects', JSON.stringify(sData)); localStorage.setItem('org_global', JSON.stringify(gNotes)); localStorage.setItem('org_deadlines', JSON.stringify(dlData)); localStorage.setItem('org_ring', JSON.stringify(ring)); updRUI(); updHUI(); }
     function addRSc() { if(ring.score < 5) { ring.score++; sDat(); } }
-    function updRUI() { documentById('study-ring').style.strokeDasharray = `${Math.min((ring.score/5)*100, 100)}, 100`; documentById('ring-score').innerText = `${ring.score}/5`; }
-    function updHUI() { let c = [0,0,0,0,0]; sData.forEach(s => c[s.status]++); documentById('health-bar').innerHTML = c.map((cnt, i) => cnt > 0 ? `<div class="health-segment" style="width: ${(cnt/sData.length)*100}%; background-color: ${stD[i].h};"></div>` : '').join(''); }
+    function updRUI() { $('study-ring').style.strokeDasharray = `${Math.min((ring.score/5)*100, 100)}, 100`; $('ring-score').innerText = `${ring.score}/5`; }
+    function updHUI() { let c = [0,0,0,0,0]; sData.forEach(s => c[s.status]++); $('health-bar').innerHTML = c.map((cnt, i) => cnt > 0 ? `<div class="health-segment" style="width: ${(cnt/sData.length)*100}%; background-color: ${stD[i].h};"></div>` : '').join(''); }
     function isOD(ds) { return new Date(ds.split('-')[0], ds.split('-')[1]-1, ds.split('-')[2]) < new Date().setHours(0,0,0,0); }
     function gDD(ds) { return Math.ceil((new Date(ds.split('-')[0], ds.split('-')[1]-1, ds.split('-')[2]) - new Date().setHours(0,0,0,0)) / 86400000); }
     function fmtD(ds) { return new Date(ds.split('-')[0], ds.split('-')[1]-1, ds.split('-')[2]).toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'}); }
 
     function openAddHw() {
-      documentById('global-new-hw-desc').value = ''; documentById('global-new-hw-date').value = '';
-      documentById('global-new-hw-sub').innerHTML = sData.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+      $('global-new-hw-desc').value = ''; $('global-new-hw-date').value = '';
+      $('global-new-hw-sub').innerHTML = sData.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
       openSc('add-hw-screen');
     }
 
     function saveGlobalHw() {
-      const d = documentById('global-new-hw-desc').value; const subId = documentById('global-new-hw-sub').value; const dt = documentById('global-new-hw-date').value;
+      const d = $('global-new-hw-desc').value; const subId = $('global-new-hw-sub').value; const dt = $('global-new-hw-date').value;
       if(!d || !dt || !subId) { pSnd('tick'); return; }
       pSnd('pop');
-      const targetSub = getSub(subId);
-      targetSub.homework.push({ id: Date.now().toString(), text: d, date: dt });
+      getSub(subId).homework.push({ id: Date.now().toString(), text: d, date: dt });
       sDat(); pSnd('success'); goHome();
     }
 
@@ -438,129 +423,88 @@
       if(isInit) { updRUI(); updHUI(); }
 
       if(dlData.length > 0) {
-        documentById('deadline-section').style.display = 'block'; dlData.sort((a,b) => gDD(a.date) - gDD(b.date));
-        documentById('deadline-list').innerHTML = dlData.map(d => { const ds = gDD(d.date); return `<div class="deadline-card ${ds<=2?'critical':(ds<=7?'warning':'')}"><div class="dl-days">${ds<0?'0':ds}</div><div class="dl-label">Days until<br>${d.name}</div><button class="icon-btn" style="position:absolute; top:8px; right:8px; width:26px; height:26px; min-width:26px; min-height:26px; font-size:14px; color:white; background:rgba(0,0,0,0.15) !important; border:none; box-shadow:none;" onclick="delDL('${d.id}')">×</button></div>`; }).join('');
-      } else documentById('deadline-section').style.display = 'none';
+        $('deadline-section').style.display = 'block'; dlData.sort((a,b) => gDD(a.date) - gDD(b.date));
+        $('deadline-list').innerHTML = dlData.map(d => { const ds = gDD(d.date); return `<div class="deadline-card ${ds<=2?'critical':(ds<=7?'warning':'')}"><div class="dl-days">${ds<0?'0':ds}</div><div class="dl-label">Days until<br>${d.name}</div><button class="icon-btn" style="position:absolute; top:8px; right:8px; width:26px; height:26px; min-width:26px; min-height:26px; font-size:14px; color:white; background:rgba(0,0,0,0.15) !important; border:none; box-shadow:none;" onclick="delDL('${d.id}')">×</button></div>`; }).join('');
+      } else $('deadline-section').style.display = 'none';
 
-      const tt = getTT(); const ts = documentById('dynamic-timetable-section');
+      const tt = getTT(); const ts = $('dynamic-timetable-section');
       if(tt) {
         ts.innerHTML = `<h2>Today's Schedule</h2><div class="horizontal-scroll" style="margin-bottom: 20px;">${tt.map((cN, i) => { 
           const m = sData.find(s => s.name.toLowerCase() === cN.toLowerCase()); 
-          const iS = sLab[i].includes('Session'); 
           let hwText = '';
           if (m && m.homework && m.homework.length > 0) {
             const upc = [...m.homework].sort((a,b) => new Date(a.date) - new Date(b.date))[0];
             const d = gDD(upc.date);
-            let sC = 'var(--text-secondary)';
-            let txt = `Homework task due in ${d} days`;
-            if (d < 0) { txt = 'Homework overdue!'; sC = 'var(--critical)'; }
-            else if (d === 0) { txt = 'Homework due today'; sC = 'var(--warning)'; }
-            else if (d === 1) { txt = 'Homework due in 1 day'; }
+            let sC = 'var(--text-secondary)'; let txt = `Homework task due in ${d} days`;
+            if(d<0){ txt='Homework overdue!'; sC='var(--critical)'; } else if(d===0){ txt='Homework due today'; sC='var(--warning)'; } else if(d===1){ txt='Homework due in 1 day'; }
             hwText = `<div style="font-size:11px; margin-top:6px; font-weight:600; color:${sC}; line-height:1.2;">${txt}</div>`;
           }
-          return `<div class="timetable-card app-card" data-tt-sub="${m?m.id:''}" style="background-color: ${m?stD[m.status].c:(iS?'rgba(0,0,0,0.03)':'var(--card-bg)')}; border-color: ${m?stD[m.status].h:'var(--card-border)'};" ${m?`onclick="openDet('${m.id}')"`:''}><div class="tt-session">${sLab[i]}</div><div class="tt-subject">${cN}</div>${hwText}</div>`; 
+          return `<div class="timetable-card app-card" data-tt-sub="${m?m.id:''}" style="background-color: ${m?stD[m.status].c:(sLab[i].includes('Session')?'rgba(0,0,0,0.03)':'var(--card-bg)')}; border-color: ${m?stD[m.status].h:'var(--card-border)'};" ${m?`onclick="openDet('${m.id}')"`:''}><div class="tt-session">${sLab[i]}</div><div class="tt-subject">${cN}</div>${hwText}</div>`; 
         }).join('')}</div>`;
       } else {
         ts.innerHTML = `<h2>Today's Schedule</h2><div class="app-card" style="padding: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px;"><span style="font-size: 28px;">🎉</span><span style="font-weight: 600; color: var(--text-secondary); text-align: center;">It's the weekend!<br>No classes scheduled today.</span></div>`;
       }
 
       sData.sort((a, b) => a.status - b.status);
-      documentById('subjects-list').innerHTML = sData.map((s, i) => `<div class="card app-card ${a}" data-id="${s.id}" style="background-color: ${stD[s.status].c}; border-color: ${stD[s.status].h}; animation-delay: ${0.28 + (0.04*i)}s; z-index: ${100-i};" onclick="openDet('${s.id}')"><div class="boxes-container">${[0,1,2,3,4].map(j => `<div class="box ${s.status===j?'active':''}" style="--box-color: ${stD[j].h};" onclick="event.stopPropagation(); setSt('${s.id}', ${j})"></div>`).join('')}</div><div class="subject-title">${s.name}</div></div>`).join('');
-      documentById('global-notes-list').innerHTML = gNotes.map((n, i) => `<div id="global-item-${n.id}" class="list-item app-card task-card ${a} ${isOD(n.date)?'overdue':''}" style="animation-delay: ${0.40 + (0.04*i)}s;"><div><div style="font-weight: 600; font-size: 15px;">${n.text}</div><div class="date-badge">Due: ${fmtD(n.date)}</div></div><button class="delete-btn" onclick="compGAnim('${n.id}')">×</button></div>`).join('');
+      $('subjects-list').innerHTML = sData.map((s, i) => `<div class="card app-card ${a}" data-id="${s.id}" style="background-color: ${stD[s.status].c}; border-color: ${stD[s.status].h}; animation-delay: ${0.28 + (0.04*i)}s; z-index: ${100-i};" onclick="openDet('${s.id}')"><div class="boxes-container">${[0,1,2,3,4].map(j => `<div class="box ${s.status===j?'active':''}" style="--box-color: ${stD[j].h};" onclick="event.stopPropagation(); setSt('${s.id}', ${j})"></div>`).join('')}</div><div class="subject-title">${s.name}</div></div>`).join('');
+      $('global-notes-list').innerHTML = gNotes.map((n, i) => `<div id="global-item-${n.id}" class="list-item app-card task-card ${a} ${isOD(n.date)?'overdue':''}" style="animation-delay: ${0.40 + (0.04*i)}s;"><div><div style="font-weight: 600; font-size: 15px;">${n.text}</div><div class="date-badge">Due: ${fmtD(n.date)}</div></div><button class="delete-btn" onclick="compGAnim('${n.id}')">×</button></div>`).join('');
     }
 
     function processPhoto(e) { const f = e.target.files[0]; if(!f) return; pSnd('pop'); const r = new FileReader(); r.onload = ev => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const s = Math.min(600/img.width, 1); c.width = img.width*s; c.height = img.height*s; c.getContext('2d').drawImage(img,0,0,c.width,c.height); getSub(cSubId).photos.push({ id: Date.now().toString(), img: c.toDataURL('image/jpeg', 0.5) }); sDat(); renderDet(); }; img.src = ev.target.result; }; r.readAsDataURL(f); }
     function delPhoto(id) { pSnd('tick'); getSub(cSubId).photos = getSub(cSubId).photos.filter(p => p.id !== id); sDat(); renderDet(); }
 
     function animRO(id) {
-      const list = documentById('subjects-list');
-      const crd = Array.from(list.children);
+      const list = $('subjects-list'); const crd = Array.from(list.children);
       crd.forEach(c => { c.style.animation='none'; c.classList.remove('cascade-item'); });
       const pos = {}; crd.forEach(c => pos[c.dataset.id] = c.getBoundingClientRect().top);
       sData.sort((a,b) => a.status - b.status);
-      
-      sData.forEach((s, idx) => { 
-        const c = list.querySelector(`.card[data-id="${s.id}"]`); 
-        if(c) { 
-          list.appendChild(c); 
-          c.style.backgroundColor=stD[s.status].c; 
-          c.style.borderColor=stD[s.status].h; 
-          c.querySelectorAll('.box').forEach((b,i)=>{ b.classList.toggle('active', i===s.status); }); 
-          c.dataset.tZ = 100-idx; 
-        } 
-      });
-      
+      sData.forEach((s, idx) => { const c = list.querySelector(`.card[data-id="${s.id}"]`); if(c) { list.appendChild(c); c.style.backgroundColor=stD[s.status].c; c.style.borderColor=stD[s.status].h; c.querySelectorAll('.box').forEach((b,i)=>{ b.classList.toggle('active', i===s.status); }); c.dataset.tZ = 100-idx; } });
       Array.from(list.children).forEach(c => {
         const dY = pos[c.dataset.id] - c.getBoundingClientRect().top;
-        if(dY !== 0) {
-          c.style.transition='none'; 
-          c.style.transform=`translate3d(0, ${dY}px, 0)`; 
-          requestAnimationFrame(() => requestAnimationFrame(() => {
-            c.style.transition='transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'; 
-            c.style.transform=`translate3d(0, 0, 0)`; 
-            setTimeout(() => { c.style.transition=''; c.style.zIndex=c.dataset.tZ; }, 500); 
-          }));
-        } else {
-          c.style.zIndex = c.dataset.tZ;
-        }
+        if(dY !== 0) { c.style.transition='none'; c.style.transform=`translate3d(0, ${dY}px, 0)`; requestAnimationFrame(() => requestAnimationFrame(() => { c.style.transition='transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'; c.style.transform=`translate3d(0, 0, 0)`; setTimeout(() => { c.style.transition=''; c.style.zIndex=c.dataset.tZ; }, 500); })); } else c.style.zIndex = c.dataset.tZ;
       });
     }
 
     function setSt(id, idx) { 
       pSnd('tick'); getSub(id).status = idx; sDat(); 
-      if(!cSubId) { 
-        animRO(id); document.querySelectorAll(`.timetable-card[data-tt-sub="${id}"]`).forEach(c => { c.style.backgroundColor = stD[idx].c; c.style.borderColor = stD[idx].h; c.style.transform = 'scale(1.04)'; setTimeout(() => c.style.transform='', 200); });
-      } else { 
-        document.querySelectorAll('.status-row').forEach((r,i) => { const b = r.querySelector('.box'); if(i===idx) { r.classList.add('active-status'); b.classList.add('active'); r.style.setProperty('--status-bg', stD[i].c); r.style.setProperty('--box-color', stD[i].h); b.style.setProperty('--box-color', stD[i].h); } else { r.classList.remove('active-status'); b.classList.remove('active'); } }); 
-      } updHUI();
+      if(!cSubId) { animRO(id); $$(`.timetable-card[data-tt-sub="${id}"]`).forEach(c => { c.style.backgroundColor = stD[idx].c; c.style.borderColor = stD[idx].h; c.style.transform = 'scale(1.04)'; setTimeout(() => c.style.transform='', 200); });
+      } else $$('.status-row').forEach((r,i) => { const b = r.querySelector('.box'); if(i===idx) { r.classList.add('active-status'); b.classList.add('active'); r.style.setProperty('--status-bg', stD[i].c); r.style.setProperty('--box-color', stD[i].h); b.style.setProperty('--box-color', stD[i].h); } else { r.classList.remove('active-status'); b.classList.remove('active'); } }); updHUI();
     }
 
-    function openSc(id) { 
-      pSnd('swoosh'); 
-      document.querySelectorAll('.screen').forEach(s => { s.classList.remove('active'); void s.offsetWidth; }); 
-      const scr = documentById(id); 
-      scr.classList.add('active'); 
-      window.scrollTo(0,0); 
-      if(id === 'settings-screen') { appSetApply(); rendSet(); } 
-    }
-    
+    function openSc(id) { pSnd('swoosh'); $$('.screen').forEach(s => { s.classList.remove('active'); void s.offsetWidth; }); $(id).classList.add('active'); window.scrollTo(0,0); if(id === 'settings-screen') { appSetApply(); rendSet(); } }
     function openDet(id) { cSubId = id; renderDet(); openSc('detail-screen'); }
     function goHome() { cSubId = null; sData.sort((a,b) => a.status - b.status); renderHome(true); openSc('home-screen'); }
 
-    function renderDet(isUpdate = false) {
+    function renderDet(isUpd = false) {
       const s = getSub(cSubId);
-      documentById('detail-title').innerText = s.name; documentById('subject-notes').value = s.notes;
-      
-      if(!isUpdate) {
-        documentById('detail-statuses').innerHTML = stD.map((st, i) => `<div class="status-row app-card cascade-item" style="--status-bg: ${st.c}; --box-color: ${st.h}; animation-delay: ${0.05 + (0.03*i)}s;" onclick="setSt('${s.id}', ${i})"><div class="box ${s.status===i?'active':''}" style="--box-color: ${st.h};"></div><div class="status-label">${st.l}</div></div>`).join('');
-      }
-      
-      const pG = documentById('photo-gallery'); if(s.photos.length>0) { pG.style.display='flex'; pG.innerHTML = s.photos.map(p => `<div class="photo-card cascade-item" style="animation-delay: 0.15s; background-image: url('${p.img}')"><button class="del-photo" onclick="delPhoto('${p.id}')">×</button></div>`).join(''); } else { pG.style.display='none'; pG.innerHTML=''; }
-      let tS=0, tO=0; documentById('grades-list').innerHTML = s.grades.map((g,i) => { tS+=parseFloat(g.score); tO+=parseFloat(g.outOf); return `<div class="list-item app-card cascade-item" style="animation-delay:${0.40 + (0.04*i)}s;"><div><div style="font-weight: 600;">${g.name}</div><div class="date-badge">${g.score} / ${g.outOf}</div></div><div style="display:flex; align-items:center; gap: 8px;"><div class="grade-badge">${Math.round((g.score/g.outOf)*100)}%</div><button class="delete-btn" onclick="delGrade('${g.id}')">×</button></div></div>`; }).join('');
-      documentById('average-banner').innerText = tO>0 ? `Current Average: ${Math.round((tS/tO)*100)}%` : "No Grades Logged";
-      documentById('hw-list').innerHTML = s.homework.map((hw,i) => `<div id="hw-item-${hw.id}" class="list-item app-card task-card cascade-item ${isOD(hw.date)?'overdue':''}" style="animation-delay:${0.25 + (0.04*i)}s;"><div><div style="font-weight: 600; font-size: 15px;">${hw.text}</div><div class="date-badge">Due: ${fmtD(hw.date)}</div></div><button class="delete-btn" onclick="compHWAnim('${hw.id}')">×</button></div>`).join('');
+      $('detail-title').innerText = s.name; $('subject-notes').value = s.notes;
+      if(!isUpd) $('detail-statuses').innerHTML = stD.map((st, i) => `<div class="status-row app-card cascade-item" style="--status-bg: ${st.c}; --box-color: ${st.h}; animation-delay: ${0.05 + (0.03*i)}s;" onclick="setSt('${s.id}', ${i})"><div class="box ${s.status===i?'active':''}" style="--box-color: ${st.h};"></div><div class="status-label">${st.l}</div></div>`).join('');
+      const pG = $('photo-gallery'); if(s.photos.length>0) { pG.style.display='flex'; pG.innerHTML = s.photos.map(p => `<div class="photo-card cascade-item" style="animation-delay: 0.15s; background-image: url('${p.img}')"><button class="del-photo" onclick="delPhoto('${p.id}')">×</button></div>`).join(''); } else { pG.style.display='none'; pG.innerHTML=''; }
+      let tS=0, tO=0; $('grades-list').innerHTML = s.grades.map((g,i) => { tS+=parseFloat(g.score); tO+=parseFloat(g.outOf); return `<div class="list-item app-card cascade-item" style="animation-delay:${0.40 + (0.04*i)}s;"><div><div style="font-weight: 600;">${g.name}</div><div class="date-badge">${g.score} / ${g.outOf}</div></div><div style="display:flex; align-items:center; gap: 8px;"><div class="grade-badge">${Math.round((g.score/g.outOf)*100)}%</div><button class="delete-btn" onclick="delGrade('${g.id}')">×</button></div></div>`; }).join('');
+      $('average-banner').innerText = tO>0 ? `Current Average: ${Math.round((tS/tO)*100)}%` : "No Grades Logged";
+      $('hw-list').innerHTML = s.homework.map((hw,i) => `<div id="hw-item-${hw.id}" class="list-item app-card task-card cascade-item ${isOD(hw.date)?'overdue':''}" style="animation-delay:${0.25 + (0.04*i)}s;"><div><div style="font-weight: 600; font-size: 15px;">${hw.text}</div><div class="date-badge">Due: ${fmtD(hw.date)}</div></div><button class="delete-btn" onclick="compHWAnim('${hw.id}')">×</button></div>`).join('');
     }
 
     function perfC(el, cb) { pSnd('success'); el.style.transition='all 0.3s ease'; el.style.background='var(--success)'; el.style.transform='scale(0.96) translateX(15px)'; const d=el.querySelector('div>div:first-child'), b=el.querySelector('.date-badge'), x=el.querySelector('.delete-btn'); if(d) d.style.color='#FFF'; if(b) b.style.color='rgba(255,255,255,0.85)'; if(x) { x.innerHTML='✓'; x.style.color='#FFF'; x.style.transform='scale(1.1)'; } setTimeout(()=>{ el.style.transition='all 0.4s cubic-bezier(0.16,1,0.3,1)'; el.style.transform='scale(0.9) translateX(30px)'; el.style.opacity='0'; el.style.maxHeight=el.offsetHeight+'px'; requestAnimationFrame(()=>{ el.style.maxHeight='0px';el.style.paddingTop='0';el.style.paddingBottom='0';el.style.marginBottom='0';el.style.borderWidth='0'; }); setTimeout(cb, 380); }, 300); }
-    function compGAnim(id) { const el=documentById(`global-item-${id}`); if(el) perfC(el,()=>delGN(id)); else delGN(id); }
-    function compHWAnim(id) { const el=documentById(`hw-item-${id}`); if(el) perfC(el,()=>delHW(id)); else delHW(id); }
+    function compGAnim(id) { const el=$(`global-item-${id}`); if(el) perfC(el,()=>delGN(id)); else delGN(id); }
+    function compHWAnim(id) { const el=$(`hw-item-${id}`); if(el) perfC(el,()=>delHW(id)); else delHW(id); }
 
     function delGN(id) { addRSc(); gNotes = gNotes.filter(n => n.id !== id); sDat(); renderHome(false); }
-    function delHW(id) { addRSc(); getSub(cSubId).homework = getSub(cSubId).homework.filter(h => h.id !== id); sDat(); const el=documentById(`hw-item-${id}`); if(el) el.remove(); }
+    function delHW(id) { addRSc(); getSub(cSubId).homework = getSub(cSubId).homework.filter(h => h.id !== id); sDat(); const el=$(`hw-item-${id}`); if(el) el.remove(); }
     
-    function addGrade() { pSnd('pop'); const n=documentById('grade-name'),s=documentById('grade-score'),o=documentById('grade-out-of'); if(!n.value||!s.value||!o.value) return; getSub(cSubId).grades.push({ id: Date.now().toString(), name: n.value, score: s.value, outOf: o.value }); n.value=''; s.value=''; o.value=''; sDat(); renderDet(true); }
+    function addGrade() { pSnd('pop'); const n=$('grade-name'),s=$('grade-score'),o=$('grade-out-of'); if(!n.value||!s.value||!o.value) return; getSub(cSubId).grades.push({ id: Date.now().toString(), name: n.value, score: s.value, outOf: o.value }); n.value=''; s.value=''; o.value=''; sDat(); renderDet(true); }
     function delGrade(id) { pSnd('tick'); getSub(cSubId).grades = getSub(cSubId).grades.filter(g => g.id !== id); sDat(); renderDet(true); }
-    function addHW() { pSnd('pop'); const d=documentById('hw-desc'), dt=documentById('hw-date'); if(!d.value||!dt.value) return; getSub(cSubId).homework.push({ id: Date.now().toString(), text: d.value, date: dt.value }); d.value=''; dt.value=''; sDat(); renderDet(true); }
-    function addGN() { pSnd('pop'); const t=documentById('global-task'),d=documentById('global-date'); if(!t.value||!d.value) return; gNotes.push({ id: Date.now().toString(), text: t.value, date: d.value }); t.value=''; d.value=''; sDat(); renderHome(false); }
-    function saveNotes() { getSub(cSubId).notes = documentById('subject-notes').value; sDat(); }
-    function addDL() { pSnd('pop'); const n=documentById('dl-name'), d=documentById('dl-date'); if(!n.value||!d.value) return; deadlines.push({ id: Date.now().toString(), name: n.value, date: d.value }); n.value=''; d.value=''; sDat(); renderHome(false); alert("Deadline Added!"); }
+    function addHW() { pSnd('pop'); const d=$('hw-desc'), dt=$('hw-date'); if(!d.value||!dt.value) return; getSub(cSubId).homework.push({ id: Date.now().toString(), text: d.value, date: dt.value }); d.value=''; dt.value=''; sDat(); renderDet(true); }
+    function addGN() { pSnd('pop'); const t=$('global-task'),d=$('global-date'); if(!t.value||!d.value) return; gNotes.push({ id: Date.now().toString(), text: t.value, date: d.value }); t.value=''; d.value=''; sDat(); renderHome(false); }
+    function saveNotes() { getSub(cSubId).notes = $('subject-notes').value; sDat(); }
+    function addDL() { pSnd('pop'); const n=$('dl-name'), d=$('dl-date'); if(!n.value||!d.value) return; dlData.push({ id: Date.now().toString(), name: n.value, date: d.value }); n.value=''; d.value=''; sDat(); renderHome(false); alert("Deadline Added!"); }
     function delDL(id) { pSnd('tick'); dlData = dlData.filter(d => d.id !== id); sDat(); renderHome(false); }
 
     let tI; let tL = 25*60; let isR = false; const pI = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`, psI = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
-    function toggleTmr() { const w = documentById('timer-icon'), r = documentById('timer-progress'); pSnd('tick'); if(isR){ clearInterval(tI); isR=false; w.innerHTML=pI; } else { isR=true; w.innerHTML=psI; tI=setInterval(()=>{ tL--; let m=Math.floor(tL/60),s=tL%60; documentById('timer-display').innerText=`${m}:${s<10?'0':''}${s}`; r.style.strokeDasharray=`${(tL/(25*60))*100}, 100`; if(tL<=0){ clearInterval(tI); isR=false; w.innerHTML=pI; tL=25*60; r.style.strokeDasharray=`100, 100`; documentById('timer-display').innerText=`25:00`; pSnd('success'); addRSc(); alert("Focus complete!"); } }, 1000); } }
+    function toggleTmr() { const w = $('timer-icon'), r = $('timer-progress'); pSnd('tick'); if(isR){ clearInterval(tI); isR=false; w.innerHTML=pI; } else { isR=true; w.innerHTML=psI; tI=setInterval(()=>{ tL--; let m=Math.floor(tL/60),s=tL%60; $('timer-display').innerText=`${m}:${s<10?'0':''}${s}`; r.style.strokeDasharray=`${(tL/(25*60))*100}, 100`; if(tL<=0){ clearInterval(tI); isR=false; w.innerHTML=pI; tL=25*60; r.style.strokeDasharray=`100, 100`; $('timer-display').innerText=`25:00`; pSnd('success'); addRSc(); alert("Focus complete!"); } }, 1000); } }
 
-    function rendSet() { documentById('settings-subjects-list').innerHTML = sData.map((s,i) => `<div class="list-item app-card cascade-item" style="animation-delay: ${0.20 + (i*0.04)}s;"><div style="font-weight: 500;">${s.name}</div><button class="delete-btn" onclick="delSub('${s.id}')">×</button></div>`).join(''); }
-    function addSub() { pSnd('pop'); const i=documentById('new-subject'); if(!i.value)return; sData.push({ id: Date.now().toString(), name: i.value, status: 2, homework: [], notes: "", grades: [], photos: []}); i.value=''; sDat(); rendSet(); }
+    function rendSet() { $('settings-subjects-list').innerHTML = sData.map((s,i) => `<div class="list-item app-card cascade-item" style="animation-delay: ${0.20 + (i*0.04)}s;"><div style="font-weight: 500;">${s.name}</div><button class="delete-btn" onclick="delSub('${s.id}')">×</button></div>`).join(''); }
+    function addSub() { pSnd('pop'); const i=$('new-subject'); if(!i.value)return; sData.push({ id: Date.now().toString(), name: i.value, status: 2, homework: [], notes: "", grades: [], photos: []}); i.value=''; sDat(); rendSet(); }
     function delSub(id) { pSnd('tick'); if(confirm("Delete?")) { sData = sData.filter(s => s.id !== id); sDat(); rendSet(); } }
   </script>
 </body>
