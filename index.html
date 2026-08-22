@@ -42,8 +42,11 @@
     
     h1, h2, h3, .subject-title, .simon-action, .ring-text, .dl-days { font-family: 'Outfit', sans-serif; letter-spacing: -0.4px; }
     
-    /* Clean, Simple Splash */
-    #splash { position: fixed; inset: 0; background: var(--bg-base); color: var(--text-primary); z-index: 9999; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; transition: opacity 0.4s ease; }
+    /* Splash Screen */
+    #splash { position: fixed; inset: 0; background: var(--bg-base); color: var(--text-primary); z-index: 9999; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; transition: opacity 0.4s ease; perspective: 1000px; }
+    .splash-letter { display: inline-block; transform-origin: center center; }
+    .splash-letter.swirl { animation: letterSwirl 0.8s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards; }
+    @keyframes letterSwirl { 0% { transform: translate3d(0,0,0) rotateZ(0deg) scale(1); opacity: 1; } 100% { transform: translate3d(var(--tx), var(--ty), -200px) rotateZ(720deg) scale(0); opacity: 0; } }
     
     #rotate-lock { display: none; position: fixed; inset: 0; z-index: 100000; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); color: #FFFFFF; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px; font-weight: 700; font-size: 22px; line-height: 1.3; }
     @media screen and (orientation: landscape) and (max-height: 600px) { #rotate-lock { display: flex; } .screen, .top-bar { display: none !important; } }
@@ -77,7 +80,7 @@
     @media (prefers-color-scheme: dark) { .btn-grey { background: rgba(255, 255, 255, 0.15) !important; } }
     
     .app-card { position: relative; background: var(--card-bg); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid var(--card-border); border-radius: 20px; }
-    .app-card::before { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: var(--card-shadow); z-index: -1; pointer-events: none; }
+    .app-card::before { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: var(--card-shadow); z-index: -1; pointer-events: none; transition: box-shadow 0.3s ease; }
     
     .flex-col { display: flex; flex-direction: column; }
     .flex-between { display: flex; justify-content: space-between; align-items: center; }
@@ -128,6 +131,8 @@
     .box:active { transform: scale(0.7); }
     .box.active { background-color: var(--box-color); border-color: var(--box-color); transform: scale(1.15); box-shadow: 0 4px 16px var(--box-color); }
     .subject-title { font-size: 17px; font-weight: 600; flex: 1; line-height: 1.2; }
+    
+    #detail-title { font-size: clamp(22px, 6vw, 28px); font-weight: 800; line-height: 1.1; margin: 0; flex: 1; text-wrap: balance; text-shadow: 0 2px 12px rgba(0,0,0,0.05); }
     
     .status-row { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-radius: 16px; margin-bottom: 8px; transition: transform 0.1s ease, background-color 0.2s ease; cursor: pointer; }
     .status-row:active { transform: scale(0.97); }
@@ -185,15 +190,16 @@
   </style>
 </head>
 <body>
+  <!-- ROTATION BLOCKER OVERLAY -->
   <div id="rotate-lock">
     <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 16px;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
     Please rotate your phone back to portrait mode.
   </div>
 
   <div id="app-background"></div>
-  <div id="splash">School Tracker</div>
+  <div id="splash"></div>
 
-  <!-- 🔥 NEW ONBOARDING SCREEN 🔥 -->
+  <!-- ONBOARDING SCREEN -->
   <div id="onboarding-screen" class="screen">
     <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height: 80vh; text-align:center;">
       <div class="app-card cascade-item d-1" style="padding: 28px 24px; width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 16px;">
@@ -222,9 +228,9 @@
     </div>
   </div>
 
+  <!-- HOME SCREEN -->
   <div id="home-screen" class="screen">
     <div class="top-bar">
-      <!-- 🔥 DYNAMIC GREETING HEADER 🔥 -->
       <div class="flex-col" style="flex: 1; margin-left: 4px;">
         <div id="user-greeting" style="font-size: 13px; font-weight: 700; color: var(--text-secondary); margin-bottom: 2px; display: flex; align-items: center; gap: 4px; opacity: 0.9;">
           <!-- JS injects greeting here -->
@@ -318,7 +324,7 @@
 
     <div class="cascade-item d-3 flex-between" style="margin-top:20px; margin-bottom:8px;">
       <h3 style="margin:0;">Captured Notes</h3>
-      <button class="add-btn flex-between" style="padding:6px 14px; font-size:13px; gap:6px;" onclick="document.getElementById('camera-input').click()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Scan</button>
+      <button class="add-btn flex-between" style="padding:6px 14px; font-size:13px; gap:6px;" onclick="$('camera-input').click()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Scan</button>
     </div>
     <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none" onchange="processPhoto(event)">
     <div class="photo-gallery cascade-item d-4" id="photo-gallery"></div>
@@ -362,7 +368,7 @@
       <div style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:8px;">IMAGE</div>
       <input type="file" id="bg-upload" accept="image/*" style="display:none;" onchange="handleBgUp(event)">
       <div style="display:flex; gap:8px; margin-bottom:12px;">
-        <button class="add-btn btn-grey" style="flex:1; padding:12px; border-radius: 12px; font-size: 14px;" onclick="document.getElementById('bg-upload').click()">Upload Photo</button>
+        <button class="add-btn btn-grey" style="flex:1; padding:12px; border-radius: 12px; font-size: 14px;" onclick="$('bg-upload').click()">Upload Photo</button>
         <button class="add-btn btn-grey" style="padding:12px; border-radius: 12px; font-size: 14px;" onclick="resetBg()">Reset</button>
       </div>
       <div class="flex-between" style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:8px;"><span>TRANSPARENCY</span><span><span id="opacity-val">50</span>%</span></div>
@@ -373,7 +379,7 @@
     <div class="app-card setting-row cascade-item d-5">
       <p style="font-size:14px; color:var(--text-secondary); margin-top:0; margin-bottom:12px; line-height:1.4;">Upload a screenshot of your timetable to automatically populate your 10-day cycle.</p>
       <input type="file" id="tt-upload" accept="image/*" style="display:none;" onchange="handleTTScan(event)">
-      <button id="scan-tt-btn" class="add-btn" style="width:100%; padding:12px; display:flex; justify-content:center; align-items:center; gap:8px;" onclick="document.getElementById('tt-upload').click()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Scan Timetable</button>
+      <button id="scan-tt-btn" class="add-btn" style="width:100%; padding:12px; display:flex; justify-content:center; align-items:center; gap:8px;" onclick="$('tt-upload').click()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Scan Timetable</button>
     </div>
 
     <h3 class="cascade-item d-6">Subject Manager</h3>
@@ -395,14 +401,11 @@
     if(ring.date !== tStr) ring = { date: tStr, score: 0 }; 
     let cSubId = null;
 
-    // 🔥 User Identity Logic 🔥
     let uData = JSON.parse(localStorage.getItem('org_user'));
-
     let appSet = JSON.parse(localStorage.getItem('org_settings')) || { bgEnabled: false, bgOpacity: 50, bgImage: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=100&w=1200&auto=format&fit=crop' };
     
     function appSetApply() {
-      const b = $('app-background');
-      const mT = $('theme-color-meta');
+      const b = $('app-background'); const mT = $('theme-color-meta');
       if(appSet.bgEnabled) { 
         b.style.opacity = appSet.bgOpacity / 100; b.style.backgroundImage = `url('${appSet.bgImage}')`; 
         document.body.classList.add('bg-active'); document.documentElement.classList.add('bg-active');
@@ -441,38 +444,44 @@
     window.onload = () => { 
       try { appSetApply(); } catch(e) {} 
       const splash = $('splash');
+      const titleText = "School Tracker";
+      splash.innerHTML = titleText.split('').map(c => `<span class="splash-letter">${c===' '?'&nbsp;':c}</span>`).join('');
+      const letters = $$('.splash-letter');
+      
       setTimeout(() => {
-        splash.style.opacity = '0';
-        setTimeout(() => { 
-          splash.style.display = 'none'; 
-          if(uData && uData.f) {
-            renderHome(true); openSc('home-screen');
-          } else {
-            openSc('onboarding-screen');
-          }
-        }, 400);
-      }, 600); 
+        pSnd('swoosh');
+        letters.forEach((l, i) => {
+          l.style.setProperty('--tx', `${(Math.random() - 0.5) * 500}px`);
+          l.style.setProperty('--ty', `${(Math.random() - 0.5) * 500 - 100}px`);
+          l.style.setProperty('--rz', `${(Math.random() - 0.5) * 720}deg`);
+          l.style.animationDelay = `${i * 0.015}s`;
+          l.classList.add('swirl');
+        });
+        
+        setTimeout(() => {
+          splash.style.opacity = '0';
+          setTimeout(() => { 
+            splash.style.display = 'none'; 
+            if(uData && uData.f) { renderHome(true); openSc('home-screen'); } 
+            else { openSc('onboarding-screen'); }
+          }, 300);
+        }, letters.length * 15 + 400);
+      }, 300); 
     };
 
     function finishOnboarding() {
-      const f = $('ob-first').value.trim();
-      const l = $('ob-last').value.trim();
-      const s = $('ob-school').value;
+      const f = $('ob-first').value.trim(); const l = $('ob-last').value.trim(); const s = $('ob-school').value;
       if(!f || !l) { pSnd('tick'); return; }
       pSnd('success');
       uData = { f, l, s };
       localStorage.setItem('org_user', JSON.stringify(uData));
-      renderHome(true);
-      openSc('home-screen');
+      renderHome(true); openSc('home-screen');
     }
 
     function updGreet() {
       if(!uData || !uData.f) return;
-      const hr = new Date().getHours();
-      let g = 'Good evening';
-      if(hr < 12) g = 'Good morning';
-      else if(hr < 18) g = 'Good afternoon';
-      
+      const hr = new Date().getHours(); let g = 'Good evening';
+      if(hr < 12) g = 'Good morning'; else if(hr < 18) g = 'Good afternoon';
       $('user-greeting').innerHTML = `${g}, ${uData.f} ${uData.l} <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color: var(--accent); opacity: 0.8; margin-left: 2px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>`;
     }
 
@@ -494,8 +503,7 @@
       const d = $('global-new-hw-desc').value; const subId = $('global-new-hw-sub').value; const dt = $('global-new-hw-date').value;
       if(!d || !dt || !subId) { pSnd('tick'); return; }
       pSnd('pop');
-      const targetSub = getSub(subId);
-      targetSub.homework.push({ id: Date.now().toString(), text: d, date: dt });
+      getSub(subId).homework.push({ id: Date.now().toString(), text: d, date: dt });
       sDat(); pSnd('success'); goHome();
     }
 
@@ -512,13 +520,10 @@
       if(tt) {
         ts.innerHTML = `<h2>Today's Schedule</h2><div class="horizontal-scroll" style="margin-bottom: 20px;">${tt.map((cN, i) => { 
           const m = sData.find(s => s.name.toLowerCase() === cN.toLowerCase()); 
-          const iS = sLab[i].includes('Session'); 
-          let hwText = '';
+          const iS = sLab[i].includes('Session'); let hwText = '';
           if (m && m.homework && m.homework.length > 0) {
             const upc = [...m.homework].sort((a,b) => new Date(a.date) - new Date(b.date))[0];
-            const d = gDD(upc.date);
-            let sC = 'var(--text-secondary)';
-            let txt = `Homework task due in ${d} days`;
+            const d = gDD(upc.date); let sC = 'var(--text-secondary)'; let txt = `Homework task due in ${d} days`;
             if (d < 0) { txt = 'Homework overdue!'; sC = 'var(--critical)'; }
             else if (d === 0) { txt = 'Homework due today'; sC = 'var(--warning)'; }
             else if (d === 1) { txt = 'Homework due in 1 day'; }
@@ -539,55 +544,26 @@
     function delPhoto(id) { pSnd('tick'); getSub(cSubId).photos = getSub(cSubId).photos.filter(p => p.id !== id); sDat(); renderDet(); }
 
     function animRO(id) {
-      const list = $('subjects-list');
-      const crd = Array.from(list.children);
+      const list = $('subjects-list'); const crd = Array.from(list.children);
       crd.forEach(c => { c.style.animation='none'; c.classList.remove('cascade-item'); });
       const pos = {}; crd.forEach(c => pos[c.dataset.id] = c.getBoundingClientRect().top);
       sData.sort((a,b) => a.status - b.status);
-      
-      sData.forEach((s, idx) => { 
-        const c = list.querySelector(`.card[data-id="${s.id}"]`); 
-        if(c) { 
-          list.appendChild(c); 
-          c.style.backgroundColor=stD[s.status].c; 
-          c.style.borderColor=stD[s.status].h; 
-          c.querySelectorAll('.box').forEach((b,i)=>{ b.classList.toggle('active', i===s.status); }); 
-          c.dataset.tZ = 100-idx; 
-        } 
-      });
-      
+      sData.forEach((s, idx) => { const c = list.querySelector(`.card[data-id="${s.id}"]`); if(c) { list.appendChild(c); c.style.backgroundColor=stD[s.status].c; c.style.borderColor=stD[s.status].h; c.querySelectorAll('.box').forEach((b,i)=>{ b.classList.toggle('active', i===s.status); }); c.dataset.tZ = 100-idx; } });
       Array.from(list.children).forEach(c => {
         const dY = pos[c.dataset.id] - c.getBoundingClientRect().top;
-        if(dY !== 0) {
-          c.style.transition='none'; 
-          c.style.transform=`translate3d(0, ${dY}px, 0)`; 
-          requestAnimationFrame(() => requestAnimationFrame(() => {
-            c.style.transition='transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'; 
-            c.style.transform=`translate3d(0, 0, 0)`; 
-            setTimeout(() => { c.style.transition=''; c.style.zIndex=c.dataset.tZ; }, 500); 
-          }));
-        } else {
-          c.style.zIndex = c.dataset.tZ;
-        }
+        if(dY !== 0) { c.style.transition='none'; c.style.transform=`translate3d(0, ${dY}px, 0)`; requestAnimationFrame(() => requestAnimationFrame(() => { c.style.transition='transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'; c.style.transform=`translate3d(0, 0, 0)`; setTimeout(() => { c.style.transition=''; c.style.zIndex=c.dataset.tZ; }, 500); })); } else c.style.zIndex = c.dataset.tZ;
       });
     }
 
     function setSt(id, idx) { 
       pSnd('tick'); getSub(id).status = idx; sDat(); 
-      if(!cSubId) { 
-        animRO(id); $$(`.timetable-card[data-tt-sub="${id}"]`).forEach(c => { c.style.backgroundColor = stD[idx].c; c.style.borderColor = stD[idx].h; c.style.transform = 'scale(1.04)'; setTimeout(() => c.style.transform='', 200); });
-      } else { 
-        $$('.status-row').forEach((r,i) => { const b = r.querySelector('.box'); if(i===idx) { r.classList.add('active-status'); b.classList.add('active'); r.style.setProperty('--status-bg', stD[i].c); r.style.setProperty('--box-color', stD[i].h); b.style.setProperty('--box-color', stD[i].h); } else { r.classList.remove('active-status'); b.classList.remove('active'); } }); 
-      } updHUI();
+      if(!cSubId) { animRO(id); $$(`.timetable-card[data-tt-sub="${id}"]`).forEach(c => { c.style.backgroundColor = stD[idx].c; c.style.borderColor = stD[idx].h; c.style.transform = 'scale(1.04)'; setTimeout(() => c.style.transform='', 200); });
+      } else { $$('.status-row').forEach((r,i) => { const b = r.querySelector('.box'); if(i===idx) { r.classList.add('active-status'); b.classList.add('active'); r.style.setProperty('--status-bg', stD[i].c); r.style.setProperty('--box-color', stD[i].h); b.style.setProperty('--box-color', stD[i].h); } else { r.classList.remove('active-status'); b.classList.remove('active'); } }); } updHUI();
     }
 
     function openSc(id) { 
-      pSnd('swoosh'); 
-      $$('.screen').forEach(s => { s.classList.remove('active'); void s.offsetWidth; }); 
-      const scr = $(id); 
-      scr.classList.add('active'); 
-      window.scrollTo(0,0); 
-      if(id === 'settings-screen') { appSetApply(); rendSet(); } 
+      pSnd('swoosh'); $$('.screen').forEach(s => { s.classList.remove('active'); void s.offsetWidth; }); 
+      $(id).classList.add('active'); window.scrollTo(0,0); if(id === 'settings-screen') { appSetApply(); rendSet(); } 
     }
     
     function openDet(id) { cSubId = id; renderDet(); openSc('detail-screen'); }
@@ -596,11 +572,7 @@
     function renderDet(isUpdate = false) {
       const s = getSub(cSubId);
       $('detail-title').innerText = s.name; $('subject-notes').value = s.notes;
-      
-      if(!isUpdate) {
-        $('detail-statuses').innerHTML = stD.map((st, i) => `<div class="status-row app-card cascade-item" style="--status-bg: ${st.c}; --box-color: ${st.h}; animation-delay: ${0.05 + (0.03*i)}s;" onclick="setSt('${s.id}', ${i})"><div class="box ${s.status===i?'active':''}" style="--box-color: ${st.h};"></div><div class="status-label">${st.l}</div></div>`).join('');
-      }
-      
+      if(!isUpdate) $('detail-statuses').innerHTML = stD.map((st, i) => `<div class="status-row app-card cascade-item" style="--status-bg: ${st.c}; --box-color: ${st.h}; animation-delay: ${0.05 + (0.03*i)}s;" onclick="setSt('${s.id}', ${i})"><div class="box ${s.status===i?'active':''}" style="--box-color: ${st.h};"></div><div class="status-label">${st.l}</div></div>`).join('');
       const pG = $('photo-gallery'); if(s.photos.length>0) { pG.style.display='flex'; pG.innerHTML = s.photos.map(p => `<div class="photo-card cascade-item" style="animation-delay: 0.15s; background-image: url('${p.img}')"><button class="del-photo" onclick="delPhoto('${p.id}')">×</button></div>`).join(''); } else { pG.style.display='none'; pG.innerHTML=''; }
       let tS=0, tO=0; $('grades-list').innerHTML = s.grades.map((g,i) => { tS+=parseFloat(g.score); tO+=parseFloat(g.outOf); return `<div class="list-item app-card cascade-item" style="animation-delay:${0.40 + (0.04*i)}s;"><div><div style="font-weight: 600;">${g.name}</div><div class="date-badge">${g.score} / ${g.outOf}</div></div><div style="display:flex; align-items:center; gap: 8px;"><div class="grade-badge">${Math.round((g.score/g.outOf)*100)}%</div><button class="delete-btn" onclick="delGrade('${g.id}')">×</button></div></div>`; }).join('');
       $('average-banner').innerText = tO>0 ? `Current Average: ${Math.round((tS/tO)*100)}%` : "No Grades Logged";
@@ -614,12 +586,13 @@
     function delGN(id) { addRSc(); gNotes = gNotes.filter(n => n.id !== id); sDat(); renderHome(false); }
     function delHW(id) { addRSc(); getSub(cSubId).homework = getSub(cSubId).homework.filter(h => h.id !== id); sDat(); const el=$(`hw-item-${id}`); if(el) el.remove(); }
     
+    // 🔥 GLOBALLY FIXED SELECTORS 🔥
     function addGrade() { pSnd('pop'); const n=$('grade-name'),s=$('grade-score'),o=$('grade-out-of'); if(!n.value||!s.value||!o.value) return; getSub(cSubId).grades.push({ id: Date.now().toString(), name: n.value, score: s.value, outOf: o.value }); n.value=''; s.value=''; o.value=''; sDat(); renderDet(true); }
     function delGrade(id) { pSnd('tick'); getSub(cSubId).grades = getSub(cSubId).grades.filter(g => g.id !== id); sDat(); renderDet(true); }
     function addHW() { pSnd('pop'); const d=$('hw-desc'), dt=$('hw-date'); if(!d.value||!dt.value) return; getSub(cSubId).homework.push({ id: Date.now().toString(), text: d.value, date: dt.value }); d.value=''; dt.value=''; sDat(); renderDet(true); }
     function addGN() { pSnd('pop'); const t=$('global-task'),d=$('global-date'); if(!t.value||!d.value) return; gNotes.push({ id: Date.now().toString(), text: t.value, date: d.value }); t.value=''; d.value=''; sDat(); renderHome(false); }
     function saveNotes() { getSub(cSubId).notes = $('subject-notes').value; sDat(); }
-    function addDL() { pSnd('pop'); const n=$('dl-name'), d=$('dl-date'); if(!n.value||!d.value) return; deadlines.push({ id: Date.now().toString(), name: n.value, date: d.value }); n.value=''; d.value=''; sDat(); renderHome(false); alert("Deadline Added!"); }
+    function addDL() { pSnd('pop'); const n=$('dl-name'), d=$('dl-date'); if(!n.value||!d.value) return; dlData.push({ id: Date.now().toString(), name: n.value, date: d.value }); n.value=''; d.value=''; sDat(); renderHome(false); alert("Deadline Added!"); }
     function delDL(id) { pSnd('tick'); dlData = dlData.filter(d => d.id !== id); sDat(); renderHome(false); }
 
     let tI; let tL = 25*60; let isR = false; const pI = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`, psI = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
