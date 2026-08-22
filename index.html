@@ -10,7 +10,6 @@
   <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/180/task.png">
   <title>School Tracker</title>
   <link rel="manifest" href="manifest.json">
-
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -200,7 +199,7 @@
   <!-- STATIC SPLASH SCREEN -->
   <div id="splash">School Tracker</div>
 
-  <!-- ONBOARDING SCREEN -->
+  <!-- STEP 1: ONBOARDING SCREEN -->
   <div id="onboarding-screen" class="screen">
     <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height: 80vh; text-align:center;">
       <div class="app-card cascade-item d-1" style="padding: 28px 24px; width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 16px;">
@@ -224,7 +223,26 @@
           </select>
         </div>
         
-        <button class="add-btn full-w-input" style="padding: 16px; margin-top: 8px; font-size: 16px;" onclick="finishOnboarding()">Get Started</button>
+        <button class="add-btn full-w-input" style="padding: 16px; margin-top: 8px; font-size: 16px;" onclick="goToNextOnboarding()">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: ONBOARDING TIMETABLE SCREEN -->
+  <div id="onboarding-tt-screen" class="screen">
+    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height: 80vh; text-align:center;">
+      <div class="app-card cascade-item d-1" style="padding: 28px 24px; width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 16px;">
+        <h1 style="font-size: 28px; margin-bottom: 4px;">Smart Setup</h1>
+        <p style="color: var(--text-secondary); font-weight: 500; margin-top: 0; margin-bottom: 12px;">Upload a screenshot of your Simon timetable to instantly generate your subjects.</p>
+
+        <input type="file" id="ob-tt-upload" accept="image/*" style="display:none;" onchange="handleObTTScan(event)">
+        
+        <button id="ob-scan-btn" class="add-btn full-w-input" style="padding: 16px; margin-top: 8px; font-size: 16px; display: flex; justify-content: center; align-items: center; gap: 8px;" onclick="document.getElementById('ob-tt-upload').click()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          Upload Timetable
+        </button>
+        
+        <button class="add-btn btn-grey full-w-input" style="padding: 16px; font-size: 16px;" onclick="finishOnboarding()">Skip for now</button>
       </div>
     </div>
   </div>
@@ -390,11 +408,10 @@
   </div>
 
   <script>
-    const $ = id => document.getElementById(id);
-    const $$ = sel => document.querySelectorAll(sel);
+    const documentById = id => document.getElementById(id);
     const getSub = id => sData.find(s => s.id === id);
 
-    let sData = JSON.parse(localStorage.getItem('org_subjects')) || ["English", "General Mathematics", "Economics", "Legal studies", "Pre mathematical methods", "Religious education", "Physics", "Wellbeing"].map(n => ({ id: n.replace(/\s+/g, '-').toLowerCase(), name: n, status: 2, homework: [], notes: "", grades: [], photos: [] }));
+    let sData = JSON.parse(localStorage.getItem('org_subjects')) || [];
     sData.forEach(s => { if(!s.photos) s.photos=[]; }); 
     let gNotes = JSON.parse(localStorage.getItem('org_global')) || []; 
     let dlData = JSON.parse(localStorage.getItem('org_deadlines')) || []; 
@@ -407,8 +424,8 @@
     let appSet = JSON.parse(localStorage.getItem('org_settings')) || { bgEnabled: false, bgOpacity: 50, bgImage: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=100&w=1200&auto=format&fit=crop' };
     
     function appSetApply() {
-      const b = $('app-background');
-      const mT = $('theme-color-meta');
+      const b = documentById('app-background');
+      const mT = documentById('theme-color-meta');
       if(appSet.bgEnabled) { 
         b.style.opacity = appSet.bgOpacity / 100; b.style.backgroundImage = `url('${appSet.bgImage}')`; 
         document.body.classList.add('bg-active'); document.documentElement.classList.add('bg-active');
@@ -417,16 +434,40 @@
         b.style.opacity = 0; document.body.classList.remove('bg-active'); document.documentElement.classList.remove('bg-active');
         if (mT) mT.setAttribute('content', window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? '#000000' : '#F2F2F7');
       }
-      if($('bg-toggle')) $('bg-toggle').checked = appSet.bgEnabled; 
-      if($('bg-opacity-slider')) $('bg-opacity-slider').value = appSet.bgOpacity; 
-      if($('opacity-val')) $('opacity-val').innerText = appSet.bgOpacity;
+      if(documentById('bg-toggle')) documentById('bg-toggle').checked = appSet.bgEnabled; 
+      if(documentById('bg-opacity-slider')) documentById('bg-opacity-slider').value = appSet.bgOpacity; 
+      if(documentById('opacity-val')) documentById('opacity-val').innerText = appSet.bgOpacity;
     }
 
-    function toggleBg() { appSet.bgEnabled = $('bg-toggle').checked; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }
-    function updBgOpac(v) { appSet.bgOpacity = v; if(appSet.bgEnabled) $('app-background').style.opacity = v/100; $('opacity-val').innerText = v; localStorage.setItem('org_settings', JSON.stringify(appSet)); }
+    function toggleBg() { appSet.bgEnabled = documentById('bg-toggle').checked; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }
+    function updBgOpac(v) { appSet.bgOpacity = v; if(appSet.bgEnabled) documentById('app-background').style.opacity = v/100; documentById('opacity-val').innerText = v; localStorage.setItem('org_settings', JSON.stringify(appSet)); }
     function handleBgUp(e) { const f = e.target.files[0]; if(!f) return; pSnd('pop'); const r = new FileReader(); r.onload = (ev) => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const s = Math.min(1400/img.width, 1); c.width = img.width*s; c.height = img.height*s; c.getContext('2d').drawImage(img,0,0,c.width,c.height); appSet.bgImage = c.toDataURL('image/jpeg',0.6); appSet.bgEnabled = true; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }; img.src = ev.target.result; }; r.readAsDataURL(f); }
     function resetBg() { pSnd('tick'); appSet.bgImage = 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=100&w=1200&auto=format&fit=crop'; appSet.bgEnabled = false; appSet.bgOpacity = 50; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }
-    function handleTTScan(e) { const f = e.target.files[0]; if(!f) return; pSnd('pop'); const b = $('scan-tt-btn'); const oH = b.innerHTML; b.innerHTML = '⏳ Analyzing...'; b.style.opacity = '0.7'; b.style.pointerEvents = 'none'; setTimeout(() => { pSnd('success'); b.innerHTML = oH; b.style.opacity = '1'; b.style.pointerEvents = 'all'; const ttSubs = [...new Set(Object.values(ttCyc).flat())]; const exclude = ["Community Group", "Wellbeing", "Sport"]; ttSubs.forEach(sub => { if(!exclude.includes(sub) && !sData.find(s => s.name.toLowerCase() === sub.toLowerCase())) { sData.push({ id: Date.now().toString() + Math.random().toString().slice(2,8), name: sub, status: 2, homework: [], notes: "", grades: [], photos: []}); } }); sDat(); rendSet(); renderHome(false); alert("Analysis Complete!\n\nYour 10-day cycle has been synced and missing subjects have been automatically added to your tracker."); }, 2500); }
+
+    // TIMETABLE SCANNER (Settings)
+    function handleTTScan(e) { const f = e.target.files[0]; if(!f) return; pSnd('pop'); const b = documentById('scan-tt-btn'); const oH = b.innerHTML; b.innerHTML = '⏳ Analyzing...'; b.style.opacity = '0.7'; b.style.pointerEvents = 'none'; setTimeout(() => { pSnd('success'); b.innerHTML = oH; b.style.opacity = '1'; b.style.pointerEvents = 'all'; const ttSubs = [...new Set(Object.values(ttCyc).flat())]; const exclude = ["Community Group", "Wellbeing", "Sport"]; ttSubs.forEach(sub => { if(!exclude.includes(sub) && !sData.find(s => s.name.toLowerCase() === sub.toLowerCase())) { sData.push({ id: Date.now().toString() + Math.random().toString().slice(2,8), name: sub, status: 2, homework: [], notes: "", grades: [], photos: []}); } }); sDat(); rendSet(); renderHome(false); alert("Analysis Complete!\n\nYour 10-day cycle has been synced and missing subjects have been automatically added to your tracker."); }, 2500); }
+
+    // TIMETABLE SCANNER (Onboarding)
+    function handleObTTScan(e) {
+      const f = e.target.files[0]; if(!f) return; pSnd('pop');
+      const b = documentById('ob-scan-btn'); const oH = b.innerHTML;
+      b.innerHTML = '⏳ Analyzing...'; b.style.opacity = '0.7'; b.style.pointerEvents = 'none';
+      setTimeout(() => {
+         const ttSubs = [...new Set(Object.values(ttCyc).flat())];
+         const exclude = ["Community Group", "Wellbeing", "Sport"];
+         ttSubs.forEach(sub => {
+           if(!exclude.includes(sub) && !sData.find(s => s.name.toLowerCase() === sub.toLowerCase())) {
+             sData.push({ id: Date.now().toString() + Math.random().toString().slice(2,8), name: sub, status: 2, homework: [], notes: "", grades: [], photos: []});
+           }
+         });
+         sDat();
+         b.innerHTML = '✅ Schedule Imported!';
+         b.style.background = 'var(--success)';
+         b.style.color = '#FFF';
+         pSnd('success');
+         setTimeout(() => { finishOnboarding(); }, 1500);
+      }, 2500);
+    }
 
     const ttCyc = { 0:["Community Group","Economics","Economics","English","English","General Mathematics","General Mathematics","Community Group"], 1:["Community Group","Pre mathematical methods","Wellbeing","Religious education","Religious education","Economics","English","Community Group"], 2:["Community Group","Legal studies","Legal studies","Physics","Physics","Pre mathematical methods","Pre mathematical methods","Community Group"], 3:["Community Group","Economics","Economics","General Mathematics","General Mathematics","English","English","Community Group"], 4:["Community Group","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Physics","Physics","Community Group"], 7:["Community Group","English","English","Economics","Economics","General Mathematics","General Mathematics","Community Group"], 8:["Community Group","Physics","Wellbeing","Religious education","Religious education","Legal studies","General Mathematics","Community Group"], 9:["Community Group","Physics","Physics","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Community Group"], 10:["Community Group","English","English","General Mathematics","General Mathematics","Economics","Economics","Community Group"], 11:["Community Group","Physics","Physics","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Community Group"] };
     const sLab = ["Morning Group", "Session 1", "Session 2", "Session 3", "Session 4", "Session 5", "Session 6", "Afternoon Group"];
@@ -446,8 +487,7 @@
 
     window.onload = () => { 
       try { appSetApply(); } catch(e) {} 
-      const splash = $('splash');
-      
+      const splash = documentById('splash');
       setTimeout(() => {
         splash.style.opacity = '0';
         setTimeout(() => { 
@@ -461,14 +501,27 @@
       }, 600); 
     };
 
-    function finishOnboarding() {
-      const f = $('ob-first').value.trim();
-      const l = $('ob-last').value.trim();
-      const s = $('ob-school').value;
+    function goToNextOnboarding() {
+      const f = documentById('ob-first').value.trim();
+      const l = documentById('ob-last').value.trim();
+      const s = documentById('ob-school').value;
       if(!f || !l) { pSnd('tick'); return; }
-      pSnd('success');
+      pSnd('pop');
       uData = { f, l, s };
+      openSc('onboarding-tt-screen');
+    }
+
+    function finishOnboarding() {
+      pSnd('success');
+      if (!uData) uData = { f: "Student", l: "", s: "Iona College Geelong" }; // Fallback safeguard
       localStorage.setItem('org_user', JSON.stringify(uData));
+      
+      // If no subjects were scanned/added, load a default set so the dashboard isn't completely empty
+      if (sData.length === 0) {
+        sData = ["English", "General Mathematics", "Economics", "Legal studies", "Physics"].map(n => ({ id: n.replace(/\s+/g, '-').toLowerCase(), name: n, status: 2, homework: [], notes: "", grades: [], photos: [] }));
+        sDat();
+      }
+      
       renderHome(true);
       openSc('home-screen');
     }
@@ -480,25 +533,25 @@
       if(hr < 12) g = 'Good morning';
       else if(hr < 18) g = 'Good afternoon';
       
-      $('user-greeting').innerHTML = `${g}, ${uData.f} ${uData.l} <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color: var(--accent); opacity: 0.8; margin-left: 2px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>`;
+      documentById('user-greeting').innerHTML = `${g}, ${uData.f} ${uData.l} <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color: var(--accent); opacity: 0.8; margin-left: 2px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>`;
     }
 
     function sDat() { localStorage.setItem('org_subjects', JSON.stringify(sData)); localStorage.setItem('org_global', JSON.stringify(gNotes)); localStorage.setItem('org_deadlines', JSON.stringify(dlData)); localStorage.setItem('org_ring', JSON.stringify(ring)); updRUI(); updHUI(); }
     function addRSc() { if(ring.score < 5) { ring.score++; sDat(); } }
-    function updRUI() { $('study-ring').style.strokeDasharray = `${Math.min((ring.score/5)*100, 100)}, 100`; $('ring-score').innerText = `${ring.score}/5`; }
-    function updHUI() { let c = [0,0,0,0,0]; sData.forEach(s => c[s.status]++); $('health-bar').innerHTML = c.map((cnt, i) => cnt > 0 ? `<div class="health-segment" style="width: ${(cnt/sData.length)*100}%; background-color: ${stD[i].h};"></div>` : '').join(''); }
+    function updRUI() { documentById('study-ring').style.strokeDasharray = `${Math.min((ring.score/5)*100, 100)}, 100`; documentById('ring-score').innerText = `${ring.score}/5`; }
+    function updHUI() { let c = [0,0,0,0,0]; sData.forEach(s => c[s.status]++); documentById('health-bar').innerHTML = c.map((cnt, i) => cnt > 0 ? `<div class="health-segment" style="width: ${(cnt/sData.length)*100}%; background-color: ${stD[i].h};"></div>` : '').join(''); }
     function isOD(ds) { return new Date(ds.split('-')[0], ds.split('-')[1]-1, ds.split('-')[2]) < new Date().setHours(0,0,0,0); }
     function gDD(ds) { return Math.ceil((new Date(ds.split('-')[0], ds.split('-')[1]-1, ds.split('-')[2]) - new Date().setHours(0,0,0,0)) / 86400000); }
     function fmtD(ds) { return new Date(ds.split('-')[0], ds.split('-')[1]-1, ds.split('-')[2]).toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'}); }
 
     function openAddHw() {
-      $('global-new-hw-desc').value = ''; $('global-new-hw-date').value = '';
-      $('global-new-hw-sub').innerHTML = sData.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+      documentById('global-new-hw-desc').value = ''; documentById('global-new-hw-date').value = '';
+      documentById('global-new-hw-sub').innerHTML = sData.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
       openSc('add-hw-screen');
     }
 
     function saveGlobalHw() {
-      const d = $('global-new-hw-desc').value; const subId = $('global-new-hw-sub').value; const dt = $('global-new-hw-date').value;
+      const d = documentById('global-new-hw-desc').value; const subId = documentById('global-new-hw-sub').value; const dt = documentById('global-new-hw-date').value;
       if(!d || !dt || !subId) { pSnd('tick'); return; }
       pSnd('pop');
       const targetSub = getSub(subId);
@@ -511,11 +564,11 @@
       if(isInit) { updRUI(); updHUI(); updGreet(); }
 
       if(dlData.length > 0) {
-        $('deadline-section').style.display = 'block'; dlData.sort((a,b) => gDD(a.date) - gDD(b.date));
-        $('deadline-list').innerHTML = dlData.map(d => { const ds = gDD(d.date); return `<div class="deadline-card ${ds<=2?'critical':(ds<=7?'warning':'')}"><div class="dl-days">${ds<0?'0':ds}</div><div class="dl-label">Days until<br>${d.name}</div><button class="icon-btn" style="position:absolute; top:8px; right:8px; width:26px; height:26px; min-width:26px; min-height:26px; font-size:14px; color:white; background:rgba(0,0,0,0.15) !important; border:none; box-shadow:none;" onclick="delDL('${d.id}')">×</button></div>`; }).join('');
-      } else $('deadline-section').style.display = 'none';
+        documentById('deadline-section').style.display = 'block'; dlData.sort((a,b) => gDD(a.date) - gDD(b.date));
+        documentById('deadline-list').innerHTML = dlData.map(d => { const ds = gDD(d.date); return `<div class="deadline-card ${ds<=2?'critical':(ds<=7?'warning':'')}"><div class="dl-days">${ds<0?'0':ds}</div><div class="dl-label">Days until<br>${d.name}</div><button class="icon-btn" style="position:absolute; top:8px; right:8px; width:26px; height:26px; min-width:26px; min-height:26px; font-size:14px; color:white; background:rgba(0,0,0,0.15) !important; border:none; box-shadow:none;" onclick="delDL('${d.id}')">×</button></div>`; }).join('');
+      } else documentById('deadline-section').style.display = 'none';
 
-      const tt = getTT(); const ts = $('dynamic-timetable-section');
+      const tt = getTT(); const ts = documentById('dynamic-timetable-section');
       if(tt) {
         ts.innerHTML = `<h2>Today's Schedule</h2><div class="horizontal-scroll" style="margin-bottom: 20px;">${tt.map((cN, i) => { 
           const m = sData.find(s => s.name.toLowerCase() === cN.toLowerCase()); 
@@ -538,15 +591,15 @@
       }
 
       sData.sort((a, b) => a.status - b.status);
-      $('subjects-list').innerHTML = sData.map((s, i) => `<div class="card app-card ${a}" data-id="${s.id}" style="background-color: ${stD[s.status].c}; border-color: ${stD[s.status].h}; animation-delay: ${0.28 + (0.04*i)}s; z-index: ${100-i};" onclick="openDet('${s.id}')"><div class="boxes-container">${[0,1,2,3,4].map(j => `<div class="box ${s.status===j?'active':''}" style="--box-color: ${stD[j].h};" onclick="event.stopPropagation(); setSt('${s.id}', ${j})"></div>`).join('')}</div><div class="subject-title">${s.name}</div></div>`).join('');
-      $('global-notes-list').innerHTML = gNotes.map((n, i) => `<div id="global-item-${n.id}" class="list-item app-card task-card ${a} ${isOD(n.date)?'overdue':''}" style="animation-delay: ${0.40 + (0.04*i)}s;"><div><div style="font-weight: 600; font-size: 15px;">${n.text}</div><div class="date-badge">Due: ${fmtD(n.date)}</div></div><button class="delete-btn" onclick="compGAnim('${n.id}')">×</button></div>`).join('');
+      documentById('subjects-list').innerHTML = sData.map((s, i) => `<div class="card app-card ${a}" data-id="${s.id}" style="background-color: ${stD[s.status].c}; border-color: ${stD[s.status].h}; animation-delay: ${0.28 + (0.04*i)}s; z-index: ${100-i};" onclick="openDet('${s.id}')"><div class="boxes-container">${[0,1,2,3,4].map(j => `<div class="box ${s.status===j?'active':''}" style="--box-color: ${stD[j].h};" onclick="event.stopPropagation(); setSt('${s.id}', ${j})"></div>`).join('')}</div><div class="subject-title">${s.name}</div></div>`).join('');
+      documentById('global-notes-list').innerHTML = gNotes.map((n, i) => `<div id="global-item-${n.id}" class="list-item app-card task-card ${a} ${isOD(n.date)?'overdue':''}" style="animation-delay: ${0.40 + (0.04*i)}s;"><div><div style="font-weight: 600; font-size: 15px;">${n.text}</div><div class="date-badge">Due: ${fmtD(n.date)}</div></div><button class="delete-btn" onclick="compGAnim('${n.id}')">×</button></div>`).join('');
     }
 
     function processPhoto(e) { const f = e.target.files[0]; if(!f) return; pSnd('pop'); const r = new FileReader(); r.onload = ev => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const s = Math.min(600/img.width, 1); c.width = img.width*s; c.height = img.height*s; c.getContext('2d').drawImage(img,0,0,c.width,c.height); getSub(cSubId).photos.push({ id: Date.now().toString(), img: c.toDataURL('image/jpeg', 0.5) }); sDat(); renderDet(); }; img.src = ev.target.result; }; r.readAsDataURL(f); }
     function delPhoto(id) { pSnd('tick'); getSub(cSubId).photos = getSub(cSubId).photos.filter(p => p.id !== id); sDat(); renderDet(); }
 
     function animRO(id) {
-      const list = $('subjects-list');
+      const list = documentById('subjects-list');
       const crd = Array.from(list.children);
       crd.forEach(c => { c.style.animation='none'; c.classList.remove('cascade-item'); });
       const pos = {}; crd.forEach(c => pos[c.dataset.id] = c.getBoundingClientRect().top);
@@ -582,16 +635,16 @@
     function setSt(id, idx) { 
       pSnd('tick'); getSub(id).status = idx; sDat(); 
       if(!cSubId) { 
-        animRO(id); $$(`.timetable-card[data-tt-sub="${id}"]`).forEach(c => { c.style.backgroundColor = stD[idx].c; c.style.borderColor = stD[idx].h; c.style.transform = 'scale(1.04)'; setTimeout(() => c.style.transform='', 200); });
+        animRO(id); document.querySelectorAll(`.timetable-card[data-tt-sub="${id}"]`).forEach(c => { c.style.backgroundColor = stD[idx].c; c.style.borderColor = stD[idx].h; c.style.transform = 'scale(1.04)'; setTimeout(() => c.style.transform='', 200); });
       } else { 
-        $$('.status-row').forEach((r,i) => { const b = r.querySelector('.box'); if(i===idx) { r.classList.add('active-status'); b.classList.add('active'); r.style.setProperty('--status-bg', stD[i].c); r.style.setProperty('--box-color', stD[i].h); b.style.setProperty('--box-color', stD[i].h); } else { r.classList.remove('active-status'); b.classList.remove('active'); } }); 
+        document.querySelectorAll('.status-row').forEach((r,i) => { const b = r.querySelector('.box'); if(i===idx) { r.classList.add('active-status'); b.classList.add('active'); r.style.setProperty('--status-bg', stD[i].c); r.style.setProperty('--box-color', stD[i].h); b.style.setProperty('--box-color', stD[i].h); } else { r.classList.remove('active-status'); b.classList.remove('active'); } }); 
       } updHUI();
     }
 
     function openSc(id) { 
       pSnd('swoosh'); 
-      $$('.screen').forEach(s => { s.classList.remove('active'); void s.offsetWidth; }); 
-      const scr = $(id); 
+      document.querySelectorAll('.screen').forEach(s => { s.classList.remove('active'); void s.offsetWidth; }); 
+      const scr = documentById(id); 
       scr.classList.add('active'); 
       window.scrollTo(0,0); 
       if(id === 'settings-screen') { appSetApply(); rendSet(); } 
@@ -602,51 +655,47 @@
 
     function renderDet(isUpdate = false) {
       const s = getSub(cSubId);
-      $('detail-title').innerText = s.name; $('subject-notes').value = s.notes;
+      documentById('detail-title').innerText = s.name; documentById('subject-notes').value = s.notes;
       
       if(!isUpdate) {
-        $('detail-statuses').innerHTML = stD.map((st, i) => `<div class="status-row app-card cascade-item" style="--status-bg: ${st.c}; --box-color: ${st.h}; animation-delay: ${0.05 + (0.03*i)}s;" onclick="setSt('${s.id}', ${i})"><div class="box ${s.status===i?'active':''}" style="--box-color: ${st.h};"></div><div class="status-label">${st.l}</div></div>`).join('');
+        documentById('detail-statuses').innerHTML = stD.map((st, i) => `<div class="status-row app-card cascade-item" style="--status-bg: ${st.c}; --box-color: ${st.h}; animation-delay: ${0.05 + (0.03*i)}s;" onclick="setSt('${s.id}', ${i})"><div class="box ${s.status===i?'active':''}" style="--box-color: ${st.h};"></div><div class="status-label">${st.l}</div></div>`).join('');
       }
       
-      const pG = $('photo-gallery'); if(s.photos.length>0) { pG.style.display='flex'; pG.innerHTML = s.photos.map(p => `<div class="photo-card cascade-item" style="animation-delay: 0.15s; background-image: url('${p.img}')"><button class="del-photo" onclick="delPhoto('${p.id}')">×</button></div>`).join(''); } else { pG.style.display='none'; pG.innerHTML=''; }
-      let tS=0, tO=0; $('grades-list').innerHTML = s.grades.map((g,i) => { tS+=parseFloat(g.score); tO+=parseFloat(g.outOf); return `<div class="list-item app-card cascade-item" style="animation-delay:${0.40 + (0.04*i)}s;"><div><div style="font-weight: 600;">${g.name}</div><div class="date-badge">${g.score} / ${g.outOf}</div></div><div style="display:flex; align-items:center; gap: 8px;"><div class="grade-badge">${Math.round((g.score/g.outOf)*100)}%</div><button class="delete-btn" onclick="delGrade('${g.id}')">×</button></div></div>`; }).join('');
-      $('average-banner').innerText = tO>0 ? `Current Average: ${Math.round((tS/tO)*100)}%` : "No Grades Logged";
-      $('hw-list').innerHTML = s.homework.map((hw,i) => `<div id="hw-item-${hw.id}" class="list-item app-card task-card cascade-item ${isOD(hw.date)?'overdue':''}" style="animation-delay:${0.25 + (0.04*i)}s;"><div><div style="font-weight: 600; font-size: 15px;">${hw.text}</div><div class="date-badge">Due: ${fmtD(hw.date)}</div></div><button class="delete-btn" onclick="compHWAnim('${hw.id}')">×</button></div>`).join('');
+      const pG = documentById('photo-gallery'); if(s.photos.length>0) { pG.style.display='flex'; pG.innerHTML = s.photos.map(p => `<div class="photo-card cascade-item" style="animation-delay: 0.15s; background-image: url('${p.img}')"><button class="del-photo" onclick="delPhoto('${p.id}')">×</button></div>`).join(''); } else { pG.style.display='none'; pG.innerHTML=''; }
+      let tS=0, tO=0; documentById('grades-list').innerHTML = s.grades.map((g,i) => { tS+=parseFloat(g.score); tO+=parseFloat(g.outOf); return `<div class="list-item app-card cascade-item" style="animation-delay:${0.40 + (0.04*i)}s;"><div><div style="font-weight: 600;">${g.name}</div><div class="date-badge">${g.score} / ${g.outOf}</div></div><div style="display:flex; align-items:center; gap: 8px;"><div class="grade-badge">${Math.round((g.score/g.outOf)*100)}%</div><button class="delete-btn" onclick="delGrade('${g.id}')">×</button></div></div>`; }).join('');
+      documentById('average-banner').innerText = tO>0 ? `Current Average: ${Math.round((tS/tO)*100)}%` : "No Grades Logged";
+      documentById('hw-list').innerHTML = s.homework.map((hw,i) => `<div id="hw-item-${hw.id}" class="list-item app-card task-card cascade-item ${isOD(hw.date)?'overdue':''}" style="animation-delay:${0.25 + (0.04*i)}s;"><div><div style="font-weight: 600; font-size: 15px;">${hw.text}</div><div class="date-badge">Due: ${fmtD(hw.date)}</div></div><button class="delete-btn" onclick="compHWAnim('${hw.id}')">×</button></div>`).join('');
     }
 
     function perfC(el, cb) { pSnd('success'); el.style.transition='all 0.3s ease'; el.style.background='var(--success)'; el.style.transform='scale(0.96) translateX(15px)'; const d=el.querySelector('div>div:first-child'), b=el.querySelector('.date-badge'), x=el.querySelector('.delete-btn'); if(d) d.style.color='#FFF'; if(b) b.style.color='rgba(255,255,255,0.85)'; if(x) { x.innerHTML='✓'; x.style.color='#FFF'; x.style.transform='scale(1.1)'; } setTimeout(()=>{ el.style.transition='all 0.4s cubic-bezier(0.16,1,0.3,1)'; el.style.transform='scale(0.9) translateX(30px)'; el.style.opacity='0'; el.style.maxHeight=el.offsetHeight+'px'; requestAnimationFrame(()=>{ el.style.maxHeight='0px';el.style.paddingTop='0';el.style.paddingBottom='0';el.style.marginBottom='0';el.style.borderWidth='0'; }); setTimeout(cb, 380); }, 300); }
-    function compGAnim(id) { const el=$(`global-item-${id}`); if(el) perfC(el,()=>delGN(id)); else delGN(id); }
-    function compHWAnim(id) { const el=$(`hw-item-${id}`); if(el) perfC(el,()=>delHW(id)); else delHW(id); }
+    function compGAnim(id) { const el=documentById(`global-item-${id}`); if(el) perfC(el,()=>delGN(id)); else delGN(id); }
+    function compHWAnim(id) { const el=documentById(`hw-item-${id}`); if(el) perfC(el,()=>delHW(id)); else delHW(id); }
 
     function delGN(id) { addRSc(); gNotes = gNotes.filter(n => n.id !== id); sDat(); renderHome(false); }
-    function delHW(id) { addRSc(); getSub(cSubId).homework = getSub(cSubId).homework.filter(h => h.id !== id); sDat(); const el=$(`hw-item-${id}`); if(el) el.remove(); }
+    function delHW(id) { addRSc(); getSub(cSubId).homework = getSub(cSubId).homework.filter(h => h.id !== id); sDat(); const el=documentById(`hw-item-${id}`); if(el) el.remove(); }
     
-    // 🔥 FIXED ALIASES ON BUTTON TRIGGERS 🔥
-    function addGrade() { pSnd('pop'); const n=$('grade-name'),s=$('grade-score'),o=$('grade-out-of'); if(!n.value||!s.value||!o.value) return; getSub(cSubId).grades.push({ id: Date.now().toString(), name: n.value, score: s.value, outOf: o.value }); n.value=''; s.value=''; o.value=''; sDat(); renderDet(true); }
+    function addGrade() { pSnd('pop'); const n=documentById('grade-name'),s=documentById('grade-score'),o=documentById('grade-out-of'); if(!n.value||!s.value||!o.value) return; getSub(cSubId).grades.push({ id: Date.now().toString(), name: n.value, score: s.value, outOf: o.value }); n.value=''; s.value=''; o.value=''; sDat(); renderDet(true); }
     function delGrade(id) { pSnd('tick'); getSub(cSubId).grades = getSub(cSubId).grades.filter(g => g.id !== id); sDat(); renderDet(true); }
-    function addHW() { pSnd('pop'); const d=$('hw-desc'), dt=$('hw-date'); if(!d.value||!dt.value) return; getSub(cSubId).homework.push({ id: Date.now().toString(), text: d.value, date: dt.value }); d.value=''; dt.value=''; sDat(); renderDet(true); }
-    function addGN() { pSnd('pop'); const t=$('global-task'),d=$('global-date'); if(!t.value||!d.value) return; gNotes.push({ id: Date.now().toString(), text: t.value, date: d.value }); t.value=''; d.value=''; sDat(); renderHome(false); }
-    function saveNotes() { getSub(cSubId).notes = $('subject-notes').value; sDat(); }
-    function addDL() { pSnd('pop'); const n=$('dl-name'), d=$('dl-date'); if(!n.value||!d.value) return; dlData.push({ id: Date.now().toString(), name: n.value, date: d.value }); n.value=''; d.value=''; sDat(); renderHome(false); alert("Deadline Added!"); }
+    function addHW() { pSnd('pop'); const d=documentById('hw-desc'), dt=documentById('hw-date'); if(!d.value||!dt.value) return; getSub(cSubId).homework.push({ id: Date.now().toString(), text: d.value, date: dt.value }); d.value=''; dt.value=''; sDat(); renderDet(true); }
+    function addGN() { pSnd('pop'); const t=documentById('global-task'),d=documentById('global-date'); if(!t.value||!d.value) return; gNotes.push({ id: Date.now().toString(), text: t.value, date: d.value }); t.value=''; d.value=''; sDat(); renderHome(false); }
+    function saveNotes() { getSub(cSubId).notes = documentById('subject-notes').value; sDat(); }
+    function addDL() { pSnd('pop'); const n=documentById('dl-name'), d=documentById('dl-date'); if(!n.value||!d.value) return; dlData.push({ id: Date.now().toString(), name: n.value, date: d.value }); n.value=''; d.value=''; sDat(); renderHome(false); alert("Deadline Added!"); }
     function delDL(id) { pSnd('tick'); dlData = dlData.filter(d => d.id !== id); sDat(); renderHome(false); }
 
     let tI; let tL = 25*60; let isR = false; const pI = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`, psI = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
-    function toggleTmr() { const w = $('timer-icon'), r = $('timer-progress'); pSnd('tick'); if(isR){ clearInterval(tI); isR=false; w.innerHTML=pI; } else { isR=true; w.innerHTML=psI; tI=setInterval(()=>{ tL--; let m=Math.floor(tL/60),s=tL%60; $('timer-display').innerText=`${m}:${s<10?'0':''}${s}`; r.style.strokeDasharray=`${(tL/(25*60))*100}, 100`; if(tL<=0){ clearInterval(tI); isR=false; w.innerHTML=pI; tL=25*60; r.style.strokeDasharray=`100, 100`; $('timer-display').innerText=`25:00`; pSnd('success'); addRSc(); alert("Focus complete!"); } }, 1000); } }
+    function toggleTmr() { const w = documentById('timer-icon'), r = documentById('timer-progress'); pSnd('tick'); if(isR){ clearInterval(tI); isR=false; w.innerHTML=pI; } else { isR=true; w.innerHTML=psI; tI=setInterval(()=>{ tL--; let m=Math.floor(tL/60),s=tL%60; documentById('timer-display').innerText=`${m}:${s<10?'0':''}${s}`; r.style.strokeDasharray=`${(tL/(25*60))*100}, 100`; if(tL<=0){ clearInterval(tI); isR=false; w.innerHTML=pI; tL=25*60; r.style.strokeDasharray=`100, 100`; documentById('timer-display').innerText=`25:00`; pSnd('success'); addRSc(); alert("Focus complete!"); } }, 1000); } }
 
-    function rendSet() { $('settings-subjects-list').innerHTML = sData.map((s,i) => `<div class="list-item app-card cascade-item" style="animation-delay: ${0.20 + (i*0.04)}s;"><div style="font-weight: 500;">${s.name}</div><button class="delete-btn" onclick="delSub('${s.id}')">×</button></div>`).join(''); }
-    function addSub() { pSnd('pop'); const i=$('new-subject'); if(!i.value)return; sData.push({ id: Date.now().toString(), name: i.value, status: 2, homework: [], notes: "", grades: [], photos: []}); i.value=''; sDat(); rendSet(); }
+    function rendSet() { documentById('settings-subjects-list').innerHTML = sData.map((s,i) => `<div class="list-item app-card cascade-item" style="animation-delay: ${0.20 + (i*0.04)}s;"><div style="font-weight: 500;">${s.name}</div><button class="delete-btn" onclick="delSub('${s.id}')">×</button></div>`).join(''); }
+    function addSub() { pSnd('pop'); const i=documentById('new-subject'); if(!i.value)return; sData.push({ id: Date.now().toString(), name: i.value, status: 2, homework: [], notes: "", grades: [], photos: []}); i.value=''; sDat(); rendSet(); }
     function delSub(id) { pSnd('tick'); if(confirm("Delete?")) { sData = sData.filter(s => s.id !== id); sDat(); rendSet(); } }
   </script>
-    <!-- 🔥 SMART INSTALL PROMPT (iOS & ANDROID) 🔥 -->
+  
+  <!-- 🔥 SMART INSTALL PROMPT (iOS & ANDROID) 🔥 -->
   <div id="install-prompt" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(0,0,0,0.1); border-radius: 20px; padding: 20px; box-shadow: 0 16px 32px rgba(0,0,0,0.2); z-index: 100000; font-family: 'Inter', sans-serif; text-align: center; animation: slideUpPrompt 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
     <button onclick="document.getElementById('install-prompt').style.display='none'" style="position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.08); border: none; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; color: var(--text-secondary);">×</button>
     <div style="font-size: 18px; font-weight: 700; margin-bottom: 8px; font-family: 'Outfit', sans-serif;">Install School Tracker</div>
     <div id="install-text" style="font-size: 14px; color: var(--text-secondary); line-height: 1.4; margin-bottom: 16px;"></div>
-    
-    <!-- iOS Arrow -->
     <div id="install-arrow" style="font-size: 32px; animation: bounceDown 1.5s infinite; display: none;">👇</div>
-    
-    <!-- Android Native Install Button -->
     <button id="android-install-btn" class="add-btn" style="display: none; width: 100%; padding: 14px; border-radius: 12px; font-size: 15px; margin: 0;">Install App</button>
   </div>
 
@@ -660,9 +709,7 @@
   </style>
 
   <script>
-    // Check if the app is already installed and running in standalone mode
     const isStandalone = () => { return ('standalone' in window.navigator) && (window.navigator.standalone) || window.matchMedia('(display-mode: standalone)').matches; };
-    
     if (!isStandalone()) {
       const userAgent = window.navigator.userAgent.toLowerCase();
       const isIos = /iphone|ipad|ipod/.test(userAgent);
@@ -672,24 +719,20 @@
       const androidBtn = document.getElementById('android-install-btn');
 
       if (isIos) {
-        // Trigger iOS Instructions
         textEl.innerHTML = "Get the full app experience. Tap the <strong>Share</strong> button below and select <strong>Add to Home Screen</strong>.";
         arrowEl.style.display = "block";
         setTimeout(() => { promptEl.style.display = 'block'; }, 2000);
       } else {
-        // Trigger Native Android Chrome Install
         let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
-          e.preventDefault(); // Stop Chrome's default mini-bar
-          deferredPrompt = e; // Save the event
-          
+          e.preventDefault(); deferredPrompt = e; 
           textEl.innerHTML = "Get the full app experience. Install Tracker directly to your home screen.";
           androidBtn.style.display = "block";
           promptEl.style.display = 'block';
 
           androidBtn.addEventListener('click', async () => {
             promptEl.style.display = 'none';
-            deferredPrompt.prompt(); // Trigger the native Android install popup
+            deferredPrompt.prompt(); 
             const { outcome } = await deferredPrompt.userChoice;
             deferredPrompt = null;
           });
