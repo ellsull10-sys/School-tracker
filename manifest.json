@@ -1,0 +1,21 @@
+{
+  "name": "School Tracker",
+  "short_name": "Tracker",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#1C2B39",
+  "theme_color": "#1C2B39",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://img.icons8.com/fluency/180/task.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "https://img.icons8.com/fluency/512/task.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
