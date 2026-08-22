@@ -635,5 +635,65 @@
     function addSub() { pSnd('pop'); const i=$('new-subject'); if(!i.value)return; sData.push({ id: Date.now().toString(), name: i.value, status: 2, homework: [], notes: "", grades: [], photos: []}); i.value=''; sDat(); rendSet(); }
     function delSub(id) { pSnd('tick'); if(confirm("Delete?")) { sData = sData.filter(s => s.id !== id); sDat(); rendSet(); } }
   </script>
+    <!-- 🔥 SMART INSTALL PROMPT (iOS & ANDROID) 🔥 -->
+  <div id="install-prompt" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(0,0,0,0.1); border-radius: 20px; padding: 20px; box-shadow: 0 16px 32px rgba(0,0,0,0.2); z-index: 100000; font-family: 'Inter', sans-serif; text-align: center; animation: slideUpPrompt 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
+    <button onclick="document.getElementById('install-prompt').style.display='none'" style="position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.08); border: none; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; color: var(--text-secondary);">×</button>
+    <div style="font-size: 18px; font-weight: 700; margin-bottom: 8px; font-family: 'Outfit', sans-serif;">Install School Tracker</div>
+    <div id="install-text" style="font-size: 14px; color: var(--text-secondary); line-height: 1.4; margin-bottom: 16px;"></div>
+    
+    <!-- iOS Arrow -->
+    <div id="install-arrow" style="font-size: 32px; animation: bounceDown 1.5s infinite; display: none;">👇</div>
+    
+    <!-- Android Native Install Button -->
+    <button id="android-install-btn" class="add-btn" style="display: none; width: 100%; padding: 14px; border-radius: 12px; font-size: 15px; margin: 0;">Install App</button>
+  </div>
+
+  <style>
+    @keyframes slideUpPrompt { from { transform: translate(-50%, 100px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+    @keyframes bounceDown { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+    @media (prefers-color-scheme: dark) {
+      #install-prompt { background: rgba(28, 28, 30, 0.85) !important; border-color: rgba(255,255,255,0.1) !important; color: #FFF; box-shadow: 0 16px 32px rgba(0,0,0,0.6) !important; }
+      #install-prompt > button:first-child { background: rgba(255,255,255,0.15) !important; color: #FFF !important; }
+    }
+  </style>
+
+  <script>
+    // Check if the app is already installed and running in standalone mode
+    const isStandalone = () => { return ('standalone' in window.navigator) && (window.navigator.standalone) || window.matchMedia('(display-mode: standalone)').matches; };
+    
+    if (!isStandalone()) {
+      const userAgent = window.navigator.userAgent.toLowerCase();
+      const isIos = /iphone|ipad|ipod/.test(userAgent);
+      const promptEl = document.getElementById('install-prompt');
+      const textEl = document.getElementById('install-text');
+      const arrowEl = document.getElementById('install-arrow');
+      const androidBtn = document.getElementById('android-install-btn');
+
+      if (isIos) {
+        // Trigger iOS Instructions
+        textEl.innerHTML = "Get the full app experience. Tap the <strong>Share</strong> button below and select <strong>Add to Home Screen</strong>.";
+        arrowEl.style.display = "block";
+        setTimeout(() => { promptEl.style.display = 'block'; }, 2000);
+      } else {
+        // Trigger Native Android Chrome Install
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+          e.preventDefault(); // Stop Chrome's default mini-bar
+          deferredPrompt = e; // Save the event
+          
+          textEl.innerHTML = "Get the full app experience. Install Tracker directly to your home screen.";
+          androidBtn.style.display = "block";
+          promptEl.style.display = 'block';
+
+          androidBtn.addEventListener('click', async () => {
+            promptEl.style.display = 'none';
+            deferredPrompt.prompt(); // Trigger the native Android install popup
+            const { outcome } = await deferredPrompt.userChoice;
+            deferredPrompt = null;
+          });
+        });
+      }
+    }
+  </script>
 </body>
 </html>
