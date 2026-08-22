@@ -20,7 +20,9 @@
       --bg-base: #F2F2F7; --card-bg: rgba(255, 255, 255, 0.75); --card-border: rgba(0, 0, 0, 0.05);
       --card-shadow: 0 12px 28px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
       --input-bg: rgba(255, 255, 255, 0.65); --text-primary: #1C1C1E; --text-secondary: #636366;
-      --accent: #2C3E50; --accent-grad: linear-gradient(135deg, #34495E, #1E293B);
+      --accent: #2C3E50; 
+      /* 🔥 Enhanced, richer dark blue gradient for buttons 🔥 */
+      --accent-grad: linear-gradient(135deg, #345B7B, #1A2534);
       --rich-blue: linear-gradient(135deg, #2A4365, #1A365D); --warning: #FF9500; --critical: #FF3B30; --success: #10B981;
     }
     
@@ -129,17 +131,23 @@
     .status-label { font-size: 15px; font-weight: 600; color: var(--text-secondary); transition: color 0.2s ease; }
     .status-row.active-status .status-label { color: var(--text-primary); }
     
-    /* 🔥 PURE BOX-SIZING FIX FOR SAFARI INPUT OVERFLOW 🔥 */
     .input-group { display: flex; gap: 8px; margin-bottom: 16px; width: 100%; }
-    input[type="text"], input[type="date"], input[type="number"], textarea, select { 
-      flex: 1; min-width: 0; max-width: 100%; box-sizing: border-box !important; padding: 14px 16px; border-radius: 14px; border: 1px solid rgba(0,0,0,0.08); background: var(--input-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text-primary); font-size: 15px; font-family: inherit; outline: none; transition: background-color 0.2s ease; box-shadow: inset 0 2px 6px rgba(0,0,0,0.02); 
-    }
+    input[type="text"], input[type="date"], input[type="number"], textarea, select { flex: 1; min-width: 0; padding: 14px 16px; border-radius: 14px; border: 1px solid rgba(0,0,0,0.08); background: var(--input-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text-primary); font-size: 15px; font-family: inherit; outline: none; transition: background-color 0.2s ease; box-shadow: inset 0 2px 6px rgba(0,0,0,0.02); }
     input:focus, textarea:focus, select:focus { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.15); }
     textarea { height: 90px; resize: none; width: 100%; margin-top: 2px; line-height: 1.5; }
     select { -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23636366%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E"); background-repeat: no-repeat; background-position: right 14px center; background-size: 16px; padding-right: 40px !important; }
 
     button.add-btn { background: var(--accent-grad); color: #FFFFFF; border: none; padding: 0 18px; border-radius: 14px; font-weight: 600; font-size: 15px; flex-shrink: 0; transition: transform 0.1s ease; cursor: pointer; box-shadow: 0 6px 16px rgba(30, 41, 59, 0.2); }
     button.add-btn:active { transform: scale(0.92); }
+
+    /* 🔥 Safari Bug Fix: Forces inputs to perfectly fit inside vertical columns 🔥 */
+    .full-w-input {
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+      display: block !important;
+      margin: 0 !important;
+    }
     
     .list-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-radius: 16px; margin-bottom: 8px; transform-origin: top; }
     .task-card { background: var(--rich-blue) !important; color: #FFFFFF !important; border: none !important; }
@@ -216,7 +224,6 @@
       </a>
     </div>
 
-    <!-- 🔥 CORRECTED ADD HOMEWORK BANNER STYLING 🔥 -->
     <div class="app-card cascade-item d-2" style="background: var(--accent-grad); color: #FFFFFF; border: none; box-shadow: 0 10px 24px rgba(30, 41, 59, 0.3); padding: 14px 16px; margin-top:-4px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; border-radius: 16px; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 700;" onclick="openAddHw()">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
       Add Homework
@@ -253,28 +260,24 @@
     </div>
   </div>
 
-  <!-- 🔥 CORRECTED GLOBAL ADD HOMEWORK SCREEN 🔥 -->
   <div id="add-hw-screen" class="screen">
     <div class="header-bar cascade-item d-1">
       <button class="back-btn" onclick="goHome()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Back</button>
       <h1 style="margin:0;">New Task</h1>
     </div>
     
-    <div class="app-card setting-row cascade-item d-2" style="gap: 12px;">
+    <div class="app-card cascade-item d-2" style="padding: 16px; display: flex; flex-direction: column; gap: 12px; width: 100%; box-sizing: border-box;">
       <div style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:4px; text-transform:uppercase;">Homework Details</div>
-      
-      <input type="text" id="global-new-hw-desc" placeholder="Task description..." style="width: 100%; max-width: 100%; margin: 0; display: block;">
-      <select id="global-new-hw-sub" style="width: 100%; max-width: 100%; margin: 0; display: block;"></select>
-      <input type="date" id="global-new-hw-date" style="width: 100%; max-width: 100%; margin: 0; display: block;">
-      
-      <button class="add-btn" style="width: 100%; max-width: 100%; margin: 0; margin-top: 4px; padding: 14px; display: flex; justify-content: center; align-items: center; gap: 8px;" onclick="saveGlobalHw()">
+      <input type="text" id="global-new-hw-desc" class="full-w-input" placeholder="Task description...">
+      <select id="global-new-hw-sub" class="full-w-input"></select>
+      <input type="date" id="global-new-hw-date" class="full-w-input">
+      <button class="add-btn full-w-input" style="margin-top: 4px; padding: 14px; display: flex; justify-content: center; align-items: center; gap: 8px;" onclick="saveGlobalHw()">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
         Save Task
       </button>
     </div>
   </div>
 
-  <!-- DETAIL SCREEN -->
   <div id="detail-screen" class="screen">
     <div class="header-bar cascade-item d-1">
       <button class="back-btn" onclick="goHome()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Back</button>
@@ -314,7 +317,6 @@
     <textarea class="cascade-item" style="animation-delay: 0.52s;" id="subject-notes" placeholder="Add additional information here..." onblur="saveNotes()"></textarea>
   </div>
 
-  <!-- SETTINGS SCREEN -->
   <div id="settings-screen" class="screen">
     <div class="header-bar cascade-item d-1">
       <button class="back-btn" onclick="goHome()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Dashboard</button>
@@ -333,8 +335,8 @@
         <button class="add-btn" style="flex:1; padding:12px; background:var(--input-bg); color:var(--text-primary); box-shadow:none;" onclick="document.getElementById('bg-upload').click()">Upload Photo</button>
         <button class="add-btn" style="padding:12px; background:var(--input-bg); color:var(--text-primary); box-shadow:none;" onclick="resetBg()">Reset</button>
       </div>
-      <div style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:8px; display:flex; justify-content:space-between;"><span>TRANSPARENCY</span><span><span id="opacity-val">70</span>%</span></div>
-      <input type="range" id="bg-opacity-slider" min="0" max="100" value="70" oninput="updBgOpac(this.value)">
+      <div style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:8px; display:flex; justify-content:space-between;"><span>TRANSPARENCY</span><span><span id="opacity-val">50</span>%</span></div>
+      <input type="range" id="bg-opacity-slider" min="0" max="100" value="50" oninput="updBgOpac(this.value)">
     </div>
 
     <h3 class="cascade-item d-4">Timetable Scanner</h3>
@@ -362,7 +364,8 @@
     if(ring.date !== tStr) ring = { date: tStr, score: 0 }; 
     let cSubId = null;
 
-    let appSet = JSON.parse(localStorage.getItem('org_settings')) || { bgEnabled: true, bgOpacity: 70, bgImage: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=100&w=1200&auto=format&fit=crop' };
+    // 🔥 BG defaults to false and opacity 50% 🔥
+    let appSet = JSON.parse(localStorage.getItem('org_settings')) || { bgEnabled: false, bgOpacity: 50, bgImage: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=100&w=1200&auto=format&fit=crop' };
     
     function appSetApply() {
       const b = documentById('app-background');
@@ -384,7 +387,7 @@
     function toggleBg() { appSet.bgEnabled = documentById('bg-toggle').checked; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }
     function updBgOpac(v) { appSet.bgOpacity = v; if(appSet.bgEnabled) documentById('app-background').style.opacity = v/100; documentById('opacity-val').innerText = v; localStorage.setItem('org_settings', JSON.stringify(appSet)); }
     function handleBgUp(e) { const f = e.target.files[0]; if(!f) return; pSnd('pop'); const r = new FileReader(); r.onload = (ev) => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const s = Math.min(1400/img.width, 1); c.width = img.width*s; c.height = img.height*s; c.getContext('2d').drawImage(img,0,0,c.width,c.height); appSet.bgImage = c.toDataURL('image/jpeg',0.6); appSet.bgEnabled = true; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }; img.src = ev.target.result; }; r.readAsDataURL(f); }
-    function resetBg() { pSnd('tick'); appSet.bgImage = 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=100&w=1200&auto=format&fit=crop'; appSet.bgEnabled = true; appSet.bgOpacity = 70; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }
+    function resetBg() { pSnd('tick'); appSet.bgImage = 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=100&w=1200&auto=format&fit=crop'; appSet.bgEnabled = false; appSet.bgOpacity = 50; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }
     function handleTTScan(e) { const f = e.target.files[0]; if(!f) return; pSnd('pop'); const b = documentById('scan-tt-btn'); const oHTML = b.innerHTML; b.innerHTML = '⏳ Analyzing...'; b.style.opacity = '0.7'; b.style.pointerEvents = 'none'; setTimeout(() => { pSnd('success'); b.innerHTML = oHTML; b.style.opacity = '1'; b.style.pointerEvents = 'all'; alert("Analysis Complete!\n\n(Simulated: Overrides 10-day array locally.)"); }, 2500); }
 
     const ttCyc = { 0:["Community Group","Economics","Economics","English","English","General Mathematics","General Mathematics","Community Group"], 1:["Community Group","Pre mathematical methods","Wellbeing","Religious education","Religious education","Economics","English","Community Group"], 2:["Community Group","Legal studies","Legal studies","Physics","Physics","Pre mathematical methods","Pre mathematical methods","Community Group"], 3:["Community Group","Economics","Economics","General Mathematics","General Mathematics","English","English","Community Group"], 4:["Community Group","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Physics","Physics","Community Group"], 7:["Community Group","English","English","Economics","Economics","General Mathematics","General Mathematics","Community Group"], 8:["Community Group","Physics","Wellbeing","Religious education","Religious education","Legal studies","General Mathematics","Community Group"], 9:["Community Group","Physics","Physics","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Community Group"], 10:["Community Group","English","English","General Mathematics","General Mathematics","Economics","Economics","Community Group"], 11:["Community Group","Physics","Physics","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Community Group"] };
