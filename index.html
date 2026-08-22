@@ -20,15 +20,12 @@
       --bg-base: #F2F2F7; --card-bg: rgba(255, 255, 255, 0.75); --card-border: rgba(0, 0, 0, 0.05);
       --card-shadow: 0 12px 28px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
       --input-bg: rgba(255, 255, 255, 0.65); --text-primary: #1C1C1E; --text-secondary: #636366;
-      --accent: #2C3E50; 
-      /* 🔥 Enhanced, richer dark blue gradient for buttons 🔥 */
-      --accent-grad: linear-gradient(135deg, #345B7B, #1A2534);
+      --accent: #2C3E50; --accent-grad: linear-gradient(135deg, #345B7B, #1A2534);
       --rich-blue: linear-gradient(135deg, #2A4365, #1A365D); --warning: #FF9500; --critical: #FF3B30; --success: #10B981;
     }
     
     html.bg-active, body.bg-active { background-color: #FFFFFF !important; }
     body.bg-active { --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.25), 0 8px 16px rgba(0, 0, 0, 0.15); }
-    
     body.bg-active h1, body.bg-active h2 { text-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(255, 255, 255, 0.4) !important; }
 
     @media (prefers-color-scheme: dark) {
@@ -132,7 +129,7 @@
     .status-row.active-status .status-label { color: var(--text-primary); }
     
     .input-group { display: flex; gap: 8px; margin-bottom: 16px; width: 100%; }
-    input[type="text"], input[type="date"], input[type="number"], textarea, select { flex: 1; min-width: 0; padding: 14px 16px; border-radius: 14px; border: 1px solid rgba(0,0,0,0.08); background: var(--input-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text-primary); font-size: 15px; font-family: inherit; outline: none; transition: background-color 0.2s ease; box-shadow: inset 0 2px 6px rgba(0,0,0,0.02); }
+    input[type="text"], input[type="date"], input[type="number"], textarea, select { flex: 1; min-width: 0; max-width: 100%; box-sizing: border-box !important; padding: 14px 16px; border-radius: 14px; border: 1px solid rgba(0,0,0,0.08); background: var(--input-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text-primary); font-size: 15px; font-family: inherit; outline: none; transition: background-color 0.2s ease; box-shadow: inset 0 2px 6px rgba(0,0,0,0.02); }
     input:focus, textarea:focus, select:focus { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.15); }
     textarea { height: 90px; resize: none; width: 100%; margin-top: 2px; line-height: 1.5; }
     select { -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23636366%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E"); background-repeat: no-repeat; background-position: right 14px center; background-size: 16px; padding-right: 40px !important; }
@@ -140,14 +137,19 @@
     button.add-btn { background: var(--accent-grad); color: #FFFFFF; border: none; padding: 0 18px; border-radius: 14px; font-weight: 600; font-size: 15px; flex-shrink: 0; transition: transform 0.1s ease; cursor: pointer; box-shadow: 0 6px 16px rgba(30, 41, 59, 0.2); }
     button.add-btn:active { transform: scale(0.92); }
 
-    /* 🔥 Safari Bug Fix: Forces inputs to perfectly fit inside vertical columns 🔥 */
+    /* 🔥 Safari Flexbox Bug Fix: Forces inputs to strictly obey parent bounds without overflowing 🔥 */
     .full-w-input {
-      width: 100% !important;
-      max-width: 100% !important;
+      flex: none !important;
+      align-self: stretch !important;
+      width: auto !important;
       box-sizing: border-box !important;
-      display: block !important;
+      -webkit-box-sizing: border-box !important;
       margin: 0 !important;
     }
+
+    /* 🔥 Distinguishable Grey Buttons 🔥 */
+    .btn-grey { background: rgba(0, 0, 0, 0.08) !important; color: var(--text-primary) !important; box-shadow: none !important; }
+    @media (prefers-color-scheme: dark) { .btn-grey { background: rgba(255, 255, 255, 0.15) !important; } }
     
     .list-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-radius: 16px; margin-bottom: 8px; transform-origin: top; }
     .task-card { background: var(--rich-blue) !important; color: #FFFFFF !important; border: none !important; }
@@ -317,6 +319,7 @@
     <textarea class="cascade-item" style="animation-delay: 0.52s;" id="subject-notes" placeholder="Add additional information here..." onblur="saveNotes()"></textarea>
   </div>
 
+  <!-- SETTINGS SCREEN -->
   <div id="settings-screen" class="screen">
     <div class="header-bar cascade-item d-1">
       <button class="back-btn" onclick="goHome()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Dashboard</button>
@@ -332,8 +335,8 @@
       <div style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:8px;">IMAGE</div>
       <input type="file" id="bg-upload" accept="image/*" style="display:none;" onchange="handleBgUp(event)">
       <div style="display:flex; gap:8px; margin-bottom:12px;">
-        <button class="add-btn" style="flex:1; padding:12px; background:var(--input-bg); color:var(--text-primary); box-shadow:none;" onclick="document.getElementById('bg-upload').click()">Upload Photo</button>
-        <button class="add-btn" style="padding:12px; background:var(--input-bg); color:var(--text-primary); box-shadow:none;" onclick="resetBg()">Reset</button>
+        <button class="add-btn btn-grey" style="flex:1; padding:12px; border-radius: 12px; font-size: 14px;" onclick="document.getElementById('bg-upload').click()">Upload Photo</button>
+        <button class="add-btn btn-grey" style="padding:12px; border-radius: 12px; font-size: 14px;" onclick="resetBg()">Reset</button>
       </div>
       <div style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:8px; display:flex; justify-content:space-between;"><span>TRANSPARENCY</span><span><span id="opacity-val">50</span>%</span></div>
       <input type="range" id="bg-opacity-slider" min="0" max="100" value="50" oninput="updBgOpac(this.value)">
@@ -364,7 +367,6 @@
     if(ring.date !== tStr) ring = { date: tStr, score: 0 }; 
     let cSubId = null;
 
-    // 🔥 BG defaults to false and opacity 50% 🔥
     let appSet = JSON.parse(localStorage.getItem('org_settings')) || { bgEnabled: false, bgOpacity: 50, bgImage: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=100&w=1200&auto=format&fit=crop' };
     
     function appSetApply() {
