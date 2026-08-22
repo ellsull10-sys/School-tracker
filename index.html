@@ -40,7 +40,15 @@
     #app-background { position: fixed; top: -10vh; left: -10vw; width: 120vw; height: 120vh; z-index: 0; background-size: cover; background-position: center; opacity: var(--bg-opacity, 0.7); transition: opacity 0.3s ease, background-image 0.4s ease; pointer-events: none; }
     
     h1, h2, h3, .subject-title, .simon-action, .ring-text, .dl-days { font-family: 'Outfit', sans-serif; letter-spacing: -0.4px; }
-    #splash { position: fixed; inset: 0; background: var(--bg-base); color: var(--text-primary); z-index: 9999; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; transition: opacity 0.4s ease; }
+    
+    /* 🔥 SWIRLING SPLASH ANIMATION CSS 🔥 */
+    #splash { position: fixed; inset: 0; background: var(--bg-base); color: var(--text-primary); z-index: 9999; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; transition: opacity 0.4s ease; perspective: 1000px; }
+    .splash-letter { display: inline-block; transform-origin: center center; }
+    .splash-letter.swirl { animation: letterSwirl 0.8s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards; }
+    @keyframes letterSwirl {
+      0% { transform: translate3d(0,0,0) rotateZ(0deg) scale(1); opacity: 1; }
+      100% { transform: translate3d(var(--tx), var(--ty), -200px) rotateZ(720deg) scale(0); opacity: 0; }
+    }
     
     #rotate-lock { display: none; position: fixed; inset: 0; z-index: 100000; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); color: #FFFFFF; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px; font-weight: 700; font-size: 22px; line-height: 1.3; }
     @media screen and (orientation: landscape) and (max-height: 600px) { #rotate-lock { display: flex; } .screen, .top-bar { display: none !important; } }
@@ -186,7 +194,7 @@
   </div>
 
   <div id="app-background"></div>
-  <div id="splash">School Tracker</div>
+  <div id="splash"></div>
 
   <div id="home-screen" class="screen active">
     <div class="top-bar">
@@ -376,7 +384,28 @@
     function updBgOpac(v) { appSet.bgOpacity = v; if(appSet.bgEnabled) $('app-background').style.opacity = v/100; $('opacity-val').innerText = v; localStorage.setItem('org_settings', JSON.stringify(appSet)); }
     function handleBgUp(e) { const f = e.target.files[0]; if(!f) return; pSnd('pop'); const r = new FileReader(); r.onload = (ev) => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const s = Math.min(1400/img.width, 1); c.width = img.width*s; c.height = img.height*s; c.getContext('2d').drawImage(img,0,0,c.width,c.height); appSet.bgImage = c.toDataURL('image/jpeg',0.6); appSet.bgEnabled = true; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }; img.src = ev.target.result; }; r.readAsDataURL(f); }
     function resetBg() { pSnd('tick'); appSet.bgImage = 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=100&w=1200&auto=format&fit=crop'; appSet.bgEnabled = false; appSet.bgOpacity = 50; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }
-    function handleTTScan(e) { const f = e.target.files[0]; if(!f) return; pSnd('pop'); const b = $('scan-tt-btn'); const oH = b.innerHTML; b.innerHTML = '⏳ Analyzing...'; b.style.opacity = '0.7'; b.style.pointerEvents = 'none'; setTimeout(() => { pSnd('success'); b.innerHTML = oH; b.style.opacity = '1'; b.style.pointerEvents = 'all'; alert("Analysis Complete!\n\n(Simulated: Overrides 10-day array locally.)"); }, 2500); }
+
+    // 🔥 SMART TIMETABLE SCANNER 🔥
+    function handleTTScan(e) { 
+      const f = e.target.files[0]; if(!f) return; pSnd('pop'); 
+      const b = $('scan-tt-btn'); const oH = b.innerHTML; 
+      b.innerHTML = '⏳ Analyzing...'; b.style.opacity = '0.7'; b.style.pointerEvents = 'none'; 
+      setTimeout(() => { 
+        pSnd('success'); b.innerHTML = oH; b.style.opacity = '1'; b.style.pointerEvents = 'all'; 
+        
+        // Auto-extract and inject missing subjects from the 10-day cycle array
+        const ttSubs = [...new Set(Object.values(ttCyc).flat())];
+        const exclude = ["Community Group", "Wellbeing", "Sport"]; 
+        ttSubs.forEach(sub => {
+          if(!exclude.includes(sub) && !sData.find(s => s.name.toLowerCase() === sub.toLowerCase())) {
+            sData.push({ id: Date.now().toString() + Math.random().toString().slice(2,8), name: sub, status: 2, homework: [], notes: "", grades: [], photos: []});
+          }
+        });
+        
+        sDat(); rendSet(); renderHome(false);
+        alert("Analysis Complete!\n\nYour 10-day cycle has been synced and missing subjects have been automatically added to your tracker."); 
+      }, 2500); 
+    }
 
     const ttCyc = { 0:["Community Group","Economics","Economics","English","English","General Mathematics","General Mathematics","Community Group"], 1:["Community Group","Pre mathematical methods","Wellbeing","Religious education","Religious education","Economics","English","Community Group"], 2:["Community Group","Legal studies","Legal studies","Physics","Physics","Pre mathematical methods","Pre mathematical methods","Community Group"], 3:["Community Group","Economics","Economics","General Mathematics","General Mathematics","English","English","Community Group"], 4:["Community Group","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Physics","Physics","Community Group"], 7:["Community Group","English","English","Economics","Economics","General Mathematics","General Mathematics","Community Group"], 8:["Community Group","Physics","Wellbeing","Religious education","Religious education","Legal studies","General Mathematics","Community Group"], 9:["Community Group","Physics","Physics","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Community Group"], 10:["Community Group","English","English","General Mathematics","General Mathematics","Economics","Economics","Community Group"], 11:["Community Group","Physics","Physics","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Community Group"] };
     const sLab = ["Morning Group", "Session 1", "Session 2", "Session 3", "Session 4", "Session 5", "Session 6", "Afternoon Group"];
@@ -394,7 +423,35 @@
 
     const stD = [ { c: "rgba(239, 68, 68, 0.12)", h: "#EF4444", l: "Falling behind" }, { c: "rgba(245, 158, 11, 0.12)", h: "#F59E0B", l: "Behind" }, { c: "var(--card-bg)", h: "#94A3B8", l: "Up to date" }, { c: "rgba(16, 185, 129, 0.12)", h: "#10B981", l: "Ahead" }, { c: "rgba(5, 150, 105, 0.15)", h: "#059669", l: "Well ahead" } ];
 
-    window.onload = () => { try { appSetApply(); renderHome(true); } catch(e) {} setTimeout(() => { $('splash').style.opacity = '0'; setTimeout(() => $('splash').style.display = 'none', 400); }, 500); };
+    // 🔥 SWIRLING SPLASH ANIMATION ENGINE 🔥
+    window.onload = () => { 
+      try { appSetApply(); renderHome(true); } catch(e) {} 
+      
+      const splash = $('splash');
+      const titleText = "School Tracker";
+      splash.innerHTML = titleText.split('').map(c => `<span class="splash-letter">${c===' '?'&nbsp;':c}</span>`).join('');
+      
+      const letters = $$('.splash-letter');
+      const sR = splash.getBoundingClientRect();
+      const cx = sR.width / 2; const cy = sR.height / 2;
+      
+      setTimeout(() => {
+        pSnd('swoosh');
+        letters.forEach((l, i) => {
+          const r = l.getBoundingClientRect();
+          const lcx = r.left + r.width/2; const lcy = r.top + r.height/2;
+          l.style.setProperty('--tx', `${cx - lcx}px`);
+          l.style.setProperty('--ty', `${cy - lcy}px`);
+          l.style.animationDelay = `${i * 0.05}s`;
+          l.classList.add('swirl');
+        });
+        
+        setTimeout(() => {
+          splash.style.opacity = '0';
+          setTimeout(() => splash.style.display = 'none', 400);
+        }, letters.length * 50 + 800);
+      }, 700); 
+    };
 
     function sDat() { localStorage.setItem('org_subjects', JSON.stringify(sData)); localStorage.setItem('org_global', JSON.stringify(gNotes)); localStorage.setItem('org_deadlines', JSON.stringify(dlData)); localStorage.setItem('org_ring', JSON.stringify(ring)); updRUI(); updHUI(); }
     function addRSc() { if(ring.score < 5) { ring.score++; sDat(); } }
@@ -414,7 +471,8 @@
       const d = $('global-new-hw-desc').value; const subId = $('global-new-hw-sub').value; const dt = $('global-new-hw-date').value;
       if(!d || !dt || !subId) { pSnd('tick'); return; }
       pSnd('pop');
-      getSub(subId).homework.push({ id: Date.now().toString(), text: d, date: dt });
+      const targetSub = getSub(subId);
+      targetSub.homework.push({ id: Date.now().toString(), text: d, date: dt });
       sDat(); pSnd('success'); goHome();
     }
 
@@ -431,15 +489,19 @@
       if(tt) {
         ts.innerHTML = `<h2>Today's Schedule</h2><div class="horizontal-scroll" style="margin-bottom: 20px;">${tt.map((cN, i) => { 
           const m = sData.find(s => s.name.toLowerCase() === cN.toLowerCase()); 
+          const iS = sLab[i].includes('Session'); 
           let hwText = '';
           if (m && m.homework && m.homework.length > 0) {
             const upc = [...m.homework].sort((a,b) => new Date(a.date) - new Date(b.date))[0];
             const d = gDD(upc.date);
-            let sC = 'var(--text-secondary)'; let txt = `Homework task due in ${d} days`;
-            if(d<0){ txt='Homework overdue!'; sC='var(--critical)'; } else if(d===0){ txt='Homework due today'; sC='var(--warning)'; } else if(d===1){ txt='Homework due in 1 day'; }
+            let sC = 'var(--text-secondary)';
+            let txt = `Homework task due in ${d} days`;
+            if (d < 0) { txt = 'Homework overdue!'; sC = 'var(--critical)'; }
+            else if (d === 0) { txt = 'Homework due today'; sC = 'var(--warning)'; }
+            else if (d === 1) { txt = 'Homework due in 1 day'; }
             hwText = `<div style="font-size:11px; margin-top:6px; font-weight:600; color:${sC}; line-height:1.2;">${txt}</div>`;
           }
-          return `<div class="timetable-card app-card" data-tt-sub="${m?m.id:''}" style="background-color: ${m?stD[m.status].c:(sLab[i].includes('Session')?'rgba(0,0,0,0.03)':'var(--card-bg)')}; border-color: ${m?stD[m.status].h:'var(--card-border)'};" ${m?`onclick="openDet('${m.id}')"`:''}><div class="tt-session">${sLab[i]}</div><div class="tt-subject">${cN}</div>${hwText}</div>`; 
+          return `<div class="timetable-card app-card" data-tt-sub="${m?m.id:''}" style="background-color: ${m?stD[m.status].c:(iS?'rgba(0,0,0,0.03)':'var(--card-bg)')}; border-color: ${m?stD[m.status].h:'var(--card-border)'};" ${m?`onclick="openDet('${m.id}')"`:''}><div class="tt-session">${sLab[i]}</div><div class="tt-subject">${cN}</div>${hwText}</div>`; 
         }).join('')}</div>`;
       } else {
         ts.innerHTML = `<h2>Today's Schedule</h2><div class="app-card" style="padding: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px;"><span style="font-size: 28px;">🎉</span><span style="font-weight: 600; color: var(--text-secondary); text-align: center;">It's the weekend!<br>No classes scheduled today.</span></div>`;
@@ -454,31 +516,68 @@
     function delPhoto(id) { pSnd('tick'); getSub(cSubId).photos = getSub(cSubId).photos.filter(p => p.id !== id); sDat(); renderDet(); }
 
     function animRO(id) {
-      const list = $('subjects-list'); const crd = Array.from(list.children);
+      const list = $('subjects-list');
+      const crd = Array.from(list.children);
       crd.forEach(c => { c.style.animation='none'; c.classList.remove('cascade-item'); });
       const pos = {}; crd.forEach(c => pos[c.dataset.id] = c.getBoundingClientRect().top);
       sData.sort((a,b) => a.status - b.status);
-      sData.forEach((s, idx) => { const c = list.querySelector(`.card[data-id="${s.id}"]`); if(c) { list.appendChild(c); c.style.backgroundColor=stD[s.status].c; c.style.borderColor=stD[s.status].h; c.querySelectorAll('.box').forEach((b,i)=>{ b.classList.toggle('active', i===s.status); }); c.dataset.tZ = 100-idx; } });
+      
+      sData.forEach((s, idx) => { 
+        const c = list.querySelector(`.card[data-id="${s.id}"]`); 
+        if(c) { 
+          list.appendChild(c); 
+          c.style.backgroundColor=stD[s.status].c; 
+          c.style.borderColor=stD[s.status].h; 
+          c.querySelectorAll('.box').forEach((b,i)=>{ b.classList.toggle('active', i===s.status); }); 
+          c.dataset.tZ = 100-idx; 
+        } 
+      });
+      
       Array.from(list.children).forEach(c => {
         const dY = pos[c.dataset.id] - c.getBoundingClientRect().top;
-        if(dY !== 0) { c.style.transition='none'; c.style.transform=`translate3d(0, ${dY}px, 0)`; requestAnimationFrame(() => requestAnimationFrame(() => { c.style.transition='transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'; c.style.transform=`translate3d(0, 0, 0)`; setTimeout(() => { c.style.transition=''; c.style.zIndex=c.dataset.tZ; }, 500); })); } else c.style.zIndex = c.dataset.tZ;
+        if(dY !== 0) {
+          c.style.transition='none'; 
+          c.style.transform=`translate3d(0, ${dY}px, 0)`; 
+          requestAnimationFrame(() => requestAnimationFrame(() => {
+            c.style.transition='transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'; 
+            c.style.transform=`translate3d(0, 0, 0)`; 
+            setTimeout(() => { c.style.transition=''; c.style.zIndex=c.dataset.tZ; }, 500); 
+          }));
+        } else {
+          c.style.zIndex = c.dataset.tZ;
+        }
       });
     }
 
     function setSt(id, idx) { 
       pSnd('tick'); getSub(id).status = idx; sDat(); 
-      if(!cSubId) { animRO(id); $$(`.timetable-card[data-tt-sub="${id}"]`).forEach(c => { c.style.backgroundColor = stD[idx].c; c.style.borderColor = stD[idx].h; c.style.transform = 'scale(1.04)'; setTimeout(() => c.style.transform='', 200); });
-      } else $$('.status-row').forEach((r,i) => { const b = r.querySelector('.box'); if(i===idx) { r.classList.add('active-status'); b.classList.add('active'); r.style.setProperty('--status-bg', stD[i].c); r.style.setProperty('--box-color', stD[i].h); b.style.setProperty('--box-color', stD[i].h); } else { r.classList.remove('active-status'); b.classList.remove('active'); } }); updHUI();
+      if(!cSubId) { 
+        animRO(id); $$(`.timetable-card[data-tt-sub="${id}"]`).forEach(c => { c.style.backgroundColor = stD[idx].c; c.style.borderColor = stD[idx].h; c.style.transform = 'scale(1.04)'; setTimeout(() => c.style.transform='', 200); });
+      } else { 
+        $$('.status-row').forEach((r,i) => { const b = r.querySelector('.box'); if(i===idx) { r.classList.add('active-status'); b.classList.add('active'); r.style.setProperty('--status-bg', stD[i].c); r.style.setProperty('--box-color', stD[i].h); b.style.setProperty('--box-color', stD[i].h); } else { r.classList.remove('active-status'); b.classList.remove('active'); } }); 
+      } updHUI();
     }
 
-    function openSc(id) { pSnd('swoosh'); $$('.screen').forEach(s => { s.classList.remove('active'); void s.offsetWidth; }); $(id).classList.add('active'); window.scrollTo(0,0); if(id === 'settings-screen') { appSetApply(); rendSet(); } }
+    function openSc(id) { 
+      pSnd('swoosh'); 
+      $$('.screen').forEach(s => { s.classList.remove('active'); void s.offsetWidth; }); 
+      const scr = $(id); 
+      scr.classList.add('active'); 
+      window.scrollTo(0,0); 
+      if(id === 'settings-screen') { appSetApply(); rendSet(); } 
+    }
+    
     function openDet(id) { cSubId = id; renderDet(); openSc('detail-screen'); }
     function goHome() { cSubId = null; sData.sort((a,b) => a.status - b.status); renderHome(true); openSc('home-screen'); }
 
-    function renderDet(isUpd = false) {
+    function renderDet(isUpdate = false) {
       const s = getSub(cSubId);
       $('detail-title').innerText = s.name; $('subject-notes').value = s.notes;
-      if(!isUpd) $('detail-statuses').innerHTML = stD.map((st, i) => `<div class="status-row app-card cascade-item" style="--status-bg: ${st.c}; --box-color: ${st.h}; animation-delay: ${0.05 + (0.03*i)}s;" onclick="setSt('${s.id}', ${i})"><div class="box ${s.status===i?'active':''}" style="--box-color: ${st.h};"></div><div class="status-label">${st.l}</div></div>`).join('');
+      
+      if(!isUpdate) {
+        $('detail-statuses').innerHTML = stD.map((st, i) => `<div class="status-row app-card cascade-item" style="--status-bg: ${st.c}; --box-color: ${st.h}; animation-delay: ${0.05 + (0.03*i)}s;" onclick="setSt('${s.id}', ${i})"><div class="box ${s.status===i?'active':''}" style="--box-color: ${st.h};"></div><div class="status-label">${st.l}</div></div>`).join('');
+      }
+      
       const pG = $('photo-gallery'); if(s.photos.length>0) { pG.style.display='flex'; pG.innerHTML = s.photos.map(p => `<div class="photo-card cascade-item" style="animation-delay: 0.15s; background-image: url('${p.img}')"><button class="del-photo" onclick="delPhoto('${p.id}')">×</button></div>`).join(''); } else { pG.style.display='none'; pG.innerHTML=''; }
       let tS=0, tO=0; $('grades-list').innerHTML = s.grades.map((g,i) => { tS+=parseFloat(g.score); tO+=parseFloat(g.outOf); return `<div class="list-item app-card cascade-item" style="animation-delay:${0.40 + (0.04*i)}s;"><div><div style="font-weight: 600;">${g.name}</div><div class="date-badge">${g.score} / ${g.outOf}</div></div><div style="display:flex; align-items:center; gap: 8px;"><div class="grade-badge">${Math.round((g.score/g.outOf)*100)}%</div><button class="delete-btn" onclick="delGrade('${g.id}')">×</button></div></div>`; }).join('');
       $('average-banner').innerText = tO>0 ? `Current Average: ${Math.round((tS/tO)*100)}%` : "No Grades Logged";
