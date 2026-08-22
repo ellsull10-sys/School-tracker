@@ -41,13 +41,13 @@
     
     h1, h2, h3, .subject-title, .simon-action, .ring-text, .dl-days { font-family: 'Outfit', sans-serif; letter-spacing: -0.4px; }
     
-    /* 🔥 SWIRLING SPLASH ANIMATION CSS 🔥 */
-    #splash { position: fixed; inset: 0; background: var(--bg-base); color: var(--text-primary); z-index: 9999; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; transition: opacity 0.4s ease; perspective: 1000px; }
-    .splash-letter { display: inline-block; transform-origin: center center; }
-    .splash-letter.swirl { animation: letterSwirl 0.8s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards; }
-    @keyframes letterSwirl {
-      0% { transform: translate3d(0,0,0) rotateZ(0deg) scale(1); opacity: 1; }
-      100% { transform: translate3d(var(--tx), var(--ty), -200px) rotateZ(720deg) scale(0); opacity: 0; }
+    /* 🔥 PLAYFUL FAST SPLASH ANIMATION 🔥 */
+    #splash { position: fixed; inset: 0; background: var(--bg-base); color: var(--text-primary); z-index: 9999; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; transition: opacity 0.3s ease; }
+    .splash-letter { display: inline-block; }
+    .splash-letter.swirl { animation: letterFly 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+    @keyframes letterFly {
+      0% { transform: translate3d(0,0,0) rotate(0deg) scale(1); opacity: 1; }
+      100% { transform: translate3d(var(--tx), var(--ty), 0) rotate(var(--rz)) scale(0); opacity: 0; }
     }
     
     #rotate-lock { display: none; position: fixed; inset: 0; z-index: 100000; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); color: #FFFFFF; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px; font-weight: 700; font-size: 22px; line-height: 1.3; }
@@ -62,8 +62,13 @@
     
     .d-1 { animation-delay: 0.04s !important; } .d-2 { animation-delay: 0.08s !important; } .d-3 { animation-delay: 0.12s !important; } .d-4 { animation-delay: 0.16s !important; } .d-5 { animation-delay: 0.20s !important; } .d-6 { animation-delay: 0.24s !important; } .d-7 { animation-delay: 0.28s !important; } .d-8 { animation-delay: 0.32s !important; } .d-9 { animation-delay: 0.36s !important; }
 
+    /* 🔥 INCREASED GAP FOR HEADER BAR 🔥 */
     .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; width: 100%; }
-    h1 { font-size: clamp(28px, 6vw, 34px); font-weight: 800; margin: 0; flex: 1; }
+    .header-bar { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; width: 100%; }
+    
+    h1 { font-size: clamp(28px, 6vw, 34px); font-weight: 800; margin: 0; flex: 1; text-shadow: 0 2px 16px rgba(0,0,0,0.05); }
+    .header-bar h1 { margin-left: 4px; } /* Pushes title away from button slightly */
+    
     h2 { font-size: 19px; font-weight: 700; margin-top: 24px; margin-bottom: 12px; }
     h3 { font-size: 14px; font-weight: 700; margin-top: 20px; margin-bottom: 8px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.6px; }
 
@@ -73,6 +78,10 @@
     .back-btn { display: flex; align-items: center; gap: 4px; padding: 8px 16px; height: 42px; font-size: 15px; font-weight: 600; border-radius: 16px; }
     button.add-btn { padding: 0 18px; border-radius: 14px; font-weight: 600; font-size: 15px; }
     .icon-btn:active, .back-btn:active, button.add-btn:active { transform: scale(0.92); }
+    
+    /* 🔥 GREY SECONDARY BUTTONS 🔥 */
+    .btn-grey { background: rgba(0, 0, 0, 0.08) !important; color: var(--text-primary) !important; box-shadow: none !important; border-radius: 12px !important; }
+    @media (prefers-color-scheme: dark) { .btn-grey { background: rgba(255, 255, 255, 0.15) !important; } }
     
     .app-card { position: relative; background: var(--card-bg); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid var(--card-border); border-radius: 20px; }
     .app-card::before { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: var(--card-shadow); z-index: -1; pointer-events: none; }
@@ -127,8 +136,6 @@
     .box.active { background-color: var(--box-color); border-color: var(--box-color); transform: scale(1.15); box-shadow: 0 4px 16px var(--box-color); }
     .subject-title { font-size: 17px; font-weight: 600; flex: 1; line-height: 1.2; }
     
-    #detail-title { font-size: clamp(22px, 6vw, 28px); font-weight: 800; line-height: 1.1; margin: 0; flex: 1; text-wrap: balance; text-shadow: 0 2px 12px rgba(0,0,0,0.05); }
-    
     .status-row { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-radius: 16px; margin-bottom: 8px; transition: transform 0.1s ease, background-color 0.2s ease; cursor: pointer; }
     .status-row:active { transform: scale(0.97); }
     .status-row.active-status { background-color: var(--status-bg); border-color: var(--box-color); }
@@ -142,8 +149,6 @@
     select { -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23636366%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E"); background-repeat: no-repeat; background-position: right 14px center; background-size: 16px; padding-right: 40px !important; }
 
     .full-w-input { flex: none !important; align-self: stretch !important; width: auto !important; box-sizing: border-box !important; -webkit-box-sizing: border-box !important; margin: 0 !important; }
-    .btn-grey { background: rgba(0, 0, 0, 0.08) !important; color: var(--text-primary) !important; box-shadow: none !important; }
-    @media (prefers-color-scheme: dark) { .btn-grey { background: rgba(255, 255, 255, 0.15) !important; } }
     
     .list-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-radius: 16px; margin-bottom: 8px; transform-origin: top; }
     .task-card { background: var(--rich-blue) !important; color: #FFFFFF !important; border: none !important; }
@@ -285,7 +290,7 @@
 
     <div class="cascade-item d-3 flex-between" style="margin-top:20px; margin-bottom:8px;">
       <h3 style="margin:0;">Captured Notes</h3>
-      <button class="add-btn flex-between" style="padding:6px 14px; font-size:13px; gap:6px;" onclick="$('camera-input').click()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Scan</button>
+      <button class="add-btn flex-between" style="padding:6px 14px; font-size:13px; gap:6px;" onclick="document.getElementById('camera-input').click()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Scan</button>
     </div>
     <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none" onchange="processPhoto(event)">
     <div class="photo-gallery cascade-item d-4" id="photo-gallery"></div>
@@ -329,8 +334,8 @@
       <div style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:8px;">IMAGE</div>
       <input type="file" id="bg-upload" accept="image/*" style="display:none;" onchange="handleBgUp(event)">
       <div style="display:flex; gap:8px; margin-bottom:12px;">
-        <button class="add-btn btn-grey" style="flex:1; padding:12px; border-radius: 12px; font-size: 14px;" onclick="$('bg-upload').click()">Upload Photo</button>
-        <button class="add-btn btn-grey" style="padding:12px; border-radius: 12px; font-size: 14px;" onclick="resetBg()">Reset</button>
+        <button class="add-btn btn-grey" style="flex:1; padding:12px; font-size: 14px;" onclick="document.getElementById('bg-upload').click()">Upload Photo</button>
+        <button class="add-btn btn-grey" style="padding:12px; font-size: 14px;" onclick="resetBg()">Reset</button>
       </div>
       <div class="flex-between" style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:8px;"><span>TRANSPARENCY</span><span><span id="opacity-val">50</span>%</span></div>
       <input type="range" id="bg-opacity-slider" min="0" max="100" value="50" oninput="updBgOpac(this.value)">
@@ -340,7 +345,7 @@
     <div class="app-card setting-row cascade-item d-5">
       <p style="font-size:14px; color:var(--text-secondary); margin-top:0; margin-bottom:12px; line-height:1.4;">Upload a screenshot of your timetable to automatically populate your 10-day cycle.</p>
       <input type="file" id="tt-upload" accept="image/*" style="display:none;" onchange="handleTTScan(event)">
-      <button id="scan-tt-btn" class="add-btn" style="width:100%; padding:12px; display:flex; justify-content:center; align-items:center; gap:8px;" onclick="$('tt-upload').click()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Scan Timetable</button>
+      <button id="scan-tt-btn" class="add-btn" style="width:100%; padding:12px; display:flex; justify-content:center; align-items:center; gap:8px;" onclick="document.getElementById('tt-upload').click()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Scan Timetable</button>
     </div>
 
     <h3 class="cascade-item d-6">Subject Manager</h3>
@@ -384,28 +389,7 @@
     function updBgOpac(v) { appSet.bgOpacity = v; if(appSet.bgEnabled) $('app-background').style.opacity = v/100; $('opacity-val').innerText = v; localStorage.setItem('org_settings', JSON.stringify(appSet)); }
     function handleBgUp(e) { const f = e.target.files[0]; if(!f) return; pSnd('pop'); const r = new FileReader(); r.onload = (ev) => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const s = Math.min(1400/img.width, 1); c.width = img.width*s; c.height = img.height*s; c.getContext('2d').drawImage(img,0,0,c.width,c.height); appSet.bgImage = c.toDataURL('image/jpeg',0.6); appSet.bgEnabled = true; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }; img.src = ev.target.result; }; r.readAsDataURL(f); }
     function resetBg() { pSnd('tick'); appSet.bgImage = 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=100&w=1200&auto=format&fit=crop'; appSet.bgEnabled = false; appSet.bgOpacity = 50; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }
-
-    // 🔥 SMART TIMETABLE SCANNER 🔥
-    function handleTTScan(e) { 
-      const f = e.target.files[0]; if(!f) return; pSnd('pop'); 
-      const b = $('scan-tt-btn'); const oH = b.innerHTML; 
-      b.innerHTML = '⏳ Analyzing...'; b.style.opacity = '0.7'; b.style.pointerEvents = 'none'; 
-      setTimeout(() => { 
-        pSnd('success'); b.innerHTML = oH; b.style.opacity = '1'; b.style.pointerEvents = 'all'; 
-        
-        // Auto-extract and inject missing subjects from the 10-day cycle array
-        const ttSubs = [...new Set(Object.values(ttCyc).flat())];
-        const exclude = ["Community Group", "Wellbeing", "Sport"]; 
-        ttSubs.forEach(sub => {
-          if(!exclude.includes(sub) && !sData.find(s => s.name.toLowerCase() === sub.toLowerCase())) {
-            sData.push({ id: Date.now().toString() + Math.random().toString().slice(2,8), name: sub, status: 2, homework: [], notes: "", grades: [], photos: []});
-          }
-        });
-        
-        sDat(); rendSet(); renderHome(false);
-        alert("Analysis Complete!\n\nYour 10-day cycle has been synced and missing subjects have been automatically added to your tracker."); 
-      }, 2500); 
-    }
+    function handleTTScan(e) { const f = e.target.files[0]; if(!f) return; pSnd('pop'); const b = $('scan-tt-btn'); const oH = b.innerHTML; b.innerHTML = '⏳ Analyzing...'; b.style.opacity = '0.7'; b.style.pointerEvents = 'none'; setTimeout(() => { pSnd('success'); b.innerHTML = oH; b.style.opacity = '1'; b.style.pointerEvents = 'all'; alert("Analysis Complete!\n\n(Simulated: Overrides 10-day array locally.)"); }, 2500); }
 
     const ttCyc = { 0:["Community Group","Economics","Economics","English","English","General Mathematics","General Mathematics","Community Group"], 1:["Community Group","Pre mathematical methods","Wellbeing","Religious education","Religious education","Economics","English","Community Group"], 2:["Community Group","Legal studies","Legal studies","Physics","Physics","Pre mathematical methods","Pre mathematical methods","Community Group"], 3:["Community Group","Economics","Economics","General Mathematics","General Mathematics","English","English","Community Group"], 4:["Community Group","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Physics","Physics","Community Group"], 7:["Community Group","English","English","Economics","Economics","General Mathematics","General Mathematics","Community Group"], 8:["Community Group","Physics","Wellbeing","Religious education","Religious education","Legal studies","General Mathematics","Community Group"], 9:["Community Group","Physics","Physics","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Community Group"], 10:["Community Group","English","English","General Mathematics","General Mathematics","Economics","Economics","Community Group"], 11:["Community Group","Physics","Physics","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Community Group"] };
     const sLab = ["Morning Group", "Session 1", "Session 2", "Session 3", "Session 4", "Session 5", "Session 6", "Afternoon Group"];
@@ -423,7 +407,6 @@
 
     const stD = [ { c: "rgba(239, 68, 68, 0.12)", h: "#EF4444", l: "Falling behind" }, { c: "rgba(245, 158, 11, 0.12)", h: "#F59E0B", l: "Behind" }, { c: "var(--card-bg)", h: "#94A3B8", l: "Up to date" }, { c: "rgba(16, 185, 129, 0.12)", h: "#10B981", l: "Ahead" }, { c: "rgba(5, 150, 105, 0.15)", h: "#059669", l: "Well ahead" } ];
 
-    // 🔥 SWIRLING SPLASH ANIMATION ENGINE 🔥
     window.onload = () => { 
       try { appSetApply(); renderHome(true); } catch(e) {} 
       
@@ -432,25 +415,22 @@
       splash.innerHTML = titleText.split('').map(c => `<span class="splash-letter">${c===' '?'&nbsp;':c}</span>`).join('');
       
       const letters = $$('.splash-letter');
-      const sR = splash.getBoundingClientRect();
-      const cx = sR.width / 2; const cy = sR.height / 2;
       
       setTimeout(() => {
         pSnd('swoosh');
         letters.forEach((l, i) => {
-          const r = l.getBoundingClientRect();
-          const lcx = r.left + r.width/2; const lcy = r.top + r.height/2;
-          l.style.setProperty('--tx', `${cx - lcx}px`);
-          l.style.setProperty('--ty', `${cy - lcy}px`);
-          l.style.animationDelay = `${i * 0.05}s`;
+          l.style.setProperty('--tx', `${(Math.random() - 0.5) * 500}px`);
+          l.style.setProperty('--ty', `${(Math.random() - 0.5) * 500 - 100}px`);
+          l.style.setProperty('--rz', `${(Math.random() - 0.5) * 720}deg`);
+          l.style.animationDelay = `${i * 0.015}s`;
           l.classList.add('swirl');
         });
         
         setTimeout(() => {
           splash.style.opacity = '0';
-          setTimeout(() => splash.style.display = 'none', 400);
-        }, letters.length * 50 + 800);
-      }, 700); 
+          setTimeout(() => splash.style.display = 'none', 300);
+        }, letters.length * 15 + 400);
+      }, 300); 
     };
 
     function sDat() { localStorage.setItem('org_subjects', JSON.stringify(sData)); localStorage.setItem('org_global', JSON.stringify(gNotes)); localStorage.setItem('org_deadlines', JSON.stringify(dlData)); localStorage.setItem('org_ring', JSON.stringify(ring)); updRUI(); updHUI(); }
@@ -596,7 +576,7 @@
     function addHW() { pSnd('pop'); const d=$('hw-desc'), dt=$('hw-date'); if(!d.value||!dt.value) return; getSub(cSubId).homework.push({ id: Date.now().toString(), text: d.value, date: dt.value }); d.value=''; dt.value=''; sDat(); renderDet(true); }
     function addGN() { pSnd('pop'); const t=$('global-task'),d=$('global-date'); if(!t.value||!d.value) return; gNotes.push({ id: Date.now().toString(), text: t.value, date: d.value }); t.value=''; d.value=''; sDat(); renderHome(false); }
     function saveNotes() { getSub(cSubId).notes = $('subject-notes').value; sDat(); }
-    function addDL() { pSnd('pop'); const n=$('dl-name'), d=$('dl-date'); if(!n.value||!d.value) return; dlData.push({ id: Date.now().toString(), name: n.value, date: d.value }); n.value=''; d.value=''; sDat(); renderHome(false); alert("Deadline Added!"); }
+    function addDL() { pSnd('pop'); const n=$('dl-name'), d=$('dl-date'); if(!n.value||!d.value) return; deadlines.push({ id: Date.now().toString(), name: n.value, date: d.value }); n.value=''; d.value=''; sDat(); renderHome(false); alert("Deadline Added!"); }
     function delDL(id) { pSnd('tick'); dlData = dlData.filter(d => d.id !== id); sDat(); renderHome(false); }
 
     let tI; let tL = 25*60; let isR = false; const pI = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`, psI = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
