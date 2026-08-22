@@ -15,6 +15,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
+    /* 💎 NATIVE iOS APP STORE DESIGN SYSTEM 💎 */
     :root {
       --bg-base: #F2F2F7; --card-bg: rgba(255, 255, 255, 0.75); --card-border: rgba(0, 0, 0, 0.05);
       --card-shadow: 0 12px 28px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
@@ -41,14 +42,8 @@
     
     h1, h2, h3, .subject-title, .simon-action, .ring-text, .dl-days { font-family: 'Outfit', sans-serif; letter-spacing: -0.4px; }
     
-    /* 🔥 PLAYFUL FAST SPLASH ANIMATION 🔥 */
-    #splash { position: fixed; inset: 0; background: var(--bg-base); color: var(--text-primary); z-index: 9999; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; transition: opacity 0.3s ease; }
-    .splash-letter { display: inline-block; }
-    .splash-letter.swirl { animation: letterFly 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
-    @keyframes letterFly {
-      0% { transform: translate3d(0,0,0) rotate(0deg) scale(1); opacity: 1; }
-      100% { transform: translate3d(var(--tx), var(--ty), 0) rotate(var(--rz)) scale(0); opacity: 0; }
-    }
+    /* Clean, Simple Splash */
+    #splash { position: fixed; inset: 0; background: var(--bg-base); color: var(--text-primary); z-index: 9999; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; transition: opacity 0.4s ease; }
     
     #rotate-lock { display: none; position: fixed; inset: 0; z-index: 100000; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); color: #FFFFFF; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px; font-weight: 700; font-size: 22px; line-height: 1.3; }
     @media screen and (orientation: landscape) and (max-height: 600px) { #rotate-lock { display: flex; } .screen, .top-bar { display: none !important; } }
@@ -62,12 +57,11 @@
     
     .d-1 { animation-delay: 0.04s !important; } .d-2 { animation-delay: 0.08s !important; } .d-3 { animation-delay: 0.12s !important; } .d-4 { animation-delay: 0.16s !important; } .d-5 { animation-delay: 0.20s !important; } .d-6 { animation-delay: 0.24s !important; } .d-7 { animation-delay: 0.28s !important; } .d-8 { animation-delay: 0.32s !important; } .d-9 { animation-delay: 0.36s !important; }
 
-    /* 🔥 INCREASED GAP FOR HEADER BAR 🔥 */
     .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; width: 100%; }
     .header-bar { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; width: 100%; }
     
-    h1 { font-size: clamp(28px, 6vw, 34px); font-weight: 800; margin: 0; flex: 1; text-shadow: 0 2px 16px rgba(0,0,0,0.05); }
-    .header-bar h1 { margin-left: 4px; } /* Pushes title away from button slightly */
+    h1 { font-size: clamp(28px, 6vw, 34px); font-weight: 800; margin: 0; text-shadow: 0 2px 16px rgba(0,0,0,0.05); }
+    .header-bar h1 { margin-left: 4px; flex: 1; }
     
     h2 { font-size: 19px; font-weight: 700; margin-top: 24px; margin-bottom: 12px; }
     h3 { font-size: 14px; font-weight: 700; margin-top: 20px; margin-bottom: 8px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.6px; }
@@ -79,7 +73,6 @@
     button.add-btn { padding: 0 18px; border-radius: 14px; font-weight: 600; font-size: 15px; }
     .icon-btn:active, .back-btn:active, button.add-btn:active { transform: scale(0.92); }
     
-    /* 🔥 GREY SECONDARY BUTTONS 🔥 */
     .btn-grey { background: rgba(0, 0, 0, 0.08) !important; color: var(--text-primary) !important; box-shadow: none !important; border-radius: 12px !important; }
     @media (prefers-color-scheme: dark) { .btn-grey { background: rgba(255, 255, 255, 0.15) !important; } }
     
@@ -143,7 +136,7 @@
     .status-row.active-status .status-label { color: var(--text-primary); }
     
     .input-group { display: flex; gap: 8px; margin-bottom: 16px; width: 100%; }
-    input[type="text"], input[type="date"], input[type="number"], textarea, select { flex: 1; min-width: 0; padding: 14px 16px; border-radius: 14px; border: 1px solid rgba(0,0,0,0.08); background: var(--input-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text-primary); font-size: 15px; font-family: inherit; outline: none; transition: background-color 0.2s ease; box-shadow: inset 0 2px 6px rgba(0,0,0,0.02); }
+    input[type="text"], input[type="date"], input[type="number"], textarea, select { flex: 1; min-width: 0; max-width: 100%; box-sizing: border-box !important; padding: 14px 16px; border-radius: 14px; border: 1px solid rgba(0,0,0,0.08); background: var(--input-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--text-primary); font-size: 15px; font-family: inherit; outline: none; transition: background-color 0.2s ease; box-shadow: inset 0 2px 6px rgba(0,0,0,0.02); }
     input:focus, textarea:focus, select:focus { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.15); }
     textarea { height: 90px; resize: none; width: 100%; margin-top: 2px; line-height: 1.5; }
     select { -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23636366%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E"); background-repeat: no-repeat; background-position: right 14px center; background-size: 16px; padding-right: 40px !important; }
@@ -157,7 +150,6 @@
     .task-card.overdue::before { box-shadow: 0 8px 24px rgba(239, 68, 68, 0.25) !important; }
     .task-card .date-badge { color: rgba(255,255,255,0.75) !important; }
     .task-card .delete-btn { color: rgba(255,255,255,0.85) !important; }
-    
     .date-badge { font-size: 13px; color: var(--text-secondary); font-weight: 500; margin-top: 4px; }
     .delete-btn { color: var(--critical); background: none; border: none; font-weight: 400; font-size: 24px; padding: 0 8px; cursor: pointer; transition: transform 0.15s ease; }
     .delete-btn:active { transform: scale(0.8); }
@@ -199,11 +191,47 @@
   </div>
 
   <div id="app-background"></div>
-  <div id="splash"></div>
+  <div id="splash">School Tracker</div>
 
-  <div id="home-screen" class="screen active">
+  <!-- 🔥 NEW ONBOARDING SCREEN 🔥 -->
+  <div id="onboarding-screen" class="screen">
+    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height: 80vh; text-align:center;">
+      <div class="app-card cascade-item d-1" style="padding: 28px 24px; width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 16px;">
+        <h1 style="font-size: 28px; margin-bottom: 4px;">Welcome</h1>
+        <p style="color: var(--text-secondary); font-weight: 500; margin-top: 0; margin-bottom: 12px;">Let's set up your tracker.</p>
+        
+        <div style="text-align: left;">
+          <div style="font-size:12px; font-weight:700; color:var(--text-secondary); margin-bottom:6px; text-transform:uppercase;">First Name</div>
+          <input type="text" id="ob-first" class="full-w-input" placeholder="e.g. John">
+        </div>
+        
+        <div style="text-align: left;">
+          <div style="font-size:12px; font-weight:700; color:var(--text-secondary); margin-bottom:6px; text-transform:uppercase;">Last Name</div>
+          <input type="text" id="ob-last" class="full-w-input" placeholder="e.g. Doe">
+        </div>
+        
+        <div style="text-align: left;">
+          <div style="font-size:12px; font-weight:700; color:var(--text-secondary); margin-bottom:6px; text-transform:uppercase;">School</div>
+          <select id="ob-school" class="full-w-input">
+            <option value="Iona College Geelong">Iona College Geelong</option>
+          </select>
+        </div>
+        
+        <button class="add-btn full-w-input" style="padding: 16px; margin-top: 8px; font-size: 16px;" onclick="finishOnboarding()">Get Started</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="home-screen" class="screen">
     <div class="top-bar">
-      <h1>Dashboard</h1>
+      <!-- 🔥 DYNAMIC GREETING HEADER 🔥 -->
+      <div class="flex-col" style="flex: 1; margin-left: 4px;">
+        <div id="user-greeting" style="font-size: 13px; font-weight: 700; color: var(--text-secondary); margin-bottom: 2px; display: flex; align-items: center; gap: 4px; opacity: 0.9;">
+          <!-- JS injects greeting here -->
+        </div>
+        <h1 style="margin-left: 0;">Dashboard</h1>
+      </div>
+
       <button class="icon-btn" onclick="openSc('settings-screen')">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
@@ -334,8 +362,8 @@
       <div style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:8px;">IMAGE</div>
       <input type="file" id="bg-upload" accept="image/*" style="display:none;" onchange="handleBgUp(event)">
       <div style="display:flex; gap:8px; margin-bottom:12px;">
-        <button class="add-btn btn-grey" style="flex:1; padding:12px; font-size: 14px;" onclick="document.getElementById('bg-upload').click()">Upload Photo</button>
-        <button class="add-btn btn-grey" style="padding:12px; font-size: 14px;" onclick="resetBg()">Reset</button>
+        <button class="add-btn btn-grey" style="flex:1; padding:12px; border-radius: 12px; font-size: 14px;" onclick="document.getElementById('bg-upload').click()">Upload Photo</button>
+        <button class="add-btn btn-grey" style="padding:12px; border-radius: 12px; font-size: 14px;" onclick="resetBg()">Reset</button>
       </div>
       <div class="flex-between" style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:8px;"><span>TRANSPARENCY</span><span><span id="opacity-val">50</span>%</span></div>
       <input type="range" id="bg-opacity-slider" min="0" max="100" value="50" oninput="updBgOpac(this.value)">
@@ -367,6 +395,9 @@
     if(ring.date !== tStr) ring = { date: tStr, score: 0 }; 
     let cSubId = null;
 
+    // 🔥 User Identity Logic 🔥
+    let uData = JSON.parse(localStorage.getItem('org_user'));
+
     let appSet = JSON.parse(localStorage.getItem('org_settings')) || { bgEnabled: false, bgOpacity: 50, bgImage: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=100&w=1200&auto=format&fit=crop' };
     
     function appSetApply() {
@@ -389,7 +420,7 @@
     function updBgOpac(v) { appSet.bgOpacity = v; if(appSet.bgEnabled) $('app-background').style.opacity = v/100; $('opacity-val').innerText = v; localStorage.setItem('org_settings', JSON.stringify(appSet)); }
     function handleBgUp(e) { const f = e.target.files[0]; if(!f) return; pSnd('pop'); const r = new FileReader(); r.onload = (ev) => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const s = Math.min(1400/img.width, 1); c.width = img.width*s; c.height = img.height*s; c.getContext('2d').drawImage(img,0,0,c.width,c.height); appSet.bgImage = c.toDataURL('image/jpeg',0.6); appSet.bgEnabled = true; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }; img.src = ev.target.result; }; r.readAsDataURL(f); }
     function resetBg() { pSnd('tick'); appSet.bgImage = 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=100&w=1200&auto=format&fit=crop'; appSet.bgEnabled = false; appSet.bgOpacity = 50; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }
-    function handleTTScan(e) { const f = e.target.files[0]; if(!f) return; pSnd('pop'); const b = $('scan-tt-btn'); const oH = b.innerHTML; b.innerHTML = '⏳ Analyzing...'; b.style.opacity = '0.7'; b.style.pointerEvents = 'none'; setTimeout(() => { pSnd('success'); b.innerHTML = oH; b.style.opacity = '1'; b.style.pointerEvents = 'all'; alert("Analysis Complete!\n\n(Simulated: Overrides 10-day array locally.)"); }, 2500); }
+    function handleTTScan(e) { const f = e.target.files[0]; if(!f) return; pSnd('pop'); const b = $('scan-tt-btn'); const oH = b.innerHTML; b.innerHTML = '⏳ Analyzing...'; b.style.opacity = '0.7'; b.style.pointerEvents = 'none'; setTimeout(() => { pSnd('success'); b.innerHTML = oH; b.style.opacity = '1'; b.style.pointerEvents = 'all'; const ttSubs = [...new Set(Object.values(ttCyc).flat())]; const exclude = ["Community Group", "Wellbeing", "Sport"]; ttSubs.forEach(sub => { if(!exclude.includes(sub) && !sData.find(s => s.name.toLowerCase() === sub.toLowerCase())) { sData.push({ id: Date.now().toString() + Math.random().toString().slice(2,8), name: sub, status: 2, homework: [], notes: "", grades: [], photos: []}); } }); sDat(); rendSet(); renderHome(false); alert("Analysis Complete!\n\nYour 10-day cycle has been synced and missing subjects have been automatically added to your tracker."); }, 2500); }
 
     const ttCyc = { 0:["Community Group","Economics","Economics","English","English","General Mathematics","General Mathematics","Community Group"], 1:["Community Group","Pre mathematical methods","Wellbeing","Religious education","Religious education","Economics","English","Community Group"], 2:["Community Group","Legal studies","Legal studies","Physics","Physics","Pre mathematical methods","Pre mathematical methods","Community Group"], 3:["Community Group","Economics","Economics","General Mathematics","General Mathematics","English","English","Community Group"], 4:["Community Group","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Physics","Physics","Community Group"], 7:["Community Group","English","English","Economics","Economics","General Mathematics","General Mathematics","Community Group"], 8:["Community Group","Physics","Wellbeing","Religious education","Religious education","Legal studies","General Mathematics","Community Group"], 9:["Community Group","Physics","Physics","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Community Group"], 10:["Community Group","English","English","General Mathematics","General Mathematics","Economics","Economics","Community Group"], 11:["Community Group","Physics","Physics","Legal studies","Legal studies","Pre mathematical methods","Pre mathematical methods","Community Group"] };
     const sLab = ["Morning Group", "Session 1", "Session 2", "Session 3", "Session 4", "Session 5", "Session 6", "Afternoon Group"];
@@ -408,30 +439,42 @@
     const stD = [ { c: "rgba(239, 68, 68, 0.12)", h: "#EF4444", l: "Falling behind" }, { c: "rgba(245, 158, 11, 0.12)", h: "#F59E0B", l: "Behind" }, { c: "var(--card-bg)", h: "#94A3B8", l: "Up to date" }, { c: "rgba(16, 185, 129, 0.12)", h: "#10B981", l: "Ahead" }, { c: "rgba(5, 150, 105, 0.15)", h: "#059669", l: "Well ahead" } ];
 
     window.onload = () => { 
-      try { appSetApply(); renderHome(true); } catch(e) {} 
-      
+      try { appSetApply(); } catch(e) {} 
       const splash = $('splash');
-      const titleText = "School Tracker";
-      splash.innerHTML = titleText.split('').map(c => `<span class="splash-letter">${c===' '?'&nbsp;':c}</span>`).join('');
-      
-      const letters = $$('.splash-letter');
-      
       setTimeout(() => {
-        pSnd('swoosh');
-        letters.forEach((l, i) => {
-          l.style.setProperty('--tx', `${(Math.random() - 0.5) * 500}px`);
-          l.style.setProperty('--ty', `${(Math.random() - 0.5) * 500 - 100}px`);
-          l.style.setProperty('--rz', `${(Math.random() - 0.5) * 720}deg`);
-          l.style.animationDelay = `${i * 0.015}s`;
-          l.classList.add('swirl');
-        });
-        
-        setTimeout(() => {
-          splash.style.opacity = '0';
-          setTimeout(() => splash.style.display = 'none', 300);
-        }, letters.length * 15 + 400);
-      }, 300); 
+        splash.style.opacity = '0';
+        setTimeout(() => { 
+          splash.style.display = 'none'; 
+          if(uData && uData.f) {
+            renderHome(true); openSc('home-screen');
+          } else {
+            openSc('onboarding-screen');
+          }
+        }, 400);
+      }, 600); 
     };
+
+    function finishOnboarding() {
+      const f = $('ob-first').value.trim();
+      const l = $('ob-last').value.trim();
+      const s = $('ob-school').value;
+      if(!f || !l) { pSnd('tick'); return; }
+      pSnd('success');
+      uData = { f, l, s };
+      localStorage.setItem('org_user', JSON.stringify(uData));
+      renderHome(true);
+      openSc('home-screen');
+    }
+
+    function updGreet() {
+      if(!uData || !uData.f) return;
+      const hr = new Date().getHours();
+      let g = 'Good evening';
+      if(hr < 12) g = 'Good morning';
+      else if(hr < 18) g = 'Good afternoon';
+      
+      $('user-greeting').innerHTML = `${g}, ${uData.f} ${uData.l} <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color: var(--accent); opacity: 0.8; margin-left: 2px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>`;
+    }
 
     function sDat() { localStorage.setItem('org_subjects', JSON.stringify(sData)); localStorage.setItem('org_global', JSON.stringify(gNotes)); localStorage.setItem('org_deadlines', JSON.stringify(dlData)); localStorage.setItem('org_ring', JSON.stringify(ring)); updRUI(); updHUI(); }
     function addRSc() { if(ring.score < 5) { ring.score++; sDat(); } }
@@ -458,7 +501,7 @@
 
     function renderHome(isInit = false) {
       const a = isInit ? 'cascade-item' : '';
-      if(isInit) { updRUI(); updHUI(); }
+      if(isInit) { updRUI(); updHUI(); updGreet(); }
 
       if(dlData.length > 0) {
         $('deadline-section').style.display = 'block'; dlData.sort((a,b) => gDD(a.date) - gDD(b.date));
