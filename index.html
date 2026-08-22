@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- Tesseract.js OCR Engine -->
+  <!-- 🔥 Tesseract.js OCR Engine 🔥 -->
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
   <style>
@@ -237,13 +237,13 @@
     <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height: 80vh; text-align:center;">
       <div class="app-card cascade-item d-1" style="padding: 28px 24px; width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 16px;">
         <h1 style="font-size: 28px; margin-bottom: 4px;">Smart Setup</h1>
-        <p style="color: var(--text-secondary); font-weight: 500; margin-top: 0; margin-bottom: 12px;">Upload a screenshot of your Simon timetable grid to auto-detect your 10-day schedule and subjects.</p>
+        <p style="color: var(--text-secondary); font-weight: 500; margin-top: 0; margin-bottom: 12px;">Upload a screenshot of your Iona College timetable to automatically build your subjects and dashboard.</p>
 
         <input type="file" id="ob-tt-upload" accept="image/*" style="display:none;" onchange="handleTimetableImage(event, 'ob')">
         
         <button id="ob-scan-btn" class="add-btn full-w-input" style="padding: 16px; margin-top: 8px; font-size: 16px; display: flex; justify-content: center; align-items: center; gap: 8px;" onclick="$('ob-tt-upload').click()">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-          Scan Simon Timetable
+          Scan 10-Day Timetable
         </button>
         
         <button class="add-btn btn-grey full-w-input" style="padding: 16px; font-size: 16px;" onclick="finishOnboarding()">Use Standard Subjects</button>
@@ -408,7 +408,7 @@
     <div class="input-group cascade-item d-7"><input type="text" id="new-subject" placeholder="New Subject Name..."><button class="add-btn" onclick="addSub()">Create</button></div>
     <div id="settings-subjects-list"></div>
 
-    <!-- RED SIGN OUT & RESET BUTTON -->
+    <!-- 🔥 RED SIGN OUT & RESET BUTTON 🔥 -->
     <div class="cascade-item" style="margin-top: 32px; margin-bottom: 20px;">
       <button class="add-btn btn-danger full-w-input" style="padding: 16px; border-radius: 16px; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="signOut()">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
@@ -544,6 +544,7 @@
           .map(l => l.trim())
           .filter(l => l.length > 0);
 
+        // Extract class code tokens matching Simon format (e.g. 10OUT1A, 11GMA1A, 10CG1F)
         const detectedCodes = [];
         const codeRegex = /\b([0-9]{1,2}[A-Z]{2,4}[0-9]?[A-Z0-9]?)\b/gi;
 
@@ -554,6 +555,7 @@
           }
         });
 
+        // Reconstruct 10-Day Cycle (Day 1-5 = indices 0-4, Day 6-10 = indices 7-11)
         const daySlots = [0, 1, 2, 3, 4, 7, 8, 9, 10, 11];
         let codeIdx = 0;
 
@@ -572,6 +574,7 @@
           });
         }
 
+        // Dynamically populate Subjects from OCR output
         const ttSubs = [...new Set(Object.values(ttCyc).flat())];
         const exclude = ["Community Group", "Wellbeing", "Sport", "Study Period"];
         
@@ -609,7 +612,7 @@
           } else {
             rendSet();
             renderHome(false);
-            alert("Simon Timetable Parsed!\n\nYour 10-day cycle and enrolled subjects have been updated across your dashboard.");
+            alert("Simon Timetable Parsed!\n\nYour 10-day cycle and enrolled subjects have been updated.");
           }
         }, 1200);
 
