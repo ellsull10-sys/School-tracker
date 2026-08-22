@@ -14,6 +14,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tesseract.js OCR Engine -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
   <style>
     /* 💎 NATIVE iOS APP STORE DESIGN SYSTEM 💎 */
@@ -43,7 +46,6 @@
     
     h1, h2, h3, .subject-title, .simon-action, .ring-text, .dl-days { font-family: 'Outfit', sans-serif; letter-spacing: -0.4px; }
     
-    /* Static Splash Screen */
     #splash { position: fixed; inset: 0; background: var(--bg-base); color: var(--text-primary); z-index: 9999; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; transition: opacity 0.4s ease; }
     
     #rotate-lock { display: none; position: fixed; inset: 0; z-index: 100000; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); color: #FFFFFF; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px; font-weight: 700; font-size: 22px; line-height: 1.3; }
@@ -235,13 +237,13 @@
     <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height: 80vh; text-align:center;">
       <div class="app-card cascade-item d-1" style="padding: 28px 24px; width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 16px;">
         <h1 style="font-size: 28px; margin-bottom: 4px;">Smart Setup</h1>
-        <p style="color: var(--text-secondary); font-weight: 500; margin-top: 0; margin-bottom: 12px;">Upload a screenshot of your Iona College timetable to automatically build your subjects and dashboard.</p>
+        <p style="color: var(--text-secondary); font-weight: 500; margin-top: 0; margin-bottom: 12px;">Upload a screenshot of your Simon timetable grid to auto-detect your 10-day schedule and subjects.</p>
 
-        <input type="file" id="ob-tt-upload" accept="image/*" style="display:none;" onchange="handleObTTScan(event)">
+        <input type="file" id="ob-tt-upload" accept="image/*" style="display:none;" onchange="handleTimetableImage(event, 'ob')">
         
         <button id="ob-scan-btn" class="add-btn full-w-input" style="padding: 16px; margin-top: 8px; font-size: 16px; display: flex; justify-content: center; align-items: center; gap: 8px;" onclick="$('ob-tt-upload').click()">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-          Scan 10-Day Timetable
+          Scan Simon Timetable
         </button>
         
         <button class="add-btn btn-grey full-w-input" style="padding: 16px; font-size: 16px;" onclick="finishOnboarding()">Use Standard Subjects</button>
@@ -397,8 +399,8 @@
 
     <h3 class="cascade-item d-4">Timetable Scanner</h3>
     <div class="app-card setting-row cascade-item d-5">
-      <p style="font-size:14px; color:var(--text-secondary); margin-top:0; margin-bottom:12px; line-height:1.4;">Upload a screenshot of your 10-day timetable to automatically synchronize your schedule and classes.</p>
-      <input type="file" id="tt-upload" accept="image/*" style="display:none;" onchange="handleTTScan(event)">
+      <p style="font-size:14px; color:var(--text-secondary); margin-top:0; margin-bottom:12px; line-height:1.4;">Upload a screenshot of your 10-day Simon timetable grid to automatically detect and synchronize your classes.</p>
+      <input type="file" id="tt-upload" accept="image/*" style="display:none;" onchange="handleTimetableImage(event, 'settings')">
       <button id="scan-tt-btn" class="add-btn" style="width:100%; padding:12px; display:flex; justify-content:center; align-items:center; gap:8px;" onclick="$('tt-upload').click()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Scan Timetable</button>
     </div>
 
@@ -406,7 +408,7 @@
     <div class="input-group cascade-item d-7"><input type="text" id="new-subject" placeholder="New Subject Name..."><button class="add-btn" onclick="addSub()">Create</button></div>
     <div id="settings-subjects-list"></div>
 
-    <!-- 🔥 RED SIGN OUT & RESET BUTTON 🔥 -->
+    <!-- RED SIGN OUT & RESET BUTTON -->
     <div class="cascade-item" style="margin-top: 32px; margin-bottom: 20px;">
       <button class="add-btn btn-danger full-w-input" style="padding: 16px; border-radius: 16px; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="signOut()">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
@@ -420,7 +422,6 @@
     const $$ = sel => document.querySelectorAll(sel);
     const getSub = id => sData.find(s => s.id === id);
 
-    // Default subjects list
     let sData = JSON.parse(localStorage.getItem('org_subjects')) || [
       "English", "Mathematics", "Science", "Humanities", "Health & Physical Education (HPE)", "Religious Education"
     ].map(n => ({ id: n.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase(), name: n, status: 2, homework: [], notes: "", grades: [], photos: [] }));
@@ -457,21 +458,55 @@
     function handleBgUp(e) { const f = e.target.files[0]; if(!f) return; pSnd('pop'); const r = new FileReader(); r.onload = (ev) => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const s = Math.min(1400/img.width, 1); c.width = img.width*s; c.height = img.height*s; c.getContext('2d').drawImage(img,0,0,c.width,c.height); appSet.bgImage = c.toDataURL('image/jpeg',0.6); appSet.bgEnabled = true; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }; img.src = ev.target.result; }; r.readAsDataURL(f); }
     function resetBg() { pSnd('tick'); appSet.bgImage = 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=100&w=1200&auto=format&fit=crop'; appSet.bgEnabled = false; appSet.bgOpacity = 50; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }
 
-    // 🔥 IONA COLLEGE GEELONG CURRICULUM POOL 🔥
-    const ionaCurriculum = [
-      // Core Subjects
-      "English", "Mathematics", "Science", "Humanities", "Health & Physical Education (HPE)", "Religious Education", "Learning to Learn", "Language: Indonesian",
-      // HPE Electives
-      "Coaching & Leadership", "Global Health", "Outdoor Education", "Recreational Pursuits", "Sport Science",
-      // Science Electives & Pathways
-      "Aquatic Science", "Psychology", "Physics", "Chemistry", "Biology",
-      // Arts Electives
-      "Drama (Page to Stage)", "Media (Lights Camera Action)", "Music Repertoire", "Visual Art", "Digital Art",
-      // Technology & STEM
-      "STEM", "Digital Technology", "Food Technology", "Textiles (Non-Resistant)", "Woodwork (Resistant Materials)", "Metal, Plastics & Electronics",
-      // Senior VCE / VET & Mathematics Pathways
-      "General Mathematics", "Pre Mathematical Methods", "Economics", "Legal Studies"
+    // 🔥 IONA COLLEGE SIMON CODE MAPPING DICTIONARY 🔥
+    const codeMap = [
+      { tag: 'CG', name: 'Community Group' },
+      { tag: 'WEL', name: 'Wellbeing' },
+      { tag: 'ESE', name: 'English' },
+      { tag: 'ENG', name: 'English' },
+      { tag: 'GMA', name: 'General Mathematics' },
+      { tag: 'MMA', name: 'Pre Mathematical Methods' },
+      { tag: 'MAT', name: 'Mathematics' },
+      { tag: 'MTH', name: 'Mathematics' },
+      { tag: 'SCH', name: 'Chemistry' },
+      { tag: 'SPH', name: 'Physics' },
+      { tag: 'SBI', name: 'Biology' },
+      { tag: 'SAQ', name: 'Aquatic Science' },
+      { tag: 'SPS', name: 'Psychology' },
+      { tag: 'SCI', name: 'Science' },
+      { tag: 'OUT', name: 'Outdoor Education' },
+      { tag: 'HPE', name: 'Health & Physical Education (HPE)' },
+      { tag: 'REC', name: 'Recreational Pursuits' },
+      { tag: 'SPS', name: 'Sport Science' },
+      { tag: 'COA', name: 'Coaching & Leadership' },
+      { tag: 'GLH', name: 'Global Health' },
+      { tag: 'DTR', name: 'Woodwork (Resistant Materials)' },
+      { tag: 'DTN', name: 'Textiles (Non-Resistant)' },
+      { tag: 'FOT', name: 'Food Technology' },
+      { tag: 'DIT', name: 'Digital Technology' },
+      { tag: 'STM', name: 'STEM' },
+      { tag: 'MPE', name: 'Metal, Plastics & Electronics' },
+      { tag: 'RED', name: 'Religious Education' },
+      { tag: 'HUM', name: 'Humanities' },
+      { tag: 'IND', name: 'Language: Indonesian' },
+      { tag: 'LTL', name: 'Learning to Learn' },
+      { tag: 'DRA', name: 'Drama (Page to Stage)' },
+      { tag: 'MED', name: 'Media (Lights Camera Action)' },
+      { tag: 'MUS', name: 'Music Repertoire' },
+      { tag: 'ART', name: 'Visual Art' },
+      { tag: 'DAR', name: 'Digital Art' },
+      { tag: 'ECO', name: 'Economics' },
+      { tag: 'LEG', name: 'Legal Studies' }
     ];
+
+    function mapCodeToSubject(token) {
+      if (!token) return 'Community Group';
+      const clean = token.toUpperCase().replace(/[^A-Z0-9]/g, '');
+      for (let m of codeMap) {
+        if (clean.includes(m.tag)) return m.name;
+      }
+      return clean.length > 3 ? clean : 'Study Period';
+    }
 
     let ttCyc = JSON.parse(localStorage.getItem('org_ttcyc')) || { 
       0:["Community Group","Economics","Economics","English","English","General Mathematics","General Mathematics","Community Group"], 
@@ -489,46 +524,107 @@
     const sLab = ["Morning Group", "Session 1", "Session 2", "Session 3", "Session 4", "Session 5", "Session 6", "Afternoon Group"];
     function getTT() { const d = Math.floor((new Date().setHours(0,0,0,0) - new Date(2026, 7, 10).setHours(0,0,0,0)) / 86400000); return d < 0 ? null : ttCyc[d % 14] || null; }
 
-    function parseAndSyncTimetable() {
-      // Intelligently sync subjects from timetable schedule
-      const ttSubs = [...new Set(Object.values(ttCyc).flat())];
-      const exclude = ["Community Group", "Wellbeing", "Sport"];
-      
-      ttSubs.forEach(sub => {
-        if(!exclude.includes(sub) && !sData.find(s => s.name.toLowerCase() === sub.toLowerCase())) {
-          sData.push({ id: sub.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase() + '-' + Date.now().toString().slice(-4), name: sub, status: 2, homework: [], notes: "", grades: [], photos: [] });
+    // 🔥 REAL IN-BROWSER TESSERACT OCR TIMETABLE PARSER 🔥
+    async function handleTimetableImage(event, source) {
+      const file = event.target.files[0];
+      if (!file) return;
+      pSnd('pop');
+
+      const btn = source === 'ob' ? $('ob-scan-btn') : $('scan-tt-btn');
+      const origText = btn.innerHTML;
+      btn.innerHTML = '⏳ Reading Timetable (OCR)...';
+      btn.style.opacity = '0.7';
+      btn.style.pointerEvents = 'none';
+
+      try {
+        const worker = await Tesseract.createWorker('eng');
+        const ret = await worker.recognize(file);
+        await worker.terminate();
+
+        const lines = ret.data.text.split('\n')
+          .map(l => l.trim())
+          .filter(l => l.length > 0);
+
+        // Extract class code tokens matching Simon format (e.g. 10OUT1A, 11GMA1A, 10CG1F)
+        const detectedCodes = [];
+        const codeRegex = /\b([0-9]{1,2}[A-Z]{2,4}[0-9]?[A-Z0-9]?)\b/gi;
+
+        lines.forEach(line => {
+          const matches = line.match(codeRegex);
+          if (matches) {
+            matches.forEach(m => detectedCodes.push(m.toUpperCase()));
+          }
+        });
+
+        // Reconstruct 10-Day Cycle (Day 1-5 = indices 0-4, Day 6-10 = indices 7-11)
+        const daySlots = [0, 1, 2, 3, 4, 7, 8, 9, 10, 11];
+        let codeIdx = 0;
+
+        if (detectedCodes.length >= 20) {
+          daySlots.forEach(d => {
+            ttCyc[d] = [];
+            for (let s = 0; s < 8; s++) {
+              if (s === 0 || s === 7) {
+                ttCyc[d].push('Community Group');
+              } else {
+                const rawCode = detectedCodes[codeIdx % detectedCodes.length];
+                ttCyc[d].push(mapCodeToSubject(rawCode));
+                codeIdx++;
+              }
+            }
+          });
         }
-      });
-      localStorage.setItem('org_ttcyc', JSON.stringify(ttCyc));
-      sDat();
-    }
 
-    // SETTINGS SCANNER
-    function handleTTScan(e) {
-      const f = e.target.files[0]; if(!f) return; pSnd('pop');
-      const b = $('scan-tt-btn'); const oH = b.innerHTML;
-      b.innerHTML = '⏳ Analyzing Iona Timetable...'; b.style.opacity = '0.7'; b.style.pointerEvents = 'none';
-      setTimeout(() => {
-        pSnd('success'); b.innerHTML = oH; b.style.opacity = '1'; b.style.pointerEvents = 'all';
-        parseAndSyncTimetable();
-        rendSet(); renderHome(false);
-        alert("Iona Timetable Synced!\n\nYour 10-day cycle and curriculum subjects have been updated across your dashboard.");
-      }, 2200);
-    }
+        // Dynamically populate Subjects from OCR output
+        const ttSubs = [...new Set(Object.values(ttCyc).flat())];
+        const exclude = ["Community Group", "Wellbeing", "Sport", "Study Period"];
+        
+        ttSubs.forEach(sub => {
+          if (!exclude.includes(sub) && !sData.find(s => s.name.toLowerCase() === sub.toLowerCase())) {
+            sData.push({ 
+              id: sub.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase() + '-' + Date.now().toString().slice(-4), 
+              name: sub, 
+              status: 2, 
+              homework: [], 
+              notes: "", 
+              grades: [], 
+              photos: [] 
+            });
+          }
+        });
 
-    // ONBOARDING SCANNER
-    function handleObTTScan(e) {
-      const f = e.target.files[0]; if(!f) return; pSnd('pop');
-      const b = $('ob-scan-btn');
-      b.innerHTML = '⏳ Analyzing Timetable...'; b.style.opacity = '0.7'; b.style.pointerEvents = 'none';
-      setTimeout(() => {
-         parseAndSyncTimetable();
-         b.innerHTML = '✅ Timetable Imported!';
-         b.style.background = 'var(--success)';
-         b.style.color = '#FFF';
-         pSnd('success');
-         setTimeout(() => { finishOnboarding(); }, 1200);
-      }, 2000);
+        localStorage.setItem('org_ttcyc', JSON.stringify(ttCyc));
+        sDat();
+        pSnd('success');
+
+        btn.innerHTML = '✅ Schedule Synchronized!';
+        btn.style.background = 'var(--success)';
+        btn.style.color = '#FFF';
+
+        setTimeout(() => {
+          btn.innerHTML = origText;
+          btn.style.opacity = '1';
+          btn.style.pointerEvents = 'all';
+          btn.style.background = '';
+          btn.style.color = '';
+
+          if (source === 'ob') {
+            finishOnboarding();
+          } else {
+            rendSet();
+            renderHome(false);
+            alert("Simon Timetable Parsed!\n\nYour 10-day cycle and enrolled subjects have been updated across your dashboard.");
+          }
+        }, 1200);
+
+      } catch (err) {
+        console.error("OCR Parse Error: ", err);
+        btn.innerHTML = origText;
+        btn.style.opacity = '1';
+        btn.style.pointerEvents = 'all';
+        pSnd('tick');
+        alert("Could not clearly read the timetable grid. Please ensure your screenshot is clear and uncropped, or enter subjects manually.");
+      }
     }
 
     let aCtx;
@@ -575,7 +671,10 @@
       localStorage.setItem('org_user', JSON.stringify(uData));
       
       if (sData.length === 0) {
-        parseAndSyncTimetable();
+        sData = [
+          "English", "Mathematics", "Science", "Humanities", "Health & Physical Education (HPE)", "Religious Education"
+        ].map(n => ({ id: n.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase(), name: n, status: 2, homework: [], notes: "", grades: [], photos: [] }));
+        sDat();
       }
       
       renderHome(true);
