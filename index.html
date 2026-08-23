@@ -46,6 +46,7 @@
     
     h1, h2, h3, .subject-title, .simon-action, .ring-text, .dl-days { font-family: 'Outfit', sans-serif; letter-spacing: -0.4px; }
     
+    /* Static Splash Screen */
     #splash { position: fixed; inset: 0; background: var(--bg-base); color: var(--text-primary); z-index: 9999; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; transition: opacity 0.4s ease; }
     
     #rotate-lock { display: none; position: fixed; inset: 0; z-index: 100000; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); color: #FFFFFF; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px; font-weight: 700; font-size: 22px; line-height: 1.3; }
@@ -405,6 +406,7 @@
     </div>
 
     <h3 class="cascade-item d-6">Subject Manager</h3>
+    <p style="font-size:13px; color:var(--text-secondary); margin-top:0; margin-bottom:12px; padding: 0 16px;">Tap a subject to rename it.</p>
     <div class="input-group cascade-item d-7"><input type="text" id="new-subject" placeholder="New Subject Name..."><button class="add-btn" onclick="addSub()">Create</button></div>
     <div id="settings-subjects-list"></div>
 
@@ -465,23 +467,24 @@
       { tag: 'WEL', name: 'Wellbeing' },
       { tag: 'ESE', name: 'English' },
       { tag: 'ENG', name: 'English' },
-      { tag: 'GMA', name: 'General Mathematics' },
-      { tag: 'MMA', name: 'Pre Mathematical Methods' },
+      { tag: 'LTL', name: 'Learning to Learn' },
       { tag: 'MAT', name: 'Mathematics' },
       { tag: 'MTH', name: 'Mathematics' },
+      { tag: 'NUM', name: 'Numeracy' },
       { tag: 'SCH', name: 'Chemistry' },
       { tag: 'SPH', name: 'Physics' },
       { tag: 'SBI', name: 'Biology' },
       { tag: 'SAQ', name: 'Aquatic Science' },
-      { tag: 'SPS', name: 'Psychology' },
+      { tag: 'PSY', name: 'Psychology' },
       { tag: 'SCI', name: 'Science' },
       { tag: 'OUT', name: 'Outdoor Education' },
       { tag: 'HPE', name: 'Health & Physical Education (HPE)' },
       { tag: 'REC', name: 'Recreational Pursuits' },
+      { tag: 'SPS', name: 'Sport Science' },
       { tag: 'COA', name: 'Coaching & Leadership' },
       { tag: 'GLH', name: 'Global Health' },
-      { tag: 'DTR', name: 'Woodwork (Resistant Materials)' },
-      { tag: 'DTN', name: 'Textiles (Non-Resistant)' },
+      { tag: 'DTR', name: 'Woodwork' },
+      { tag: 'TEX', name: 'Textiles' },
       { tag: 'FOT', name: 'Food Technology' },
       { tag: 'DIT', name: 'Digital Technology' },
       { tag: 'STM', name: 'STEM' },
@@ -489,18 +492,21 @@
       { tag: 'RED', name: 'Religious Education' },
       { tag: 'HUM', name: 'Humanities' },
       { tag: 'IND', name: 'Language: Indonesian' },
-      { tag: 'LTL', name: 'Learning to Learn' },
       { tag: 'DRA', name: 'Drama (Page to Stage)' },
       { tag: 'MED', name: 'Media (Lights Camera Action)' },
       { tag: 'MUS', name: 'Music Repertoire' },
       { tag: 'ART', name: 'Visual Art' },
       { tag: 'DAR', name: 'Digital Art' },
+      { tag: 'GMA', name: 'General Mathematics' },
+      { tag: 'MMA', name: 'Pre Mathematical Methods' },
       { tag: 'ECO', name: 'Economics' },
-      { tag: 'LEG', name: 'Legal Studies' }
+      { tag: 'LEG', name: 'Legal Studies' },
+      { tag: 'VCE', name: 'VCE Pathway' },
+      { tag: 'VET', name: 'VET Pathway' }
     ];
 
     function mapCodeToSubject(token) {
-      if (!token) return 'Community Group';
+      if (!token) return 'Study Period';
       const clean = token.toUpperCase().replace(/[^A-Z0-9]/g, '');
       for (let m of codeMap) {
         if (clean.includes(m.tag)) return m.name;
@@ -526,8 +532,7 @@
 
     // 🔥 SMART SUBJECT DEDUPLICATION & SYNC 🔥
     function syncSubjectsWithTimetable(detectedSubs) {
-      // 1. Identify specific sub-categories from OCR
-      const specificMaths = ["Pre Mathematical Methods", "General Mathematics"];
+      const specificMaths = ["Pre Mathematical Methods", "General Mathematics", "Numeracy", "Advanced Mathematics"];
       const specificHumanities = ["Legal Studies", "Economics"];
       const specificSciences = ["Physics", "Chemistry", "Biology", "Aquatic Science", "Psychology"];
       const specificHPE = ["Outdoor Education", "Coaching & Leadership", "Global Health", "Recreational Pursuits", "Sport Science"];
@@ -537,16 +542,14 @@
       const hasSpecificSci = detectedSubs.some(s => specificSciences.includes(s));
       const hasSpecificHpe = detectedSubs.some(s => specificHPE.includes(s));
 
-      // 2. Remove generic placeholders if a specific subject was found
       if (hasSpecificMath) sData = sData.filter(s => s.name !== "Mathematics");
       if (hasSpecificHum) sData = sData.filter(s => s.name !== "Humanities");
       if (hasSpecificSci) sData = sData.filter(s => s.name !== "Science");
       if (hasSpecificHpe) sData = sData.filter(s => s.name !== "Health & Physical Education (HPE)");
 
-      // 3. Keep Wellbeing, exclude Community Group & Study Period
-      const exclude = ["Community Group", "Sport", "Study Period"];
+      // Keep Wellbeing, exclude CG and Sport/Study Period
+      const exclude = ["Community Group", "Study Period", "Sport"];
       
-      // 4. Inject new tracked subjects
       detectedSubs.forEach(sub => {
         if (!exclude.includes(sub) && !sData.find(s => s.name.toLowerCase() === sub.toLowerCase())) {
           sData.push({ 
@@ -580,22 +583,30 @@
         const detectedCodes = [];
         const codeRegex = /\b([0-9]{1,2}[A-Z]{2,4}[0-9]?[A-Z0-9]?)\b/gi;
 
+        // 🔥 FILTER OUT "CG" TO PREVENT DOUBLE PERIODS 🔥
         lines.forEach(line => {
           const matches = line.match(codeRegex);
-          if (matches) matches.forEach(m => detectedCodes.push(m.toUpperCase()));
+          if (matches) {
+            matches.forEach(m => {
+                const upperM = m.toUpperCase();
+                if(mapCodeToSubject(upperM) !== 'Community Group') {
+                    detectedCodes.push(upperM);
+                }
+            });
+          }
         });
 
         const daySlots = [0, 1, 2, 3, 4, 7, 8, 9, 10, 11];
         let codeIdx = 0;
 
-        if (detectedCodes.length >= 20) {
+        if (detectedCodes.length >= 10) {
           daySlots.forEach(d => {
             ttCyc[d] = [];
             for (let s = 0; s < 8; s++) {
               if (s === 0 || s === 7) {
-                ttCyc[d].push('Community Group');
+                ttCyc[d].push('Community Group'); // Lock CG perfectly into Period 1 and 8
               } else {
-                const rawCode = detectedCodes[codeIdx % detectedCodes.length];
+                const rawCode = detectedCodes[codeIdx] || '';
                 ttCyc[d].push(mapCodeToSubject(rawCode));
                 codeIdx++;
               }
@@ -700,23 +711,12 @@
       $('user-greeting').innerHTML = `${g}, ${uData.f} ${uData.l} <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color: var(--accent); opacity: 0.8; margin-left: 2px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>`;
     }
 
+    // 🔥 SIGNOUT & RESET FUNCTION 🔥
     function signOut() {
       pSnd('tick');
-      if(confirm("Are you sure you want to sign out? This will reset your profile and tracker data.")) {
+      if(confirm("Are you sure you want to sign out? This will reset your profile and wipe all tracker data.")) {
         localStorage.clear();
-        uData = null;
-        sData = [
-          "English", "Mathematics", "Science", "Humanities", "Health & Physical Education (HPE)", "Religious Education"
-        ].map(n => ({ id: n.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase(), name: n, status: 2, homework: [], notes: "", grades: [], photos: [] }));
-        gNotes = [];
-        dlData = [];
-        ring = { date: new Date().toDateString(), score: 0 };
-        appSet = { bgEnabled: false, bgOpacity: 50, bgImage: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=100&w=1200&auto=format&fit=crop' };
-        
-        $('ob-first').value = '';
-        $('ob-last').value = '';
-        appSetApply();
-        openSc('onboarding-screen');
+        window.location.reload(); // Instantly reloads the entire PWA back to the initial Welcome splash.
       }
     }
 
@@ -868,7 +868,32 @@
     let tI; let tL = 25*60; let isR = false; const pI = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`, psI = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
     function toggleTmr() { const w = $('timer-icon'), r = $('timer-progress'); pSnd('tick'); if(isR){ clearInterval(tI); isR=false; w.innerHTML=pI; } else { isR=true; w.innerHTML=psI; tI=setInterval(()=>{ tL--; let m=Math.floor(tL/60),s=tL%60; $('timer-display').innerText=`${m}:${s<10?'0':''}${s}`; r.style.strokeDasharray=`${(tL/(25*60))*100}, 100`; if(tL<=0){ clearInterval(tI); isR=false; w.innerHTML=pI; tL=25*60; r.style.strokeDasharray=`100, 100`; $('timer-display').innerText=`25:00`; pSnd('success'); addRSc(); alert("Focus complete!"); } }, 1000); } }
 
-    function rendSet() { $('settings-subjects-list').innerHTML = sData.map((s,i) => `<div class="list-item app-card cascade-item" style="animation-delay: ${0.20 + (i*0.04)}s;"><div style="font-weight: 500;">${s.name}</div><button class="delete-btn" onclick="delSub('${s.id}')">×</button></div>`).join(''); }
+    // 🔥 EDITABLE SUBJECT NAMES FEATURE 🔥
+    function renameSub(id) {
+      pSnd('pop');
+      const sub = getSub(id);
+      const newName = prompt("Rename subject:", sub.name);
+      if(newName && newName.trim() !== "") {
+        sub.name = newName.trim();
+        sDat();
+        rendSet();
+        if(!$('detail-screen').classList.contains('active')){
+          renderHome(false);
+        }
+      }
+    }
+
+    function rendSet() { 
+      $('settings-subjects-list').innerHTML = sData.map((s,i) => `
+        <div class="list-item app-card cascade-item" style="animation-delay: ${0.20 + (i*0.04)}s;">
+          <div style="font-weight: 500; flex: 1; cursor: pointer; padding-right: 12px;" onclick="renameSub('${s.id}')">
+            ${s.name} <span style="font-size:12px; color:var(--text-secondary); margin-left: 4px;">✎</span>
+          </div>
+          <button class="delete-btn" onclick="delSub('${s.id}')">×</button>
+        </div>
+      `).join(''); 
+    }
+    
     function addSub() { pSnd('pop'); const i=$('new-subject'); if(!i.value)return; sData.push({ id: Date.now().toString(), name: i.value, status: 2, homework: [], notes: "", grades: [], photos: []}); i.value=''; sDat(); rendSet(); }
     function delSub(id) { pSnd('tick'); if(confirm("Delete subject?")) { sData = sData.filter(s => s.id !== id); sDat(); rendSet(); } }
   </script>
