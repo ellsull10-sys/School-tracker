@@ -267,7 +267,7 @@
 
       <button class="icon-btn" onclick="openSc('settings-screen')">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+          <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
           <circle cx="12" cy="12" r="3"></circle>
         </svg>
       </button>
@@ -435,7 +435,7 @@
   </div>
 
   <script>
-    // 🔥 SAFE ARRAY HELPER FOR FIREBASE MAGIC 🔥
+    // 🔥 SAFE ARRAY HELPER TO PREVENT SPLASH SCREEN FREEZE 🔥
     const safeArr = obj => obj ? (Array.isArray(obj) ? obj : Object.values(obj)) : [];
 
     // 🔥 YOUR ACTIVE FIREBASE CONFIG 🔥
@@ -455,26 +455,40 @@
     let isIncomingSync = false;
 
     try {
-      if (firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY") {
-        firebase.initializeApp(firebaseConfig);
-        db = firebase.database();
-        syncActive = true;
-      }
+      firebase.initializeApp(firebaseConfig);
+      db = firebase.database();
+      syncActive = true;
     } catch(err) {
       console.error("Firebase init failed:", err);
     }
 
     const $ = id => document.getElementById(id);
     const $$ = sel => document.querySelectorAll(sel);
+
+    // 🔥 BULLETPROOF DATA LOADING 🔥
+    let rawSubs = JSON.parse(localStorage.getItem('org_subjects'));
+    let sData = rawSubs ? safeArr(rawSubs) : null;
+    
+    if(!sData || sData.length === 0) {
+      sData = [
+        "English", "Mathematics", "Science", "Humanities", "Health & Physical Education (HPE)", "Religious Education"
+      ].map(n => ({ id: n.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase(), name: n, status: 2, homework: [], notes: "", grades: [], photos: [] }));
+    }
+    
+    // This absolutely ensures the app never crashes reading data
+    sData = sData.map(s => ({
+        ...s,
+        homework: safeArr(s.homework),
+        notes: s.notes || "",
+        grades: safeArr(s.grades),
+        photos: safeArr(s.photos)
+    }));
+
     const getSub = id => sData.find(s => s.id === id);
 
-    let sData = JSON.parse(localStorage.getItem('org_subjects')) || [
-      "English", "Mathematics", "Science", "Humanities", "Health & Physical Education (HPE)", "Religious Education"
-    ].map(n => ({ id: n.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase(), name: n, status: 2, homework: [], notes: "", grades: [], photos: [] }));
-    sData.forEach(s => { if(!s.photos) s.photos=[]; }); 
-
-    let gNotes = JSON.parse(localStorage.getItem('org_global')) || []; 
-    let dlData = JSON.parse(localStorage.getItem('org_deadlines')) || []; 
+    let gNotes = safeArr(JSON.parse(localStorage.getItem('org_global'))); 
+    let dlData = safeArr(JSON.parse(localStorage.getItem('org_deadlines'))); 
+    
     let tStr = new Date().toDateString(); 
     let ring = JSON.parse(localStorage.getItem('org_ring')) || { date: tStr, score: 0 }; 
     if(ring.date !== tStr) ring = { date: tStr, score: 0 }; 
@@ -681,19 +695,6 @@
       }
     }
 
-    let aCtx;
-    function pSnd(t) {
-      if(!aCtx) aCtx = new (window.AudioContext || window.webkitAudioContext)(); if(aCtx.state === 'suspended') aCtx.resume();
-      const o = aCtx.createOscillator(), g = aCtx.createGain(), n = aCtx.currentTime; o.connect(g); g.connect(aCtx.destination);
-      if(t==='tick') { o.type='sine'; o.frequency.setValueAtTime(800,n); o.frequency.exponentialRampToValueAtTime(1400,n+.08); g.gain.setValueAtTime(.15,n); g.gain.exponentialRampToValueAtTime(.01,n+.08); o.start(); o.stop(n+.08); }
-      else if(t==='pop') { o.type='triangle'; o.frequency.setValueAtTime(300,n); o.frequency.exponentialRampToValueAtTime(100,n+.12); g.gain.setValueAtTime(.2,n); g.gain.exponentialRampToValueAtTime(.01,n+.12); o.start(); o.stop(n+.12); }
-      else if(t==='swoosh') { o.type='sine'; o.frequency.setValueAtTime(300,n); o.frequency.exponentialRampToValueAtTime(500,n+.12); g.gain.setValueAtTime(.1,n); g.gain.linearRampToValueAtTime(.01,n+.12); o.start(); o.stop(n+.12); }
-      else if(t==='success') { o.type='sine'; o.frequency.setValueAtTime(523.25,n); o.frequency.setValueAtTime(659.25,n+.08); g.gain.setValueAtTime(.15,n); g.gain.linearRampToValueAtTime(.01,n+.25); o.start(); o.stop(n+.25); }
-    }
-
-    const stD = [ { c: "rgba(239, 68, 68, 0.12)", h: "#EF4444", l: "Falling behind" }, { c: "rgba(245, 158, 11, 0.12)", h: "#F59E0B", l: "Behind" }, { c: "var(--card-bg)", h: "#94A3B8", l: "Up to date" }, { c: "rgba(16, 185, 129, 0.12)", h: "#10B981", l: "Ahead" }, { c: "rgba(5, 150, 105, 0.15)", h: "#059669", l: "Well ahead" } ];
-
-    let isIncomingSync = false;
     window.onload = () => { 
       try { appSetApply(); } catch(e) {} 
       const splash = $('splash');
@@ -701,16 +702,11 @@
         splash.style.opacity = '0';
         setTimeout(() => { 
           splash.style.display = 'none'; 
-          try {
-            if(uData && uData.f) {
-              initCloudListener();
-              renderHome(true); openSc('home-screen');
-            } else {
-              openSc('onboarding-screen');
-            }
-          } catch(err) {
-            console.error("Startup Crash Protected:", err);
+          if(uData && uData.f) {
+            initCloudListener();
             renderHome(true); openSc('home-screen');
+          } else {
+            openSc('onboarding-screen');
           }
         }, 400);
       }, 500); 
@@ -735,7 +731,7 @@
         if (cloudData && cloudData.sData && cloudData.sData.length > 0) {
           isIncomingSync = true;
           
-          // 🔥 Firebase Array Converter Fix 🔥
+          // Fix Firebase empty array deletion bug
           sData = safeArr(cloudData.sData).map(s => ({
               ...s, 
               homework: safeArr(s.homework), 
@@ -746,14 +742,14 @@
           
           gNotes = safeArr(cloudData.gNotes);
           dlData = safeArr(cloudData.dlData);
-          ttCyc = cloudData.ttCyc || ttCyc;
-          ring = cloudData.ring || ring;
+          if(cloudData.ttCyc) ttCyc = cloudData.ttCyc;
+          if(cloudData.ring) ring = cloudData.ring;
           
           localStorage.setItem('org_subjects', JSON.stringify(sData)); 
           localStorage.setItem('org_global', JSON.stringify(gNotes)); 
           localStorage.setItem('org_deadlines', JSON.stringify(dlData)); 
           localStorage.setItem('org_ring', JSON.stringify(ring));
-          localStorage.setItem('org_ttcyc', JSON.stringify(ttCyc));
+          if (typeof ttCyc !== 'undefined') localStorage.setItem('org_ttcyc', JSON.stringify(ttCyc));
 
           rendSet();
           renderHome(false);
@@ -790,7 +786,7 @@
 
           isIncomingSync = true;
           
-          // 🔥 Firebase Array Converter Fix 🔥
+          // Fix Firebase empty array deletion bug
           if(cloudData.sData) {
               sData = safeArr(cloudData.sData).map(s => ({
                   ...s, 
@@ -803,14 +799,14 @@
           
           gNotes = safeArr(cloudData.gNotes);
           dlData = safeArr(cloudData.dlData);
-          ttCyc = cloudData.ttCyc || ttCyc;
+          if(cloudData.ttCyc) ttCyc = cloudData.ttCyc;
           if(cloudData.ring) ring = cloudData.ring;
           
           localStorage.setItem('org_subjects', JSON.stringify(sData)); 
           localStorage.setItem('org_global', JSON.stringify(gNotes)); 
           localStorage.setItem('org_deadlines', JSON.stringify(dlData)); 
           localStorage.setItem('org_ring', JSON.stringify(ring));
-          localStorage.setItem('org_ttcyc', JSON.stringify(ttCyc));
+          if (typeof ttCyc !== 'undefined') localStorage.setItem('org_ttcyc', JSON.stringify(ttCyc));
 
           if($('detail-screen').classList.contains('active')) renderDet(true);
           else if($('settings-screen').classList.contains('active')) rendSet();
@@ -874,7 +870,7 @@
       localStorage.setItem('org_global', JSON.stringify(gNotes)); 
       localStorage.setItem('org_deadlines', JSON.stringify(dlData)); 
       localStorage.setItem('org_ring', JSON.stringify(ring)); 
-      localStorage.setItem('org_ttcyc', JSON.stringify(ttCyc));
+      if (typeof ttCyc !== 'undefined') localStorage.setItem('org_ttcyc', JSON.stringify(ttCyc));
       updRUI(); updHUI(); 
 
       if(syncActive && db && uData && uData.syncPin && !isIncomingSync) {
