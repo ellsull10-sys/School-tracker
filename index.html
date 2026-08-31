@@ -17,6 +17,10 @@
   
   <!-- 🔥 Tesseract.js OCR Engine 🔥 -->
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  
+  <!-- 🔥 Firebase Realtime Database Engines 🔥 -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
   <style>
     /* 💎 NATIVE iOS APP STORE DESIGN SYSTEM 💎 */
@@ -381,9 +385,20 @@
       <button class="back-btn" onclick="goHome()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Dashboard</button>
       <h1 style="margin:0;">Settings</h1>
     </div>
-    
-    <h3 class="cascade-item d-2">Appearance</h3>
+
+    <!-- 🔥 CLOUD SYNC SECTION 🔥 -->
+    <h3 class="cascade-item d-2">Cloud Sync</h3>
     <div class="app-card setting-row cascade-item d-3">
+      <p style="font-size:14px; color:var(--text-secondary); margin-top:0; margin-bottom:12px; line-height:1.4;">Enter a unique Sync PIN to connect your phone and laptop.</p>
+      <div class="input-group" style="margin-bottom:0;">
+        <input type="text" id="sync-pin-input" placeholder="e.g. ElliotIona26">
+        <button class="add-btn" onclick="connectSync()">Connect</button>
+      </div>
+      <div id="sync-status" style="font-size:12px; margin-top:8px; font-weight:600; color:var(--warning);">Not Connected</div>
+    </div>
+    
+    <h3 class="cascade-item d-4">Appearance</h3>
+    <div class="app-card setting-row cascade-item d-5">
       <div class="flex-between" style="margin-bottom:12px;">
         <div style="font-size:15px; font-weight:600;">Custom Background</div>
         <label class="toggle-switch"><input type="checkbox" id="bg-toggle" onchange="toggleBg()"><span class="slider"></span></label>
@@ -398,19 +413,18 @@
       <input type="range" id="bg-opacity-slider" min="0" max="100" value="50" oninput="updBgOpac(this.value)">
     </div>
 
-    <h3 class="cascade-item d-4">Timetable Scanner</h3>
-    <div class="app-card setting-row cascade-item d-5">
+    <h3 class="cascade-item d-6">Timetable Scanner</h3>
+    <div class="app-card setting-row cascade-item d-7">
       <p style="font-size:14px; color:var(--text-secondary); margin-top:0; margin-bottom:12px; line-height:1.4;">Upload a screenshot of your 10-day Simon timetable grid to automatically detect and synchronize your classes.</p>
       <input type="file" id="tt-upload" accept="image/*" style="display:none;" onchange="handleTimetableImage(event, 'settings')">
       <button id="scan-tt-btn" class="add-btn" style="width:100%; padding:12px; display:flex; justify-content:center; align-items:center; gap:8px;" onclick="$('tt-upload').click()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Scan Timetable</button>
     </div>
 
-    <h3 class="cascade-item d-6">Subject Manager</h3>
+    <h3 class="cascade-item">Subject Manager</h3>
     <p style="font-size:13px; color:var(--text-secondary); margin-top:0; margin-bottom:12px; padding: 0 16px;">Tap a subject to rename it.</p>
-    <div class="input-group cascade-item d-7"><input type="text" id="new-subject" placeholder="New Subject Name..."><button class="add-btn" onclick="addSub()">Create</button></div>
+    <div class="input-group cascade-item"><input type="text" id="new-subject" placeholder="New Subject Name..."><button class="add-btn" onclick="addSub()">Create</button></div>
     <div id="settings-subjects-list"></div>
 
-    <!-- 🔥 RED SIGN OUT & RESET BUTTON 🔥 -->
     <div class="cascade-item" style="margin-top: 32px; margin-bottom: 20px;">
       <button class="add-btn btn-danger full-w-input" style="padding: 16px; border-radius: 16px; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="signOut()">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
@@ -420,11 +434,28 @@
   </div>
 
   <script>
+    // 🔥 PASTE YOUR FIREBASE CONFIG HERE 🔥
+    const firebaseConfig = {
+      apiKey: "AIzaSyAqw5hcUSv6x4MMjRTdgHk7nbtgkHvDXlk",
+      authDomain: "school-tracker-880f9.firebaseapp.com",
+      databaseURL: "https://school-tracker-880f9-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "school-tracker-880f9",
+      storageBucket: "school-tracker-880f9.firebasestorage.app",
+      messagingSenderId: "190541703025",
+      appId: "1:190541703025:web:3156546de0b0224614b8d0",
+      measurementId: "G-0L3GRJ3R5R"
+    };
+
+    let syncActive = false;
+    if(firebaseConfig.apiKey !== "YOUR_API_KEY") {
+        firebase.initializeApp(firebaseConfig);
+        syncActive = true;
+    }
+
     const $ = id => document.getElementById(id);
     const $$ = sel => document.querySelectorAll(sel);
     const getSub = id => sData.find(s => s.id === id);
 
-    // Default subjects list
     let sData = JSON.parse(localStorage.getItem('org_subjects')) || [
       "English", "Mathematics", "Science", "Humanities", "Health & Physical Education (HPE)", "Religious Education"
     ].map(n => ({ id: n.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase(), name: n, status: 2, homework: [], notes: "", grades: [], photos: [] }));
@@ -461,7 +492,6 @@
     function handleBgUp(e) { const f = e.target.files[0]; if(!f) return; pSnd('pop'); const r = new FileReader(); r.onload = (ev) => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const s = Math.min(1400/img.width, 1); c.width = img.width*s; c.height = img.height*s; c.getContext('2d').drawImage(img,0,0,c.width,c.height); appSet.bgImage = c.toDataURL('image/jpeg',0.6); appSet.bgEnabled = true; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }; img.src = ev.target.result; }; r.readAsDataURL(f); }
     function resetBg() { pSnd('tick'); appSet.bgImage = 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=100&w=1200&auto=format&fit=crop'; appSet.bgEnabled = false; appSet.bgOpacity = 50; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }
 
-    // 🔥 IONA COLLEGE SIMON CODE MAPPING DICTIONARY 🔥
     const codeMap = [
       { tag: 'CG', name: 'Community Group' },
       { tag: 'WEL', name: 'Wellbeing' },
@@ -530,7 +560,6 @@
     const sLab = ["Morning Group", "Session 1", "Session 2", "Session 3", "Session 4", "Session 5", "Session 6", "Afternoon Group"];
     function getTT() { const d = Math.floor((new Date().setHours(0,0,0,0) - new Date(2026, 7, 10).setHours(0,0,0,0)) / 86400000); return d < 0 ? null : ttCyc[d % 14] || null; }
 
-    // 🔥 SMART SUBJECT DEDUPLICATION & SYNC 🔥
     function syncSubjectsWithTimetable(detectedSubs) {
       const specificMaths = ["Pre Mathematical Methods", "General Mathematics", "Numeracy", "Advanced Mathematics"];
       const specificHumanities = ["Legal Studies", "Economics"];
@@ -547,7 +576,6 @@
       if (hasSpecificSci) sData = sData.filter(s => s.name !== "Science");
       if (hasSpecificHpe) sData = sData.filter(s => s.name !== "Health & Physical Education (HPE)");
 
-      // Keep Wellbeing, exclude CG and Sport/Study Period
       const exclude = ["Community Group", "Study Period", "Sport"];
       
       detectedSubs.forEach(sub => {
@@ -561,7 +589,6 @@
       sDat();
     }
 
-    // REAL IN-BROWSER TESSERACT OCR TIMETABLE PARSER
     async function handleTimetableImage(event, source) {
       const file = event.target.files[0];
       if (!file) return;
@@ -583,7 +610,6 @@
         const detectedCodes = [];
         const codeRegex = /\b([0-9]{1,2}[A-Z]{2,4}[0-9]?[A-Z0-9]?)\b/gi;
 
-        // 🔥 FILTER OUT "CG" TO PREVENT DOUBLE PERIODS 🔥
         lines.forEach(line => {
           const matches = line.match(codeRegex);
           if (matches) {
@@ -604,7 +630,7 @@
             ttCyc[d] = [];
             for (let s = 0; s < 8; s++) {
               if (s === 0 || s === 7) {
-                ttCyc[d].push('Community Group'); // Lock CG perfectly into Period 1 and 8
+                ttCyc[d].push('Community Group'); 
               } else {
                 const rawCode = detectedCodes[codeIdx] || '';
                 ttCyc[d].push(mapCodeToSubject(rawCode));
@@ -656,6 +682,7 @@
 
     const stD = [ { c: "rgba(239, 68, 68, 0.12)", h: "#EF4444", l: "Falling behind" }, { c: "rgba(245, 158, 11, 0.12)", h: "#F59E0B", l: "Behind" }, { c: "var(--card-bg)", h: "#94A3B8", l: "Up to date" }, { c: "rgba(16, 185, 129, 0.12)", h: "#10B981", l: "Ahead" }, { c: "rgba(5, 150, 105, 0.15)", h: "#059669", l: "Well ahead" } ];
 
+    let isIncomingSync = false;
     window.onload = () => { 
       try { appSetApply(); } catch(e) {} 
       const splash = $('splash');
@@ -664,6 +691,7 @@
         setTimeout(() => { 
           splash.style.display = 'none'; 
           if(uData && uData.f) {
+            initCloudListener();
             renderHome(true); openSc('home-screen');
           } else {
             openSc('onboarding-screen');
@@ -671,6 +699,49 @@
         }, 400);
       }, 500); 
     };
+
+    function connectSync() {
+      if(!syncActive) { alert("Firebase keys have not been added to the code yet."); return; }
+      const pin = $('sync-pin-input').value.trim();
+      if(!pin) return;
+      pSnd('pop');
+      if(!uData) uData = {};
+      uData.syncPin = pin;
+      localStorage.setItem('org_user', JSON.stringify(uData));
+      initCloudListener();
+      sDat();
+    }
+
+    function initCloudListener() {
+      if(!syncActive || !uData || !uData.syncPin) return;
+      $('sync-status').innerText = "🟢 Connected (" + uData.syncPin + ")";
+      $('sync-status').style.color = "var(--success)";
+      if($('sync-pin-input')) $('sync-pin-input').value = uData.syncPin;
+
+      firebase.database().ref('tracker/' + uData.syncPin).on('value', snap => {
+          const cloudData = snap.val();
+          if(cloudData) {
+              isIncomingSync = true;
+              if(cloudData.sData) sData = cloudData.sData;
+              if(cloudData.gNotes) gNotes = cloudData.gNotes;
+              if(cloudData.dlData) dlData = cloudData.dlData;
+              if(cloudData.ttCyc) ttCyc = cloudData.ttCyc;
+              if(cloudData.ring) ring = cloudData.ring;
+              
+              localStorage.setItem('org_subjects', JSON.stringify(sData)); 
+              localStorage.setItem('org_global', JSON.stringify(gNotes)); 
+              localStorage.setItem('org_deadlines', JSON.stringify(dlData)); 
+              localStorage.setItem('org_ring', JSON.stringify(ring));
+              localStorage.setItem('org_ttcyc', JSON.stringify(ttCyc));
+
+              if($('detail-screen').classList.contains('active')) renderDet(true);
+              else if($('settings-screen').classList.contains('active')) rendSet();
+              else renderHome(false);
+
+              setTimeout(()=> isIncomingSync = false, 500);
+          }
+      });
+    }
 
     function goToNextOnboarding() {
       const f = $('ob-first').value.trim();
@@ -687,16 +758,14 @@
       if (!uData) uData = { f: "Student", l: "", s: "Iona College Geelong" };
       localStorage.setItem('org_user', JSON.stringify(uData));
       
-      // If user hit "Skip / Use Standard Subjects"
       if (sData.length === 0) {
         const defaultSubs = ["English", "Mathematics", "Science", "Humanities", "Health & Physical Education (HPE)", "Religious Education"];
         const ttSubs = [...new Set(Object.values(ttCyc).flat())];
-        
-        // Populate standard first, then sync the fallback timetable
         sData = defaultSubs.map(n => ({ id: n.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase(), name: n, status: 2, homework: [], notes: "", grades: [], photos: [] }));
         syncSubjectsWithTimetable(ttSubs);
       }
       
+      initCloudListener();
       renderHome(true);
       openSc('home-screen');
     }
@@ -707,20 +776,32 @@
       let g = 'Good evening';
       if(hr < 12) g = 'Good morning';
       else if(hr < 18) g = 'Good afternoon';
-      
       $('user-greeting').innerHTML = `${g}, ${uData.f} ${uData.l} <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color: var(--accent); opacity: 0.8; margin-left: 2px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>`;
     }
 
-    // 🔥 SIGNOUT & RESET FUNCTION 🔥
     function signOut() {
       pSnd('tick');
       if(confirm("Are you sure you want to sign out? This will reset your profile and wipe all tracker data.")) {
         localStorage.clear();
-        window.location.reload(); // Instantly reloads the entire PWA back to the initial Welcome splash.
+        window.location.reload(); 
       }
     }
 
-    function sDat() { localStorage.setItem('org_subjects', JSON.stringify(sData)); localStorage.setItem('org_global', JSON.stringify(gNotes)); localStorage.setItem('org_deadlines', JSON.stringify(dlData)); localStorage.setItem('org_ring', JSON.stringify(ring)); updRUI(); updHUI(); }
+    function sDat() { 
+      localStorage.setItem('org_subjects', JSON.stringify(sData)); 
+      localStorage.setItem('org_global', JSON.stringify(gNotes)); 
+      localStorage.setItem('org_deadlines', JSON.stringify(dlData)); 
+      localStorage.setItem('org_ring', JSON.stringify(ring)); 
+      localStorage.setItem('org_ttcyc', JSON.stringify(ttCyc));
+      updRUI(); updHUI(); 
+
+      if(syncActive && uData && uData.syncPin && !isIncomingSync) {
+        firebase.database().ref('tracker/' + uData.syncPin).set({
+          sData, gNotes, dlData, ring, ttCyc, lastUpdated: Date.now()
+        });
+      }
+    }
+
     function addRSc() { if(ring.score < 5) { ring.score++; sDat(); } }
     function updRUI() { $('study-ring').style.strokeDasharray = `${Math.min((ring.score/5)*100, 100)}, 100`; $('ring-score').innerText = `${ring.score}/5`; }
     function updHUI() { let c = [0,0,0,0,0]; sData.forEach(s => c[s.status]++); $('health-bar').innerHTML = c.map((cnt, i) => cnt > 0 ? `<div class="health-segment" style="width: ${(cnt/sData.length)*100}%; background-color: ${stD[i].h};"></div>` : '').join(''); }
@@ -868,7 +949,6 @@
     let tI; let tL = 25*60; let isR = false; const pI = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`, psI = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
     function toggleTmr() { const w = $('timer-icon'), r = $('timer-progress'); pSnd('tick'); if(isR){ clearInterval(tI); isR=false; w.innerHTML=pI; } else { isR=true; w.innerHTML=psI; tI=setInterval(()=>{ tL--; let m=Math.floor(tL/60),s=tL%60; $('timer-display').innerText=`${m}:${s<10?'0':''}${s}`; r.style.strokeDasharray=`${(tL/(25*60))*100}, 100`; if(tL<=0){ clearInterval(tI); isR=false; w.innerHTML=pI; tL=25*60; r.style.strokeDasharray=`100, 100`; $('timer-display').innerText=`25:00`; pSnd('success'); addRSc(); alert("Focus complete!"); } }, 1000); } }
 
-    // 🔥 EDITABLE SUBJECT NAMES & TIMETABLE SYNC FEATURE 🔥
     function renameSub(id) {
       pSnd('pop');
       const sub = getSub(id);
@@ -879,18 +959,14 @@
         const finalName = newName.trim();
         sub.name = finalName;
         
-        // Loop through the 10-day cycle and update any references to the old name
         for (let day in ttCyc) {
           ttCyc[day] = ttCyc[day].map(subjectName => 
             (subjectName === oldName) ? finalName : subjectName
           );
         }
         
-        // Save both the subjects array and the timetable array
-        localStorage.setItem('org_ttcyc', JSON.stringify(ttCyc));
         sDat();
         rendSet();
-        
         if(!$('detail-screen').classList.contains('active')){
           renderHome(false);
         }
