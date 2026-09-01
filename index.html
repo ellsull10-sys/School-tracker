@@ -75,13 +75,13 @@
     h2 { font-size: 19px; font-weight: 700; margin-top: 24px; margin-bottom: 12px; }
     h3 { font-size: 14px; font-weight: 700; margin-top: 20px; margin-bottom: 8px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.6px; }
 
-    .icon-btn, .back-btn, button.add-btn { background: var(--accent-grad) !important; color: #FFFFFF !important; border: none !important; cursor: pointer; box-shadow: 0 6px 16px rgba(30, 41, 59, 0.3); transition: transform 0.1s ease; flex-shrink: 0; }
-    .icon-btn { border-radius: 50%; min-width: 42px; min-height: 42px; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; }
-.icon-btn svg { width: 22px !important; height: 22px !important; min-width: 22px !important; min-height: 22px !important; display: block; flex: none; }
+    ...icon-btn, .back-btn, button.add-btn { background: var(--accent-grad) !important; color: #FFFFFF !important; border: none !important; cursor: pointer; box-shadow: 0 6px 16px rgba(30, 41, 59, 0.3); transition: transform 0.1s ease; flex-shrink: 0 !important; }
+    .icon-btn { border-radius: 50%; min-width: 42px !important; min-height: 42px !important; width: 42px !important; height: 42px !important; display: flex; align-items: center; justify-content: center; padding: 0 !important; margin: 0 !important; }
+    .icon-btn svg { width: 22px !important; height: 22px !important; min-width: 22px !important; min-height: 22px !important; flex-shrink: 0 !important; flex-grow: 0 !important; flex-basis: 22px !important; display: block; margin: 0 auto !important; }
     .back-btn { display: flex; align-items: center; gap: 4px; padding: 8px 16px; height: 42px; font-size: 15px; font-weight: 600; border-radius: 16px; }
     button.add-btn { padding: 0 18px; border-radius: 14px; font-weight: 600; font-size: 15px; }
     .icon-btn:active, .back-btn:active, button.add-btn:active { transform: scale(0.92); }
-    
+
     .btn-grey { background: rgba(0, 0, 0, 0.08) !important; color: var(--text-primary) !important; box-shadow: none !important; border-radius: 12px !important; }
     @media (prefers-color-scheme: dark) { .btn-grey { background: rgba(255, 255, 255, 0.15) !important; } }
 
