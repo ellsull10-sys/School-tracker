@@ -41,6 +41,7 @@
       html.bg-active, body.bg-active { background-color: #000000 !important; }
       body.bg-active { --card-shadow: 0 24px 54px rgba(0, 0, 0, 0.8), 0 8px 24px rgba(0, 0, 0, 0.6); }
       body.bg-active h1, body.bg-active h2 { text-shadow: 0 4px 16px rgba(0,0,0,0.5) !important; }
+      .timetable-card::before { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important; } /* Super subtle dark mode shadow */
     }
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -113,15 +114,15 @@
     .health-bar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; background: var(--input-bg); margin-top: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
     .health-segment { height: 100%; transition: width 0.4s ease; border-radius: 7px; }
     
-    /* 🔥 SHADOW CLIPPING FIX: Massive bottom padding lets drop shadows breathe safely 🔥 */
+    /* 🔥 REVERTED HORIZONTAL SCROLL PADDING (Fixes the left cut-off completely) 🔥 */
     .horizontal-scroll { 
       display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; 
-      margin-left: -32px; margin-right: -32px; padding-left: 32px; padding-right: 32px; 
-      padding-top: 24px; padding-bottom: 40px; margin-top: -24px; margin-bottom: -20px; 
+      margin-left: -16px; margin-right: -16px; padding-left: 16px; padding-right: 16px; 
+      padding-top: 12px; padding-bottom: 24px; margin-top: -12px; margin-bottom: -12px; 
       -webkit-overflow-scrolling: touch; 
     }
     .horizontal-scroll::-webkit-scrollbar { display: none; }
-    .horizontal-scroll::after { content: ''; flex: 0 0 20px; }
+    .horizontal-scroll::after { content: ''; flex: 0 0 4px; }
     
     @media (pointer: fine) {
       .horizontal-scroll { scrollbar-width: thin; }
@@ -144,6 +145,7 @@
     @keyframes pulseAlert { 0%,100% { transform: scale(1); } 50% { transform: scale(0.98); } }
     
     .timetable-card { flex: 0 0 130px; scroll-snap-align: start; padding: 14px; display: flex; flex-direction: column; gap: 6px; cursor: pointer; transition: transform 0.1s ease; }
+    .timetable-card::before { box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03) !important; } /* 🔥 Super subtle almost non-existent shadow override 🔥 */
     .timetable-card:active { transform: scale(0.95); }
     .tt-session { font-size: 12px; color: var(--text-secondary); font-weight: 600; }
     .tt-subject { font-size: 15px; font-weight: 700; line-height: 1.2; }
