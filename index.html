@@ -53,8 +53,9 @@
     /* Static Splash Screen */
     #splash { position: fixed; inset: 0; background: var(--bg-base); color: var(--text-primary); z-index: 9999; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; transition: opacity 0.4s ease; }
     
+    /* Rotate lock specifically disabled for desktop environments */
     #rotate-lock { display: none; position: fixed; inset: 0; z-index: 100000; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); color: #FFFFFF; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px; font-weight: 700; font-size: 22px; line-height: 1.3; }
-    @media screen and (orientation: landscape) and (max-height: 600px) { #rotate-lock { display: flex; } .screen, .top-bar { display: none !important; } }
+    @media screen and (orientation: landscape) and (max-height: 600px) and (hover: none) and (pointer: coarse) { #rotate-lock { display: flex; } .screen, .top-bar { display: none !important; } }
 
     .screen { position: relative; z-index: 1; padding: 16px; padding-top: calc(env(safe-area-inset-top) + 16px); padding-bottom: 40px; display: none; }
     .screen.active { display: block; animation: screenFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
@@ -194,6 +195,15 @@
     input[type="range"] { -webkit-appearance: none; width: 100%; background: transparent; }
     input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 2px 6px rgba(0,0,0,0.2); margin-top: -9px; cursor: pointer; }
     input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 6px; cursor: pointer; background: rgba(0,0,0,0.1); border-radius: 3px; }
+
+    /* 🔥 RESPONSIVE DESKTOP LAYOUT (Phones stay untouched!) 🔥 */
+    .desktop-layout { display: flex; flex-direction: column; }
+    @media (min-width: 850px) {
+      .desktop-layout { flex-direction: row; gap: 32px; align-items: flex-start; }
+      .dl-left { flex: 0 0 340px; position: sticky; top: 20px; display: flex; flex-direction: column; }
+      .dl-right { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+      #settings-screen, #add-hw-screen, #detail-screen { max-width: 700px; margin: 0 auto; }
+    }
   </style>
 </head>
 <body>
@@ -267,59 +277,69 @@
 
       <button class="icon-btn" onclick="openSc('settings-screen')">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+          <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
           <circle cx="12" cy="12" r="3"></circle>
         </svg>
       </button>
     </div>
 
-    <div class="dashboard-grid cascade-item d-1">
-      <div id="home-ring-card" class="widget app-card">
-        <div class="widget-title">Today's Goal</div>
-        <div class="ring-container">
-          <svg viewBox="0 0 36 36" class="circular-chart"><path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" /><path class="circle" id="study-ring" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" /></svg>
-          <div class="ring-text" id="ring-score">0/5</div>
+    <!-- 🔥 RESPONSIVE DESKTOP LAYOUT WRAPPER 🔥 -->
+    <div class="desktop-layout">
+      
+      <!-- LEFT COLUMN -->
+      <div class="dl-left">
+        <div class="dashboard-grid cascade-item d-1">
+          <div id="home-ring-card" class="widget app-card">
+            <div class="widget-title">Today's Goal</div>
+            <div class="ring-container">
+              <svg viewBox="0 0 36 36" class="circular-chart"><path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" /><path class="circle" id="study-ring" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" /></svg>
+              <div class="ring-text" id="ring-score">0/5</div>
+            </div>
+          </div>
+          <a href="https://simon.iona.vic.edu.au/" target="_blank" id="home-simon-card" class="widget simon-widget" style="border-radius: 20px;">
+            <div class="simon-title">Portal</div>
+            <div class="simon-action">Open Simon<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></div>
+          </a>
+        </div>
+
+        <div class="app-card cascade-item d-2" style="background: var(--accent-grad); color: #FFFFFF; border: none; box-shadow: 0 10px 24px rgba(30, 41, 59, 0.3); padding: 14px 16px; margin-top:-4px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; border-radius: 16px; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 700;" onclick="openAddHw()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          Add Homework
+        </div>
+
+        <div id="home-health-card" class="health-bar-container app-card cascade-item d-3">
+          <div class="widget-title" style="margin-bottom: 0;">Subject Health</div>
+          <div class="health-bar" id="health-bar"></div>
+        </div>
+
+        <h2 id="task-title" class="cascade-item d-7" style="margin-top: 0;">My Tasks</h2>
+        <div id="task-input-card" class="input-group cascade-item d-8">
+          <input type="text" id="global-task" placeholder="Task description...">
+          <input type="date" id="global-date">
+          <button class="add-btn" onclick="addGN()">Add</button>
+        </div>
+        <div id="global-notes-list"></div>
+
+        <h2 id="add-dl-title" class="cascade-item d-9">Add Deadline</h2>
+        <div id="add-dl-card" class="input-group cascade-item" style="animation-delay: 0.40s;">
+          <input type="text" id="dl-name" placeholder="E.g., Legal SAC...">
+          <input type="date" id="dl-date">
+          <button class="add-btn" onclick="addDL()">Add</button>
+        </div>
+        
+        <div id="deadline-section" style="display: none;" class="cascade-item d-4">
+          <h2 id="dl-title">Upcoming Deadlines</h2>
+          <div class="horizontal-scroll" id="deadline-list" style="padding-bottom: 10px; margin-bottom: 0;"></div>
         </div>
       </div>
-      <a href="https://simon.iona.vic.edu.au/" target="_blank" id="home-simon-card" class="widget simon-widget" style="border-radius: 20px;">
-        <div class="simon-title">Portal</div>
-        <div class="simon-action">Open Simon<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></div>
-      </a>
-    </div>
 
-    <div class="app-card cascade-item d-2" style="background: var(--accent-grad); color: #FFFFFF; border: none; box-shadow: 0 10px 24px rgba(30, 41, 59, 0.3); padding: 14px 16px; margin-top:-4px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; border-radius: 16px; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 700;" onclick="openAddHw()">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-      Add Homework
-    </div>
+      <!-- RIGHT COLUMN -->
+      <div class="dl-right">
+        <div id="dynamic-timetable-section" class="cascade-item d-5"></div>
+        <h2 id="subj-title" class="cascade-item d-6">Subjects</h2>
+        <div id="subjects-list"></div>
+      </div>
 
-    <div id="home-health-card" class="health-bar-container app-card cascade-item d-3">
-      <div class="widget-title" style="margin-bottom: 0;">Subject Health</div>
-      <div class="health-bar" id="health-bar"></div>
-    </div>
-
-    <div id="deadline-section" style="display: none;" class="cascade-item d-4">
-      <h2 id="dl-title">Upcoming Deadlines</h2>
-      <div class="horizontal-scroll" id="deadline-list"></div>
-    </div>
-
-    <div id="dynamic-timetable-section" class="cascade-item d-5"></div>
-
-    <h2 id="subj-title" class="cascade-item d-6">Subjects</h2>
-    <div id="subjects-list"></div>
-
-    <h2 id="task-title" class="cascade-item d-7">My Tasks</h2>
-    <div id="task-input-card" class="input-group cascade-item d-8">
-      <input type="text" id="global-task" placeholder="Task description...">
-      <input type="date" id="global-date">
-      <button class="add-btn" onclick="addGN()">Add</button>
-    </div>
-    <div id="global-notes-list"></div>
-
-    <h2 id="add-dl-title" class="cascade-item d-9">Add Deadline</h2>
-    <div id="add-dl-card" class="input-group cascade-item" style="animation-delay: 0.40s;">
-      <input type="text" id="dl-name" placeholder="E.g., Legal SAC...">
-      <input type="date" id="dl-date">
-      <button class="add-btn" onclick="addDL()">Add</button>
     </div>
   </div>
 
@@ -385,7 +405,7 @@
       <button class="back-btn" onclick="goHome()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Dashboard</button>
       <h1 style="margin:0;">Settings</h1>
     </div>
-    
+
     <!-- 🔥 CLOUD SYNC SECTION 🔥 -->
     <h3 class="cascade-item d-2">Cloud Sync</h3>
     <div class="app-card setting-row cascade-item d-3">
@@ -396,7 +416,7 @@
       </div>
       <div id="sync-status" style="font-size:12px; margin-top:8px; font-weight:600; color:var(--warning);">Not Connected</div>
     </div>
-
+    
     <h3 class="cascade-item d-4">Appearance</h3>
     <div class="app-card setting-row cascade-item d-5">
       <div class="flex-between" style="margin-bottom:12px;">
@@ -421,7 +441,7 @@
     </div>
 
     <h3 class="cascade-item d-8">Subject Manager</h3>
-    <p style="font-size:13px; color:var(--text-secondary); margin-top:0; margin-bottom:12px; padding: 0 16px;">Tap a subject to rename it.</p>
+    <p class="cascade-item d-8" style="font-size:13px; color:var(--text-secondary); margin-top:0; margin-bottom:12px; padding: 0 16px;">Tap a subject to rename it.</p>
     <div class="input-group cascade-item d-9"><input type="text" id="new-subject" placeholder="New Subject Name..."><button class="add-btn" onclick="addSub()">Create</button></div>
     <div id="settings-subjects-list"></div>
 
@@ -435,7 +455,7 @@
   </div>
 
   <script>
-    // 🔥 THE ULTIMATE DATA SANITIZER (Prevents Crashes) 🔥
+    // 🔥 THE ULTIMATE DATA SANITIZER (Kills Grey Screens) 🔥
     const safeArr = obj => {
       if(!obj) return [];
       const arr = Array.isArray(obj) ? obj : Object.values(obj);
@@ -456,30 +476,48 @@
     let syncActive = false;
     let db = null;
     let isIncomingSync = false;
+    let localWriteTime = 0; // 🔥 ANIMATION SHIELD 🔥
 
     try {
-      firebase.initializeApp(firebaseConfig);
-      db = firebase.database();
-      syncActive = true;
+      if (firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY") {
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.database();
+        syncActive = true;
+      }
     } catch(err) {
       console.error("Firebase init failed:", err);
     }
 
     const $ = id => document.getElementById(id);
     const $$ = sel => document.querySelectorAll(sel);
-    const getSub = id => sData.find(s => s.id === id);
 
-    // Default subjects list
-    let sData = JSON.parse(localStorage.getItem('org_subjects')) || [
-      "English", "Mathematics", "Science", "Humanities", "Health & Physical Education (HPE)", "Religious Education"
-    ].map(n => ({ id: n.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase(), name: n, status: 2, homework: [], notes: "", grades: [], photos: [] }));
-    sData.forEach(s => { if(!s.photos) s.photos=[]; }); 
+    // 🔥 BULLETPROOF LOCAL DATA LOADING 🔥
+    let rawSubs = null;
+    try { rawSubs = JSON.parse(localStorage.getItem('org_subjects')); } catch(e){}
+    let sData = safeArr(rawSubs);
+    
+    if(sData.length === 0) {
+      sData = [
+        "English", "Mathematics", "Science", "Humanities", "Health & Physical Education (HPE)", "Religious Education"
+      ].map(n => ({ id: n.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase(), name: n, status: 2, homework: [], notes: "", grades: [], photos: [] }));
+    } else {
+      sData = sData.filter(s => s && s.name).map(s => ({
+          ...s,
+          homework: safeArr(s.homework).filter(h => h && h.date),
+          notes: s.notes || "",
+          grades: safeArr(s.grades).filter(g => g && g.score),
+          photos: safeArr(s.photos).filter(p => p && p.img)
+      }));
+    }
 
-    let gNotes = JSON.parse(localStorage.getItem('org_global')) || []; 
-    let dlData = JSON.parse(localStorage.getItem('org_deadlines')) || []; 
+    const getSub = id => sData.find(s => s && s.id === id);
+
+    let gNotes = safeArr(JSON.parse(localStorage.getItem('org_global'))).filter(n => n && n.date); 
+    let dlData = safeArr(JSON.parse(localStorage.getItem('org_deadlines'))).filter(d => d && d.date); 
+    
     let tStr = new Date().toDateString(); 
     let ring = JSON.parse(localStorage.getItem('org_ring')) || { date: tStr, score: 0 }; 
-    if(ring.date !== tStr) ring = { date: tStr, score: 0 }; 
+    if(!ring || ring.date !== tStr) ring = { date: tStr, score: 0 }; 
     let cSubId = null;
 
     let uData = JSON.parse(localStorage.getItem('org_user'));
@@ -506,7 +544,6 @@
     function handleBgUp(e) { const f = e.target.files[0]; if(!f) return; pSnd('pop'); const r = new FileReader(); r.onload = (ev) => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const s = Math.min(1400/img.width, 1); c.width = img.width*s; c.height = img.height*s; c.getContext('2d').drawImage(img,0,0,c.width,c.height); appSet.bgImage = c.toDataURL('image/jpeg',0.6); appSet.bgEnabled = true; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }; img.src = ev.target.result; }; r.readAsDataURL(f); }
     function resetBg() { pSnd('tick'); appSet.bgImage = 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=100&w=1200&auto=format&fit=crop'; appSet.bgEnabled = false; appSet.bgOpacity = 50; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }
 
-    // 🔥 IONA COLLEGE SIMON CODE MAPPING DICTIONARY 🔥
     const codeMap = [
       { tag: 'CG', name: 'Community Group' },
       { tag: 'WEL', name: 'Wellbeing' },
@@ -559,7 +596,7 @@
       return clean.length > 3 ? clean : 'Study Period';
     }
 
-    let ttCyc = JSON.parse(localStorage.getItem('org_ttcyc')) || { 
+    let ttCyc = { 
       0:["Community Group","Economics","Economics","English","English","General Mathematics","General Mathematics","Community Group"], 
       1:["Community Group","Pre Mathematical Methods","Wellbeing","Religious Education","Religious Education","Economics","English","Community Group"], 
       2:["Community Group","Legal Studies","Legal Studies","Physics","Physics","Pre Mathematical Methods","Pre Mathematical Methods","Community Group"], 
@@ -571,11 +608,11 @@
       10:["Community Group","English","English","General Mathematics","General Mathematics","Economics","Economics","Community Group"], 
       11:["Community Group","Physics","Physics","Legal Studies","Legal Studies","Pre Mathematical Methods","Pre Mathematical Methods","Community Group"] 
     };
+    try { const tL = JSON.parse(localStorage.getItem('org_ttcyc')); if(tL && typeof tL === 'object') ttCyc = tL; } catch(e){}
 
     const sLab = ["Morning Group", "Session 1", "Session 2", "Session 3", "Session 4", "Session 5", "Session 6", "Afternoon Group"];
     function getTT() { const d = Math.floor((new Date().setHours(0,0,0,0) - new Date(2026, 7, 10).setHours(0,0,0,0)) / 86400000); return d < 0 ? null : ttCyc[d % 14] || null; }
 
-    // 🔥 SMART SUBJECT DEDUPLICATION & SYNC 🔥
     function syncSubjectsWithTimetable(detectedSubs) {
       const specificMaths = ["Pre Mathematical Methods", "General Mathematics", "Numeracy", "Advanced Mathematics"];
       const specificHumanities = ["Legal Studies", "Economics"];
@@ -592,7 +629,6 @@
       if (hasSpecificSci) sData = sData.filter(s => s.name !== "Science");
       if (hasSpecificHpe) sData = sData.filter(s => s.name !== "Health & Physical Education (HPE)");
 
-      // Keep Wellbeing, exclude CG and Sport/Study Period
       const exclude = ["Community Group", "Study Period", "Sport"];
       
       detectedSubs.forEach(sub => {
@@ -606,7 +642,6 @@
       sDat();
     }
 
-    // REAL IN-BROWSER TESSERACT OCR TIMETABLE PARSER
     async function handleTimetableImage(event, source) {
       const file = event.target.files[0];
       if (!file) return;
@@ -624,19 +659,17 @@
         await worker.terminate();
 
         const lines = ret.data.text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-
         const detectedCodes = [];
         const codeRegex = /\b([0-9]{1,2}[A-Z]{2,4}[0-9]?[A-Z0-9]?)\b/gi;
 
-        // 🔥 FILTER OUT "CG" TO PREVENT DOUBLE PERIODS 🔥
         lines.forEach(line => {
           const matches = line.match(codeRegex);
           if (matches) {
             matches.forEach(m => {
-                const upperM = m.toUpperCase();
-                if(mapCodeToSubject(upperM) !== 'Community Group') {
-                    detectedCodes.push(upperM);
-                }
+              const upperM = m.toUpperCase();
+              if(mapCodeToSubject(upperM) !== 'Community Group') {
+                detectedCodes.push(upperM);
+              }
             });
           }
         });
@@ -649,7 +682,7 @@
             ttCyc[d] = [];
             for (let s = 0; s < 8; s++) {
               if (s === 0 || s === 7) {
-                ttCyc[d].push('Community Group'); // Lock CG perfectly into Period 1 and 8
+                ttCyc[d].push('Community Group');
               } else {
                 const rawCode = detectedCodes[codeIdx] || '';
                 ttCyc[d].push(mapCodeToSubject(rawCode));
@@ -701,6 +734,7 @@
 
     const stD = [ { c: "rgba(239, 68, 68, 0.12)", h: "#EF4444", l: "Falling behind" }, { c: "rgba(245, 158, 11, 0.12)", h: "#F59E0B", l: "Behind" }, { c: "var(--card-bg)", h: "#94A3B8", l: "Up to date" }, { c: "rgba(16, 185, 129, 0.12)", h: "#10B981", l: "Ahead" }, { c: "rgba(5, 150, 105, 0.15)", h: "#059669", l: "Well ahead" } ];
 
+    // 🔥 THE ULTIMATE ANTI-CRASH STARTUP 🔥
     window.onload = () => { 
       try { appSetApply(); } catch(e) {} 
       const splash = $('splash');
@@ -708,263 +742,27 @@
         splash.style.opacity = '0';
         setTimeout(() => { 
           splash.style.display = 'none'; 
-          if(uData && uData.f) {
-            renderHome(true); initCloudListener(); openSc('home-screen');
-          } else {
-            openSc('onboarding-screen');
+          try {
+            if(uData && uData.f) {
+              initCloudListener();
+              renderHome(true); 
+              openSc('home-screen');
+            } else {
+              openSc('onboarding-screen');
+            }
+          } catch(err) {
+            console.error("FATAL ERROR CAUGHT:", err);
+            // This physically breaks the loop by deleting the corrupted PIN.
+            alert("A corrupted cloud sync caused a crash. We've completely reset your local data to unfreeze the app.");
+            localStorage.clear();
+            window.location.reload(); 
           }
         }, 400);
       }, 500); 
     };
 
-    function goToNextOnboarding() {
-      const f = $('ob-first').value.trim();
-      const l = $('ob-last').value.trim();
-      const s = $('ob-school').value;
-      if(!f || !l) { pSnd('tick'); return; }
-      pSnd('pop');
-      uData = { f, l, s };
-      openSc('onboarding-tt-screen');
-    }
-
-    function finishOnboarding() {
-      pSnd('success');
-      if (!uData) uData = { f: "Student", l: "", s: "Iona College Geelong" };
-      localStorage.setItem('org_user', JSON.stringify(uData));
-      
-      // If user hit "Skip / Use Standard Subjects"
-      if (sData.length === 0) {
-        const defaultSubs = ["English", "Mathematics", "Science", "Humanities", "Health & Physical Education (HPE)", "Religious Education"];
-        const ttSubs = [...new Set(Object.values(ttCyc).flat())];
-        
-        // Populate standard first, then sync the fallback timetable
-        sData = defaultSubs.map(n => ({ id: n.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase(), name: n, status: 2, homework: [], notes: "", grades: [], photos: [] }));
-        syncSubjectsWithTimetable(ttSubs);
-      }
-      
-      renderHome(true);
-      openSc('home-screen');
-    }
-
-    function updGreet() {
-      if(!uData || !uData.f) return;
-      const hr = new Date().getHours();
-      let g = 'Good evening';
-      if(hr < 12) g = 'Good morning';
-      else if(hr < 18) g = 'Good afternoon';
-      
-      $('user-greeting').innerHTML = `${g}, ${uData.f} ${uData.l} <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color: var(--accent); opacity: 0.8; margin-left: 2px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>`;
-    }
-
-    // 🔥 SIGNOUT & RESET FUNCTION 🔥
-    function signOut() {
-      pSnd('tick');
-      if(confirm("Are you sure you want to sign out? This will reset your profile and wipe all tracker data.")) {
-        localStorage.clear();
-        window.location.reload(); // Instantly reloads the entire PWA back to the initial Welcome splash.
-      }
-    }
-
-    function sDat() { localStorage.setItem('org_subjects', JSON.stringify(sData)); localStorage.setItem('org_global', JSON.stringify(gNotes)); localStorage.setItem('org_deadlines', JSON.stringify(dlData)); localStorage.setItem('org_ring', JSON.stringify(ring)); updRUI(); updHUI();
-      if(syncActive && db && uData && uData.syncPin && !isIncomingSync) {
-        db.ref('tracker/' + uData.syncPin).set({
-          sData, gNotes, dlData, ring, ttCyc, lastUpdated: Date.now()
-        }).catch(err => console.error("Firebase write error:", err));
-      }
-    }
-    function addRSc() { if(ring.score < 5) { ring.score++; sDat(); } }
-    function updRUI() { $('study-ring').style.strokeDasharray = `${Math.min((ring.score/5)*100, 100)}, 100`; $('ring-score').innerText = `${ring.score}/5`; }
-    function updHUI() { let c = [0,0,0,0,0]; sData.forEach(s => c[s.status]++); $('health-bar').innerHTML = c.map((cnt, i) => cnt > 0 ? `<div class="health-segment" style="width: ${(cnt/sData.length)*100}%; background-color: ${stD[i].h};"></div>` : '').join(''); }
-    function isOD(ds) { return new Date(ds.split('-')[0], ds.split('-')[1]-1, ds.split('-')[2]) < new Date().setHours(0,0,0,0); }
-    function gDD(ds) { return Math.ceil((new Date(ds.split('-')[0], ds.split('-')[1]-1, ds.split('-')[2]) - new Date().setHours(0,0,0,0)) / 86400000); }
-    function fmtD(ds) { return new Date(ds.split('-')[0], ds.split('-')[1]-1, ds.split('-')[2]).toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'}); }
-
-    function openAddHw() {
-      $('global-new-hw-desc').value = ''; $('global-new-hw-date').value = '';
-      $('global-new-hw-sub').innerHTML = sData.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
-      openSc('add-hw-screen');
-    }
-
-    function saveGlobalHw() {
-      const d = $('global-new-hw-desc').value; const subId = $('global-new-hw-sub').value; const dt = $('global-new-hw-date').value;
-      if(!d || !dt || !subId) { pSnd('tick'); return; }
-      pSnd('pop');
-      const targetSub = getSub(subId);
-      targetSub.homework.push({ id: Date.now().toString(), text: d, date: dt });
-      sDat(); pSnd('success'); goHome();
-    }
-
-    function renderHome(isInit = false) {
-      const a = isInit ? 'cascade-item' : '';
-      if(isInit) { updRUI(); updHUI(); updGreet(); }
-
-      if(dlData.length > 0) {
-        $('deadline-section').style.display = 'block'; dlData.sort((a,b) => gDD(a.date) - gDD(b.date));
-        $('deadline-list').innerHTML = dlData.map(d => { const ds = gDD(d.date); return `<div class="deadline-card ${ds<=2?'critical':(ds<=7?'warning':'')}"><div class="dl-days">${ds<0?'0':ds}</div><div class="dl-label">Days until<br>${d.name}</div><button class="icon-btn" style="position:absolute; top:8px; right:8px; width:26px; height:26px; min-width:26px; min-height:26px; font-size:14px; color:white; background:rgba(0,0,0,0.15) !important; border:none; box-shadow:none;" onclick="delDL('${d.id}')">×</button></div>`; }).join('');
-      } else $('deadline-section').style.display = 'none';
-
-      const tt = getTT(); const ts = $('dynamic-timetable-section');
-      if(tt) {
-        ts.innerHTML = `<h2>Today's Schedule</h2><div class="horizontal-scroll" style="margin-bottom: 20px;">${tt.map((cN, i) => { 
-          const m = sData.find(s => s.name.toLowerCase() === cN.toLowerCase()); 
-          const iS = sLab[i].includes('Session'); 
-          let hwText = '';
-          if (m && m.homework && m.homework.length > 0) {
-            const upc = [...m.homework].sort((a,b) => new Date(a.date) - new Date(b.date))[0];
-            const d = gDD(upc.date);
-            let sC = 'var(--text-secondary)';
-            let txt = `Homework task due in ${d} days`;
-            if (d < 0) { txt = 'Homework overdue!'; sC = 'var(--critical)'; }
-            else if (d === 0) { txt = 'Homework due today'; sC = 'var(--warning)'; }
-            else if (d === 1) { txt = 'Homework due in 1 day'; }
-            hwText = `<div style="font-size:11px; margin-top:6px; font-weight:600; color:${sC}; line-height:1.2;">${txt}</div>`;
-          }
-          return `<div class="timetable-card app-card" data-tt-sub="${m?m.id:''}" style="background-color: ${m?stD[m.status].c:(iS?'rgba(0,0,0,0.03)':'var(--card-bg)')}; border-color: ${m?stD[m.status].h:'var(--card-border)'};" ${m?`onclick="openDet('${m.id}')"`:''}><div class="tt-session">${sLab[i]}</div><div class="tt-subject">${cN}</div>${hwText}</div>`; 
-        }).join('')}</div>`;
-      } else {
-        ts.innerHTML = `<h2>Today's Schedule</h2><div class="app-card" style="padding: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px;"><span style="font-size: 28px;">🎉</span><span style="font-weight: 600; color: var(--text-secondary); text-align: center;">It's the weekend!<br>No classes scheduled today.</span></div>`;
-      }
-
-      sData.sort((a, b) => a.status - b.status);
-      $('subjects-list').innerHTML = sData.map((s, i) => `<div class="card app-card ${a}" data-id="${s.id}" style="background-color: ${stD[s.status].c}; border-color: ${stD[s.status].h}; animation-delay: ${0.28 + (0.04*i)}s; z-index: ${100-i};" onclick="openDet('${s.id}')"><div class="boxes-container">${[0,1,2,3,4].map(j => `<div class="box ${s.status===j?'active':''}" style="--box-color: ${stD[j].h};" onclick="event.stopPropagation(); setSt('${s.id}', ${j})"></div>`).join('')}</div><div class="subject-title">${s.name}</div></div>`).join('');
-      $('global-notes-list').innerHTML = gNotes.map((n, i) => `<div id="global-item-${n.id}" class="list-item app-card task-card ${a} ${isOD(n.date)?'overdue':''}" style="animation-delay: ${0.40 + (0.04*i)}s;"><div><div style="font-weight: 600; font-size: 15px;">${n.text}</div><div class="date-badge">Due: ${fmtD(n.date)}</div></div><button class="delete-btn" onclick="compGAnim('${n.id}')">×</button></div>`).join('');
-    }
-
-    function processPhoto(e) { const f = e.target.files[0]; if(!f) return; pSnd('pop'); const r = new FileReader(); r.onload = ev => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const s = Math.min(600/img.width, 1); c.width = img.width*s; c.height = img.height*s; c.getContext('2d').drawImage(img,0,0,c.width,c.height); getSub(cSubId).photos.push({ id: Date.now().toString(), img: c.toDataURL('image/jpeg', 0.5) }); sDat(); renderDet(); }; img.src = ev.target.result; }; r.readAsDataURL(f); }
-    function delPhoto(id) { pSnd('tick'); getSub(cSubId).photos = getSub(cSubId).photos.filter(p => p.id !== id); sDat(); renderDet(); }
-
-    function animRO(id) {
-      const list = $('subjects-list'); const crd = Array.from(list.children);
-      crd.forEach(c => { c.style.animation='none'; c.classList.remove('cascade-item'); });
-      const pos = {}; crd.forEach(c => pos[c.dataset.id] = c.getBoundingClientRect().top);
-      sData.sort((a,b) => a.status - b.status);
-      
-      sData.forEach((s, idx) => { 
-        const c = list.querySelector(`.card[data-id="${s.id}"]`); 
-        if(c) { 
-          list.appendChild(c); 
-          c.style.backgroundColor=stD[s.status].c; 
-          c.style.borderColor=stD[s.status].h; 
-          c.querySelectorAll('.box').forEach((b,i)=>{ b.classList.toggle('active', i===s.status); }); 
-          c.dataset.tZ = 100-idx; 
-        } 
-      });
-      
-      Array.from(list.children).forEach(c => {
-        const dY = pos[c.dataset.id] - c.getBoundingClientRect().top;
-        if(dY !== 0) {
-          c.style.transition='none'; 
-          c.style.transform=`translate3d(0, ${dY}px, 0)`; 
-          requestAnimationFrame(() => requestAnimationFrame(() => {
-            c.style.transition='transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'; 
-            c.style.transform=`translate3d(0, 0, 0)`; 
-            setTimeout(() => { c.style.transition=''; c.style.zIndex=c.dataset.tZ; }, 500); 
-          }));
-        } else {
-          c.style.zIndex = c.dataset.tZ;
-        }
-      });
-    }
-
-    function setSt(id, idx) { 
-      pSnd('tick'); getSub(id).status = idx; sDat(); 
-      if(!cSubId) { 
-        animRO(id); $$(`.timetable-card[data-tt-sub="${id}"]`).forEach(c => { c.style.backgroundColor = stD[idx].c; c.style.borderColor = stD[idx].h; c.style.transform = 'scale(1.04)'; setTimeout(() => c.style.transform='', 200); });
-      } else { 
-        $$('.status-row').forEach((r,i) => { const b = r.querySelector('.box'); if(i===idx) { r.classList.add('active-status'); b.classList.add('active'); r.style.setProperty('--status-bg', stD[i].c); r.style.setProperty('--box-color', stD[i].h); b.style.setProperty('--box-color', stD[i].h); } else { r.classList.remove('active-status'); b.classList.remove('active'); } }); 
-      } updHUI();
-    }
-
-    function openSc(id) { 
-      pSnd('swoosh'); 
-      $$('.screen').forEach(s => { s.classList.remove('active'); void s.offsetWidth; }); 
-      const scr = $(id); 
-      scr.classList.add('active'); 
-      window.scrollTo(0,0); 
-      if(id === 'settings-screen') { appSetApply(); rendSet(); } 
-    }
-    
-    function openDet(id) { cSubId = id; renderDet(); openSc('detail-screen'); }
-    function goHome() { cSubId = null; sData.sort((a,b) => a.status - b.status); renderHome(true); openSc('home-screen'); }
-
-    function renderDet(isUpdate = false) {
-      const s = getSub(cSubId);
-      $('detail-title').innerText = s.name; $('subject-notes').value = s.notes;
-      
-      if(!isUpdate) {
-        $('detail-statuses').innerHTML = stD.map((st, i) => `<div class="status-row app-card cascade-item" style="--status-bg: ${st.c}; --box-color: ${st.h}; animation-delay: ${0.05 + (0.03*i)}s;" onclick="setSt('${s.id}', ${i})"><div class="box ${s.status===i?'active':''}" style="--box-color: ${st.h};"></div><div class="status-label">${st.l}</div></div>`).join('');
-      }
-      
-      const pG = $('photo-gallery'); if(s.photos.length>0) { pG.style.display='flex'; pG.innerHTML = s.photos.map(p => `<div class="photo-card cascade-item" style="animation-delay: 0.15s; background-image: url('${p.img}')"><button class="del-photo" onclick="delPhoto('${p.id}')">×</button></div>`).join(''); } else { pG.style.display='none'; pG.innerHTML=''; }
-      let tS=0, tO=0; $('grades-list').innerHTML = s.grades.map((g,i) => { tS+=parseFloat(g.score); tO+=parseFloat(g.outOf); return `<div class="list-item app-card cascade-item" style="animation-delay:${0.40 + (0.04*i)}s;"><div><div style="font-weight: 600;">${g.name}</div><div class="date-badge">${g.score} / ${g.outOf}</div></div><div style="display:flex; align-items:center; gap: 8px;"><div class="grade-badge">${Math.round((g.score/g.outOf)*100)}%</div><button class="delete-btn" onclick="delGrade('${g.id}')">×</button></div></div>`; }).join('');
-      $('average-banner').innerText = tO>0 ? `Current Average: ${Math.round((tS/tO)*100)}%` : "No Grades Logged";
-      $('hw-list').innerHTML = s.homework.map((hw,i) => `<div id="hw-item-${hw.id}" class="list-item app-card task-card cascade-item ${isOD(hw.date)?'overdue':''}" style="animation-delay:${0.25 + (0.04*i)}s;"><div><div style="font-weight: 600; font-size: 15px;">${hw.text}</div><div class="date-badge">Due: ${fmtD(hw.date)}</div></div><button class="delete-btn" onclick="compHWAnim('${hw.id}')">×</button></div>`).join('');
-    }
-
-    function perfC(el, cb) { pSnd('success'); el.style.transition='all 0.3s ease'; el.style.background='var(--success)'; el.style.transform='scale(0.96) translateX(15px)'; const d=el.querySelector('div>div:first-child'), b=el.querySelector('.date-badge'), x=el.querySelector('.delete-btn'); if(d) d.style.color='#FFF'; if(b) b.style.color='rgba(255,255,255,0.85)'; if(x) { x.innerHTML='✓'; x.style.color='#FFF'; x.style.transform='scale(1.1)'; } setTimeout(()=>{ el.style.transition='all 0.4s cubic-bezier(0.16,1,0.3,1)'; el.style.transform='scale(0.9) translateX(30px)'; el.style.opacity='0'; el.style.maxHeight=el.offsetHeight+'px'; requestAnimationFrame(()=>{ el.style.maxHeight='0px';el.style.paddingTop='0';el.style.paddingBottom='0';el.style.marginBottom='0';el.style.borderWidth='0'; }); setTimeout(cb, 380); }, 300); }
-    function compGAnim(id) { const el=$(`global-item-${id}`); if(el) perfC(el,()=>delGN(id)); else delGN(id); }
-    function compHWAnim(id) { const el=$(`hw-item-${id}`); if(el) perfC(el,()=>delHW(id)); else delHW(id); }
-
-    function delGN(id) { addRSc(); gNotes = gNotes.filter(n => n.id !== id); sDat(); renderHome(false); }
-    function delHW(id) { addRSc(); getSub(cSubId).homework = getSub(cSubId).homework.filter(h => h.id !== id); sDat(); const el=$(`hw-item-${id}`); if(el) el.remove(); }
-    
-    function addGrade() { pSnd('pop'); const n=$('grade-name'),s=$('grade-score'),o=$('grade-out-of'); if(!n.value||!s.value||!o.value) return; getSub(cSubId).grades.push({ id: Date.now().toString(), name: n.value, score: s.value, outOf: o.value }); n.value=''; s.value=''; o.value=''; sDat(); renderDet(true); }
-    function delGrade(id) { pSnd('tick'); getSub(cSubId).grades = getSub(cSubId).grades.filter(g => g.id !== id); sDat(); renderDet(true); }
-    function addHW() { pSnd('pop'); const d=$('hw-desc'), dt=$('hw-date'); if(!d.value||!dt.value) return; getSub(cSubId).homework.push({ id: Date.now().toString(), text: d.value, date: dt.value }); d.value=''; dt.value=''; sDat(); renderDet(true); }
-    function addGN() { pSnd('pop'); const t=$('global-task'),d=$('global-date'); if(!t.value||!d.value) return; gNotes.push({ id: Date.now().toString(), text: t.value, date: d.value }); t.value=''; d.value=''; sDat(); renderHome(false); }
-    function saveNotes() { getSub(cSubId).notes = $('subject-notes').value; sDat(); }
-    function addDL() { pSnd('pop'); const n=$('dl-name'), d=$('dl-date'); if(!n.value||!d.value) return; dlData.push({ id: Date.now().toString(), name: n.value, date: d.value }); n.value=''; d.value=''; sDat(); renderHome(false); alert("Deadline Added!"); }
-    function delDL(id) { pSnd('tick'); dlData = dlData.filter(d => d.id !== id); sDat(); renderHome(false); }
-
-    let tI; let tL = 25*60; let isR = false; const pI = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`, psI = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
-    function toggleTmr() { const w = $('timer-icon'), r = $('timer-progress'); pSnd('tick'); if(isR){ clearInterval(tI); isR=false; w.innerHTML=pI; } else { isR=true; w.innerHTML=psI; tI=setInterval(()=>{ tL--; let m=Math.floor(tL/60),s=tL%60; $('timer-display').innerText=`${m}:${s<10?'0':''}${s}`; r.style.strokeDasharray=`${(tL/(25*60))*100}, 100`; if(tL<=0){ clearInterval(tI); isR=false; w.innerHTML=pI; tL=25*60; r.style.strokeDasharray=`100, 100`; $('timer-display').innerText=`25:00`; pSnd('success'); addRSc(); alert("Focus complete!"); } }, 1000); } }
-
-    // 🔥 EDITABLE SUBJECT NAMES & TIMETABLE SYNC FEATURE 🔥
-    function renameSub(id) {
-      pSnd('pop');
-      const sub = getSub(id);
-      const oldName = sub.name;
-      const newName = prompt("Rename subject:", oldName);
-      
-      if(newName && newName.trim() !== "" && newName.trim() !== oldName) {
-        const finalName = newName.trim();
-        sub.name = finalName;
-        
-        // Loop through the 10-day cycle and update any references to the old name
-        for (let day in ttCyc) {
-          ttCyc[day] = ttCyc[day].map(subjectName => 
-            (subjectName === oldName) ? finalName : subjectName
-          );
-        }
-        
-        // Save both the subjects array and the timetable array
-        localStorage.setItem('org_ttcyc', JSON.stringify(ttCyc));
-        sDat();
-        rendSet();
-        
-        if(!$('detail-screen').classList.contains('active')){
-          renderHome(false);
-        }
-      }
-    }
-
-    function rendSet() { 
-      $('settings-subjects-list').innerHTML = sData.map((s,i) => `
-        <div class="list-item app-card cascade-item" style="animation-delay: ${0.20 + (i*0.04)}s;">
-          <div style="font-weight: 500; flex: 1; cursor: pointer; padding-right: 12px;" onclick="renameSub('${s.id}')">
-            ${s.name} <span style="font-size:12px; color:var(--text-secondary); margin-left: 4px;">✎</span>
-          </div>
-          <button class="delete-btn" onclick="delSub('${s.id}')">×</button>
-        </div>
-      `).join(''); 
-    }
-    
-    function addSub() { pSnd('pop'); const i=$('new-subject'); if(!i.value)return; sData.push({ id: Date.now().toString(), name: i.value, status: 2, homework: [], notes: "", grades: [], photos: []}); i.value=''; sDat(); rendSet(); }
-    function delSub(id) { pSnd('tick'); if(confirm("Delete subject?")) { sData = sData.filter(s => s.id !== id); sDat(); rendSet(); } }
-
-    // 🔥 CLOUD SYNC FUNCTIONS 🔥
     function connectSync() {
-      if(!syncActive || !db) { alert("Firebase is not active."); return; }
+      if(!syncActive || !db) { alert("Firebase is not active. Please verify your keys."); return; }
       const rawPin = $('sync-pin-input').value.trim();
       const pin = rawPin.replace(/[^a-zA-Z0-9_-]/g, '');
       if(!pin) { alert("Please enter a valid PIN."); return; }
@@ -982,7 +780,6 @@
         if (cloudData && cloudData.sData && cloudData.sData.length > 0) {
           isIncomingSync = true;
           
-          // BULLETPROOF DATA SANITIZATION
           sData = safeArr(cloudData.sData).filter(s => s && s.name).map(s => ({
               ...s, 
               homework: safeArr(s.homework).filter(h => h && h.date), 
@@ -1029,6 +826,9 @@
       ref.off();
 
       ref.on('value', snap => {
+        // 🔥 THE ANIMATION SHIELD 🔥 Ignores cloud echo for 1.5 seconds.
+        if (Date.now() - localWriteTime < 1500) return;
+
         const cloudData = snap.val();
         if(cloudData) {
           $('sync-status').innerText = "🟢 Synced (" + pin + ")";
@@ -1065,6 +865,268 @@
         }
       });
     }
+
+    function goToNextOnboarding() {
+      const f = $('ob-first').value.trim();
+      const l = $('ob-last').value.trim();
+      const s = $('ob-school').value;
+      if(!f || !l) { pSnd('tick'); return; }
+      pSnd('pop');
+      uData = { f, l, s };
+      openSc('onboarding-tt-screen');
+    }
+
+    function finishOnboarding() {
+      pSnd('success');
+      if (!uData) uData = { f: "Student", l: "", s: "Iona College Geelong" };
+      localStorage.setItem('org_user', JSON.stringify(uData));
+      
+      if (sData.length === 0) {
+        const defaultSubs = ["English", "Mathematics", "Science", "Humanities", "Health & Physical Education (HPE)", "Religious Education"];
+        const ttSubs = [...new Set(Object.values(ttCyc).flat())];
+        sData = defaultSubs.map(n => ({ id: n.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase(), name: n, status: 2, homework: [], notes: "", grades: [], photos: [] }));
+        syncSubjectsWithTimetable(ttSubs);
+      }
+      
+      initCloudListener();
+      renderHome(true);
+      openSc('home-screen');
+    }
+
+    function updGreet() {
+      if(!uData || !uData.f) return;
+      const hr = new Date().getHours();
+      let g = 'Good evening';
+      if(hr < 12) g = 'Good morning';
+      else if(hr < 18) g = 'Good afternoon';
+      $('user-greeting').innerHTML = `${g}, ${uData.f} ${uData.l} <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color: var(--accent); opacity: 0.8; margin-left: 2px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>`;
+    }
+
+    function signOut() {
+      pSnd('tick');
+      if(confirm("Are you sure you want to sign out? This will reset your profile and wipe all tracker data.")) {
+        localStorage.clear();
+        window.location.reload(); 
+      }
+    }
+
+    function sDat() { 
+      localStorage.setItem('org_subjects', JSON.stringify(sData)); 
+      localStorage.setItem('org_global', JSON.stringify(gNotes)); 
+      localStorage.setItem('org_deadlines', JSON.stringify(dlData)); 
+      localStorage.setItem('org_ring', JSON.stringify(ring)); 
+      if (typeof ttCyc !== 'undefined') localStorage.setItem('org_ttcyc', JSON.stringify(ttCyc));
+      updRUI(); updHUI(); 
+
+      if(syncActive && db && uData && uData.syncPin && !isIncomingSync) {
+        localWriteTime = Date.now(); // Put shields up for 1.5s
+        db.ref('tracker/' + uData.syncPin).set({
+          sData, gNotes, dlData, ring, ttCyc, lastUpdated: localWriteTime
+        }).catch(err => console.error("Firebase write error:", err));
+      }
+    }
+
+    function addRSc() { if(ring.score < 5) { ring.score++; sDat(); } }
+    function updRUI() { $('study-ring').style.strokeDasharray = `${Math.min((ring.score/5)*100, 100)}, 100`; $('ring-score').innerText = `${ring.score}/5`; }
+    
+    // Triple-checked Health UI Renderer
+    function updHUI() { 
+      let c = [0,0,0,0,0]; 
+      sData.forEach(s => {
+          let st = parseInt(s.status);
+          if(isNaN(st) || st < 0 || st > 4) st = 2; 
+          c[st]++;
+      }); 
+      $('health-bar').innerHTML = c.map((cnt, i) => cnt > 0 && stD[i] ? `<div class="health-segment" style="width: ${(cnt/sData.length)*100}%; background-color: ${stD[i].h};"></div>` : '').join(''); 
+    }
+    
+    function isOD(ds) { if(!ds || !ds.includes('-')) return false; const p=ds.split('-'); return new Date(p[0], p[1]-1, p[2]) < new Date().setHours(0,0,0,0); }
+    function gDD(ds) { if(!ds || !ds.includes('-')) return 0; const p=ds.split('-'); return Math.ceil((new Date(p[0], p[1]-1, p[2]) - new Date().setHours(0,0,0,0)) / 86400000); }
+    function fmtD(ds) { if(!ds || !ds.includes('-')) return ds||''; const p=ds.split('-'); return new Date(p[0], p[1]-1, p[2]).toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'}); }
+
+    function openAddHw() {
+      $('global-new-hw-desc').value = ''; $('global-new-hw-date').value = '';
+      $('global-new-hw-sub').innerHTML = sData.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+      openSc('add-hw-screen');
+    }
+
+    function saveGlobalHw() {
+      const d = $('global-new-hw-desc').value; const subId = $('global-new-hw-sub').value; const dt = $('global-new-hw-date').value;
+      if(!d || !dt || !subId) { pSnd('tick'); return; }
+      pSnd('pop');
+      const targetSub = getSub(subId);
+      if(targetSub) targetSub.homework.push({ id: Date.now().toString(), text: d, date: dt });
+      sDat(); pSnd('success'); goHome();
+    }
+
+    function renderHome(isInit = false) {
+      const a = isInit ? 'cascade-item' : '';
+      if(isInit) { updRUI(); updHUI(); updGreet(); }
+
+      if(dlData.length > 0) {
+        $('deadline-section').style.display = 'block'; dlData.sort((a,b) => gDD(a.date) - gDD(b.date));
+        $('deadline-list').innerHTML = dlData.map(d => { const ds = gDD(d.date); return `<div class="deadline-card ${ds<=2?'critical':(ds<=7?'warning':'')}"><div class="dl-days">${ds<0?'0':ds}</div><div class="dl-label">Days until<br>${d.name}</div><button class="icon-btn" style="position:absolute; top:8px; right:8px; width:26px; height:26px; min-width:26px; min-height:26px; font-size:14px; color:white; background:rgba(0,0,0,0.15) !important; border:none; box-shadow:none;" onclick="delDL('${d.id}')">×</button></div>`; }).join('');
+      } else $('deadline-section').style.display = 'none';
+
+      const tt = getTT(); const ts = $('dynamic-timetable-section');
+      if(tt) {
+        ts.innerHTML = `<h2>Today's Schedule</h2><div class="horizontal-scroll" style="margin-bottom: 20px;">${safeArr(tt).map((cN, i) => { 
+          // 🔥 SAFE STRING CHECK 🔥
+          const m = sData.find(s => s.name && cN && String(s.name).toLowerCase() === String(cN).toLowerCase()); 
+          const iS = String(sLab[i]).includes('Session'); 
+          let hwText = '';
+          if (m && m.homework && m.homework.length > 0) {
+            const upc = [...m.homework].sort((a,b) => new Date(a.date) - new Date(b.date))[0];
+            const d = gDD(upc.date);
+            let sC = 'var(--text-secondary)';
+            let txt = `Homework task due in ${d} days`;
+            if (d < 0) { txt = 'Homework overdue!'; sC = 'var(--critical)'; }
+            else if (d === 0) { txt = 'Homework due today'; sC = 'var(--warning)'; }
+            else if (d === 1) { txt = 'Homework due in 1 day'; }
+            hwText = `<div style="font-size:11px; margin-top:6px; font-weight:600; color:${sC}; line-height:1.2;">${txt}</div>`;
+          }
+          return `<div class="timetable-card app-card" data-tt-sub="${m?m.id:''}" style="background-color: ${m?stD[m.status].c:(iS?'rgba(0,0,0,0.03)':'var(--card-bg)')}; border-color: ${m?stD[m.status].h:'var(--card-border)'};" ${m?`onclick="openDet('${m.id}')"`:''}><div class="tt-session">${sLab[i]}</div><div class="tt-subject">${cN}</div>${hwText}</div>`; 
+        }).join('')}</div>`;
+      } else {
+        ts.innerHTML = `<h2>Today's Schedule</h2><div class="app-card" style="padding: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px;"><span style="font-size: 28px;">🎉</span><span style="font-weight: 600; color: var(--text-secondary); text-align: center;">It's the weekend!<br>No classes scheduled today.</span></div>`;
+      }
+
+      sData.sort((a, b) => a.status - b.status);
+      $('subjects-list').innerHTML = sData.map((s, i) => `<div class="card app-card ${a}" data-id="${s.id}" style="background-color: ${stD[s.status]?stD[s.status].c:'#FFF'}; border-color: ${stD[s.status]?stD[s.status].h:'#CCC'}; animation-delay: ${0.28 + (0.04*i)}s; z-index: ${100-i};" onclick="openDet('${s.id}')"><div class="boxes-container">${[0,1,2,3,4].map(j => `<div class="box ${s.status===j?'active':''}" style="--box-color: ${stD[j]?stD[j].h:'#CCC'};" onclick="event.stopPropagation(); setSt('${s.id}', ${j})"></div>`).join('')}</div><div class="subject-title">${s.name}</div></div>`).join('');
+      $('global-notes-list').innerHTML = gNotes.map((n, i) => `<div id="global-item-${n.id}" class="list-item app-card task-card ${a} ${isOD(n.date)?'overdue':''}" style="animation-delay: ${0.40 + (0.04*i)}s;"><div><div style="font-weight: 600; font-size: 15px;">${n.text}</div><div class="date-badge">Due: ${fmtD(n.date)}</div></div><button class="delete-btn" onclick="compGAnim('${n.id}')">×</button></div>`).join('');
+    }
+
+    function processPhoto(e) { const f = e.target.files[0]; if(!f) return; pSnd('pop'); const r = new FileReader(); r.onload = ev => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); const s = Math.min(600/img.width, 1); c.width = img.width*s; c.height = img.height*s; c.getContext('2d').drawImage(img,0,0,c.width,c.height); getSub(cSubId).photos.push({ id: Date.now().toString(), img: c.toDataURL('image/jpeg', 0.5) }); sDat(); renderDet(true); }; img.src = ev.target.result; }; r.readAsDataURL(f); }
+    function delPhoto(id) { pSnd('tick'); getSub(cSubId).photos = getSub(cSubId).photos.filter(p => p.id !== id); sDat(); renderDet(true); }
+
+    function animRO(id) {
+      const list = $('subjects-list'); const crd = Array.from(list.children);
+      crd.forEach(c => { c.style.animation='none'; c.classList.remove('cascade-item'); });
+      const pos = {}; crd.forEach(c => pos[c.dataset.id] = c.getBoundingClientRect().top);
+      sData.sort((a,b) => a.status - b.status);
+      
+      sData.forEach((s, idx) => { 
+        const c = list.querySelector(`.card[data-id="${s.id}"]`); 
+        if(c) { 
+          list.appendChild(c); 
+          c.style.backgroundColor=stD[s.status].c; 
+          c.style.borderColor=stD[s.status].h; 
+          c.querySelectorAll('.box').forEach((b,i)=>{ b.classList.toggle('active', i===s.status); }); 
+          c.dataset.tZ = 100-idx; 
+        } 
+      });
+      
+      Array.from(list.children).forEach(c => {
+        const dY = pos[c.dataset.id] - c.getBoundingClientRect().top;
+        if(dY !== 0) {
+          c.style.transition='none'; 
+          c.style.transform=`translate3d(0, ${dY}px, 0)`; 
+          requestAnimationFrame(() => requestAnimationFrame(() => {
+            c.style.transition='transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'; 
+            c.style.transform=`translate3d(0, 0, 0)`; 
+            setTimeout(() => { c.style.transition=''; c.style.zIndex=c.dataset.tZ; }, 500); 
+          }));
+        } else {
+          c.style.zIndex = c.dataset.tZ;
+        }
+      });
+    }
+
+    function setSt(id, idx) { 
+      pSnd('tick'); const s = getSub(id); if(s) s.status = idx; sDat(); 
+      if(!cSubId) { 
+        animRO(id); $$(`.timetable-card[data-tt-sub="${id}"]`).forEach(c => { c.style.backgroundColor = stD[idx].c; c.style.borderColor = stD[idx].h; c.style.transform = 'scale(1.04)'; setTimeout(() => c.style.transform='', 200); });
+      } else { 
+        $$('.status-row').forEach((r,i) => { const b = r.querySelector('.box'); if(i===idx) { r.classList.add('active-status'); b.classList.add('active'); r.style.setProperty('--status-bg', stD[i].c); r.style.setProperty('--box-color', stD[i].h); b.style.setProperty('--box-color', stD[i].h); } else { r.classList.remove('active-status'); b.classList.remove('active'); } }); 
+      } updHUI();
+    }
+
+    function openSc(id) { 
+      pSnd('swoosh'); 
+      $$('.screen').forEach(s => { s.classList.remove('active'); void s.offsetWidth; }); 
+      const scr = $(id); 
+      if(scr) scr.classList.add('active'); 
+      window.scrollTo(0,0); 
+      if(id === 'settings-screen') { appSetApply(); rendSet(); } 
+    }
+    
+    function openDet(id) { cSubId = renderDet(false, id); openSc('detail-screen'); }
+    function renderDet(isUpdate = false, overrideId = null) {
+      if(overrideId) cSubId = overrideId;
+      const s = getSub(cSubId);
+      if(!s) { goHome(); return null; } // 🔥 SAFEGUARD 🔥
+      $('detail-title').innerText = s.name; $('subject-notes').value = s.notes;
+      
+      if(!isUpdate) {
+        $('detail-statuses').innerHTML = stD.map((st, i) => `<div class="status-row app-card cascade-item" style="--status-bg: ${st.c}; --box-color: ${st.h}; animation-delay: ${0.05 + (0.03*i)}s;" onclick="setSt('${s.id}', ${i})"><div class="box ${s.status===i?'active':''}" style="--box-color: ${st.h};"></div><div class="status-label">${st.l}</div></div>`).join('');
+      }
+      
+      const pG = $('photo-gallery'); if(s.photos.length>0) { pG.style.display='flex'; pG.innerHTML = s.photos.map(p => `<div class="photo-card cascade-item" style="animation-delay: 0.15s; background-image: url('${p.img}')"><button class="del-photo" onclick="delPhoto('${p.id}')">×</button></div>`).join(''); } else { pG.style.display='none'; pG.innerHTML=''; }
+      let tS=0, tO=0; $('grades-list').innerHTML = s.grades.map((g,i) => { tS+=parseFloat(g.score); tO+=parseFloat(g.outOf); return `<div class="list-item app-card cascade-item" style="animation-delay:${0.40 + (0.04*i)}s;"><div><div style="font-weight: 600;">${g.name}</div><div class="date-badge">${g.score} / ${g.outOf}</div></div><div style="display:flex; align-items:center; gap: 8px;"><div class="grade-badge">${Math.round((g.score/g.outOf)*100)}%</div><button class="delete-btn" onclick="delGrade('${g.id}')">×</button></div></div>`; }).join('');
+      $('average-banner').innerText = tO>0 ? `Current Average: ${Math.round((tS/tO)*100)}%` : "No Grades Logged";
+      $('hw-list').innerHTML = s.homework.map((hw,i) => `<div id="hw-item-${hw.id}" class="list-item app-card task-card cascade-item ${isOD(hw.date)?'overdue':''}" style="animation-delay:${0.25 + (0.04*i)}s;"><div><div style="font-weight: 600; font-size: 15px;">${hw.text}</div><div class="date-badge">Due: ${fmtD(hw.date)}</div></div><button class="delete-btn" onclick="compHWAnim('${hw.id}')">×</button></div>`).join('');
+      return cSubId;
+    }
+    
+    function goHome() { cSubId = null; sData.sort((a,b) => a.status - b.status); renderHome(true); openSc('home-screen'); }
+
+    function perfC(el, cb) { pSnd('success'); el.style.transition='all 0.3s ease'; el.style.background='var(--success)'; el.style.transform='scale(0.96) translateX(15px)'; const d=el.querySelector('div>div:first-child'), b=el.querySelector('.date-badge'), x=el.querySelector('.delete-btn'); if(d) d.style.color='#FFF'; if(b) b.style.color='rgba(255,255,255,0.85)'; if(x) { x.innerHTML='✓'; x.style.color='#FFF'; x.style.transform='scale(1.1)'; } setTimeout(()=>{ el.style.transition='all 0.4s cubic-bezier(0.16,1,0.3,1)'; el.style.transform='scale(0.9) translateX(30px)'; el.style.opacity='0'; el.style.maxHeight=el.offsetHeight+'px'; requestAnimationFrame(()=>{ el.style.maxHeight='0px';el.style.paddingTop='0';el.style.paddingBottom='0';el.style.marginBottom='0';el.style.borderWidth='0'; }); setTimeout(cb, 380); }, 300); }
+    function compGAnim(id) { const el=$(`global-item-${id}`); if(el) perfC(el,()=>delGN(id)); else delGN(id); }
+    function compHWAnim(id) { const el=$(`hw-item-${id}`); if(el) perfC(el,()=>delHW(id)); else delHW(id); }
+
+    function delGN(id) { addRSc(); gNotes = gNotes.filter(n => n.id !== id); sDat(); renderHome(false); }
+    function delHW(id) { addRSc(); const s = getSub(cSubId); if(s){ s.homework = s.homework.filter(h => h.id !== id); sDat(); const el=$(`hw-item-${id}`); if(el) el.remove(); } }
+    
+    function addGrade() { pSnd('pop'); const n=$('grade-name'),s=$('grade-score'),o=$('grade-out-of'); if(!n.value||!s.value||!o.value) return; const sub = getSub(cSubId); if(sub){ sub.grades.push({ id: Date.now().toString(), name: n.value, score: s.value, outOf: o.value }); n.value=''; s.value=''; o.value=''; sDat(); renderDet(true); } }
+    function delGrade(id) { pSnd('tick'); const s = getSub(cSubId); if(s){ s.grades = s.grades.filter(g => g.id !== id); sDat(); renderDet(true); } }
+    function addHW() { pSnd('pop'); const d=$('hw-desc'), dt=$('hw-date'); if(!d.value||!dt.value) return; const s = getSub(cSubId); if(s){ s.homework.push({ id: Date.now().toString(), text: d.value, date: dt.value }); d.value=''; dt.value=''; sDat(); renderDet(true); } }
+    function addGN() { pSnd('pop'); const t=$('global-task'),d=$('global-date'); if(!t.value||!d.value) return; gNotes.push({ id: Date.now().toString(), text: t.value, date: d.value }); t.value=''; d.value=''; sDat(); renderHome(false); }
+    function saveNotes() { const s = getSub(cSubId); if(s){ s.notes = $('subject-notes').value; sDat(); } }
+    function addDL() { pSnd('pop'); const n=$('dl-name'), d=$('dl-date'); if(!n.value||!d.value) return; dlData.push({ id: Date.now().toString(), name: n.value, date: d.value }); n.value=''; d.value=''; sDat(); renderHome(false); alert("Deadline Added!"); }
+    function delDL(id) { pSnd('tick'); dlData = dlData.filter(d => d.id !== id); sDat(); renderHome(false); }
+
+    let tI; let tL = 25*60; let isR = false; const pI = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`, psI = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
+    function toggleTmr() { const w = $('timer-icon'), r = $('timer-progress'); pSnd('tick'); if(isR){ clearInterval(tI); isR=false; w.innerHTML=pI; } else { isR=true; w.innerHTML=psI; tI=setInterval(()=>{ tL--; let m=Math.floor(tL/60),s=tL%60; $('timer-display').innerText=`${m}:${s<10?'0':''}${s}`; r.style.strokeDasharray=`${(tL/(25*60))*100}, 100`; if(tL<=0){ clearInterval(tI); isR=false; w.innerHTML=pI; tL=25*60; r.style.strokeDasharray=`100, 100`; $('timer-display').innerText=`25:00`; pSnd('success'); addRSc(); alert("Focus complete!"); } }, 1000); } }
+
+    function renameSub(id) {
+      pSnd('pop');
+      const sub = getSub(id);
+      const oldName = sub.name;
+      const newName = prompt("Rename subject:", oldName);
+      
+      if(newName && newName.trim() !== "" && newName.trim() !== oldName) {
+        const finalName = newName.trim();
+        sub.name = finalName;
+        
+        for (let day in ttCyc) {
+          ttCyc[day] = ttCyc[day].map(subjectName => 
+            (subjectName === oldName) ? finalName : subjectName
+          );
+        }
+        
+        localStorage.setItem('org_ttcyc', JSON.stringify(ttCyc));
+        sDat();
+        rendSet();
+        
+        if(!$('detail-screen').classList.contains('active')){
+          renderHome(false);
+        }
+      }
+    }
+
+    function rendSet() { 
+      $('settings-subjects-list').innerHTML = sData.map((s,i) => `
+        <div class="list-item app-card cascade-item" style="animation-delay: ${0.20 + (i*0.04)}s;">
+          <div style="font-weight: 500; flex: 1; cursor: pointer; padding-right: 12px;" onclick="renameSub('${s.id}')">
+            ${s.name} <span style="font-size:12px; color:var(--text-secondary); margin-left: 4px;">✎</span>
+          </div>
+          <button class="delete-btn" onclick="delSub('${s.id}')">×</button>
+        </div>
+      `).join(''); 
+    }
+    
+    function addSub() { pSnd('pop'); const i=$('new-subject'); if(!i.value)return; sData.push({ id: Date.now().toString(), name: i.value, status: 2, homework: [], notes: "", grades: [], photos: []}); i.value=''; sDat(); rendSet(); }
+    function delSub(id) { pSnd('tick'); if(confirm("Delete subject?")) { sData = sData.filter(s => s.id !== id); sDat(); rendSet(); } }
   </script>
   
   <!-- SMART INSTALL PROMPT (iOS & ANDROID) -->
