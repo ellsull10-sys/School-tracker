@@ -75,13 +75,14 @@
     h2 { font-size: 19px; font-weight: 700; margin-top: 24px; margin-bottom: 12px; }
     h3 { font-size: 14px; font-weight: 700; margin-top: 20px; margin-bottom: 8px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.6px; }
 
-    ...icon-btn, .back-btn, button.add-btn { background: var(--accent-grad) !important; color: #FFFFFF !important; border: none !important; cursor: pointer; box-shadow: 0 6px 16px rgba(30, 41, 59, 0.3); transition: transform 0.1s ease; flex-shrink: 0 !important; }
+    /* 🔥 BULLETPROOF SETTINGS ICON & BUTTON FIXES 🔥 */
+    .icon-btn, .back-btn, button.add-btn { background: var(--accent-grad) !important; color: #FFFFFF !important; border: none !important; cursor: pointer; box-shadow: 0 6px 16px rgba(30, 41, 59, 0.3); transition: transform 0.1s ease; flex-shrink: 0 !important; }
     .icon-btn { border-radius: 50%; min-width: 42px !important; min-height: 42px !important; width: 42px !important; height: 42px !important; display: flex; align-items: center; justify-content: center; padding: 0 !important; margin: 0 !important; }
     .icon-btn svg { width: 22px !important; height: 22px !important; min-width: 22px !important; min-height: 22px !important; flex-shrink: 0 !important; flex-grow: 0 !important; flex-basis: 22px !important; display: block; margin: 0 auto !important; }
     .back-btn { display: flex; align-items: center; gap: 4px; padding: 8px 16px; height: 42px; font-size: 15px; font-weight: 600; border-radius: 16px; }
     button.add-btn { padding: 0 18px; border-radius: 14px; font-weight: 600; font-size: 15px; }
     .icon-btn:active, .back-btn:active, button.add-btn:active { transform: scale(0.92); }
-
+    
     .btn-grey { background: rgba(0, 0, 0, 0.08) !important; color: var(--text-primary) !important; box-shadow: none !important; border-radius: 12px !important; }
     @media (prefers-color-scheme: dark) { .btn-grey { background: rgba(255, 255, 255, 0.15) !important; } }
 
@@ -112,7 +113,13 @@
     .health-bar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; background: var(--input-bg); margin-top: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
     .health-segment { height: 100%; transition: width 0.4s ease; border-radius: 7px; }
     
-    .horizontal-scroll { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin-left: -16px; margin-right: -16px; padding-top: 20px; padding-bottom: 40px; margin-top: -20px; margin-bottom: -40px; padding-left: 16px; -webkit-overflow-scrolling: touch; }
+    /* 🔥 SHADOW CLIPPING FIX: Massive bottom padding lets drop shadows breathe safely 🔥 */
+    .horizontal-scroll { 
+      display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; 
+      margin-left: -16px; margin-right: -16px; padding-left: 16px; padding-right: 16px; 
+      padding-top: 10px; padding-bottom: 35px; margin-top: -10px; margin-bottom: -20px; 
+      -webkit-overflow-scrolling: touch; 
+    }
     .horizontal-scroll::-webkit-scrollbar { display: none; }
     .horizontal-scroll::after { content: ''; flex: 0 0 4px; }
     
@@ -196,12 +203,11 @@
     input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 2px 6px rgba(0,0,0,0.2); margin-top: -9px; cursor: pointer; }
     input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 6px; cursor: pointer; background: rgba(0,0,0,0.1); border-radius: 3px; }
 
-    /* 🔥 RESPONSIVE DESKTOP LAYOUT (Phones stay untouched!) 🔥 */
-    .desktop-layout { display: flex; flex-direction: column; }
+    /* 🔥 RESPONSIVE DESKTOP LAYOUT (Flows together naturally, Phones untouched!) 🔥 */
+    .home-layout { display: flex; flex-direction: column; }
     @media (min-width: 850px) {
-      .desktop-layout { flex-direction: row; gap: 32px; align-items: flex-start; }
-      .dl-left { flex: 0 0 340px; position: sticky; top: 20px; display: flex; flex-direction: column; }
-      .dl-right { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+      .home-layout { display: grid; grid-template-columns: 350px 1fr; gap: 32px; align-items: start; }
+      .hl-left, .hl-right { display: flex; flex-direction: column; min-width: 0; }
       #settings-screen, #add-hw-screen, #detail-screen { max-width: 700px; margin: 0 auto; }
     }
   </style>
@@ -284,10 +290,9 @@
     </div>
 
     <!-- 🔥 RESPONSIVE DESKTOP LAYOUT WRAPPER 🔥 -->
-    <div class="desktop-layout">
-      
+    <div class="home-layout">
       <!-- LEFT COLUMN -->
-      <div class="dl-left">
+      <div class="hl-left">
         <div class="dashboard-grid cascade-item d-1">
           <div id="home-ring-card" class="widget app-card">
             <div class="widget-title">Today's Goal</div>
@@ -326,20 +331,19 @@
           <input type="date" id="dl-date">
           <button class="add-btn" onclick="addDL()">Add</button>
         </div>
-        
+
         <div id="deadline-section" style="display: none;" class="cascade-item d-4">
           <h2 id="dl-title">Upcoming Deadlines</h2>
-          <div class="horizontal-scroll" id="deadline-list" style="padding-bottom: 10px; margin-bottom: 0;"></div>
+          <div class="horizontal-scroll" id="deadline-list"></div>
         </div>
       </div>
 
       <!-- RIGHT COLUMN -->
-      <div class="dl-right">
+      <div class="hl-right">
         <div id="dynamic-timetable-section" class="cascade-item d-5"></div>
         <h2 id="subj-title" class="cascade-item d-6">Subjects</h2>
         <div id="subjects-list"></div>
       </div>
-
     </div>
   </div>
 
@@ -734,7 +738,7 @@
 
     const stD = [ { c: "rgba(239, 68, 68, 0.12)", h: "#EF4444", l: "Falling behind" }, { c: "rgba(245, 158, 11, 0.12)", h: "#F59E0B", l: "Behind" }, { c: "var(--card-bg)", h: "#94A3B8", l: "Up to date" }, { c: "rgba(16, 185, 129, 0.12)", h: "#10B981", l: "Ahead" }, { c: "rgba(5, 150, 105, 0.15)", h: "#059669", l: "Well ahead" } ];
 
-    // 🔥 THE ULTIMATE ANTI-CRASH STARTUP 🔥
+    // 🔥 AUTO-RECOVERY STARTUP SEQUENCE 🔥
     window.onload = () => { 
       try { appSetApply(); } catch(e) {} 
       const splash = $('splash');
@@ -752,9 +756,10 @@
             }
           } catch(err) {
             console.error("FATAL ERROR CAUGHT:", err);
-            // This physically breaks the loop by deleting the corrupted PIN.
-            alert("A corrupted cloud sync caused a crash. We've completely reset your local data to unfreeze the app.");
-            localStorage.clear();
+            alert("A corrupted cloud sync caused a crash. We've wiped the local ghost file to save the app.");
+            localStorage.removeItem('org_subjects');
+            localStorage.removeItem('org_global');
+            localStorage.removeItem('org_deadlines');
             window.location.reload(); 
           }
         }, 400);
@@ -765,7 +770,7 @@
       if(!syncActive || !db) { alert("Firebase is not active. Please verify your keys."); return; }
       const rawPin = $('sync-pin-input').value.trim();
       const pin = rawPin.replace(/[^a-zA-Z0-9_-]/g, '');
-      if(!pin) { alert("Please enter a valid PIN."); return; }
+      if(!pin) { alert("Please enter a valid PIN (letters and numbers only)."); return; }
       
       pSnd('pop');
       if(!uData) uData = { f: "Student", l: "", s: "Iona College Geelong" };
@@ -970,7 +975,7 @@
 
       const tt = getTT(); const ts = $('dynamic-timetable-section');
       if(tt) {
-        ts.innerHTML = `<h2>Today's Schedule</h2><div class="horizontal-scroll" style="margin-bottom: 20px;">${safeArr(tt).map((cN, i) => { 
+        ts.innerHTML = `<h2>Today's Schedule</h2><div class="horizontal-scroll">${safeArr(tt).map((cN, i) => { 
           // 🔥 SAFE STRING CHECK 🔥
           const m = sData.find(s => s.name && cN && String(s.name).toLowerCase() === String(cN).toLowerCase()); 
           const iS = String(sLab[i]).includes('Session'); 
