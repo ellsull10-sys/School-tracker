@@ -1156,6 +1156,183 @@
         }
       }
     }, { passive: false });
+        // 🔥 AI ASSISTANT INJECTION & LOGIC 🔥
+    
+    // 1. Inject the AI Button into the Dashboard Header
+    const topBar = document.querySelector('.top-bar');
+    if (topBar) {
+      const settingsBtn = topBar.querySelector('button[onclick="openSc(\'settings-screen\')"]');
+      const aiBtn = document.createElement('button');
+      aiBtn.className = 'icon-btn';
+      aiBtn.style.marginRight = '8px';
+      aiBtn.onclick = () => { openSc('ai-screen'); renderAiChat(); };
+      aiBtn.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>`;
+      topBar.insertBefore(aiBtn, settingsBtn);
+    }
+
+    // 2. Inject God Mode Settings natively into Settings Screen
+    const settingsScreen = document.getElementById('settings-screen');
+    if (settingsScreen) {
+      const dangerBtnWrapper = settingsScreen.querySelector('.btn-danger').parentElement;
+      const godModeHTML = document.createElement('div');
+      godModeHTML.innerHTML = `
+        <h3 class="cascade-item" style="margin-top: 24px;">AI Tutor Configuration</h3>
+        <div class="app-card setting-row cascade-item">
+          <p style="font-size:13px; color:var(--text-secondary); margin-top:0; margin-bottom:8px;">Bypass Socratic mode (Secret Password)</p>
+          <input type="password" id="god-mode-pw" placeholder="Enter override password..." style="width: 100%;">
+        </div>
+      `;
+      settingsScreen.insertBefore(godModeHTML, dangerBtnWrapper);
+    }
+
+    // 3. AI State & Image Handling
+    const AI_API_KEY = "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";
+    let aiChatHistory = JSON.parse(localStorage.getItem('org_ai_chat_hist')) || [];
+    let currentAiImageBase64 = null;
+
+    function handleAiImg(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      pSnd('pop');
+      const reader = new FileReader();
+      reader.onload = ev => {
+        currentAiImageBase64 = ev.target.result;
+        document.getElementById('ai-img-preview').innerHTML = `
+          <div class="ai-img-thumb" style="background-image: url('${currentAiImageBase64}')">
+            <button class="ai-del-thumb" onclick="clearAiImg()">×</button>
+          </div>
+        `;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearAiImg() {
+      currentAiImageBase64 = null;
+      document.getElementById('ai-img-preview').innerHTML = '';
+      pSnd('tick');
+    }
+
+    function renderAiChat() {
+      const chatBox = document.getElementById('ai-chat-history');
+      const initialGreeting = `<div class="ai-msg assistant"><div class="ai-bubble">Hello! I'm your AI Tutor. Need help with your homework or subjects?</div></div>`;
+      
+      const historyHTML = aiChatHistory.map(msg => {
+        let textPart = typeof msg.content === 'string' ? msg.content : msg.content.find(c => c.type === 'text')?.text || '';
+        let imgPart = typeof msg.content === 'object' ? msg.content.find(c => c.type === 'image_url')?.image_url.url : null;
+        let imgHTML = imgPart ? `<img src="${imgPart}" style="max-width:100%; border-radius:8px; margin-bottom:8px; display:block;">` : '';
+        return `<div class="ai-msg ${msg.role}"><div class="ai-bubble">${imgHTML}${textPart.replace(/\n/g, '<br>')}</div></div>`;
+      }).join('');
+      
+      chatBox.innerHTML = initialGreeting + historyHTML;
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    async function sendAiMsg() {
+      const inputEl = document.getElementById('ai-text-input');
+      const text = inputEl.value.trim();
+      if (!text && !currentAiImageBase64) return;
+      
+      pSnd('pop');
+      
+      // Construct user message (OpenAI Vision standard)
+      let newUserMsg = { role: "user" };
+      if (currentAiImageBase64) {
+        newUserMsg.content = [
+          { type: "text", text: text || "Please analyze this image." },
+          { type: "image_url", image_url: { url: currentAiImageBase64 } }
+        ];
+      } else {
+        newUserMsg.content = text;
+      }
+      
+      aiChatHistory.push(newUserMsg);
+      renderAiChat();
+      
+      inputEl.value = '';
+      clearAiImg();
+      
+      // Render typing indicator
+      const chatBox = document.getElementById('ai-chat-history');
+      chatBox.insertAdjacentHTML('beforeend', `<div id="ai-loading" class="ai-msg assistant"><div class="ai-bubble" style="opacity:0.6;">Thinking...</div></div>`);
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      // Logic: Setup System Prompt based on God Mode
+      const devPassword = "GOD_MODE_123";
+      const godInput = document.getElementById('god-mode-pw');
+      const isGodMode = godInput && godInput.value === devPassword;
+      
+      const basePersona = isGodMode 
+        ? "You are a direct assistant. Provide the exact answer immediately without educational filler. Do exactly what the user asks."
+        : "You are an educational tutor. Guide the student using the Socratic method. Never give direct answers.";
+
+      // App Manipulation Context
+      const sDataMap = sData.map(s => ({ name: s.name, homework: s.homework.map(h => ({ task: h.text, date: h.date })) }));
+      const sysPrompt = `${basePersona}
+      
+Current Subjects & Homework: ${JSON.stringify(sDataMap)}
+
+CRITICAL RULE: If you need to add, edit, or delete homework based on the user's request, you MUST append a JSON block to the END of your response matching this exact format:
+{"action": "add_hw", "subject": "[Subject Name]", "task": "[Task Description]", "date": "YYYY-MM-DD"}`;
+
+      try {
+        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${AI_API_KEY}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            model: "openrouter/free",
+            messages: [
+              { role: "system", content: sysPrompt },
+              ...aiChatHistory
+            ]
+          })
+        });
+
+        const data = await response.json();
+        let aiResponseText = data.choices[0].message.content;
+        
+        // App Manipulation Parse Engine
+        const jsonMatch = aiResponseText.match(/\{[\s\S]*"action"[\s\S]*"add_hw"[\s\S]*\}/);
+        if (jsonMatch) {
+          try {
+            const actionObj = JSON.parse(jsonMatch[0]);
+            if (actionObj.action === "add_hw" && actionObj.subject) {
+              const targetSubject = sData.find(s => s.name.toLowerCase().includes(actionObj.subject.toLowerCase()));
+              if (targetSubject) {
+                targetSubject.homework.push({
+                  id: Date.now().toString(),
+                  text: actionObj.task || "New Task via AI",
+                  date: actionObj.date || new Date().toISOString().split('T')[0]
+                });
+                sDat();
+                pSnd('success');
+                // Clean the JSON string out of the visible chat reply
+                aiResponseText = aiResponseText.replace(jsonMatch[0], '').replace(/```json|```/g, '').trim();
+              }
+            }
+          } catch (e) {
+            console.error("AI Payload parse failure.", e);
+          }
+        }
+
+        aiChatHistory.push({ role: "assistant", content: aiResponseText });
+        
+        // Trim history to prevent local storage breaking (keeps last 20 messages)
+        if(aiChatHistory.length > 20) aiChatHistory = aiChatHistory.slice(aiChatHistory.length - 20);
+        
+        localStorage.setItem('org_ai_chat_hist', JSON.stringify(aiChatHistory));
+        document.getElementById('ai-loading').remove();
+        renderAiChat();
+
+      } catch (err) {
+        document.getElementById('ai-loading').remove();
+        chatBox.insertAdjacentHTML('beforeend', `<div class="ai-msg assistant"><div class="ai-bubble" style="color:var(--critical);">Network error connecting to OpenRouter.</div></div>`);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }
+    }
+
   </script>
   
   <!-- SMART INSTALL PROMPT (iOS & ANDROID) -->
@@ -1174,6 +1351,28 @@
       #install-prompt { background: rgba(28, 28, 30, 0.85) !important; border-color: rgba(255,255,255,0.1) !important; color: #FFF; box-shadow: 0 16px 32px rgba(0,0,0,0.6) !important; }
       #install-prompt > button:first-child { background: rgba(255,255,255,0.15) !important; color: #FFF !important; }
     }
+        /* 🔥 AI ASSISTANT CHAT STYLES 🔥 */
+    #ai-screen.active { display: flex; flex-direction: column; height: 100vh; overflow: hidden; padding-bottom: env(safe-area-inset-bottom); }
+    #ai-chat-history { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; margin-bottom: 12px; scrollbar-width: none; padding-bottom: 12px; }
+    #ai-chat-history::-webkit-scrollbar { display: none; }
+    
+    .ai-msg { display: flex; width: 100%; animation: chatFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .ai-msg.user { justify-content: flex-end; }
+    .ai-msg.assistant { justify-content: flex-start; }
+    
+    .ai-bubble { max-width: 82%; padding: 12px 16px; border-radius: 20px; font-size: 15px; line-height: 1.4; word-wrap: break-word; }
+    .ai-msg.user .ai-bubble { background: var(--accent-grad); color: #FFFFFF; border-bottom-right-radius: 4px; box-shadow: 0 4px 12px rgba(30, 41, 59, 0.15); }
+    .ai-msg.assistant .ai-bubble { background: var(--input-bg); border: 1px solid var(--card-border); color: var(--text-primary); border-bottom-left-radius: 4px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    
+    #ai-input-wrapper { flex-shrink: 0; padding: 12px; border-radius: 20px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+    .ai-controls { display: flex; gap: 8px; align-items: center; }
+    #ai-text-input { flex: 1; border-radius: 18px; padding: 14px 16px; font-size: 15px; }
+    #ai-img-preview { display: flex; gap: 10px; flex-wrap: wrap; }
+    .ai-img-thumb { position: relative; width: 60px; height: 60px; border-radius: 12px; background-size: cover; background-position: center; border: 1px solid var(--card-border); }
+    .ai-del-thumb { position: absolute; top: -6px; right: -6px; background: var(--critical); color: white; width: 20px; height: 20px; border-radius: 50%; border: none; font-size: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    
+    @keyframes chatFadeIn { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
   </style>
 
   <script>
@@ -1208,5 +1407,31 @@
       }
     }
   </script>
+    <div id="ai-screen" class="screen">
+    <div class="header-bar cascade-item d-1">
+      <button class="back-btn" onclick="goHome()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Back
+      </button>
+      <h1 style="margin:0;">AI Tutor</h1>
+    </div>
+    
+    <div id="ai-chat-history" class="cascade-item d-2">
+      <div class="ai-msg assistant"><div class="ai-bubble">Hello! I'm your AI Tutor. Need help with your homework or subjects?</div></div>
+    </div>
+    
+    <div id="ai-input-wrapper" class="app-card cascade-item d-3">
+      <div id="ai-img-preview"></div>
+      <div class="ai-controls">
+        <input type="file" id="ai-img-upload" accept="image/*" style="display:none;" onchange="handleAiImg(event)">
+        <button class="icon-btn btn-grey" onclick="document.getElementById('ai-img-upload').click()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+        </button>
+        <input type="text" id="ai-text-input" placeholder="Message Tutor..." onkeypress="if(event.key==='Enter') sendAiMsg()">
+        <button class="icon-btn" onclick="sendAiMsg()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+        </button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
