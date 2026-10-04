@@ -41,7 +41,7 @@
       html.bg-active, body.bg-active { background-color: #000000 !important; }
       body.bg-active { --card-shadow: 0 24px 54px rgba(0, 0, 0, 0.8), 0 8px 24px rgba(0, 0, 0, 0.6); }
       body.bg-active h1, body.bg-active h2 { text-shadow: 0 4px 16px rgba(0,0,0,0.5) !important; }
-      .timetable-card::before { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important; } /* Super subtle dark mode shadow */
+      .timetable-card::before { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important; }
     }
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -51,10 +51,8 @@
     
     h1, h2, h3, .subject-title, .simon-action, .ring-text, .dl-days { font-family: 'Outfit', sans-serif; letter-spacing: -0.4px; }
     
-    /* Static Splash Screen */
     #splash { position: fixed; inset: 0; background: var(--bg-base); color: var(--text-primary); z-index: 9999; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; transition: opacity 0.4s ease; }
     
-    /* Rotate lock specifically disabled for desktop environments */
     #rotate-lock { display: none; position: fixed; inset: 0; z-index: 100000; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); color: #FFFFFF; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px; font-weight: 700; font-size: 22px; line-height: 1.3; }
     @media screen and (orientation: landscape) and (max-height: 600px) and (hover: none) and (pointer: coarse) { #rotate-lock { display: flex; } .screen, .top-bar { display: none !important; } }
 
@@ -76,7 +74,6 @@
     h2 { font-size: 19px; font-weight: 700; margin-top: 24px; margin-bottom: 12px; }
     h3 { font-size: 14px; font-weight: 700; margin-top: 20px; margin-bottom: 8px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.6px; }
 
-    /* 🔥 BULLETPROOF SETTINGS ICON & BUTTON FIXES 🔥 */
     .icon-btn, .back-btn, button.add-btn { background: var(--accent-grad) !important; color: #FFFFFF !important; border: none !important; cursor: pointer; box-shadow: 0 6px 16px rgba(30, 41, 59, 0.3); transition: transform 0.1s ease; flex-shrink: 0 !important; }
     .icon-btn { border-radius: 50%; min-width: 42px !important; min-height: 42px !important; width: 42px !important; height: 42px !important; display: flex; align-items: center; justify-content: center; padding: 0 !important; margin: 0 !important; }
     .icon-btn svg { width: 22px !important; height: 22px !important; min-width: 22px !important; min-height: 22px !important; flex-shrink: 0 !important; flex-grow: 0 !important; flex-basis: 22px !important; display: block; margin: 0 auto !important; }
@@ -114,7 +111,6 @@
     .health-bar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; background: var(--input-bg); margin-top: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
     .health-segment { height: 100%; transition: width 0.4s ease; border-radius: 7px; }
     
-    /* 🔥 REVERTED HORIZONTAL SCROLL PADDING (Fixes the left cut-off completely) 🔥 */
     .horizontal-scroll { 
       display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; 
       margin-left: -16px; margin-right: -16px; padding-left: 16px; padding-right: 16px; 
@@ -145,7 +141,7 @@
     @keyframes pulseAlert { 0%,100% { transform: scale(1); } 50% { transform: scale(0.98); } }
     
     .timetable-card { flex: 0 0 130px; scroll-snap-align: start; padding: 14px; display: flex; flex-direction: column; gap: 6px; cursor: pointer; transition: transform 0.1s ease; }
-    .timetable-card::before { box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03) !important; } /* 🔥 Super subtle almost non-existent shadow override 🔥 */
+    .timetable-card::before { box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03) !important; }
     .timetable-card:active { transform: scale(0.95); }
     .tt-session { font-size: 12px; color: var(--text-secondary); font-weight: 600; }
     .tt-subject { font-size: 15px; font-weight: 700; line-height: 1.2; }
@@ -187,8 +183,6 @@
     .delete-btn:active { transform: scale(0.8); }
     .grade-badge { font-size: 14px; font-weight: 700; background: rgba(0,0,0,0.05); padding: 4px 10px; border-radius: 8px; }
     .average-banner { padding: 16px; text-align: center; font-weight: 700; font-size: 16px; margin-bottom: 16px; }
-    .completing { animation: completeTaskAnim 0.35s ease forwards; pointer-events: none; overflow: hidden; }
-    @keyframes completeTaskAnim { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; background: #10B981 !important; transform: scale(0.97); } 100% { opacity: 0; transform: scale(0.92) translateY(-4px); } }
     
     .photo-gallery { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 24px; margin-bottom: -16px; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
     .photo-gallery::-webkit-scrollbar { display: none; }
@@ -215,15 +209,13 @@
     input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 2px 6px rgba(0,0,0,0.2); margin-top: -9px; cursor: pointer; }
     input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 6px; cursor: pointer; background: rgba(0,0,0,0.1); border-radius: 3px; }
 
-    /* 🔥 RESPONSIVE DESKTOP LAYOUT (Flows together naturally, Phones untouched!) 🔥 */
     .home-layout { display: flex; flex-direction: column; }
     @media (min-width: 850px) {
       .home-layout { display: grid; grid-template-columns: 350px 1fr; gap: 32px; align-items: start; }
       .hl-left, .hl-right { display: flex; flex-direction: column; min-width: 0; }
-      #settings-screen, #add-hw-screen, #detail-screen { max-width: 700px; margin: 0 auto; }
+      #settings-screen, #add-hw-screen, #detail-screen, #tt-editor-screen { max-width: 700px; margin: 0 auto; }
     }
 
-    /* 🔥 AI ASSISTANT CHAT STYLES 🔥 */
     #ai-screen.active { display: flex; flex-direction: column; height: 100vh; overflow: hidden; padding-bottom: env(safe-area-inset-bottom); }
     #ai-chat-history { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; margin-bottom: 12px; scrollbar-width: none; padding-bottom: 12px; }
     #ai-chat-history::-webkit-scrollbar { display: none; }
@@ -244,6 +236,45 @@
     .ai-del-thumb { position: absolute; top: -6px; right: -6px; background: var(--critical); color: white; width: 20px; height: 20px; border-radius: 50%; border: none; font-size: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
     
     @keyframes chatFadeIn { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+    .tt-day-ovoid {
+      flex: 0 0 auto;
+      border-radius: 9999px !important;
+      padding: 10px 20px !important;
+      font-size: 13.5px !important;
+      font-weight: 600 !important;
+      border: 2px solid transparent !important;
+      box-shadow: none !important;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .tt-day-ovoid.active {
+      background: var(--accent-grad) !important;
+      color: #FFFFFF !important;
+      box-shadow: none !important;
+      border-color: rgba(255, 255, 255, 0.4) !important;
+      transform: scale(1.04);
+    }
+    .tt-day-ovoid:not(.active) {
+      background: rgba(0, 0, 0, 0.06) !important;
+      color: var(--text-secondary) !important;
+      box-shadow: none !important;
+    }
+    .tt-day-ovoid:active {
+      transform: scale(0.95);
+    }
+    @media (prefers-color-scheme: dark) {
+      .tt-day-ovoid:not(.active) {
+        background: rgba(255, 255, 255, 0.12) !important;
+        color: var(--text-secondary) !important;
+      }
+      .tt-day-ovoid.active {
+        border-color: rgba(255, 255, 255, 0.25) !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -255,10 +286,8 @@
 
   <div id="app-background"></div>
   
-  <!-- STATIC SPLASH SCREEN -->
   <div id="splash">School Tracker</div>
 
-  <!-- STEP 1: ONBOARDING SCREEN -->
   <div id="onboarding-screen" class="screen">
     <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height: 80vh; text-align:center;">
       <div class="app-card cascade-item d-1" style="padding: 28px 24px; width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 16px;">
@@ -279,6 +308,26 @@
           <div style="font-size:12px; font-weight:700; color:var(--text-secondary); margin-bottom:6px; text-transform:uppercase;">School</div>
           <select id="ob-school" class="full-w-input">
             <option value="Iona College Geelong">Iona College Geelong</option>
+            <option value="Teen Tutors">Teen Tutors</option>
+          </select>
+        </div>
+
+        <div style="text-align: left;">
+          <div style="font-size:12px; font-weight:700; color:var(--text-secondary); margin-bottom:6px; text-transform:uppercase;">Year Level</div>
+          <select id="ob-year" class="full-w-input">
+            <option value="0">Prep</option>
+            <option value="1">Year 1</option>
+            <option value="2">Year 2</option>
+            <option value="3">Year 3</option>
+            <option value="4">Year 4</option>
+            <option value="5">Year 5</option>
+            <option value="6">Year 6</option>
+            <option value="7">Year 7</option>
+            <option value="8">Year 8</option>
+            <option value="9">Year 9</option>
+            <option value="10" selected>Year 10</option>
+            <option value="11">Year 11</option>
+            <option value="12">Year 12</option>
           </select>
         </div>
         
@@ -287,35 +336,33 @@
     </div>
   </div>
 
-  <!-- STEP 2: ONBOARDING TIMETABLE SCREEN -->
   <div id="onboarding-tt-screen" class="screen">
     <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height: 80vh; text-align:center;">
       <div class="app-card cascade-item d-1" style="padding: 28px 24px; width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 16px;">
         <h1 style="font-size: 28px; margin-bottom: 4px;">Smart Setup</h1>
-        <p style="color: var(--text-secondary); font-weight: 500; margin-top: 0; margin-bottom: 12px;">Upload a screenshot of your Iona College timetable to automatically build your subjects and dashboard.</p>
+        <p style="color: var(--text-secondary); font-weight: 500; margin-top: 0; margin-bottom: 12px;">Upload a screenshot of your timetable to automatically build your subjects and dashboard.</p>
 
         <input type="file" id="ob-tt-upload" accept="image/*" style="display:none;" onchange="handleTimetableImage(event, 'ob')">
         
         <button id="ob-scan-btn" class="add-btn full-w-input" style="padding: 16px; margin-top: 8px; font-size: 16px; display: flex; justify-content: center; align-items: center; gap: 8px;" onclick="$('ob-tt-upload').click()">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-          Scan 10-Day Timetable
+          Scan Timetable
         </button>
         
-        <button class="add-btn btn-grey full-w-input" style="padding: 16px; font-size: 16px;" onclick="finishOnboarding()">Use Standard Subjects</button>
+        <button class="add-btn btn-grey full-w-input" style="padding: 16px; font-size: 16px;" onclick="openTtEditor('manual')">Enter Manually</button>
+
+        <button class="add-btn btn-grey full-w-input" style="padding: 16px; font-size: 16px; margin-top: 12px; background: transparent !important; color: var(--text-secondary) !important; box-shadow: none !important;" onclick="finishOnboarding()">Skip & Use Standard Subjects</button>
       </div>
     </div>
   </div>
 
-  <!-- HOME SCREEN -->
   <div id="home-screen" class="screen">
     <div class="top-bar">
-      <!-- DYNAMIC GREETING HEADER -->
       <div class="flex-col" style="flex: 1; margin-left: 4px;">
         <div id="user-greeting" style="font-size: 13px; font-weight: 700; color: var(--text-secondary); margin-bottom: 2px; display: flex; align-items: center; gap: 4px; opacity: 0.9;"></div>
         <h1 style="margin-left: 0;">Dashboard</h1>
       </div>
 
-      <!-- 🔥 CLEAN, HARDCODED HEADER BUTTONS 🔥 -->
       <div style="display: flex; gap: 8px; align-items: center;">
         <button class="icon-btn" onclick="openSc('ai-screen'); renderAiChat();">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12c-2.4 0-4.6-1-6.4-2.6A9.5 9.5 0 0 0 12 3a9.5 9.5 0 0 0-2.6 6.4C7.6 11 5.4 12 3 12c2.4 0 4.6 1 6.4 2.6A9.5 9.5 0 0 0 12 21a9.5 9.5 0 0 0 2.6-6.4C16.4 13 18.6 12 21 12z"></path></svg>
@@ -328,7 +375,6 @@
       </div>
     </div>
 
-    <!-- 🔥 RESPONSIVE DESKTOP LAYOUT WRAPPER 🔥 -->
     <div class="home-layout">
       <!-- LEFT COLUMN -->
       <div class="hl-left">
@@ -384,6 +430,45 @@
         <div id="subjects-list"></div>
       </div>
     </div>
+  </div>
+
+  <div id="tt-editor-screen" class="screen">
+    <div class="header-bar cascade-item d-1">
+      <button class="back-btn" id="tt-editor-back-btn" onclick="openSc('settings-screen')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Back</button>
+      <h1 style="margin:0;">Timetable</h1>
+    </div>
+    
+    <div class="app-card cascade-item d-2" style="padding:16px; margin-bottom:16px; display: flex; flex-direction: column; gap: 14px;">
+       <div>
+         <label style="font-size:12px; font-weight:700; color:var(--text-secondary); text-transform: uppercase; margin-bottom: 6px; display: block;">Cycle Length</label>
+         <select id="tt-cycle-type" class="full-w-input" onchange="changeTtCycleLength(parseInt(this.value))">
+            <option value="5">5-Day Cycle (Weekly • Mon - Fri)</option>
+            <option value="10" selected>10-Day Cycle (Fortnightly • Week 1 & 2)</option>
+         </select>
+       </div>
+       <div>
+         <label style="font-size:12px; font-weight:700; color:var(--text-secondary); text-transform: uppercase; margin-bottom: 6px; display: block;">Periods Per Day</label>
+         <select id="tt-period-count" class="full-w-input" onchange="renderTtEditorGrid()">
+            <option value="4">4 Periods</option>
+            <option value="5">5 Periods</option>
+            <option value="6" selected>6 Periods</option>
+            <option value="7">7 Periods</option>
+            <option value="8">8 Periods</option>
+         </select>
+       </div>
+       <p style="font-size: 13px; color: var(--text-secondary); margin: 0; line-height: 1.4;">Leave slots empty for study or free periods.</p>
+    </div>
+    
+    <div class="horizontal-scroll cascade-item d-3" id="tt-day-tabs" style="margin-bottom:10px; padding-bottom: 12px;"></div>
+    
+    <div id="tt-day-hint-banner" class="cascade-item d-3" style="margin-bottom: 16px; padding: 10px 14px; background: rgba(52, 91, 123, 0.08); border-radius: 14px; border: 1px solid rgba(52, 91, 123, 0.15); display: flex; align-items: center; gap: 8px;">
+      <span style="font-size: 16px;">💡</span>
+      <span id="tt-day-hint-text" style="font-size: 13px; font-weight: 600; color: var(--text-primary); line-height: 1.3;">Day 1 is Monday</span>
+    </div>
+
+    <div id="tt-editor-grid" class="cascade-item d-4 app-card" style="padding: 16px; display: flex; flex-direction: column; gap: 12px;"></div>
+    
+    <button class="add-btn full-w-input cascade-item d-5 btn-success" style="padding: 16px; margin-top: 24px; font-size: 16px; background: var(--success) !important;" onclick="saveTimetable()">Save Timetable</button>
   </div>
 
   <div id="add-hw-screen" class="screen">
@@ -449,7 +534,6 @@
       <h1 style="margin:0;">Settings</h1>
     </div>
 
-    <!-- 🔥 AI GOD MODE SECTION 🔥 -->
     <h3 class="cascade-item d-2">AI Tutor Configuration</h3>
     <div class="app-card setting-row cascade-item d-3">
       <p style="font-size:13px; color:var(--text-secondary); margin-top:0; margin-bottom:8px;">Unlock full AI capabilities (Bypass Tutor Mode).</p>
@@ -460,7 +544,6 @@
       <div id="god-mode-status" style="font-size:12px; margin-top:8px; font-weight:600; color:var(--text-secondary);">Currently: Tutor Mode</div>
     </div>
 
-    <!-- 🔥 CLOUD SYNC SECTION 🔥 -->
     <h3 class="cascade-item d-4">Cloud Sync</h3>
     <div class="app-card setting-row cascade-item d-5">
       <p style="font-size:14px; color:var(--text-secondary); margin-top:0; margin-bottom:12px; line-height:1.4;">Enter a unique Sync PIN to connect your phone and laptop.</p>
@@ -489,9 +572,10 @@
 
     <h3 class="cascade-item d-8">Timetable Scanner</h3>
     <div class="app-card setting-row cascade-item d-9">
-      <p style="font-size:14px; color:var(--text-secondary); margin-top:0; margin-bottom:12px; line-height:1.4;">Upload a screenshot of your 10-day Simon timetable grid to automatically detect and synchronize your classes.</p>
+      <p style="font-size:14px; color:var(--text-secondary); margin-top:0; margin-bottom:12px; line-height:1.4;">Upload a screenshot of your 10-day Simon timetable grid or manually configure it.</p>
       <input type="file" id="tt-upload" accept="image/*" style="display:none;" onchange="handleTimetableImage(event, 'settings')">
       <button id="scan-tt-btn" class="add-btn" style="width:100%; padding:12px; display:flex; justify-content:center; align-items:center; gap:8px;" onclick="$('tt-upload').click()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Scan Timetable</button>
+      <button class="add-btn btn-grey" style="width:100%; padding:12px; margin-top:8px; display:flex; justify-content:center; align-items:center; gap:8px;" onclick="openTtEditor('settings')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> Edit Timetable Manually</button>
     </div>
 
     <h3 class="cascade-item">Subject Manager</h3>
@@ -499,7 +583,6 @@
     <div class="input-group cascade-item"><input type="text" id="new-subject" placeholder="New Subject Name..."><button class="add-btn" onclick="addSub()">Create</button></div>
     <div id="settings-subjects-list"></div>
 
-    <!-- 🔥 RED SIGN OUT & RESET BUTTON 🔥 -->
     <div class="cascade-item" style="margin-top: 32px; margin-bottom: 20px;">
       <button class="add-btn btn-danger full-w-input" style="padding: 16px; border-radius: 16px; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="signOut()">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
@@ -508,33 +591,25 @@
     </div>
   </div>
 
-  <!-- 🔥 NEW AI ASSISTANT SCREEN 🔥 -->
   <div id="ai-screen" class="screen">
     <div class="header-bar cascade-item d-1" style="position:relative; z-index:100;">
       <button class="back-btn" onclick="goHome()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Back
       </button>
       
-      <!-- History Dropdown Trigger -->
       <div style="flex:1; display:flex; align-items:center; gap:4px; cursor:pointer;" onclick="toggleAiHistory()">
         <h1 style="margin:0;">AI Tutor</h1>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-secondary);"><polyline points="6 9 12 15 18 9"></polyline></svg>
       </div>
 
-      <!-- History Dropdown Modal -->
-      <div id="ai-history-dropdown" class="app-card" style="display:none; position:absolute; top:50px; left:50%; transform:translateX(-50%); width:250px; max-height: 300px; overflow-y: auto; padding:8px; flex-direction:column; gap:4px; box-shadow:0 12px 32px rgba(0,0,0,0.15);">
-        <!-- Injected via JS -->
-      </div>
+      <div id="ai-history-dropdown" class="app-card" style="display:none; position:absolute; top:50px; left:50%; transform:translateX(-50%); width:250px; max-height: 300px; overflow-y: auto; padding:8px; flex-direction:column; gap:4px; box-shadow:0 12px 32px rgba(0,0,0,0.15);"></div>
 
-      <!-- 🔥 NEW CHAT BUTTON 🔥 -->
       <button class="icon-btn btn-grey" onclick="startNewAiSession()" style="margin-left: auto;">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
       </button>
     </div>
     
-    <div id="ai-chat-history" class="cascade-item d-2">
-      <div class="ai-msg assistant"><div class="ai-bubble">Hello! I'm your AI Tutor. Need help with your homework or subjects?</div></div>
-    </div>
+    <div id="ai-chat-history" class="cascade-item d-2"></div>
     
     <div id="ai-input-wrapper" class="app-card cascade-item d-3">
       <div id="ai-img-preview"></div>
@@ -552,7 +627,6 @@
   </div>
 
   <script>
-    // 🔥 THE ULTIMATE DATA SANITIZER (Kills Grey Screens) 🔥
     const safeArr = obj => {
       if(!obj) return [];
       const arr = Array.isArray(obj) ? obj : Object.values(obj);
@@ -570,41 +644,21 @@
       measurementId: "G-0L3GRJ3R5R"
     };
 
-    let syncActive = false;
-    let db = null;
-    let isIncomingSync = false;
-    let localWriteTime = 0; // 🔥 ANIMATION SHIELD 🔥
-
-    try {
-      if (firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY") {
-        firebase.initializeApp(firebaseConfig);
-        db = firebase.database();
-        syncActive = true;
-      }
-    } catch(err) {
-      console.error("Firebase init failed:", err);
-    }
+    let syncActive = false; let db = null; let isIncomingSync = false; let localWriteTime = 0; 
+    try { if (firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY") { firebase.initializeApp(firebaseConfig); db = firebase.database(); syncActive = true; } } catch(err) { console.error("Firebase init failed:", err); }
 
     const $ = id => document.getElementById(id);
     const $$ = sel => document.querySelectorAll(sel);
 
-    // 🔥 BULLETPROOF LOCAL DATA LOADING 🔥
     let rawSubs = null;
     try { rawSubs = JSON.parse(localStorage.getItem('org_subjects')); } catch(e){}
     let sData = safeArr(rawSubs);
     
     if(sData.length === 0) {
-      sData = [
-        "English", "Mathematics", "Science", "Humanities", "Health & Physical Education (HPE)", "Religious Education"
-      ].map(n => ({ id: n.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase(), name: n, status: 2, homework: [], notes: "", grades: [], photos: [] }));
+      sData = [ "English", "Mathematics", "Science", "Humanities", "Health & Physical Education (HPE)", "Religious Education" ]
+        .map(n => ({ id: n.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase(), name: n, status: 2, homework: [], notes: "", grades: [], photos: [] }));
     } else {
-      sData = sData.filter(s => s && s.name).map(s => ({
-          ...s,
-          homework: safeArr(s.homework).filter(h => h && h.date),
-          notes: s.notes || "",
-          grades: safeArr(s.grades).filter(g => g && g.score),
-          photos: safeArr(s.photos).filter(p => p && p.img)
-      }));
+      sData = sData.filter(s => s && s.name).map(s => ({ ...s, homework: safeArr(s.homework).filter(h => h && h.date), notes: s.notes || "", grades: safeArr(s.grades).filter(g => g && g.score), photos: safeArr(s.photos).filter(p => p && p.img) }));
     }
 
     const getSub = id => sData.find(s => s && s.id === id);
@@ -617,23 +671,13 @@
     if(!ring || ring.date !== tStr) ring = { date: tStr, score: 0 }; 
     let cSubId = null;
 
-    let uData = JSON.parse(localStorage.getItem('org_user'));
+    let uData = JSON.parse(localStorage.getItem('org_user')); // Now includes `y` (year level)
     let appSet = JSON.parse(localStorage.getItem('org_settings')) || { bgEnabled: false, bgOpacity: 50, bgImage: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=100&w=1200&auto=format&fit=crop' };
     
     function appSetApply() {
-      const b = $('app-background');
-      const mT = $('theme-color-meta');
-      if(appSet.bgEnabled) { 
-        b.style.opacity = appSet.bgOpacity / 100; b.style.backgroundImage = `url('${appSet.bgImage}')`; 
-        document.body.classList.add('bg-active'); document.documentElement.classList.add('bg-active');
-        if (mT) mT.setAttribute('content', '#000000'); 
-      } else { 
-        b.style.opacity = 0; document.body.classList.remove('bg-active'); document.documentElement.classList.remove('bg-active');
-        if (mT) mT.setAttribute('content', window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? '#000000' : '#F2F2F7');
-      }
-      if($('bg-toggle')) $('bg-toggle').checked = appSet.bgEnabled; 
-      if($('bg-opacity-slider')) $('bg-opacity-slider').value = appSet.bgOpacity; 
-      if($('opacity-val')) $('opacity-val').innerText = appSet.bgOpacity;
+      const b = $('app-background'); const mT = $('theme-color-meta');
+      if(appSet.bgEnabled) { b.style.opacity = appSet.bgOpacity / 100; b.style.backgroundImage = `url('${appSet.bgImage}')`; document.body.classList.add('bg-active'); document.documentElement.classList.add('bg-active'); if (mT) mT.setAttribute('content', '#000000'); } else { b.style.opacity = 0; document.body.classList.remove('bg-active'); document.documentElement.classList.remove('bg-active'); if (mT) mT.setAttribute('content', window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? '#000000' : '#F2F2F7'); }
+      if($('bg-toggle')) $('bg-toggle').checked = appSet.bgEnabled; if($('bg-opacity-slider')) $('bg-opacity-slider').value = appSet.bgOpacity; if($('opacity-val')) $('opacity-val').innerText = appSet.bgOpacity;
     }
 
     function toggleBg() { appSet.bgEnabled = $('bg-toggle').checked; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }
@@ -642,101 +686,275 @@
     function resetBg() { pSnd('tick'); appSet.bgImage = 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=100&w=1200&auto=format&fit=crop'; appSet.bgEnabled = false; appSet.bgOpacity = 50; appSetApply(); localStorage.setItem('org_settings', JSON.stringify(appSet)); }
 
     const codeMap = [
-      { tag: 'CG', name: 'Community Group' },
-      { tag: 'WEL', name: 'Wellbeing' },
-      { tag: 'ESE', name: 'English' },
-      { tag: 'ENG', name: 'English' },
-      { tag: 'LTL', name: 'Learning to Learn' },
-      { tag: 'MAT', name: 'Mathematics' },
-      { tag: 'MTH', name: 'Mathematics' },
-      { tag: 'NUM', name: 'Numeracy' },
-      { tag: 'SCH', name: 'Chemistry' },
-      { tag: 'SPH', name: 'Physics' },
-      { tag: 'SBI', name: 'Biology' },
-      { tag: 'SAQ', name: 'Aquatic Science' },
-      { tag: 'PSY', name: 'Psychology' },
-      { tag: 'SCI', name: 'Science' },
-      { tag: 'OUT', name: 'Outdoor Education' },
-      { tag: 'HPE', name: 'Health & Physical Education (HPE)' },
-      { tag: 'REC', name: 'Recreational Pursuits' },
-      { tag: 'SPS', name: 'Sport Science' },
-      { tag: 'COA', name: 'Coaching & Leadership' },
-      { tag: 'GLH', name: 'Global Health' },
-      { tag: 'DTR', name: 'Woodwork' },
-      { tag: 'TEX', name: 'Textiles' },
-      { tag: 'FOT', name: 'Food Technology' },
-      { tag: 'DIT', name: 'Digital Technology' },
-      { tag: 'STM', name: 'STEM' },
-      { tag: 'MPE', name: 'Metal, Plastics & Electronics' },
-      { tag: 'RED', name: 'Religious Education' },
-      { tag: 'HUM', name: 'Humanities' },
-      { tag: 'IND', name: 'Language: Indonesian' },
-      { tag: 'DRA', name: 'Drama (Page to Stage)' },
-      { tag: 'MED', name: 'Media (Lights Camera Action)' },
-      { tag: 'MUS', name: 'Music Repertoire' },
-      { tag: 'ART', name: 'Visual Art' },
-      { tag: 'DAR', name: 'Digital Art' },
-      { tag: 'GMA', name: 'General Mathematics' },
-      { tag: 'MMA', name: 'Pre Mathematical Methods' },
-      { tag: 'ECO', name: 'Economics' },
-      { tag: 'LEG', name: 'Legal Studies' },
-      { tag: 'VCE', name: 'VCE Pathway' },
-      { tag: 'VET', name: 'VET Pathway' }
+      { tag: 'CG', name: 'Community Group' }, { tag: 'WEL', name: 'Wellbeing' }, { tag: 'ESE', name: 'English' }, { tag: 'ENG', name: 'English' }, { tag: 'LTL', name: 'Learning to Learn' }, { tag: 'MAT', name: 'Mathematics' }, { tag: 'MTH', name: 'Mathematics' }, { tag: 'NUM', name: 'Numeracy' }, { tag: 'SCH', name: 'Chemistry' }, { tag: 'SPH', name: 'Physics' }, { tag: 'SBI', name: 'Biology' }, { tag: 'SAQ', name: 'Aquatic Science' }, { tag: 'PSY', name: 'Psychology' }, { tag: 'SCI', name: 'Science' }, { tag: 'OUT', name: 'Outdoor Education' }, { tag: 'HPE', name: 'Health & Physical Education (HPE)' }, { tag: 'REC', name: 'Recreational Pursuits' }, { tag: 'SPS', name: 'Sport Science' }, { tag: 'COA', name: 'Coaching & Leadership' }, { tag: 'GLH', name: 'Global Health' }, { tag: 'DTR', name: 'Woodwork' }, { tag: 'TEX', name: 'Textiles' }, { tag: 'FOT', name: 'Food Technology' }, { tag: 'DIT', name: 'Digital Technology' }, { tag: 'STM', name: 'STEM' }, { tag: 'MPE', name: 'Metal, Plastics & Electronics' }, { tag: 'RED', name: 'Religious Education' }, { tag: 'HUM', name: 'Humanities' }, { tag: 'IND', name: 'Language: Indonesian' }, { tag: 'DRA', name: 'Drama (Page to Stage)' }, { tag: 'MED', name: 'Media (Lights Camera Action)' }, { tag: 'MUS', name: 'Music Repertoire' }, { tag: 'ART', name: 'Visual Art' }, { tag: 'DAR', name: 'Digital Art' }, { tag: 'GMA', name: 'General Mathematics' }, { tag: 'MMA', name: 'Pre Mathematical Methods' }, { tag: 'ECO', name: 'Economics' }, { tag: 'LEG', name: 'Legal Studies' }, { tag: 'VCE', name: 'VCE Pathway' }, { tag: 'VET', name: 'VET Pathway' }
     ];
 
     function mapCodeToSubject(token) {
-      if (!token) return 'Study Period';
+      if (!token) return '';
       const clean = token.toUpperCase().replace(/[^A-Z0-9]/g, '');
-      for (let m of codeMap) {
-        if (clean.includes(m.tag)) return m.name;
-      }
-      return clean.length > 3 ? clean : 'Study Period';
+      for (let m of codeMap) { if (clean.includes(m.tag)) return m.name; }
+      return clean.length > 2 ? clean : '';
     }
 
-    let ttCyc = { 
-      0:["Community Group","Economics","Economics","English","English","General Mathematics","General Mathematics","Community Group"], 
-      1:["Community Group","Pre Mathematical Methods","Wellbeing","Religious Education","Religious Education","Economics","English","Community Group"], 
-      2:["Community Group","Legal Studies","Legal Studies","Physics","Physics","Pre Mathematical Methods","Pre Mathematical Methods","Community Group"], 
-      3:["Community Group","Economics","Economics","General Mathematics","General Mathematics","English","English","Community Group"], 
-      4:["Community Group","Legal Studies","Legal Studies","Pre Mathematical Methods","Pre Mathematical Methods","Physics","Physics","Community Group"], 
-      7:["Community Group","English","English","Economics","Economics","General Mathematics","General Mathematics","Community Group"], 
-      8:["Community Group","Physics","Wellbeing","Religious Education","Religious Education","Legal Studies","General Mathematics","Community Group"], 
-      9:["Community Group","Physics","Physics","Legal Studies","Legal Studies","Pre Mathematical Methods","Pre Mathematical Methods","Community Group"], 
-      10:["Community Group","English","English","General Mathematics","General Mathematics","Economics","Economics","Community Group"], 
-      11:["Community Group","Physics","Physics","Legal Studies","Legal Studies","Pre Mathematical Methods","Pre Mathematical Methods","Community Group"] 
-    };
-    try { const tL = JSON.parse(localStorage.getItem('org_ttcyc')); if(tL && typeof tL === 'object') ttCyc = tL; } catch(e){}
+    let ttCycleLength = parseInt(localStorage.getItem('org_tt_cycle_length')) || 10;
+    let ttWeekParity = parseInt(localStorage.getItem('org_tt_week_parity')) || 0; // 0 = Week 1, 1 = Week 2 offset
 
-    const sLab = ["Morning Group", "Session 1", "Session 2", "Session 3", "Session 4", "Session 5", "Session 6", "Afternoon Group"];
-    function getTT() { const d = Math.floor((new Date().setHours(0,0,0,0) - new Date(2026, 7, 10).setHours(0,0,0,0)) / 86400000); return d < 0 ? null : ttCyc[d % 14] || null; }
+    function getCycleDayIndices(len = ttCycleLength) {
+      const arr = [];
+      for (let i = 0; i < len; i++) arr.push(i);
+      return arr;
+    }
 
-    function syncSubjectsWithTimetable(detectedSubs) {
-      const specificMaths = ["Pre Mathematical Methods", "General Mathematics", "Numeracy", "Advanced Mathematics"];
-      const specificHumanities = ["Legal Studies", "Economics"];
-      const specificSciences = ["Physics", "Chemistry", "Biology", "Aquatic Science", "Psychology"];
-      const specificHPE = ["Outdoor Education", "Coaching & Leadership", "Global Health", "Recreational Pursuits", "Sport Science"];
+    function normalizeTtCyc(cyc) {
+      if (!cyc || typeof cyc !== 'object') return {};
+      const res = {};
+      const hasLegacy = [7, 8, 9, 10, 11].some(k => cyc[k]);
+      for (let k in cyc) {
+        const numK = parseInt(k);
+        if (hasLegacy && numK >= 7 && numK <= 11) {
+          res[numK - 2] = cyc[k]; // 7->5, 8->6, 9->7, 10->8, 11->9
+        } else if (numK >= 0 && numK <= 9) {
+          res[numK] = cyc[k];
+        }
+      }
+      return res;
+    }
 
-      const hasSpecificMath = detectedSubs.some(s => specificMaths.includes(s));
-      const hasSpecificHum = detectedSubs.some(s => specificHumanities.includes(s));
-      const hasSpecificSci = detectedSubs.some(s => specificSciences.includes(s));
-      const hasSpecificHpe = detectedSubs.some(s => specificHPE.includes(s));
+    let ttCyc = {};
+    try { 
+      const tL = JSON.parse(localStorage.getItem('org_ttcyc')); 
+      if (tL && typeof tL === 'object') ttCyc = normalizeTtCyc(tL); 
+    } catch(e){}
 
-      if (hasSpecificMath) sData = sData.filter(s => s.name !== "Mathematics");
-      if (hasSpecificHum) sData = sData.filter(s => s.name !== "Humanities");
-      if (hasSpecificSci) sData = sData.filter(s => s.name !== "Science");
-      if (hasSpecificHpe) sData = sData.filter(s => s.name !== "Health & Physical Education (HPE)");
+    function getPeriodLabels(count) {
+       if (count === 8) return ["Morning Group", "Session 1", "Session 2", "Session 3", "Session 4", "Session 5", "Session 6", "Afternoon Group"];
+       let labels = [];
+       for(let i=1; i<=count; i++) labels.push(`Period ${i}`);
+       return labels;
+    }
 
-      const exclude = ["Community Group", "Study Period", "Sport"];
-      
-      detectedSubs.forEach(sub => {
-        if (!exclude.includes(sub) && !sData.find(s => s.name.toLowerCase() === sub.toLowerCase())) {
-          sData.push({ 
-            id: sub.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase() + '-' + Date.now().toString().slice(-4), 
-            name: sub, status: 2, homework: [], notes: "", grades: [], photos: [] 
-          });
+    function getTodayCycleInfo() {
+      const now = new Date();
+      const dayOfWeek = now.getDay(); // 0 = Sun, 1 = Mon, ..., 6 = Sat
+      if (dayOfWeek === 0 || dayOfWeek === 6) {
+        return { isWeekend: true, dayIndex: -1, label: "Weekend", hint: "No classes scheduled today" };
+      }
+
+      const weekdayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      const todayName = weekdayNames[dayOfWeek];
+      const weekdayIdx = dayOfWeek - 1; // 0 for Mon, 4 for Fri
+
+      if (ttCycleLength === 5) {
+        return {
+          isWeekend: false,
+          dayIndex: weekdayIdx,
+          label: `Day ${weekdayIdx + 1} (${todayName})`,
+          hint: `Day ${weekdayIdx + 1} is ${todayName}`
+        };
+      } else {
+        // 10-day cycle: anchor to Monday October 5, 2026
+        const anchor = new Date(2026, 9, 5).setHours(0,0,0,0);
+        const diffWeeks = Math.floor((new Date().setHours(0,0,0,0) - anchor) / (7 * 86400000));
+        const parity = Math.abs((diffWeeks + ttWeekParity) % 2);
+        const dayIndex = (parity * 5) + weekdayIdx;
+        const weekNum = parity + 1;
+        return {
+          isWeekend: false,
+          dayIndex: dayIndex,
+          label: `Day ${dayIndex + 1} (Week ${weekNum} ${todayName})`,
+          hint: `Day ${dayIndex + 1} is Week ${weekNum} ${todayName}`,
+          weekNum: weekNum
+        };
+      }
+    }
+
+    function getTT() { 
+      const info = getTodayCycleInfo();
+      if (info.isWeekend) return null;
+      return ttCyc[info.dayIndex] || null; 
+    }
+
+    function toggleWeekParity() {
+      pSnd('tick');
+      ttWeekParity = ttWeekParity === 0 ? 1 : 0;
+      localStorage.setItem('org_tt_week_parity', ttWeekParity.toString());
+      renderHome(false);
+    }
+
+    function syncSubjectsWithTimetable(timetableSubList) {
+      const ignored = ['free', 'free period', 'recess', 'lunch', 'break', '-', ''];
+      const uniqueMap = new Map();
+
+      timetableSubList.forEach(raw => {
+        if (!raw) return;
+        const trimmed = raw.trim();
+        if (!trimmed) return;
+        const lower = trimmed.toLowerCase();
+        if (ignored.includes(lower)) return;
+        if (!uniqueMap.has(lower)) {
+          uniqueMap.set(lower, trimmed);
         }
       });
+
+      const timetableLowers = Array.from(uniqueMap.keys());
+      if (timetableLowers.length === 0) return;
+
+      const updatedSData = [];
+      const handledLowers = new Set();
+
+      // 1. Keep existing subjects in sData that exist on the timetable
+      sData.forEach(existingSub => {
+        if (!existingSub || !existingSub.name) return;
+        const exLower = existingSub.name.trim().toLowerCase();
+        if (uniqueMap.has(exLower) && !handledLowers.has(exLower)) {
+          existingSub.name = uniqueMap.get(exLower);
+          updatedSData.push(existingSub);
+          handledLowers.add(exLower);
+        }
+      });
+
+      // 2. Add subjects from timetable not currently in sData
+      timetableLowers.forEach(lower => {
+        if (!handledLowers.has(lower)) {
+          const canonicalName = uniqueMap.get(lower);
+          const newId = canonicalName.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase() + '-' + Date.now().toString().slice(-4) + Math.floor(Math.random() * 100);
+          updatedSData.push({
+            id: newId,
+            name: canonicalName,
+            status: 2,
+            homework: [],
+            notes: "",
+            grades: [],
+            photos: []
+          });
+          handledLowers.add(lower);
+        }
+      });
+
+      sData = updatedSData;
       sDat();
+    }
+
+    let tempTtCyc = {};
+    let currentEditDayIdx = 0;
+    let ttEditorSource = '';
+
+    function getDayHintText(dayIdx, len = ttCycleLength) {
+      const weekdayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+      if (len === 5) {
+        return `Day ${dayIdx + 1} represents ${weekdayNames[dayIdx % 5]}`;
+      } else {
+        const weekNum = Math.floor(dayIdx / 5) + 1;
+        return `Day ${dayIdx + 1} represents Week ${weekNum} ${weekdayNames[dayIdx % 5]}`;
+      }
+    }
+
+    function changeTtCycleLength(newLen) {
+      pSnd('tick');
+      ttCycleLength = newLen;
+      localStorage.setItem('org_tt_cycle_length', ttCycleLength.toString());
+      if (currentEditDayIdx >= ttCycleLength) currentEditDayIdx = 0;
+      renderTtEditorGrid();
+    }
+
+    function openTtEditor(sourceType) {
+        ttEditorSource = sourceType;
+        tempTtCyc = JSON.parse(JSON.stringify(ttCyc));
+        
+        const activeDays = getCycleDayIndices(ttCycleLength);
+        activeDays.forEach(d => {
+          if (!tempTtCyc[d]) tempTtCyc[d] = Array(6).fill('');
+        });
+
+        let pCount = tempTtCyc[0] ? tempTtCyc[0].length : 6;
+        if(pCount < 4) pCount = 6;
+        if(pCount > 8) pCount = 8;
+        
+        $('tt-cycle-type').value = ttCycleLength.toString();
+        $('tt-period-count').value = pCount.toString();
+        currentEditDayIdx = 0;
+        
+        const backBtn = $('tt-editor-back-btn');
+        if (sourceType === 'ob' || sourceType === 'manual') {
+            backBtn.onclick = () => openSc('onboarding-tt-screen');
+        } else {
+            backBtn.onclick = () => openSc('settings-screen');
+        }
+        
+        openSc('tt-editor-screen');
+        renderTtEditorGrid();
+    }
+
+    function renderTtEditorGrid() {
+        const pCount = parseInt($('tt-period-count').value);
+        const activeDays = getCycleDayIndices(ttCycleLength);
+        
+        if (currentEditDayIdx >= activeDays.length) currentEditDayIdx = 0;
+        const actualDay = activeDays[currentEditDayIdx];
+        
+        activeDays.forEach(d => {
+            if(!tempTtCyc[d]) tempTtCyc[d] = Array(pCount).fill('');
+            if(tempTtCyc[d].length < pCount) {
+                while(tempTtCyc[d].length < pCount) tempTtCyc[d].push('');
+            } else if(tempTtCyc[d].length > pCount) {
+                tempTtCyc[d] = tempTtCyc[d].slice(0, pCount);
+            }
+        });
+
+        // Render Ovoid Tabs
+        const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+        $('tt-day-tabs').innerHTML = activeDays.map((d, i) => {
+            const isSelected = i === currentEditDayIdx;
+            const label = ttCycleLength === 5 
+              ? `Day ${i + 1} (${dayNames[i]})`
+              : `Day ${i + 1} (${i < 5 ? 'W1 ' : 'W2 '}${dayNames[i % 5]})`;
+            return `<button type="button" class="tt-day-ovoid ${isSelected ? 'active' : ''}" onclick="changeTtEditDay(${i})">${label}</button>`;
+        }).join('');
+
+        // Update Day Hint Banner
+        $('tt-day-hint-text').innerText = getDayHintText(currentEditDayIdx, ttCycleLength);
+
+        const labels = getPeriodLabels(pCount);
+        $('tt-editor-grid').innerHTML = labels.map((lbl, i) => `
+            <div>
+                <div style="font-size:12px; font-weight:700; color:var(--text-secondary); margin-bottom:4px; text-transform:uppercase;">${lbl}</div>
+                <input type="text" class="full-w-input tt-input-field" data-period="${i}" value="${tempTtCyc[actualDay][i] || ''}" placeholder="Subject name (e.g. RE, English)..." oninput="updateTempTt(${actualDay}, ${i}, this.value)">
+            </div>
+        `).join('');
+    }
+
+    function changeTtEditDay(idx) { 
+      pSnd('tick'); 
+      currentEditDayIdx = idx; 
+      renderTtEditorGrid(); 
+    }
+
+    function updateTempTt(day, period, val) { tempTtCyc[day][period] = val; }
+
+    function saveTimetable() {
+        pSnd('success');
+        ttCyc = tempTtCyc;
+        localStorage.setItem('org_ttcyc', JSON.stringify(ttCyc));
+        localStorage.setItem('org_tt_cycle_length', ttCycleLength.toString());
+        
+        // Collect all subjects across the active timetable cycle
+        const activeDays = getCycleDayIndices(ttCycleLength);
+        const allSubs = [];
+        activeDays.forEach(d => {
+          if (ttCyc[d] && Array.isArray(ttCyc[d])) {
+            allSubs.push(...ttCyc[d]);
+          }
+        });
+
+        // Prune subjects and sync with timetable
+        syncSubjectsWithTimetable(allSubs);
+        
+        if (ttEditorSource === 'ob' || ttEditorSource === 'manual') {
+            finishOnboarding();
+        } else {
+            renderHome(false);
+            openSc('settings-screen');
+        }
     }
 
     async function handleTimetableImage(event, source) {
@@ -761,40 +979,46 @@
 
         lines.forEach(line => {
           const matches = line.match(codeRegex);
-          if (matches) {
-            matches.forEach(m => {
-              const upperM = m.toUpperCase();
-              if(mapCodeToSubject(upperM) !== 'Community Group') {
-                detectedCodes.push(upperM);
-              }
-            });
+          if (matches) { 
+            matches.forEach(m => { 
+              const upperM = m.toUpperCase(); 
+              if(mapCodeToSubject(upperM) !== 'Community Group') { 
+                detectedCodes.push(upperM); 
+              } 
+            }); 
           }
         });
 
-        const daySlots = [0, 1, 2, 3, 4, 7, 8, 9, 10, 11];
+        const numDays = ttCycleLength;
+        const daySlots = getCycleDayIndices(numDays);
         let codeIdx = 0;
-
-        if (detectedCodes.length >= 10) {
+        
+        let estimatedPeriods = Math.round(detectedCodes.length / numDays);
+        if (estimatedPeriods < 4) estimatedPeriods = 6;
+        if (estimatedPeriods > 8) estimatedPeriods = 8;
+        
+        let newTtCyc = {};
+        
+        if (detectedCodes.length >= numDays) {
           daySlots.forEach(d => {
-            ttCyc[d] = [];
-            for (let s = 0; s < 8; s++) {
-              if (s === 0 || s === 7) {
-                ttCyc[d].push('Community Group');
+            newTtCyc[d] = [];
+            for (let s = 0; s < estimatedPeriods; s++) {
+              if (estimatedPeriods === 8 && (s === 0 || s === 7)) {
+                newTtCyc[d].push('Community Group');
               } else {
                 const rawCode = detectedCodes[codeIdx] || '';
-                ttCyc[d].push(mapCodeToSubject(rawCode));
+                newTtCyc[d].push(mapCodeToSubject(rawCode));
                 codeIdx++;
               }
             }
           });
         }
 
-        const ttSubs = [...new Set(Object.values(ttCyc).flat())];
-        syncSubjectsWithTimetable(ttSubs);
+        ttCyc = newTtCyc;
         localStorage.setItem('org_ttcyc', JSON.stringify(ttCyc));
 
         pSnd('success');
-        btn.innerHTML = '✅ Schedule Synchronized!';
+        btn.innerHTML = '✅ Schedule Parsed!';
         btn.style.background = 'var(--success)';
         btn.style.color = '#FFF';
 
@@ -805,16 +1029,87 @@
           btn.style.background = '';
           btn.style.color = '';
 
-          if (source === 'ob') finishOnboarding();
-          else { rendSet(); renderHome(false); alert("Simon Timetable Parsed!\n\nYour 10-day cycle and enrolled subjects have been updated."); }
-        }, 1200);
+          openTtEditor(source);
+        }, 1000);
 
       } catch (err) {
         console.error("OCR Parse Error: ", err);
-        btn.innerHTML = origText;
-        btn.style.opacity = '1';
-        btn.style.pointerEvents = 'all';
-        pSnd('tick');
+        btn.innerHTML = origText; btn.style.opacity = '1'; btn.style.pointerEvents = 'all'; pSnd('tick');
+        alert("Could not clearly read the timetable grid. You can review or enter subjects manually in the editor.");
+        openTtEditor(source);
+      }
+    }
+
+    async function handleTimetableImage(event, source) {
+      const file = event.target.files[0];
+      if (!file) return;
+      pSnd('pop');
+
+      const btn = source === 'ob' ? $('ob-scan-btn') : $('scan-tt-btn');
+      const origText = btn.innerHTML;
+      btn.innerHTML = '⏳ Reading Timetable (OCR)...';
+      btn.style.opacity = '0.7';
+      btn.style.pointerEvents = 'none';
+
+      try {
+        const worker = await Tesseract.createWorker('eng');
+        const ret = await worker.recognize(file);
+        await worker.terminate();
+
+        const lines = ret.data.text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+        const detectedCodes = [];
+        const codeRegex = /\b([0-9]{1,2}[A-Z]{2,4}[0-9]?[A-Z0-9]?)\b/gi;
+
+        lines.forEach(line => {
+          const matches = line.match(codeRegex);
+          if (matches) { matches.forEach(m => { const upperM = m.toUpperCase(); if(mapCodeToSubject(upperM) !== 'Community Group') { detectedCodes.push(upperM); } }); }
+        });
+
+        const daySlots = [0, 1, 2, 3, 4, 7, 8, 9, 10, 11];
+        let codeIdx = 0;
+        
+        let estimatedPeriods = Math.round(detectedCodes.length / 10);
+        if (estimatedPeriods < 4) estimatedPeriods = 6;
+        if (estimatedPeriods > 8) estimatedPeriods = 8;
+        
+        let newTtCyc = {};
+        
+        if (detectedCodes.length >= 10) {
+          daySlots.forEach(d => {
+            newTtCyc[d] = [];
+            for (let s = 0; s < estimatedPeriods; s++) {
+              if (estimatedPeriods === 8 && (s === 0 || s === 7)) {
+                newTtCyc[d].push('Community Group');
+              } else {
+                const rawCode = detectedCodes[codeIdx] || '';
+                newTtCyc[d].push(mapCodeToSubject(rawCode));
+                codeIdx++;
+              }
+            }
+          });
+        }
+
+        ttCyc = newTtCyc;
+        localStorage.setItem('org_ttcyc', JSON.stringify(ttCyc));
+
+        pSnd('success');
+        btn.innerHTML = '✅ Schedule Parsed!';
+        btn.style.background = 'var(--success)';
+        btn.style.color = '#FFF';
+
+        setTimeout(() => {
+          btn.innerHTML = origText;
+          btn.style.opacity = '1';
+          btn.style.pointerEvents = 'all';
+          btn.style.background = '';
+          btn.style.color = '';
+
+          openTtEditor(source); // Allow user to review
+        }, 1000);
+
+      } catch (err) {
+        console.error("OCR Parse Error: ", err);
+        btn.innerHTML = origText; btn.style.opacity = '1'; btn.style.pointerEvents = 'all'; pSnd('tick');
         alert("Could not clearly read the timetable grid. Please ensure your screenshot is clear and uncropped, or enter subjects manually.");
       }
     }
@@ -831,7 +1126,6 @@
 
     const stD = [ { c: "rgba(239, 68, 68, 0.12)", h: "#EF4444", l: "Falling behind" }, { c: "rgba(245, 158, 11, 0.12)", h: "#F59E0B", l: "Behind" }, { c: "var(--card-bg)", h: "#94A3B8", l: "Up to date" }, { c: "rgba(16, 185, 129, 0.12)", h: "#10B981", l: "Ahead" }, { c: "rgba(5, 150, 105, 0.15)", h: "#059669", l: "Well ahead" } ];
 
-    // 🔥 AUTO-RECOVERY STARTUP SEQUENCE 🔥
     window.onload = () => { 
       try { appSetApply(); } catch(e) {} 
       const splash = $('splash');
@@ -866,7 +1160,7 @@
       if(!pin) { alert("Please enter a valid PIN (letters and numbers only)."); return; }
       
       pSnd('pop');
-      if(!uData) uData = { f: "Student", l: "", s: "Iona College Geelong" };
+      if(!uData) uData = { f: "Student", l: "", s: "Iona College Geelong", y: 10 };
       uData.syncPin = pin;
       localStorage.setItem('org_user', JSON.stringify(uData));
 
@@ -879,29 +1173,25 @@
           isIncomingSync = true;
           
           sData = safeArr(cloudData.sData).filter(s => s && s.name).map(s => ({
-              ...s, 
-              homework: safeArr(s.homework).filter(h => h && h.date), 
-              notes: s.notes || "", 
-              grades: safeArr(s.grades).filter(g => g && g.score), 
-              photos: safeArr(s.photos).filter(p => p && p.img)
+              ...s, homework: safeArr(s.homework).filter(h => h && h.date), notes: s.notes || "", grades: safeArr(s.grades).filter(g => g && g.score), photos: safeArr(s.photos).filter(p => p && p.img)
           }));
           
           gNotes = safeArr(cloudData.gNotes).filter(n => n && n.date);
           dlData = safeArr(cloudData.dlData).filter(d => d && d.date);
-          if(cloudData.ttCyc) ttCyc = cloudData.ttCyc;
-          
-          // 🔥 SYNC FIX: Ensure ring is only downloaded if it's for today!
-          let tStr = new Date().toDateString();
-          if(cloudData.ring && cloudData.ring.date === tStr) {
-            ring = cloudData.ring;
-          } else {
-            ring = { date: tStr, score: 0 };
+          if(cloudData.ttCyc) ttCyc = normalizeTtCyc(cloudData.ttCyc);
+          if(cloudData.ttCycleLength) {
+            ttCycleLength = parseInt(cloudData.ttCycleLength);
+            localStorage.setItem('org_tt_cycle_length', ttCycleLength.toString());
+          }
+          if(typeof cloudData.ttWeekParity !== 'undefined') {
+            ttWeekParity = parseInt(cloudData.ttWeekParity);
+            localStorage.setItem('org_tt_week_parity', ttWeekParity.toString());
           }
           
-          localStorage.setItem('org_subjects', JSON.stringify(sData)); 
-          localStorage.setItem('org_global', JSON.stringify(gNotes)); 
-          localStorage.setItem('org_deadlines', JSON.stringify(dlData)); 
-          localStorage.setItem('org_ring', JSON.stringify(ring));
+          let tStr = new Date().toDateString();
+          if(cloudData.ring && cloudData.ring.date === tStr) { ring = cloudData.ring; } else { ring = { date: tStr, score: 0 }; }
+          
+          localStorage.setItem('org_subjects', JSON.stringify(sData)); localStorage.setItem('org_global', JSON.stringify(gNotes)); localStorage.setItem('org_deadlines', JSON.stringify(dlData)); localStorage.setItem('org_ring', JSON.stringify(ring));
           if (typeof ttCyc !== 'undefined') localStorage.setItem('org_ttcyc', JSON.stringify(ttCyc));
 
           rendSet();
@@ -910,15 +1200,12 @@
           pSnd('success');
           alert("Connected! Downloaded your latest data from the cloud.");
         } else {
-          sDat();
-          pSnd('success');
-          alert("Connected! Cloud slot created. Other devices can now use PIN: " + pin);
+          sDat(); pSnd('success'); alert("Connected! Cloud slot created. Other devices can now use PIN: " + pin);
         }
         initCloudListener();
       }).catch(err => {
         console.error("Firebase read error:", err);
-        $('sync-status').innerText = "🔴 Permission Denied";
-        $('sync-status').style.color = "var(--critical)";
+        $('sync-status').innerText = "🔴 Permission Denied"; $('sync-status').style.color = "var(--critical)";
       });
     }
 
@@ -927,46 +1214,38 @@
       const pin = uData.syncPin;
       if($('sync-pin-input')) $('sync-pin-input').value = pin;
 
-      const ref = db.ref('tracker/' + pin);
-      ref.off();
+      const ref = db.ref('tracker/' + pin); ref.off();
 
       ref.on('value', snap => {
-        // 🔥 THE ANIMATION SHIELD 🔥 Ignores cloud echo for 1.5 seconds.
         if (Date.now() - localWriteTime < 1500) return;
 
         const cloudData = snap.val();
         if(cloudData) {
-          $('sync-status').innerText = "🟢 Synced (" + pin + ")";
-          $('sync-status').style.color = "var(--success)";
-
+          $('sync-status').innerText = "🟢 Synced (" + pin + ")"; $('sync-status').style.color = "var(--success)";
           isIncomingSync = true;
           
           if(cloudData.sData) {
               sData = safeArr(cloudData.sData).filter(s => s && s.name).map(s => ({
-                  ...s, 
-                  homework: safeArr(s.homework).filter(h => h && h.date), 
-                  notes: s.notes || "", 
-                  grades: safeArr(s.grades).filter(g => g && g.score), 
-                  photos: safeArr(s.photos).filter(p => p && p.img)
+                  ...s, homework: safeArr(s.homework).filter(h => h && h.date), notes: s.notes || "", grades: safeArr(s.grades).filter(g => g && g.score), photos: safeArr(s.photos).filter(p => p && p.img)
               }));
           }
           
           gNotes = safeArr(cloudData.gNotes).filter(n => n && n.date);
           dlData = safeArr(cloudData.dlData).filter(d => d && d.date);
-          if(cloudData.ttCyc) ttCyc = cloudData.ttCyc;
-          
-          // 🔥 SYNC FIX: Ensure ring is only downloaded if it's for today!
-          let tStr = new Date().toDateString();
-          if(cloudData.ring && cloudData.ring.date === tStr) {
-            ring = cloudData.ring;
-          } else {
-            ring = { date: tStr, score: 0 };
+          if(cloudData.ttCyc) ttCyc = normalizeTtCyc(cloudData.ttCyc);
+          if(cloudData.ttCycleLength) {
+            ttCycleLength = parseInt(cloudData.ttCycleLength);
+            localStorage.setItem('org_tt_cycle_length', ttCycleLength.toString());
+          }
+          if(typeof cloudData.ttWeekParity !== 'undefined') {
+            ttWeekParity = parseInt(cloudData.ttWeekParity);
+            localStorage.setItem('org_tt_week_parity', ttWeekParity.toString());
           }
           
-          localStorage.setItem('org_subjects', JSON.stringify(sData)); 
-          localStorage.setItem('org_global', JSON.stringify(gNotes)); 
-          localStorage.setItem('org_deadlines', JSON.stringify(dlData)); 
-          localStorage.setItem('org_ring', JSON.stringify(ring));
+          let tStr = new Date().toDateString();
+          if(cloudData.ring && cloudData.ring.date === tStr) { ring = cloudData.ring; } else { ring = { date: tStr, score: 0 }; }
+          
+          localStorage.setItem('org_subjects', JSON.stringify(sData)); localStorage.setItem('org_global', JSON.stringify(gNotes)); localStorage.setItem('org_deadlines', JSON.stringify(dlData)); localStorage.setItem('org_ring', JSON.stringify(ring));
           if (typeof ttCyc !== 'undefined') localStorage.setItem('org_ttcyc', JSON.stringify(ttCyc));
 
           if($('detail-screen').classList.contains('active')) renderDet(true);
@@ -982,20 +1261,27 @@
       const f = $('ob-first').value.trim();
       const l = $('ob-last').value.trim();
       const s = $('ob-school').value;
+      const y = parseInt($('ob-year').value);
       if(!f || !l) { pSnd('tick'); return; }
       pSnd('pop');
-      uData = { f, l, s };
-      openSc('onboarding-tt-screen');
+      uData = { f, l, s, y };
+      
+      if (y <= 6) {
+        // Skip Timetable completely for primary school
+        finishOnboarding();
+      } else {
+        openSc('onboarding-tt-screen');
+      }
     }
 
     function finishOnboarding() {
       pSnd('success');
-      if (!uData) uData = { f: "Student", l: "", s: "Iona College Geelong" };
+      if (!uData) uData = { f: "Student", l: "", s: "Iona College Geelong", y: 10 };
       localStorage.setItem('org_user', JSON.stringify(uData));
       
       if (sData.length === 0) {
         const defaultSubs = ["English", "Mathematics", "Science", "Humanities", "Health & Physical Education (HPE)", "Religious Education"];
-        const ttSubs = [...new Set(Object.values(ttCyc).flat())];
+        const ttSubs = [...new Set(Object.values(ttCyc).flat())].filter(s => s && s.trim() !== '');
         sData = defaultSubs.map(n => ({ id: n.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase(), name: n, status: 2, homework: [], notes: "", grades: [], photos: [] }));
         syncSubjectsWithTimetable(ttSubs);
       }
@@ -1028,30 +1314,19 @@
       localStorage.setItem('org_deadlines', JSON.stringify(dlData)); 
       localStorage.setItem('org_ring', JSON.stringify(ring)); 
       if (typeof ttCyc !== 'undefined') localStorage.setItem('org_ttcyc', JSON.stringify(ttCyc));
+      localStorage.setItem('org_tt_cycle_length', ttCycleLength.toString());
+      localStorage.setItem('org_tt_week_parity', ttWeekParity.toString());
       updRUI(); updHUI(); 
 
-      // 🔥 NOTE: Chat history is explicitly excluded here, making it 100% local only.
       if(syncActive && db && uData && uData.syncPin && !isIncomingSync) {
-        localWriteTime = Date.now(); // Put shields up for 1.5s
-        db.ref('tracker/' + uData.syncPin).set({
-          sData, gNotes, dlData, ring, ttCyc, lastUpdated: localWriteTime
-        }).catch(err => console.error("Firebase write error:", err));
+        localWriteTime = Date.now();
+        db.ref('tracker/' + uData.syncPin).set({ sData, gNotes, dlData, ring, ttCyc, ttCycleLength, ttWeekParity, lastUpdated: localWriteTime }).catch(err => console.error("Firebase write error:", err));
       }
     }
 
     function addRSc() { if(ring.score < 5) { ring.score++; sDat(); } }
     function updRUI() { $('study-ring').style.strokeDasharray = `${Math.min((ring.score/5)*100, 100)}, 100`; $('ring-score').innerText = `${ring.score}/5`; }
-    
-    // Triple-checked Health UI Renderer
-    function updHUI() { 
-      let c = [0,0,0,0,0]; 
-      sData.forEach(s => {
-          let st = parseInt(s.status);
-          if(isNaN(st) || st < 0 || st > 4) st = 2; 
-          c[st]++;
-      }); 
-      $('health-bar').innerHTML = c.map((cnt, i) => cnt > 0 && stD[i] ? `<div class="health-segment" style="width: ${(cnt/sData.length)*100}%; background-color: ${stD[i].h};"></div>` : '').join(''); 
-    }
+    function updHUI() { let c = [0,0,0,0,0]; sData.forEach(s => { let st = parseInt(s.status); if(isNaN(st) || st < 0 || st > 4) st = 2; c[st]++; }); $('health-bar').innerHTML = c.map((cnt, i) => cnt > 0 && stD[i] ? `<div class="health-segment" style="width: ${(cnt/sData.length)*100}%; background-color: ${stD[i].h};"></div>` : '').join(''); }
     
     function isOD(ds) { if(!ds || !ds.includes('-')) return false; const p=ds.split('-'); return new Date(p[0], p[1]-1, p[2]) < new Date().setHours(0,0,0,0); }
     function gDD(ds) { if(!ds || !ds.includes('-')) return 0; const p=ds.split('-'); return Math.ceil((new Date(p[0], p[1]-1, p[2]) - new Date().setHours(0,0,0,0)) / 86400000); }
@@ -1081,27 +1356,46 @@
         $('deadline-list').innerHTML = dlData.map(d => { const ds = gDD(d.date); return `<div class="deadline-card ${ds<=2?'critical':(ds<=7?'warning':'')}"><div class="dl-days">${ds<0?'0':ds}</div><div class="dl-label">Days until<br>${d.name}</div><button class="icon-btn" style="position:absolute; top:8px; right:8px; width:26px; height:26px; min-width:26px; min-height:26px; font-size:14px; color:white; background:rgba(0,0,0,0.15) !important; border:none; box-shadow:none;" onclick="delDL('${d.id}')">×</button></div>`; }).join('');
       } else $('deadline-section').style.display = 'none';
 
-      const tt = getTT(); const ts = $('dynamic-timetable-section');
-      if(tt) {
-        ts.innerHTML = `<h2>Today's Schedule</h2><div class="horizontal-scroll">${safeArr(tt).map((cN, i) => { 
-          // 🔥 SAFE STRING CHECK 🔥
-          const m = sData.find(s => s.name && cN && String(s.name).toLowerCase() === String(cN).toLowerCase()); 
-          const iS = String(sLab[i]).includes('Session'); 
-          let hwText = '';
-          if (m && m.homework && m.homework.length > 0) {
-            const upc = [...m.homework].sort((a,b) => new Date(a.date) - new Date(b.date))[0];
-            const d = gDD(upc.date);
-            let sC = 'var(--text-secondary)';
-            let txt = `Homework task due in ${d} days`;
-            if (d < 0) { txt = 'Homework overdue!'; sC = 'var(--critical)'; }
-            else if (d === 0) { txt = 'Homework due today'; sC = 'var(--warning)'; }
-            else if (d === 1) { txt = 'Homework due in 1 day'; }
-            hwText = `<div style="font-size:11px; margin-top:6px; font-weight:600; color:${sC}; line-height:1.2;">${txt}</div>`;
-          }
-          return `<div class="timetable-card app-card" data-tt-sub="${m?m.id:''}" style="background-color: ${m?stD[m.status].c:(iS?'rgba(0,0,0,0.03)':'var(--card-bg)')}; border-color: ${m?stD[m.status].h:'var(--card-border)'};" ${m?`onclick="openDet('${m.id}')"`:''}><div class="tt-session">${sLab[i]}</div><div class="tt-subject">${cN}</div>${hwText}</div>`; 
-        }).join('')}</div>`;
+      // Timetable Visibility Check
+      if (uData && uData.y <= 6) {
+        $('dynamic-timetable-section').style.display = 'none';
       } else {
-        ts.innerHTML = `<h2>Today's Schedule</h2><div class="app-card" style="padding: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px;"><span style="font-size: 28px;">🎉</span><span style="font-weight: 600; color: var(--text-secondary); text-align: center;">It's the weekend!<br>No classes scheduled today.</span></div>`;
+        $('dynamic-timetable-section').style.display = 'block';
+        const ttInfo = getTodayCycleInfo();
+        const ts = $('dynamic-timetable-section');
+
+        if(ttInfo.isWeekend) {
+          ts.innerHTML = `<h2>Today's Schedule</h2><div class="app-card" style="padding: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px;"><span style="font-size: 28px;">🎉</span><span style="font-weight: 600; color: var(--text-secondary); text-align: center;">It's the weekend!<br>No classes scheduled today.</span></div>`;
+        } else {
+          const tt = getTT();
+          const sLab = getPeriodLabels(tt ? tt.length : 6);
+          const weekToggleBtn = ttCycleLength === 10 ? `
+            <button class="add-btn btn-grey" style="font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: 600;" onclick="toggleWeekParity()">
+              Switch to Week ${ttInfo.weekNum === 1 ? '2' : '1'}
+            </button>
+          ` : '';
+
+          ts.innerHTML = `
+            <div class="flex-between" style="margin-top: 24px; margin-bottom: 12px;">
+              <h2 style="margin: 0;">Today's Schedule</h2>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 12px; font-weight: 700; color: var(--text-secondary);">${ttInfo.label}</span>
+                ${weekToggleBtn}
+              </div>
+            </div>
+            <div class="horizontal-scroll">${safeArr(tt).map((cN, i) => { 
+              if(!cN || cN.trim() === '') return '';
+              const m = sData.find(s => s.name && cN && String(s.name).toLowerCase() === String(cN).toLowerCase()); 
+              let hwText = '';
+              if (m && m.homework && m.homework.length > 0) {
+                const upc = [...m.homework].sort((a,b) => new Date(a.date) - new Date(b.date))[0];
+                const d = gDD(upc.date); let sC = 'var(--text-secondary)'; let txt = `Homework task due in ${d} days`;
+                if (d < 0) { txt = 'Homework overdue!'; sC = 'var(--critical)'; } else if (d === 0) { txt = 'Homework due today'; sC = 'var(--warning)'; } else if (d === 1) { txt = 'Homework due in 1 day'; }
+                hwText = `<div style="font-size:11px; margin-top:6px; font-weight:600; color:${sC}; line-height:1.2;">${txt}</div>`;
+              }
+              return `<div class="timetable-card app-card" data-tt-sub="${m?m.id:''}" style="background-color: ${m?stD[m.status].c:'var(--card-bg)'}; border-color: ${m?stD[m.status].h:'var(--card-border)'};" ${m?`onclick="openDet('${m.id}')"`:''}><div class="tt-session">${sLab[i]||`Period ${i+1}`}</div><div class="tt-subject">${cN}</div>${hwText}</div>`; 
+            }).join('')}</div>`;
+        }
       }
 
       sData.sort((a, b) => a.status - b.status);
@@ -1120,38 +1414,18 @@
       
       sData.forEach((s, idx) => { 
         const c = list.querySelector(`.card[data-id="${s.id}"]`); 
-        if(c) { 
-          list.appendChild(c); 
-          c.style.backgroundColor=stD[s.status].c; 
-          c.style.borderColor=stD[s.status].h; 
-          c.querySelectorAll('.box').forEach((b,i)=>{ b.classList.toggle('active', i===s.status); }); 
-          c.dataset.tZ = 100-idx; 
-        } 
+        if(c) { list.appendChild(c); c.style.backgroundColor=stD[s.status].c; c.style.borderColor=stD[s.status].h; c.querySelectorAll('.box').forEach((b,i)=>{ b.classList.toggle('active', i===s.status); }); c.dataset.tZ = 100-idx; } 
       });
       
       Array.from(list.children).forEach(c => {
         const dY = pos[c.dataset.id] - c.getBoundingClientRect().top;
-        if(dY !== 0) {
-          c.style.transition='none'; 
-          c.style.transform=`translate3d(0, ${dY}px, 0)`; 
-          requestAnimationFrame(() => requestAnimationFrame(() => {
-            c.style.transition='transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'; 
-            c.style.transform=`translate3d(0, 0, 0)`; 
-            setTimeout(() => { c.style.transition=''; c.style.zIndex=c.dataset.tZ; }, 500); 
-          }));
-        } else {
-          c.style.zIndex = c.dataset.tZ;
-        }
+        if(dY !== 0) { c.style.transition='none'; c.style.transform=`translate3d(0, ${dY}px, 0)`; requestAnimationFrame(() => requestAnimationFrame(() => { c.style.transition='transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'; c.style.transform=`translate3d(0, 0, 0)`; setTimeout(() => { c.style.transition=''; c.style.zIndex=c.dataset.tZ; }, 500); })); } else { c.style.zIndex = c.dataset.tZ; }
       });
     }
 
     function setSt(id, idx) { 
       pSnd('tick'); const s = getSub(id); if(s) s.status = idx; sDat(); 
-      if(!cSubId) { 
-        animRO(id); $$(`.timetable-card[data-tt-sub="${id}"]`).forEach(c => { c.style.backgroundColor = stD[idx].c; c.style.borderColor = stD[idx].h; c.style.transform = 'scale(1.04)'; setTimeout(() => c.style.transform='', 200); });
-      } else { 
-        $$('.status-row').forEach((r,i) => { const b = r.querySelector('.box'); if(i===idx) { r.classList.add('active-status'); b.classList.add('active'); r.style.setProperty('--status-bg', stD[i].c); r.style.setProperty('--box-color', stD[i].h); b.style.setProperty('--box-color', stD[i].h); } else { r.classList.remove('active-status'); b.classList.remove('active'); } }); 
-      } updHUI();
+      if(!cSubId) { animRO(id); $$(`.timetable-card[data-tt-sub="${id}"]`).forEach(c => { c.style.backgroundColor = stD[idx].c; c.style.borderColor = stD[idx].h; c.style.transform = 'scale(1.04)'; setTimeout(() => c.style.transform='', 200); }); } else { $$('.status-row').forEach((r,i) => { const b = r.querySelector('.box'); if(i===idx) { r.classList.add('active-status'); b.classList.add('active'); r.style.setProperty('--status-bg', stD[i].c); r.style.setProperty('--box-color', stD[i].h); b.style.setProperty('--box-color', stD[i].h); } else { r.classList.remove('active-status'); b.classList.remove('active'); } }); } updHUI();
     }
 
     function openSc(id) { 
@@ -1160,18 +1434,14 @@
       const scr = $(id); 
       if(scr) scr.classList.add('active'); 
       window.scrollTo(0,0); 
-      if(id === 'settings-screen') { 
-        appSetApply(); 
-        rendSet(); 
-        checkGodMode(); // Ensure UI reflects god mode correctly on open
-      } 
+      if(id === 'settings-screen') { appSetApply(); rendSet(); checkGodMode(); } 
     }
     
     function openDet(id) { cSubId = renderDet(false, id); openSc('detail-screen'); }
     function renderDet(isUpdate = false, overrideId = null) {
       if(overrideId) cSubId = overrideId;
       const s = getSub(cSubId);
-      if(!s) { goHome(); return null; } // 🔥 SAFEGUARD 🔥
+      if(!s) { goHome(); return null; }
       $('detail-title').innerText = s.name; $('subject-notes').value = s.notes;
       
       if(!isUpdate) {
@@ -1206,353 +1476,151 @@
     function toggleTmr() { const w = $('timer-icon'), r = $('timer-progress'); pSnd('tick'); if(isR){ clearInterval(tI); isR=false; w.innerHTML=pI; } else { isR=true; w.innerHTML=psI; tI=setInterval(()=>{ tL--; let m=Math.floor(tL/60),s=tL%60; $('timer-display').innerText=`${m}:${s<10?'0':''}${s}`; r.style.strokeDasharray=`${(tL/(25*60))*100}, 100`; if(tL<=0){ clearInterval(tI); isR=false; w.innerHTML=pI; tL=25*60; r.style.strokeDasharray=`100, 100`; $('timer-display').innerText=`25:00`; pSnd('success'); addRSc(); alert("Focus complete!"); } }, 1000); } }
 
     function renameSub(id) {
-      pSnd('pop');
-      const sub = getSub(id);
-      const oldName = sub.name;
-      const newName = prompt("Rename subject:", oldName);
-      
+      pSnd('pop'); const sub = getSub(id); const oldName = sub.name; const newName = prompt("Rename subject:", oldName);
       if(newName && newName.trim() !== "" && newName.trim() !== oldName) {
-        const finalName = newName.trim();
-        sub.name = finalName;
-        
-        for (let day in ttCyc) {
-          ttCyc[day] = ttCyc[day].map(subjectName => 
-            (subjectName === oldName) ? finalName : subjectName
-          );
-        }
-        
-        localStorage.setItem('org_ttcyc', JSON.stringify(ttCyc));
-        sDat();
-        rendSet();
-        
-        if(!$('detail-screen').classList.contains('active')){
-          renderHome(false);
-        }
+        const finalName = newName.trim(); sub.name = finalName;
+        for (let day in ttCyc) { ttCyc[day] = ttCyc[day].map(subjectName => (subjectName === oldName) ? finalName : subjectName); }
+        localStorage.setItem('org_ttcyc', JSON.stringify(ttCyc)); sDat(); rendSet(); if(!$('detail-screen').classList.contains('active')){ renderHome(false); }
       }
     }
 
-    function rendSet() { 
-      $('settings-subjects-list').innerHTML = sData.map((s,i) => `
-        <div class="list-item app-card cascade-item" style="animation-delay: ${0.20 + (i*0.04)}s;">
-          <div style="font-weight: 500; flex: 1; cursor: pointer; padding-right: 12px;" onclick="renameSub('${s.id}')">
-            ${s.name} <span style="font-size:12px; color:var(--text-secondary); margin-left: 4px;">✎</span>
-          </div>
-          <button class="delete-btn" onclick="delSub('${s.id}')">×</button>
-        </div>
-      `).join(''); 
-    }
-    
+    function rendSet() { $('settings-subjects-list').innerHTML = sData.map((s,i) => `<div class="list-item app-card cascade-item" style="animation-delay: ${0.20 + (i*0.04)}s;"><div style="font-weight: 500; flex: 1; cursor: pointer; padding-right: 12px;" onclick="renameSub('${s.id}')">${s.name} <span style="font-size:12px; color:var(--text-secondary); margin-left: 4px;">✎</span></div><button class="delete-btn" onclick="delSub('${s.id}')">×</button></div>`).join(''); }
     function addSub() { pSnd('pop'); const i=$('new-subject'); if(!i.value)return; sData.push({ id: Date.now().toString(), name: i.value, status: 2, homework: [], notes: "", grades: [], photos: []}); i.value=''; sDat(); rendSet(); }
     function delSub(id) { pSnd('tick'); if(confirm("Delete subject?")) { sData = sData.filter(s => s.id !== id); sDat(); rendSet(); } }
     
-    // 🔥 Desktop Horizontal Scroll Fix via Mouse Wheel 🔥
     document.addEventListener('wheel', function(e) {
       const container = e.target.closest('.horizontal-scroll');
       if (container && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
         const maxScrollLeft = container.scrollWidth - container.clientWidth;
         if ((e.deltaY > 0 && container.scrollLeft < maxScrollLeft) || (e.deltaY < 0 && container.scrollLeft > 0)) {
-          e.preventDefault();
-          container.scrollLeft += e.deltaY;
+          e.preventDefault(); container.scrollLeft += e.deltaY;
         }
       }
     }, { passive: false });
 
-    // 🔥 AI ASSISTANT INJECTION & LOGIC 🔥
-    
-    // 3. AI State & Image Handling
     let aiChatHistory = JSON.parse(localStorage.getItem('org_ai_chat_hist')) || [];
     let aiChatSessions = JSON.parse(localStorage.getItem('org_ai_sessions')) || [];
     let currentAiImageBase64 = null;
 
-    // Check & Set God Mode
     function checkGodMode() {
       const isUnlocked = localStorage.getItem('org_ai_unlocked') === 'true';
-      const statusEl = document.getElementById('god-mode-status');
-      const btn = document.getElementById('god-mode-btn');
-      const pwInput = document.getElementById('god-mode-pw');
-      
+      const statusEl = document.getElementById('god-mode-status'); const btn = document.getElementById('god-mode-btn'); const pwInput = document.getElementById('god-mode-pw');
       if (statusEl && btn && pwInput) {
-        if (isUnlocked) {
-          statusEl.innerText = '🟢 Currently: Unlocked Mode';
-          statusEl.style.color = 'var(--success)';
-          btn.innerText = 'Lock';
-          btn.style.background = 'linear-gradient(135deg, var(--critical), #DC2626)'; // Red
-          pwInput.style.display = 'none';
-        } else {
-          statusEl.innerText = 'Currently: Tutor Mode';
-          statusEl.style.color = 'var(--text-secondary)';
-          btn.innerText = 'Unlock';
-          btn.style.background = 'var(--accent-grad)'; // Default blue
-          pwInput.style.display = 'block';
-        }
-      }
-      return isUnlocked;
+        if (isUnlocked) { statusEl.innerText = '🟢 Currently: Unlocked Mode'; statusEl.style.color = 'var(--success)'; btn.innerText = 'Lock'; btn.style.background = 'linear-gradient(135deg, var(--critical), #DC2626)'; pwInput.style.display = 'none'; }
+        else { statusEl.innerText = 'Currently: Tutor Mode'; statusEl.style.color = 'var(--text-secondary)'; btn.innerText = 'Unlock'; btn.style.background = 'var(--accent-grad)'; pwInput.style.display = 'block'; }
+      } return isUnlocked;
     }
 
     function toggleGodMode() {
       const isUnlocked = localStorage.getItem('org_ai_unlocked') === 'true';
-      if (isUnlocked) {
-        // Lock it
-        localStorage.setItem('org_ai_unlocked', 'false');
-        checkGodMode();
-        pSnd('tick');
-      } else {
+      if (isUnlocked) { localStorage.setItem('org_ai_unlocked', 'false'); checkGodMode(); pSnd('tick'); } else {
         const pwInput = document.getElementById('god-mode-pw');
-        if (pwInput.value === "ES201088%") {
-          localStorage.setItem('org_ai_unlocked', 'true');
-          pwInput.value = '';
-          checkGodMode();
-          pSnd('success');
-        } else {
-          pSnd('tick');
-          alert("Incorrect password.");
-        }
+        if (pwInput.value === "ES201088%") { localStorage.setItem('org_ai_unlocked', 'true'); pwInput.value = ''; checkGodMode(); pSnd('success'); } else { pSnd('tick'); alert("Incorrect password."); }
       }
     }
 
     function handleAiImg(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      pSnd('pop');
-      
-      const reader = new FileReader();
-      reader.onload = ev => {
-        currentAiImageBase64 = ev.target.result;
-        document.getElementById('ai-img-preview').innerHTML = `
-          <div class="ai-img-thumb" style="background-image: url('${currentAiImageBase64}')">
-            <button class="ai-del-thumb" onclick="clearAiImg()">×</button>
-          </div>
-        `;
-      };
-      reader.readAsDataURL(file);
+      const file = e.target.files[0]; if (!file) return; pSnd('pop');
+      const reader = new FileReader(); reader.onload = ev => { currentAiImageBase64 = ev.target.result; document.getElementById('ai-img-preview').innerHTML = `<div class="ai-img-thumb" style="background-image: url('${currentAiImageBase64}')"><button class="ai-del-thumb" onclick="clearAiImg()">×</button></div>`; }; reader.readAsDataURL(file);
     }
 
-    function clearAiImg() {
-      currentAiImageBase64 = null;
-      const preview = document.getElementById('ai-img-preview');
-      if(preview) preview.innerHTML = '';
-    }
+    function clearAiImg() { currentAiImageBase64 = null; const preview = document.getElementById('ai-img-preview'); if(preview) preview.innerHTML = ''; }
 
-    // 🔥 NEW: Session Dropdown Handlers 🔥
     function toggleAiHistory() {
       const dropdown = document.getElementById('ai-history-dropdown');
-      if (dropdown.style.display === 'flex') {
-        dropdown.style.display = 'none';
-      } else {
-        renderAiHistoryDropdown();
-        dropdown.style.display = 'flex';
-        pSnd('pop');
-      }
+      if (dropdown.style.display === 'flex') { dropdown.style.display = 'none'; } else { renderAiHistoryDropdown(); dropdown.style.display = 'flex'; pSnd('pop'); }
     }
 
     function renderAiHistoryDropdown() {
       const dropdown = document.getElementById('ai-history-dropdown');
-      if (aiChatSessions.length === 0) {
-        dropdown.innerHTML = '<div style="padding:12px; text-align:center; font-size:13px; color:var(--text-secondary);">No previous chats saved.</div>';
-        return;
-      }
-      
+      if (aiChatSessions.length === 0) { dropdown.innerHTML = '<div style="padding:12px; text-align:center; font-size:13px; color:var(--text-secondary);">No previous chats saved.</div>'; return; }
       dropdown.innerHTML = aiChatSessions.map((session, i) => {
-        // Find the first message from the user to use as the title
-        const firstUserMsg = session.find(m => m.role === 'user');
-        let title = "Previous Chat";
-        if (firstUserMsg) {
-          if (typeof firstUserMsg.content === 'string') title = firstUserMsg.content;
-          else if (Array.isArray(firstUserMsg.content)) title = firstUserMsg.content.find(c => c.type === 'text')?.text || "Image Upload";
-        }
+        const firstUserMsg = session.find(m => m.role === 'user'); let title = "Previous Chat";
+        if (firstUserMsg) { if (typeof firstUserMsg.content === 'string') title = firstUserMsg.content; else if (Array.isArray(firstUserMsg.content)) title = firstUserMsg.content.find(c => c.type === 'text')?.text || "Image Upload"; }
         if (title.length > 25) title = title.substring(0, 25) + '...';
-        
-        return `<div class="list-item app-card" style="padding:12px 16px; margin-bottom:0; cursor:pointer; background:var(--input-bg); border:none;" onclick="loadAiSession(${i})">
-          <div style="font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${title}</div>
-        </div>`;
+        return `<div class="list-item app-card" style="padding:12px 16px; margin-bottom:0; cursor:pointer; background:var(--input-bg); border:none;" onclick="loadAiSession(${i})"><div style="font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${title}</div></div>`;
       }).join('');
     }
 
     function loadAiSession(index) {
-      if (aiChatHistory.length > 0) {
-        aiChatSessions.unshift([...aiChatHistory]); // Save current before loading old
-        if (aiChatSessions.length > 5) aiChatSessions = aiChatSessions.slice(0, 5);
-      }
-      
-      aiChatHistory = aiChatSessions[index];
-      aiChatSessions.splice(index, 1); // Remove from saved pool since it is now active
-      
-      localStorage.setItem('org_ai_chat_hist', JSON.stringify(aiChatHistory));
-      localStorage.setItem('org_ai_sessions', JSON.stringify(aiChatSessions));
-      
-      document.getElementById('ai-history-dropdown').style.display = 'none';
-      pSnd('success');
-      renderAiChat();
+      if (aiChatHistory.length > 0) { aiChatSessions.unshift([...aiChatHistory]); if (aiChatSessions.length > 5) aiChatSessions = aiChatSessions.slice(0, 5); }
+      aiChatHistory = aiChatSessions[index]; aiChatSessions.splice(index, 1); 
+      localStorage.setItem('org_ai_chat_hist', JSON.stringify(aiChatHistory)); localStorage.setItem('org_ai_sessions', JSON.stringify(aiChatSessions));
+      document.getElementById('ai-history-dropdown').style.display = 'none'; pSnd('success'); renderAiChat();
     }
 
     function startNewAiSession() {
-      const dropdown = document.getElementById('ai-history-dropdown');
-      if (dropdown) dropdown.style.display = 'none';
-
-      if (aiChatHistory.length === 0) {
-        pSnd('tick');
-        return; // Already empty
-      }
-      
-      pSnd('swoosh'); // Sound effect for clear
-      
-      // Save current to the 5-chat history array
-      aiChatSessions.unshift([...aiChatHistory]);
-      if (aiChatSessions.length > 5) aiChatSessions = aiChatSessions.slice(0, 5);
+      const dropdown = document.getElementById('ai-history-dropdown'); if (dropdown) dropdown.style.display = 'none';
+      if (aiChatHistory.length === 0) { pSnd('tick'); return; } pSnd('swoosh'); 
+      aiChatSessions.unshift([...aiChatHistory]); if (aiChatSessions.length > 5) aiChatSessions = aiChatSessions.slice(0, 5);
       localStorage.setItem('org_ai_sessions', JSON.stringify(aiChatSessions));
-      
-      // Clear active
-      aiChatHistory = [];
-      localStorage.setItem('org_ai_chat_hist', JSON.stringify([]));
-      
-      renderAiChat();
+      aiChatHistory = []; localStorage.setItem('org_ai_chat_hist', JSON.stringify([])); renderAiChat();
     }
 
-    // 🔥 NEW: Robust AI Markdown & Math Formatter 🔥
     function formatAiText(text) {
-      if(!text) return '';
-      let f = text;
-      
-      // 1. Strip LaTeX math symbols
-      f = f.replace(/\$\$(.*?)\$\$/g, '$1');
-      f = f.replace(/\$(.*?)\$/g, '$1');
-      
-      // 2. Convert horizontal rules (---)
+      if(!text) return ''; let f = text;
+      f = f.replace(/\$\$(.*?)\$\$/g, '$1'); f = f.replace(/\$(.*?)\$/g, '$1');
       f = f.replace(/^---+/gm, '<hr style="border: none; border-top: 1px solid rgba(0,0,0,0.1); margin: 12px 0;">');
-      
-      // 3. Convert headers
       f = f.replace(/^###\s+(.*)$/gm, '<strong style="display:block; font-size:16px; margin-top:12px; margin-bottom:4px;">$1</strong>');
       f = f.replace(/^##\s+(.*)$/gm, '<strong style="display:block; font-size:17px; margin-top:14px; margin-bottom:6px;">$1</strong>');
       f = f.replace(/^#\s+(.*)$/gm, '<strong style="display:block; font-size:18px; margin-top:16px; margin-bottom:8px;">$1</strong>');
-      
-      // 4. Convert bold and italics
-      f = f.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-      f = f.replace(/\*(.*?)\*/g, '<em>$1</em>');
-      
-      // 5. Convert lists (bullets and numbers)
+      f = f.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); f = f.replace(/\*(.*?)\*/g, '<em>$1</em>');
       f = f.replace(/^\s*[\*\-]\s+(.*)$/gm, '<div style="display:flex; gap:8px; margin-bottom:6px; margin-top:2px;"><span style="color:var(--accent);">•</span><span>$1</span></div>');
       f = f.replace(/^\s*(\d+\.)\s+(.*)$/gm, '<div style="display:flex; gap:8px; margin-bottom:6px; margin-top:2px;"><span style="color:var(--accent); font-weight:600;">$1</span><span>$2</span></div>');
-      
-      // 6. Fix paragraph spacing (double line break to gap, single line break to space)
-      f = f.replace(/\n\n/g, '<div style="height:8px;"></div>');
-      f = f.replace(/(?<!>)\n(?!<)/g, ' '); // Only replace newlines not touching HTML elements
-      
+      f = f.replace(/\n\n/g, '<div style="height:8px;"></div>'); f = f.replace(/(?<!>)\n(?!<)/g, ' '); 
       return f;
     }
 
     function renderAiChat() {
       const chatBox = document.getElementById('ai-chat-history');
       const initialGreeting = `<div class="ai-msg assistant"><div class="ai-bubble">Hello! I'm your AI Tutor. Need help with your homework or subjects?</div></div>`;
-      
       const historyHTML = aiChatHistory.map(msg => {
         let textPart = typeof msg.content === 'string' ? msg.content : msg.content.find(c => c.type === 'text')?.text || '';
         let imgPart = typeof msg.content === 'object' && Array.isArray(msg.content) ? msg.content.find(c => c.type === 'image_url')?.image_url.url : null;
         let imgHTML = imgPart ? `<img src="${imgPart}" style="max-width:100%; border-radius:8px; margin-bottom:8px; display:block;">` : '';
-        
         return `<div class="ai-msg ${msg.role}"><div class="ai-bubble">${imgHTML}${formatAiText(textPart)}</div></div>`;
       }).join('');
-      
-      chatBox.innerHTML = initialGreeting + historyHTML;
-      chatBox.scrollTop = chatBox.scrollHeight;
+      chatBox.innerHTML = initialGreeting + historyHTML; chatBox.scrollTop = chatBox.scrollHeight;
     }
 
     async function sendAiMsg() {
-      const inputEl = document.getElementById('ai-text-input');
-      const text = inputEl.value.trim();
-      
+      const inputEl = document.getElementById('ai-text-input'); const text = inputEl.value.trim();
       if (!text && !currentAiImageBase64) return;
-      
       pSnd('pop');
       
-      // Construct user message
       let newUserMsg = { role: "user" };
-      if (currentAiImageBase64) {
-        newUserMsg.content = [
-          { type: "text", text: text || "Please analyze this image." },
-          { type: "image_url", image_url: { url: currentAiImageBase64 } }
-        ];
-      } else {
-        newUserMsg.content = text;
-      }
+      if (currentAiImageBase64) { newUserMsg.content = [ { type: "text", text: text || "Please analyze this image." }, { type: "image_url", image_url: { url: currentAiImageBase64 } } ]; }
+      else { newUserMsg.content = text; }
       
-      aiChatHistory.push(newUserMsg);
-      renderAiChat();
+      aiChatHistory.push(newUserMsg); renderAiChat();
+      inputEl.value = ''; clearAiImg(); 
       
-      inputEl.value = '';
-      clearAiImg(); // Clear image UI instantly
-      
-      // Render typing indicator
       const chatBox = document.getElementById('ai-chat-history');
       chatBox.insertAdjacentHTML('beforeend', `<div id="ai-loading" class="ai-msg assistant"><div class="ai-bubble" style="opacity:0.6;">Thinking...</div></div>`);
       chatBox.scrollTop = chatBox.scrollHeight;
 
-      // Logic: System Prompt & Personalization
-      const isGodMode = checkGodMode();
-      const userName = (uData && uData.f) ? uData.f : "the student";
-      
-      let basePersona = "";
-      if (isGodMode) {
-        basePersona = `You are a direct, god-mode assistant. Provide the exact answer immediately without educational filler. Do exactly what ${userName} asks, including writing essays or solving math problems directly.`;
-      } else {
-        basePersona = `You are an expert, strict educational tutor helping ${userName}. 
-CRITICAL RULES:
-1. NEVER write essays, paragraphs, or complete assignments for ${userName}.
-2. NEVER give direct answers to math problems.
-3. INSTEAD, guide them using the Socratic method. Ask questions, provide essay structures, brainstorm ideas, and step through math processes step-by-step so they learn. 
-4. If they ask you to "write an essay" or "give me the answer", politely refuse and offer to guide them through the process.`;
-      }
+      const isGodMode = checkGodMode(); const userName = (uData && uData.f) ? uData.f : "the student";
+      let basePersona = isGodMode ? `You are a direct, god-mode assistant. Provide the exact answer immediately without educational filler. Do exactly what ${userName} asks, including writing essays or solving math problems directly.` : `You are an expert, strict educational tutor helping ${userName}. \nCRITICAL RULES:\n1. NEVER write essays, paragraphs, or complete assignments for ${userName}.\n2. NEVER give direct answers to math problems.\n3. INSTEAD, guide them using the Socratic method. Ask questions, provide essay structures, brainstorm ideas, and step through math processes step-by-step so they learn. \n4. If they ask you to "write an essay" or "give me the answer", politely refuse and offer to guide them through the process.`;
 
-      // App Manipulation Context
-      const sDataMap = sData.map(s => ({ 
-        name: s.name, 
-        homework: s.homework.map(h => ({ task: h.text, date: h.date })) 
-      }));
-      
+      const sDataMap = sData.map(s => ({ name: s.name, homework: s.homework.map(h => ({ task: h.text, date: h.date })) }));
       const sysPrompt = `${basePersona}\n\nCurrent Subjects & Homework: ${JSON.stringify(sDataMap)}\n\nCRITICAL RULE: If you need to add, edit, or delete homework based on ${userName}'s request, you MUST append a JSON block to the END of your response matching this exact format:\n{"action": "add_hw", "subject": "[Subject Name]", "task": "[Task Description]", "date": "YYYY-MM-DD"}`;
 
-      // 🔥 STRIP IMAGES FROM HISTORY: Prevents free API endpoint crashes
       const safeHistoryForAPI = aiChatHistory.map((msg, idx) => {
-        if (idx === aiChatHistory.length - 1) return msg; // Keep current message intact
-        
-        if (Array.isArray(msg.content)) {
-          const textPart = msg.content.find(c => c.type === 'text');
-          return { role: msg.role, content: textPart ? textPart.text : '[Image previously uploaded]' };
-        }
+        if (idx === aiChatHistory.length - 1) return msg; 
+        if (Array.isArray(msg.content)) { const textPart = msg.content.find(c => c.type === 'text'); return { role: msg.role, content: textPart ? textPart.text : '[Image previously uploaded]' }; }
         return msg;
       });
 
       try {
-        // --- OPENROUTER AUTO-ROUTER ---
         const response = await fetch("https://schooltrackerproxy.ellsull10.workers.dev", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "HTTP-Referer": window.location.href, 
-            "X-Title": "School Tracker"
-          },
-          body: JSON.stringify({
-            model: "openrouter/free", // Automatically routes to ANY active free vision model
-            messages: [
-              { role: "system", content: sysPrompt },
-              ...safeHistoryForAPI
-            ]
-          })
+          method: "POST", headers: { "Content-Type": "application/json", "HTTP-Referer": window.location.href, "X-Title": "School Tracker" },
+          body: JSON.stringify({ model: "openrouter/free", messages: [ { role: "system", content: sysPrompt }, ...safeHistoryForAPI ] })
         });
-
-        const data = await response.json();
-        
-        if (data.error) {
-            throw new Error(data.error.message || "Provider returned error");
-        }
-
+        const data = await response.json(); if (data.error) throw new Error(data.error.message || "Provider returned error");
         let aiResponseText = data.choices[0].message.content;
         
-        // 🔥 SAFETY FILTER INTERCEPT 🔥
-        if (aiResponseText.includes("User Safety: safe") || aiResponseText.trim() === "") {
-          aiResponseText = `I'm here to help, ${userName}! Let me know what specific part of this subject you'd like to dive into today.`;
-        }
+        if (aiResponseText.includes("User Safety: safe") || aiResponseText.trim() === "") aiResponseText = `I'm here to help, ${userName}! Let me know what specific part of this subject you'd like to dive into today.`;
         
-        // App Manipulation Parse Engine
         const jsonMatch = aiResponseText.match(/\{[\s\S]*"action"[\s\S]*"add_hw"[\s\S]*\}/);
         if (jsonMatch) {
           try {
@@ -1560,40 +1628,21 @@ CRITICAL RULES:
             if (actionObj.action === "add_hw" && actionObj.subject) {
               const targetSubject = sData.find(s => s.name.toLowerCase().includes(actionObj.subject.toLowerCase()));
               if (targetSubject) {
-                targetSubject.homework.push({
-                  id: Date.now().toString(),
-                  text: actionObj.task || "New Task via AI",
-                  date: actionObj.date || new Date().toISOString().split('T')[0]
-                });
-                sDat();
-                pSnd('success');
-                // Clean the JSON string out of the visible chat reply
-                aiResponseText = aiResponseText.replace(jsonMatch[0], '').replace(/```json|```/g, '').trim();
+                targetSubject.homework.push({ id: Date.now().toString(), text: actionObj.task || "New Task via AI", date: actionObj.date || new Date().toISOString().split('T')[0] });
+                sDat(); pSnd('success'); aiResponseText = aiResponseText.replace(jsonMatch[0], '').replace(/```json|```/g, '').trim();
               }
             }
-          } catch (e) {
-            console.error("AI Payload parse failure.", e);
-          }
+          } catch (e) { console.error("AI Payload parse failure.", e); }
         }
 
         aiChatHistory.push({ role: "assistant", content: aiResponseText });
+        if(aiChatHistory.length > 20) aiChatHistory = aiChatHistory.slice(aiChatHistory.length - 20);
         
-        // 🔥 HISTORY LIMIT: Store active session limit.
-        if(aiChatHistory.length > 20) {
-          aiChatHistory = aiChatHistory.slice(aiChatHistory.length - 20);
-        }
-        
-        localStorage.setItem('org_ai_chat_hist', JSON.stringify(aiChatHistory));
-        document.getElementById('ai-loading')?.remove();
-        renderAiChat();
+        localStorage.setItem('org_ai_chat_hist', JSON.stringify(aiChatHistory)); document.getElementById('ai-loading')?.remove(); renderAiChat();
 
       } catch (err) {
-        console.error("AI Error:", err);
-        document.getElementById('ai-loading')?.remove();
-        
-        const chatBox = document.getElementById('ai-chat-history');
-        chatBox.insertAdjacentHTML('beforeend', `<div class="ai-msg assistant"><div class="ai-bubble" style="color:var(--critical);">Error: ${err.message || 'Network connection failed.'}</div></div>`);
-        chatBox.scrollTop = chatBox.scrollHeight;
+        console.error("AI Error:", err); document.getElementById('ai-loading')?.remove();
+        const chatBox = document.getElementById('ai-chat-history'); chatBox.insertAdjacentHTML('beforeend', `<div class="ai-msg assistant"><div class="ai-bubble" style="color:var(--critical);">Error: ${err.message || 'Network connection failed.'}</div></div>`); chatBox.scrollTop = chatBox.scrollHeight;
       }
     }
   </script>
@@ -1612,29 +1661,14 @@ CRITICAL RULES:
     if (!isStandalone()) {
       const userAgent = window.navigator.userAgent.toLowerCase();
       const isIos = /iphone|ipad|ipod/.test(userAgent);
-      const promptEl = $('install-prompt');
-      const textEl = $('install-text');
-      const arrowEl = $('install-arrow');
-      const androidBtn = $('android-install-btn');
+      const promptEl = $('install-prompt'); const textEl = $('install-text'); const arrowEl = $('install-arrow'); const androidBtn = $('android-install-btn');
 
-      if (isIos) {
-        textEl.innerHTML = "Get the full app experience. Tap the <strong>Share</strong> button below and select <strong>Add to Home Screen</strong>.";
-        arrowEl.style.display = "block";
-        setTimeout(() => { promptEl.style.display = 'block'; }, 2000);
-      } else {
+      if (isIos) { textEl.innerHTML = "Get the full app experience. Tap the <strong>Share</strong> button below and select <strong>Add to Home Screen</strong>."; arrowEl.style.display = "block"; setTimeout(() => { promptEl.style.display = 'block'; }, 2000); } 
+      else {
         let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
-          e.preventDefault(); deferredPrompt = e; 
-          textEl.innerHTML = "Get the full app experience. Install Tracker directly to your home screen.";
-          androidBtn.style.display = "block";
-          promptEl.style.display = 'block';
-
-          androidBtn.addEventListener('click', async () => {
-            promptEl.style.display = 'none';
-            deferredPrompt.prompt(); 
-            const { outcome } = await deferredPrompt.userChoice;
-            deferredPrompt = null;
-          });
+          e.preventDefault(); deferredPrompt = e; textEl.innerHTML = "Get the full app experience. Install Tracker directly to your home screen."; androidBtn.style.display = "block"; promptEl.style.display = 'block';
+          androidBtn.addEventListener('click', async () => { promptEl.style.display = 'none'; deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice; deferredPrompt = null; });
         });
       }
     }
