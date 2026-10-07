@@ -31,9 +31,9 @@
       --input-bg: rgba(255, 255, 255, 0.7);
       --text-primary: #1C1C1E;
       --text-secondary: #636366;
-      --accent: #203248;
-      --accent-grad: linear-gradient(135deg, #203248, #0B121E);
-      --rich-blue: linear-gradient(135deg, #2563EB, #1D4ED8);
+      --accent: #243B53;
+      --accent-grad: linear-gradient(180deg, #243B53, #101827);
+      --rich-blue: linear-gradient(180deg, #243B53, #101827);
       --warning: #FF9500;
       --critical: #FF3B30;
       --success: #10B981;
@@ -1501,17 +1501,16 @@
     let uData = safeStorage.get('org_user', null);
     
     // Default palette: Darker, richer navy gradient
-    let appSet = safeStorage.get('org_settings', {
+  let appSet = safeStorage.get('org_settings', {
       bgEnabled: false,
       bgOpacity: 50,
       bgImage: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=100&w=1200&auto=format&fit=crop',
       themeType: 'gradient',
-      solidColor: '#1E3A8A',
-      grad1: '#2563EB',
-      grad2: '#0F172A',
-      gradDir: '135deg'
+      solidColor: '#243B53',
+      grad1: '#243B53',
+      grad2: '#101827',
+      gradDir: '180deg'
     });
-
     function getGradCSS(c1, c2, dir) {
       if (dir === 'radial') {
         return `radial-gradient(circle at center, ${c1}, ${c2})`;
@@ -1665,10 +1664,10 @@
     function resetThemeColor() {
       pSnd('tick');
       appSet.themeType = 'gradient';
-      appSet.grad1 = '#2563EB';
-      appSet.grad2 = '#0F172A';
-      appSet.solidColor = '#1E3A8A';
-      appSet.gradDir = '135deg';
+      appSet.grad1 = '#243B53';
+      appSet.grad2 = '#101827';
+      appSet.solidColor = '#243B53';
+      appSet.gradDir = '180deg';
       appSetApply();
       safeStorage.set('org_settings', appSet);
       showToast("Reset to default Navy gradient");
@@ -1813,9 +1812,9 @@
         }
       }
 
+     if (screenId === 'home-screen') { renderHome(false); }
       if (screenId === 'settings-screen') { appSetApply(); rendSet(); checkGodMode(); }
       if (screenId === 'calendar-screen') { renderCalendar(); }
-    }
 
     const codeMap = [
       { tag: 'CG', name: 'Community Group' }, { tag: 'WEL', name: 'Wellbeing' }, { tag: 'ESE', name: 'English' }, { tag: 'ENG', name: 'English' },
@@ -2855,7 +2854,23 @@
               badgeTxt = 'Due Tomorrow';
             }
             const stColor = stD[hw.subStatus] ? stD[hw.subStatus].h : 'var(--accent)';
-            return `<div class="current-hw-card ${uClass} ${a}" onclick="openDet('${hw.subId}')"><div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;"><div style="display: flex; align-items: center; gap: 6px; min-width: 0;"><span style="width: 9px; height: 9px; border-radius: 50%; background-color: ${stColor}; flex-shrink: 0; box-shadow: 0 0 8px ${stColor};"></span><span style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${hw.subName}</span></div><span style="font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 10px; flex-shrink: 0; letter-spacing: 0.2px; ${badgeStyle}">${badgeTxt}</span></div><div style="font-size: 15px; font-weight: 700; color: var(--text-primary); line-height: 1.35; margin-top: 3px;">${hw.text}</div><div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px; font-size: 12px; color: var(--text-secondary);"><span style="font-weight: 500;">Due: ${fmtD(hw.date)}</span><span style="font-weight: 600; opacity: 0.85; display: flex; align-items: center; gap: 2px;">View in Subject <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span></div></div>`;
+            return `<div class="current-hw-card ${uClass} ${a}" onclick="openDet('${hw.subId}')">
+              <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+                <div style="display: flex; align-items: center; gap: 6px; min-width: 0;">
+                  <span style="width: 9px; height: 9px; border-radius: 50%; background-color: ${stColor}; flex-shrink: 0; box-shadow: 0 0 8px ${stColor};"></span>
+                  <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${hw.subName}</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span style="font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 10px; flex-shrink: 0; letter-spacing: 0.2px; ${badgeStyle}">${badgeTxt}</span>
+                  <button class="delete-btn" style="padding: 0 4px; font-size: 20px; line-height: 1;" onclick="event.stopPropagation(); compHWAnim('${hw.id}', '${hw.subId}')">×</button>
+                </div>
+              </div>
+              <div style="font-size: 15px; font-weight: 700; color: var(--text-primary); line-height: 1.35; margin-top: 3px;">${hw.text}</div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px; font-size: 12px; color: var(--text-secondary);">
+                <span style="font-weight: 500;">Due: ${fmtD(hw.date)}</span>
+                <span style="font-weight: 600; opacity: 0.85; display: flex; align-items: center; gap: 2px;">View in Subject <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>
+              </div>
+            </div>`;
           }).join('');
         } else {
           hwSection.style.display = 'none';
@@ -3002,74 +3017,37 @@
     
     function goHome() {
       cSubId = null;
-      sData.sort((x, y) => x.status - y.status);
-      $('subjects-list').innerHTML = sData.map((s, i) => `<div class="card app-card ${a}" data-id="${s.id}" style="background-color: ${stD[s.status]?stD[s.status].c:'#FFF'}; border-color: ${stD[s.status]?stD[s.status].h:'#CCC'}; animation-delay: ${0.28 + (0.04*i)}s; z-index: ${100-i};" onclick="openDet('${s.id}')"><div class="boxes-container">${[0,1,2,3,4].map(j => `<div class="box ${s.status===j?'active':''}" style="--box-color: ${stD[j]?stD[j].h:'#CCC'};" onclick="event.stopPropagation(); setSt('${s.id}', ${j})"></div>`).join('')}</div><div class="subject-title">${s.name}</div></div>`).join('');
-      $('global-notes-list').innerHTML = gNotes.map((n, i) => `<div id="global-item-${n.id}" class="list-item app-card task-card ${a} ${isOD(n.date)?'overdue':''}" style="animation-delay: ${0.40 + (0.04*i)}s;"><div><div style="font-weight: 600; font-size: 15px;">${n.text}</div><div class="date-badge">Due: ${fmtD(n.date)}</div></div><button class="delete-btn" onclick="compGAnim('${n.id}')">×</button></div>`).join('');
+      renderHome(false);
+      navTo('home-screen');
     }
 
-    function processPhoto(e) {
-      const f = e.target.files[0];
-      if (!f) return;
-      pSnd('pop');
-      const r = new FileReader();
-      r.onload = ev => {
-        const img = new Image();
-        img.onload = () => {
-          const c = document.createElement('canvas');
-          // Scale to max width 900px for crystal-clear legibility of notes while keeping base64 size compact for cloud sync
-          const s = Math.min(900 / img.width, 1);
-          c.width = img.width * s;
-          c.height = img.height * s;
-          c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-          const sub = getSub(cSubId);
-          if (sub) {
-            if (!Array.isArray(sub.photos)) sub.photos = [];
-            sub.photos.push({ id: Date.now().toString(), img: c.toDataURL('image/jpeg', 0.65) });
-            sDat();
-            renderDet(true);
-            showToast("Photo note saved & synced! 📷");
-          }
-          e.target.value = '';
-        };
-        img.src = ev.target.result;
-      };
-      r.readAsDataURL(f);
-    }
-
-    function delPhoto(id) {
+    function compHWAnim(hwId, subId = null) {
       pSnd('tick');
-      const s = getSub(cSubId);
-      if (s && s.photos) {
-        s.photos = s.photos.filter(p => p.id !== id);
+      const targetSub = subId ? getSub(subId) : getSub(cSubId);
+      if (targetSub && targetSub.homework) {
+        targetSub.homework = targetSub.homework.filter(h => h.id !== hwId);
         sDat();
-        renderDet(true);
-        showToast("Photo removed.");
+        if ($('detail-screen').classList.contains('active')) {
+          renderDet(true);
+        }
+        renderHome(false);
+        showToast("Homework removed! 🎉");
       }
     }
 
-    function openPhotoViewer(imgUrl) {
-      pSnd('pop');
-      const modal = $('photo-viewer-modal');
-      const img = $('photo-viewer-img');
-      if (!modal || !img) return;
-      img.src = imgUrl;
-      modal.style.display = 'flex';
-      requestAnimationFrame(() => { modal.style.opacity = '1'; });
-    }
-
-    function closePhotoViewer() {
+    function compGAnim(id) {
       pSnd('tick');
-      const modal = $('photo-viewer-modal');
-      if (!modal) return;
-      modal.style.opacity = '0';
-      setTimeout(() => {
-        modal.style.display = 'none';
-        $('photo-viewer-img').src = '';
-      }, 250);
+      gNotes = gNotes.filter(n => n.id !== id);
+      sDat();
+      renderHome(false);
+      showToast("Task completed! 🎉");
     }
 
-    function animRO(id) {
-      const list = $('subjects-list');
+    function addGrade() {
+      pSnd('pop');
+      const n = $('grade-name'), s = $('grade-score'), o = $('grade-out-of');
+      if (!n || !s || !o || !n.value || !s.value || !o.value) return;
+      const sub = getSub(cSubId);
       if (sub) {
         sub.grades.push({ id: Date.now().toString(), name: n.value.trim(), score: s.value, outOf: o.value });
         n.value = ''; s.value = ''; o.value = '';
@@ -3078,7 +3056,6 @@
         showToast("Grade recorded! 📊");
       }
     }
-
     function delGrade(id) {
       pSnd('tick');
       const s = getSub(cSubId);
