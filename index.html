@@ -1815,8 +1815,10 @@
      if (screenId === 'home-screen') { renderHome(false); }
       if (screenId === 'settings-screen') { appSetApply(); rendSet(); checkGodMode(); }
       if (screenId === 'calendar-screen') { renderCalendar(); }
+    }
 
     const codeMap = [
+
       { tag: 'CG', name: 'Community Group' }, { tag: 'WEL', name: 'Wellbeing' }, { tag: 'ESE', name: 'English' }, { tag: 'ENG', name: 'English' },
       { tag: 'LTL', name: 'Learning to Learn' }, { tag: 'MAT', name: 'Mathematics' }, { tag: 'MTH', name: 'Mathematics' }, { tag: 'NUM', name: 'Numeracy' },
       { tag: 'SCH', name: 'Chemistry' }, { tag: 'SPH', name: 'Physics' }, { tag: 'SBI', name: 'Biology' }, { tag: 'SAQ', name: 'Aquatic Science' },
@@ -2906,11 +2908,25 @@
       r.readAsDataURL(f);
     }
 
-    function delPhoto(id) {
+    function openPhotoViewer(imgUrl) {
+      pSnd('pop');
+      const modal = $('photo-viewer-modal');
+      const img = $('photo-viewer-img');
+      if (!modal || !img) return;
+      img.src = imgUrl;
+      modal.style.display = 'flex';
+      requestAnimationFrame(() => { modal.style.opacity = '1'; });
+    }
+
+    function closePhotoViewer() {
       pSnd('tick');
-      getSub(cSubId).photos = getSub(cSubId).photos.filter(p => p.id !== id);
-      sDat();
-      renderDet(true);
+      const modal = $('photo-viewer-modal');
+      if (!modal) return;
+      modal.style.opacity = '0';
+      setTimeout(() => {
+        modal.style.display = 'none';
+        $('photo-viewer-img').src = '';
+      }, 250);
     }
 
     function animRO(id) {
