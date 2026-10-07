@@ -31,16 +31,16 @@
       --input-bg: rgba(255, 255, 255, 0.7);
       --text-primary: #1C1C1E;
       --text-secondary: #636366;
-      --accent: #243B53;
-      --accent-grad: linear-gradient(180deg, #243B53, #101827);
-      --rich-blue: linear-gradient(180deg, #243B53, #101827);
+      --accent: #1E3A8A;
+      --accent-grad: linear-gradient(135deg, #475569, #0F172A);
+      --rich-blue: linear-gradient(135deg, #2563EB, #1D4ED8);
       --warning: #FF9500;
       --critical: #FF3B30;
       --success: #10B981;
     }
     
     html.bg-active, body.bg-active { background-color: #FFFFFF !important; }
-    body.bg-active { --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.22), 0 8px 16px rgba(0, 0, 0, 0.12); }
+    body.bg-active { --card-bg: rgba(255, 255, 255, 0.88); --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.22), 0 8px 16px rgba(0, 0, 0, 0.12); }
     body.bg-active h1, body.bg-active h2 { text-shadow: 0 4px 12px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(255, 255, 255, 0.4) !important; }
 
     @media (prefers-color-scheme: dark) {
@@ -54,7 +54,7 @@
         --text-secondary: #98989D;
       }
       html.bg-active, body.bg-active { background-color: #000000 !important; }
-      body.bg-active { --card-shadow: 0 24px 54px rgba(0, 0, 0, 0.85), 0 8px 24px rgba(0, 0, 0, 0.65); }
+      body.bg-active { --card-bg: rgba(28, 28, 30, 0.88); --card-shadow: 0 24px 54px rgba(0, 0, 0, 0.85), 0 8px 24px rgba(0, 0, 0, 0.65); }
       body.bg-active h1, body.bg-active h2 { text-shadow: 0 4px 16px rgba(0,0,0,0.6) !important; }
     }
 
@@ -284,9 +284,9 @@
       position: absolute;
       top: 50%;
       left: 0;
-      height: 44px;
-      width: 52px;
-      margin-top: -22px;
+      height: 46px;
+      width: 50px;
+      margin-top: -23px;
       border-radius: 100px;
       pointer-events: none;
       z-index: 1;
@@ -294,25 +294,20 @@
       transform: translate3d(0, 0, 0);
       background: var(--accent-grad);
       box-shadow: 0 10px 28px rgba(15, 23, 42, 0.4), inset 0 1.5px 2px rgba(255, 255, 255, 0.5), inset 0 -1.5px 2px rgba(0, 0, 0, 0.25);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      transition: opacity 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), width 0.15s ease-out, transform 0.06s ease-out;
-      will-change: transform, opacity, width;
+      transition: opacity 0.18s ease;
+      will-change: transform, opacity;
     }
-
+    .nav-liquid-indicator.settle { transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
+    /* While scrubbing every item is a fixed icon-only size, so layout never shifts under the finger */
+    .bottom-nav.is-scrubbing .nav-item { transition: color 0.15s ease, transform 0.2s ease !important; }
+    .bottom-nav.is-scrubbing .nav-item .nav-label { opacity: 0 !important; width: 0 !important; transform: none !important; transition: none !important; }
     .bottom-nav.is-scrubbing .nav-item.active {
+      padding: 12px 14px !important;
       background: transparent !important;
       box-shadow: none !important;
       color: var(--text-secondary) !important;
     }
-    .bottom-nav.is-scrubbing .nav-item.active:not(.scrub-target) .nav-label {
-      opacity: 0 !important;
-      width: 0 !important;
-      transform: translateX(-8px) !important;
-    }
-    .bottom-nav.is-scrubbing .nav-item.active:not(.scrub-target) svg {
-      transform: scale(1) !important;
-    }
+    .bottom-nav.is-scrubbing .nav-item.active svg { transform: scale(1) !important; }
     .bottom-nav.is-scrubbing .nav-liquid-indicator { opacity: 1; }
 
     .nav-item {
@@ -339,7 +334,6 @@
 
     .bottom-nav.is-scrubbing .nav-item.scrub-target { color: #FFFFFF !important; transform: scale(1.06); }
     .bottom-nav.is-scrubbing .nav-item.scrub-target svg { transform: scale(1.18) !important; }
-    .bottom-nav.is-scrubbing .nav-item.scrub-target .nav-label { opacity: 1 !important; width: auto !important; transform: translateX(0) !important; color: #FFFFFF !important; }
     
     .profile-avatar-mini {
       width: 40px;
@@ -464,7 +458,7 @@
     .current-hw-card:active { transform: scale(0.97); }
     .current-hw-card.overdue { border-left: 6px solid #EF4444; background: linear-gradient(135deg, rgba(239, 68, 68, 0.16), rgba(220, 38, 38, 0.05)); box-shadow: 0 8px 24px rgba(239, 68, 68, 0.18); }
     .current-hw-card.due-today { border-left: 6px solid #F59E0B; background: linear-gradient(135deg, rgba(245, 158, 11, 0.16), rgba(217, 119, 6, 0.05)); box-shadow: 0 8px 24px rgba(245, 158, 11, 0.18); }
-    .current-hw-card.due-soon { border-left: 6px solid #3B82F6; background: linear-gradient(135deg, rgba(59, 130, 246, 0.14), rgba(29, 78, 216, 0.04)); box-shadow: 0 8px 24px rgba(59, 130, 246, 0.16); }
+    .current-hw-card.due-soon { border-left: 6px solid #475569; background: linear-gradient(135deg, rgba(59, 130, 246, 0.14), rgba(29, 78, 216, 0.04)); box-shadow: 0 8px 24px rgba(59, 130, 246, 0.16); }
     .current-hw-card.normal { border-left: 6px solid #6366F1; background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(79, 70, 229, 0.04)); box-shadow: 0 8px 24px rgba(99, 102, 241, 0.14); }
     
     .horizontal-scroll {
@@ -616,7 +610,7 @@
     .cal-cell { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 6px; aspect-ratio: 1/1; border-radius: 12px; background: rgba(0,0,0,0.03); cursor: pointer; transition: all 0.2s ease; border: 2px solid transparent; }
     @media (prefers-color-scheme: dark) { .cal-cell { background: rgba(255,255,255,0.05); } }
     .cal-cell:active { transform: scale(0.9); }
-    .cal-cell.today { background: rgba(59, 130, 246, 0.15); color: #3B82F6; font-weight: 800; }
+    .cal-cell.today { background: rgba(59, 130, 246, 0.15); color: #475569; font-weight: 800; }
     .cal-cell.selected { border-color: var(--accent); background: var(--input-bg); box-shadow: 0 4px 12px rgba(0,0,0,0.08); transform: scale(1.05); z-index: 2; }
     .cal-cell.empty { background: transparent; cursor: default; }
     .cal-cell.empty:active { transform: none; }
@@ -624,7 +618,7 @@
     .cal-dot { width: 6px; height: 6px; border-radius: 50%; }
 
     #ai-screen.active { display: flex; flex-direction: column; height: 100vh; overflow: hidden; padding-bottom: calc(env(safe-area-inset-bottom) + 80px); }
-    #ai-chat-history { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; margin-bottom: 12px; scrollbar-width: none; padding-bottom: 12px; }
+    #ai-chat-history { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; margin-bottom: 12px; scrollbar-width: none; padding: 18px 16px; border-radius: 24px; border: 1px solid var(--card-border); background: var(--card-bg); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); box-shadow: var(--card-shadow); }
     #ai-chat-history::-webkit-scrollbar { display: none; }
     
     .ai-msg { display: flex; width: 100%; animation: chatFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
@@ -633,7 +627,7 @@
     
     .ai-bubble { max-width: 82%; padding: 12px 16px; border-radius: 20px; font-size: 15px; line-height: 1.4; word-wrap: break-word; }
     .ai-msg.user .ai-bubble { background: var(--accent-grad); color: #FFFFFF; border-bottom-right-radius: 4px; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15); }
-    .ai-msg.assistant .ai-bubble { background: var(--input-bg); border: 1px solid var(--card-border); color: var(--text-primary); border-bottom-left-radius: 4px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .ai-msg.assistant .ai-bubble { background: rgba(120, 120, 128, 0.14); border: 1px solid var(--card-border); color: var(--text-primary); border-bottom-left-radius: 4px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
     
     #ai-input-wrapper { flex-shrink: 0; padding: 12px; border-radius: 20px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 8px; }
     .ai-controls { display: flex; gap: 8px; align-items: center; }
@@ -645,12 +639,132 @@
 
     .home-layout { display: flex; flex-direction: column; }
     @media (min-width: 850px) {
-      .home-layout { display: grid; grid-template-columns: 350px 1fr; gap: 32px; align-items: start; }
+      .screen { width: 100%; max-width: 1760px; margin: 0 auto; padding: 32px 48px 48px 124px; }
+      body:not(.bg-active) {
+        background-image: radial-gradient(900px 520px at 88% -8%, rgba(100, 116, 139, 0.16), transparent 70%), radial-gradient(760px 520px at 4% 108%, rgba(15, 23, 42, 0.10), transparent 70%);
+        background-attachment: fixed;
+      }
+      .home-layout { display: grid; grid-template-columns: minmax(400px, 500px) 1fr; gap: 44px; align-items: start; }
       .hl-left, .hl-right { display: flex; flex-direction: column; min-width: 0; }
-      #settings-screen, #add-hw-screen, #detail-screen, #tt-editor-screen, #calendar-screen, #profile-screen { max-width: 700px; margin: 0 auto; }
-      #ai-screen.active { max-width: 800px; margin: 0 auto; width: 100%; }
-      .bottom-nav { width: auto; min-width: 500px; justify-content: center; }
+
+      /* Dashboard: roomier, bigger, livelier */
+      #home-screen h1 { font-size: 48px; }
+      #user-greeting { font-size: 16px !important; margin-bottom: 4px !important; }
+      #home-screen h2 { font-size: 26px; margin-top: 32px; }
+      #home-screen .top-bar { margin-bottom: 28px; }
+      #home-screen .dashboard-grid { gap: 16px; }
+      #home-screen .widget { padding: 24px; min-height: 150px; }
+      #home-screen .widget-title { font-size: 15px; }
+      #home-screen .circular-chart { width: 72px; height: 72px; }
+      #home-screen .ring-text { font-size: 34px; }
+      #home-screen .simon-title { font-size: 15px; }
+      #home-screen .simon-action { font-size: 22px; }
+      #home-iona-bottom-stack > .app-card:first-child, #home-tt-side-stack > .app-card:first-child { padding: 20px 22px !important; font-size: 19px !important; border-radius: 20px !important; }
+      #home-health-card { padding: 22px; }
+      #home-health-card .widget-title { font-size: 15px; }
+      #home-health-card .health-bar { height: 18px; border-radius: 9px; margin-top: 12px; }
+      .current-hw-card { padding: 20px 24px; gap: 8px; border-radius: 22px; }
+      .current-hw-card > div:nth-child(2) { font-size: 19px !important; }
+      #home-screen input[type="text"], #home-screen input[type="date"] { padding: 17px 18px; font-size: 16px; }
+      #home-screen button.add-btn { font-size: 16px; padding: 0 24px; }
+      #dynamic-timetable-section .horizontal-scroll { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 16px; overflow: visible; margin: 0; padding: 4px 0 8px; }
+      #dynamic-timetable-section .horizontal-scroll::after { display: none; }
+      #dynamic-timetable-section .timetable-card { flex: none; padding: 20px; min-height: 140px; border-radius: 22px; gap: 8px; }
+      #dynamic-timetable-section .tt-subject { font-size: 19px; }
+      #dynamic-timetable-section .tt-session { font-size: 13px; }
+      #subjects-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+      #subjects-list .card { padding: 22px 24px; gap: 18px; border-radius: 22px; margin-bottom: 0; }
+      #subjects-list .subject-title { font-size: 20px; min-width: 0; overflow-wrap: anywhere; }
+      #subjects-list .card { min-width: 0; justify-content: flex-start; }
+      #subjects-list .box { width: 28px; height: 28px; border-radius: 9px; }
+
+      /* Even 32px section rhythm, 16px between cards */
+      #home-screen .dashboard-grid { margin-bottom: 16px !important; }
+      #home-iona-bottom-stack > .app-card:first-child { margin: 0 0 16px !important; }
+      #home-health-card { margin-bottom: 0; }
+      #home-hw-section { margin-top: 32px; margin-bottom: 0 !important; }
+      #home-hw-section > .flex-between { margin: 0 0 14px !important; }
+      #task-title, #add-dl-title, #deadline-section h2 { margin: 32px 0 14px !important; }
+      #home-screen .input-group { margin-bottom: 0; }
+      #global-notes-list { margin-top: 12px; }
+      #dynamic-timetable-section > .flex-between { height: 48px; margin: 0 !important; }
+      #dynamic-timetable-section { margin-bottom: 32px; }
+      #subj-title { margin: 0 !important; height: 48px; display: flex; align-items: center; }
+      @media (hover: hover) {
+        #home-screen .card, #home-screen .timetable-card, #home-screen .widget, #home-screen .current-hw-card { transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        #home-screen .card:hover, #home-screen .timetable-card:hover, #home-screen .widget:hover, #home-screen .current-hw-card:hover { transform: translateY(-5px) scale(1.015); }
+        #home-screen .card:hover:active, #home-screen .timetable-card:hover:active, #home-screen .widget:hover:active, #home-screen .current-hw-card:hover:active { transform: scale(0.97); }
+      }
+
+      /* Settings and subject pages flow into two columns so they fill the screen */
+      #settings-screen, #detail-screen { columns: 2 440px; column-gap: 40px; }
+      #settings-screen > *, #detail-screen > * { break-inside: avoid; }
+      #settings-screen > .header-bar, #detail-screen > .header-bar { column-span: all; }
+      #settings-screen > h3, #detail-screen > h3 { break-after: avoid; }
+      #settings-subjects-list { break-inside: auto; }
+      #settings-screen > #signout-wrap { column-span: all; }
+
+      /* Calendar: month on the left, agenda on the right */
+      #calendar-screen.active { display: grid; grid-template-columns: minmax(440px, 1.25fr) minmax(320px, 1fr); column-gap: 40px; align-content: start; align-items: start; }
+      #calendar-screen > .header-bar { grid-column: 1 / -1; }
+      #calendar-screen > .app-card { grid-column: 1; grid-row: 2 / span 2; margin-bottom: 0 !important; }
+      #calendar-screen > h2 { grid-column: 2; grid-row: 2; }
+      #calendar-screen > #cal-agenda-list { grid-column: 2; grid-row: 3; }
+      #calendar-screen .cal-cell { aspect-ratio: 1.15 / 1; }
+
+      #add-hw-screen, #profile-screen { max-width: 760px; }
+      #ai-screen.active { max-width: 1100px; width: 100%; padding-bottom: 24px; }
+
+      /* Left sidebar: the active tab's own pill grows out of the bar to show its name, then folds back in */
+      .bottom-nav {
+        top: 50%; bottom: auto; left: 24px;
+        transform: translateY(-50%);
+        flex-direction: column; align-items: flex-start; gap: 8px; padding: 10px;
+        width: 74px; min-width: 0; max-width: none; box-sizing: border-box;
+        border-radius: 34px; cursor: default;
+      }
+      .nav-liquid-indicator { top: 0; left: 10px; margin-top: 0; width: 52px; height: 52px; }
+      .nav-item, .nav-item.active {
+        width: 52px; height: 52px; padding: 0 0 0 15px; justify-content: flex-start; overflow: visible;
+        transition: width 0.45s cubic-bezier(0.34, 1.35, 0.64, 1), background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+      }
+      .nav-item.show-label, .nav-item.active.show-label { width: var(--pill-w, 150px); }
+      .nav-item:hover:not(.active) { background: rgba(128, 128, 128, 0.14); }
+      .nav-item .nav-label, .nav-item.active .nav-label {
+        position: absolute; left: 44px; top: 50%;
+        width: auto; padding: 0 22px 0 0; margin: 0;
+        color: #FFFFFF; font-family: 'Outfit', sans-serif; font-size: 15px;
+        opacity: 0; transform: translate(-14px, -50%);
+        transition: opacity 0.15s ease, transform 0.3s cubic-bezier(0.34, 1.4, 0.64, 1);
+      }
+      .nav-item.show-label .nav-label, .nav-item.active.show-label .nav-label { opacity: 1; transform: translate(0, -50%); transition: opacity 0.25s ease 0.12s, transform 0.4s cubic-bezier(0.34, 1.4, 0.64, 1) 0.1s; }
+
+      .bottom-nav.is-scrubbing .nav-item { transition: width 0.3s ease, color 0.15s ease, transform 0.2s ease !important; }
     }
+    /* Schedule columns always divide the subject columns evenly (4 and 2, or 6 and 3) so edges line up */
+    @media (min-width: 850px) and (max-width: 1299px) {
+      .home-layout { display: flex; flex-direction: column; gap: 8px; }
+      #dynamic-timetable-section .horizontal-scroll { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      #subjects-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      #dynamic-timetable-section .tt-subject { font-size: 17px; }
+      #dynamic-timetable-section .timetable-card { padding: 16px; min-height: 120px; }
+    }
+    @media (min-width: 1300px) {
+      .hl-left { padding-top: 48px; }
+      #dynamic-timetable-section .horizontal-scroll { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      #subjects-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      #dynamic-timetable-section .tt-subject { font-size: 17px; }
+      #dynamic-timetable-section .timetable-card { padding: 16px; min-height: 120px; }
+    }
+    @media (min-width: 1700px) {
+      #dynamic-timetable-section .horizontal-scroll { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+      #subjects-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      #dynamic-timetable-section .tt-subject { font-size: 19px; }
+      #dynamic-timetable-section .timetable-card { padding: 20px; min-height: 130px; }
+    }
+
+    #signout-wrap { display: flex; justify-content: center; }
+    #signout-wrap button { width: min(420px, 100%) !important; }
 
     .tt-day-ovoid {
       flex: 0 0 auto;
@@ -1296,7 +1410,7 @@
             <span style="font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">Color 1 (Start)</span>
             <div style="display: flex; align-items: center; gap: 8px;">
               <input type="color" id="theme-grad-input-1" style="width: 44px; height: 38px; border: none; padding: 0; background: none; cursor: pointer; border-radius: 8px;" oninput="updateGradColors(this.value, null)">
-              <span id="grad-color-1-hex" style="font-size: 12px; font-weight: 700; font-family: monospace;">#2563EB</span>
+              <span id="grad-color-1-hex" style="font-size: 12px; font-weight: 700; font-family: monospace;">#475569</span>
             </div>
           </div>
           <div style="display: flex; flex-direction: column; gap: 4px; text-align: right;">
@@ -1325,11 +1439,10 @@
       <div style="margin-top: 10px;">
         <div style="font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 10px;">Quick Presets</div>
         <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-          <div class="preset-circle" title="Deep Navy" style="background: linear-gradient(135deg, #2563EB, #0F172A);" onclick="applyThemePreset('navy')"></div>
+          <div class="preset-circle" title="Default" style="background: linear-gradient(135deg, #475569, #0F172A);" onclick="applyThemePreset('navy')"></div>
           <div class="preset-circle" title="Emerald" style="background: linear-gradient(135deg, #10B981, #064E3B);" onclick="applyThemePreset('emerald')"></div>
           <div class="preset-circle" title="Royal Violet" style="background: linear-gradient(135deg, #8B5CF6, #2E1065);" onclick="applyThemePreset('purple')"></div>
           <div class="preset-circle" title="Sunset" style="background: linear-gradient(135deg, #F43F5E, #881337);" onclick="applyThemePreset('sunset')"></div>
-          <div class="preset-circle" title="Midnight" style="background: linear-gradient(135deg, #475569, #0F172A);" onclick="applyThemePreset('midnight')"></div>
           <div class="preset-circle" title="Amber" style="background: linear-gradient(135deg, #F59E0B, #78350F);" onclick="applyThemePreset('amber')"></div>
           <div class="preset-circle" title="Cyan" style="background: linear-gradient(135deg, #06B6D4, #083344);" onclick="applyThemePreset('cyan')"></div>
         </div>
@@ -1340,18 +1453,20 @@
       </button>
     </div>
 
-    <div class="cascade-item" style="margin-top: 32px; margin-bottom: 20px;">
+    <div id="signout-wrap" class="cascade-item" style="margin-top: 32px; margin-bottom: 20px;">
       <button class="add-btn btn-danger full-w-input" style="padding: 16px; border-radius: 16px; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="signOut()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg> Sign Out & Reset App</button>
     </div>
   </div>
 
   <div id="ai-screen" class="screen">
     <div class="header-bar cascade-item d-1" style="position:relative; z-index:100;">
-      <div style="flex:1; display:flex; align-items:center; gap:4px; cursor:pointer;" onclick="toggleAiHistory()">
+      <div style="flex:1; position:relative; min-width:0;">
+        <div style="display:inline-flex; align-items:center; gap:4px; cursor:pointer;" onclick="toggleAiHistory()">
         <h1 style="margin:0;">AI Tutor</h1>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-secondary);"><polyline points="6 9 12 15 18 9"></polyline></svg>
       </div>
-      <div id="ai-history-dropdown" class="app-card" style="display:none; position:absolute; top:50px; left:0; width:250px; max-height: 300px; overflow-y: auto; padding:8px; flex-direction:column; gap:4px; box-shadow:0 12px 32px rgba(0,0,0,0.15);"></div>
+        <div id="ai-history-dropdown" class="app-card" style="display:none; position:absolute; top:calc(100% + 10px); left:0; width:min(300px, 80vw); max-height: 300px; overflow-y: auto; padding:8px; flex-direction:column; gap:4px; box-shadow:0 12px 32px rgba(0,0,0,0.15);"></div>
+      </div>
       <button class="icon-btn btn-grey" onclick="startNewAiSession()" style="margin-right: 8px;">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
       </button>
@@ -1382,6 +1497,14 @@
       const arr = Array.isArray(obj) ? obj : Object.values(obj);
       return arr.filter(x => x !== null && typeof x !== 'undefined');
     };
+
+    const normSubs = list => safeArr(list).filter(s => s && s.name).map(s => ({
+      ...s,
+      homework: safeArr(s.homework).filter(h => h && h.date),
+      notes: s.notes || "",
+      grades: safeArr(s.grades).filter(g => g && g.score),
+      photos: safeArr(s.photos).filter(p => p && p.img)
+    }));
 
     const safeStorage = {
       get: (key, fallback) => {
@@ -1478,13 +1601,7 @@
       sData = [ "English", "Mathematics", "Science", "Humanities", "Health & Physical Education (HPE)", "Religious Education" ]
         .map(n => ({ id: n.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase(), name: n, status: 2, homework: [], notes: "", grades: [], photos: [] }));
     } else {
-      sData = sData.filter(s => s && s.name).map(s => ({
-        ...s,
-        homework: safeArr(s.homework).filter(h => h && h.date),
-        notes: s.notes || "",
-        grades: safeArr(s.grades).filter(g => g && g.score),
-        photos: safeArr(s.photos).filter(p => p && p.img)
-      }));
+      sData = normSubs(sData);
     }
 
     const getSub = id => sData.find(s => s && s.id === id);
@@ -1501,16 +1618,17 @@
     let uData = safeStorage.get('org_user', null);
     
     // Default palette: Darker, richer navy gradient
-  let appSet = safeStorage.get('org_settings', {
+    let appSet = safeStorage.get('org_settings', {
       bgEnabled: false,
       bgOpacity: 50,
       bgImage: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=100&w=1200&auto=format&fit=crop',
       themeType: 'gradient',
-      solidColor: '#243B53',
-      grad1: '#243B53',
-      grad2: '#101827',
-      gradDir: '180deg'
+      solidColor: '#1E3A8A',
+      grad1: '#475569',
+      grad2: '#0F172A',
+      gradDir: '135deg'
     });
+
     function getGradCSS(c1, c2, dir) {
       if (dir === 'radial') {
         return `radial-gradient(circle at center, ${c1}, ${c2})`;
@@ -1530,7 +1648,7 @@
         root.style.setProperty('--accent-grad', col);
         if ($('theme-preview-strip')) $('theme-preview-strip').style.background = col;
       } else {
-        const c1 = appSet.grad1 || '#2563EB';
+        const c1 = appSet.grad1 || '#475569';
         const c2 = appSet.grad2 || '#0F172A';
         const dir = appSet.gradDir || '135deg';
         const gradCSS = getGradCSS(c1, c2, dir);
@@ -1594,8 +1712,8 @@
 
       if ($('theme-solid-input')) $('theme-solid-input').value = appSet.solidColor || '#1E3A8A';
       if ($('solid-color-hex')) $('solid-color-hex').innerText = (appSet.solidColor || '#1E3A8A').toUpperCase();
-      if ($('theme-grad-input-1')) $('theme-grad-input-1').value = appSet.grad1 || '#2563EB';
-      if ($('grad-color-1-hex')) $('grad-color-1-hex').innerText = (appSet.grad1 || '#2563EB').toUpperCase();
+      if ($('theme-grad-input-1')) $('theme-grad-input-1').value = appSet.grad1 || '#475569';
+      if ($('grad-color-1-hex')) $('grad-color-1-hex').innerText = (appSet.grad1 || '#475569').toUpperCase();
       if ($('theme-grad-input-2')) $('theme-grad-input-2').value = appSet.grad2 || '#0F172A';
       if ($('grad-color-2-hex')) $('grad-color-2-hex').innerText = (appSet.grad2 || '#0F172A').toUpperCase();
       if ($('theme-grad-direction')) $('theme-grad-direction').value = appSet.gradDir || '135deg';
@@ -1635,7 +1753,7 @@
       pSnd('pop');
       appSet.themeType = 'gradient';
       if (preset === 'navy') {
-        appSet.grad1 = '#2563EB';
+        appSet.grad1 = '#475569';
         appSet.grad2 = '#0F172A';
       } else if (preset === 'emerald') {
         appSet.grad1 = '#10B981';
@@ -1664,13 +1782,13 @@
     function resetThemeColor() {
       pSnd('tick');
       appSet.themeType = 'gradient';
-      appSet.grad1 = '#243B53';
-      appSet.grad2 = '#101827';
-      appSet.solidColor = '#243B53';
-      appSet.gradDir = '180deg';
+      appSet.grad1 = '#475569';
+      appSet.grad2 = '#0F172A';
+      appSet.solidColor = '#1E3A8A';
+      appSet.gradDir = '135deg';
       appSetApply();
       safeStorage.set('org_settings', appSet);
-      showToast("Reset to default Navy gradient");
+      showToast("Reset to default gradient");
     }
 
     function toggleBg() {
@@ -1784,13 +1902,14 @@
       const scr = $(screenId);
       if (scr) scr.classList.add('active');
       window.scrollTo(0,0);
+      if (screenId === 'home-screen') { cSubId = null; if (uData && uData.f) renderHome(false); }
 
       const navEl = $('bottom-nav');
       if (screenId === 'onboarding-screen' || screenId === 'onboarding-tt-screen') {
         if (navEl) navEl.style.display = 'none';
       } else {
         if (navEl) navEl.style.display = 'flex';
-        $$('.nav-item').forEach(nav => nav.classList.remove('active'));
+        $$('.nav-item').forEach(nav => nav.classList.remove('active', 'show-label'));
         
         if (navElement) {
           navElement.classList.add('active');
@@ -1812,13 +1931,20 @@
         }
       }
 
-     if (screenId === 'home-screen') { renderHome(false); }
+      const act = document.querySelector('.nav-item.active');
+      if (act && navEl && navEl.style.display !== 'none' && window.matchMedia('(min-width: 850px)').matches) {
+        act.style.setProperty('--pill-w', (44 + act.querySelector('.nav-label').offsetWidth) + 'px');
+        act.classList.add('show-label');
+        clearTimeout(act._lt);
+        act._lt = setTimeout(() => act.classList.remove('show-label'), 1500);
+      }
+
       if (screenId === 'settings-screen') { appSetApply(); rendSet(); checkGodMode(); }
       if (screenId === 'calendar-screen') { renderCalendar(); }
+      if (screenId === 'ai-screen') renderAiChat();
     }
 
     const codeMap = [
-
       { tag: 'CG', name: 'Community Group' }, { tag: 'WEL', name: 'Wellbeing' }, { tag: 'ESE', name: 'English' }, { tag: 'ENG', name: 'English' },
       { tag: 'LTL', name: 'Learning to Learn' }, { tag: 'MAT', name: 'Mathematics' }, { tag: 'MTH', name: 'Mathematics' }, { tag: 'NUM', name: 'Numeracy' },
       { tag: 'SCH', name: 'Chemistry' }, { tag: 'SPH', name: 'Physics' }, { tag: 'SBI', name: 'Biology' }, { tag: 'SAQ', name: 'Aquatic Science' },
@@ -2332,11 +2458,11 @@
     }
 
     const stD = [
-      { c: "rgba(239, 68, 68, 0.12)", h: "#EF4444", l: "Falling behind" },
-      { c: "rgba(245, 158, 11, 0.12)", h: "#F59E0B", l: "Behind" },
+      { c: "rgba(239, 68, 68, 0.24)", h: "#EF4444", l: "Falling behind" },
+      { c: "rgba(245, 158, 11, 0.26)", h: "#F59E0B", l: "Behind" },
       { c: "var(--card-bg)", h: "#94A3B8", l: "Up to date" },
-      { c: "rgba(16, 185, 129, 0.12)", h: "#10B981", l: "Ahead" },
-      { c: "rgba(5, 150, 105, 0.15)", h: "#059669", l: "Well ahead" }
+      { c: "rgba(16, 185, 129, 0.24)", h: "#10B981", l: "Ahead" },
+      { c: "rgba(5, 150, 105, 0.28)", h: "#059669", l: "Well ahead" }
     ];
 
     window.addEventListener('load', () => { 
@@ -2385,8 +2511,8 @@
       try {
         if (uData && uData.f) {
           initCloudListener();
-          renderHome(true); 
           navTo('home-screen');
+          renderHome(true);
         } else {
           navTo('onboarding-screen');
         }
@@ -2424,13 +2550,7 @@
         const cloudData = snap.val();
         if (cloudData && cloudData.sData && cloudData.sData.length > 0) {
           isIncomingSync = true;
-          sData = safeArr(cloudData.sData).filter(s => s && s.name).map(s => ({
-            ...s,
-            homework: safeArr(s.homework).filter(h => h && h.date),
-            notes: s.notes || "",
-            grades: safeArr(s.grades).filter(g => g && g.score),
-            photos: safeArr(s.photos).filter(p => p && p.img)
-          }));
+          sData = normSubs(safeArr(cloudData.sData));
           gNotes = safeArr(cloudData.gNotes).filter(n => n && n.date);
           dlData = safeArr(cloudData.dlData).filter(d => d && d.date);
           if (cloudData.ttCyc) ttCyc = normalizeTtCyc(cloudData.ttCyc);
@@ -2491,13 +2611,7 @@
           isIncomingSync = true;
           
           if (cloudData.sData) {
-            sData = safeArr(cloudData.sData).filter(s => s && s.name).map(s => ({
-              ...s,
-              homework: safeArr(s.homework).filter(h => h && h.date),
-              notes: s.notes || "",
-              grades: safeArr(s.grades).filter(g => g && g.score),
-              photos: safeArr(s.photos).filter(p => p && p.img)
-            }));
+            sData = normSubs(safeArr(cloudData.sData));
           }
           gNotes = safeArr(cloudData.gNotes).filter(n => n && n.date);
           dlData = safeArr(cloudData.dlData).filter(d => d && d.date);
@@ -2583,8 +2697,8 @@
       }
       
       initCloudListener();
-      renderHome(true);
       navTo('home-screen');
+      renderHome(true);
     }
 
     function updGreet() {
@@ -2789,10 +2903,11 @@
         const ttInfo = getTodayCycleInfo();
         const ts = $('dynamic-timetable-section');
 
-        if (ttInfo.isWeekend) {
-          ts.innerHTML = `<h2>Today's Schedule</h2><div class="app-card" style="padding: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px;"><span style="font-size: 28px;">🎉</span><span style="font-weight: 600; color: var(--text-secondary); text-align: center;">It's the weekend!<br>No classes scheduled today.</span></div>`;
+        const tt = ttInfo.isWeekend ? null : getTT();
+        if (!safeArr(tt).some(c => c && String(c).trim())) {
+          ts.style.display = 'none';
+          ts.innerHTML = '';
         } else {
-          const tt = getTT();
           const sLab = getPeriodLabels(tt ? tt.length : 6);
           ts.innerHTML = `<div class="flex-between" style="margin-top: 24px; margin-bottom: 12px;"><h2 style="margin: 0;">Today's Schedule</h2><span style="font-size: 12px; font-weight: 700; color: var(--text-secondary);">${ttInfo.label}</span></div>
             <div class="horizontal-scroll">${safeArr(tt).map((cN, i) => { 
@@ -2852,27 +2967,11 @@
               badgeTxt = 'Due Today';
             } else if (d === 1) {
               uClass = 'due-soon';
-              badgeStyle = 'background: linear-gradient(135deg, #3B82F6, #1D4ED8); color: #FFFFFF; box-shadow: 0 2px 8px rgba(59,130,246,0.35);';
+              badgeStyle = 'background: linear-gradient(135deg, #475569, #1D4ED8); color: #FFFFFF; box-shadow: 0 2px 8px rgba(59,130,246,0.35);';
               badgeTxt = 'Due Tomorrow';
             }
             const stColor = stD[hw.subStatus] ? stD[hw.subStatus].h : 'var(--accent)';
-            return `<div class="current-hw-card ${uClass} ${a}" onclick="openDet('${hw.subId}')">
-              <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
-                <div style="display: flex; align-items: center; gap: 6px; min-width: 0;">
-                  <span style="width: 9px; height: 9px; border-radius: 50%; background-color: ${stColor}; flex-shrink: 0; box-shadow: 0 0 8px ${stColor};"></span>
-                  <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${hw.subName}</span>
-                </div>
-                <div style="display: flex; align-items: center; gap: 8px;">
-                  <span style="font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 10px; flex-shrink: 0; letter-spacing: 0.2px; ${badgeStyle}">${badgeTxt}</span>
-                  <button class="delete-btn" style="padding: 0 4px; font-size: 20px; line-height: 1;" onclick="event.stopPropagation(); compHWAnim('${hw.id}', '${hw.subId}')">×</button>
-                </div>
-              </div>
-              <div style="font-size: 15px; font-weight: 700; color: var(--text-primary); line-height: 1.35; margin-top: 3px;">${hw.text}</div>
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px; font-size: 12px; color: var(--text-secondary);">
-                <span style="font-weight: 500;">Due: ${fmtD(hw.date)}</span>
-                <span style="font-weight: 600; opacity: 0.85; display: flex; align-items: center; gap: 2px;">View in Subject <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>
-              </div>
-            </div>`;
+            return `<div class="current-hw-card ${uClass} ${a}" onclick="openDet('${hw.subId}')"><div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;"><div style="display: flex; align-items: center; gap: 6px; min-width: 0;"><span style="width: 9px; height: 9px; border-radius: 50%; background-color: ${stColor}; flex-shrink: 0; box-shadow: 0 0 8px ${stColor};"></span><span style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${hw.subName}</span></div><span style="font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 10px; flex-shrink: 0; letter-spacing: 0.2px; ${badgeStyle}">${badgeTxt}</span></div><div style="font-size: 15px; font-weight: 700; color: var(--text-primary); line-height: 1.35; margin-top: 3px;">${hw.text}</div><div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px; font-size: 12px; color: var(--text-secondary);"><span style="font-weight: 500;">Due: ${fmtD(hw.date)}</span><span style="font-weight: 600; opacity: 0.85; display: flex; align-items: center; gap: 2px;">View in Subject <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span></div></div>`;
           }).join('');
         } else {
           hwSection.style.display = 'none';
@@ -2885,56 +2984,12 @@
       $('global-notes-list').innerHTML = gNotes.map((n, i) => `<div id="global-item-${n.id}" class="list-item app-card task-card ${a} ${isOD(n.date)?'overdue':''}" style="animation-delay: ${0.40 + (0.04*i)}s;"><div><div style="font-weight: 600; font-size: 15px;">${n.text}</div><div class="date-badge">Due: ${fmtD(n.date)}</div></div><button class="delete-btn" onclick="compGAnim('${n.id}')">×</button></div>`).join('');
     }
 
-    function processPhoto(e) {
-      const f = e.target.files[0];
-      if (!f) return;
-      pSnd('pop');
-      const r = new FileReader();
-      r.onload = ev => {
-        const img = new Image();
-        img.onload = () => {
-          const c = document.createElement('canvas');
-          const s = Math.min(600 / img.width, 1);
-          c.width = img.width * s;
-          c.height = img.height * s;
-          c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-          getSub(cSubId).photos.push({ id: Date.now().toString(), img: c.toDataURL('image/jpeg', 0.55) });
-          sDat();
-          renderDet(true);
-          showToast("Photo note saved! 📷");
-        };
-        img.src = ev.target.result;
-      };
-      r.readAsDataURL(f);
-    }
-
-    function openPhotoViewer(imgUrl) {
-      pSnd('pop');
-      const modal = $('photo-viewer-modal');
-      const img = $('photo-viewer-img');
-      if (!modal || !img) return;
-      img.src = imgUrl;
-      modal.style.display = 'flex';
-      requestAnimationFrame(() => { modal.style.opacity = '1'; });
-    }
-
-    function closePhotoViewer() {
-      pSnd('tick');
-      const modal = $('photo-viewer-modal');
-      if (!modal) return;
-      modal.style.opacity = '0';
-      setTimeout(() => {
-        modal.style.display = 'none';
-        $('photo-viewer-img').src = '';
-      }, 250);
-    }
-
     function animRO(id) {
       const list = $('subjects-list');
       const crd = Array.from(list.children);
       crd.forEach(c => { c.style.animation = 'none'; c.classList.remove('cascade-item'); });
       const pos = {};
-      crd.forEach(c => pos[c.dataset.id] = c.getBoundingClientRect().top);
+      crd.forEach(c => { const r = c.getBoundingClientRect(); pos[c.dataset.id] = { x: r.left, y: r.top }; });
       sData.sort((x, y) => x.status - y.status);
       
       sData.forEach((s, idx) => { 
@@ -2949,10 +3004,10 @@
       });
       
       Array.from(list.children).forEach(c => {
-        const dY = pos[c.dataset.id] - c.getBoundingClientRect().top;
-        if (dY !== 0) {
+        const r = c.getBoundingClientRect(), dX = pos[c.dataset.id].x - r.left, dY = pos[c.dataset.id].y - r.top;
+        if (dX !== 0 || dY !== 0) {
           c.style.transition = 'none';
-          c.style.transform = `translate3d(0, ${dY}px, 0)`;
+          c.style.transform = `translate3d(${dX}px, ${dY}px, 0)`;
           requestAnimationFrame(() => requestAnimationFrame(() => {
             c.style.transition = 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
             c.style.transform = `translate3d(0, 0, 0)`;
@@ -3031,38 +3086,73 @@
       return cSubId;
     }
     
-    function goHome() {
-      cSubId = null;
-      renderHome(false);
-      navTo('home-screen');
+    function goHome() { navTo('home-screen'); }
+
+    function processPhoto(e) {
+      const f = e.target.files[0];
+      if (!f) return;
+      pSnd('pop');
+      const r = new FileReader();
+      r.onload = ev => {
+        const img = new Image();
+        img.onload = () => {
+          const c = document.createElement('canvas');
+          // Scale to max width 900px for crystal-clear legibility of notes while keeping base64 size compact for cloud sync
+          const s = Math.min(900 / img.width, 1);
+          c.width = img.width * s;
+          c.height = img.height * s;
+          c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+          const sub = getSub(cSubId);
+          if (sub) {
+            if (!Array.isArray(sub.photos)) sub.photos = [];
+            sub.photos.push({ id: Date.now().toString(), img: c.toDataURL('image/jpeg', 0.65) });
+            sDat();
+            renderDet(true);
+            showToast("Photo note saved & synced! 📷");
+          }
+          e.target.value = '';
+        };
+        img.src = ev.target.result;
+      };
+      r.readAsDataURL(f);
     }
 
-    function compHWAnim(hwId, subId = null) {
+    function delPhoto(id) {
       pSnd('tick');
-      const targetSub = subId ? getSub(subId) : getSub(cSubId);
-      if (targetSub && targetSub.homework) {
-        targetSub.homework = targetSub.homework.filter(h => h.id !== hwId);
+      const s = getSub(cSubId);
+      if (s && s.photos) {
+        s.photos = s.photos.filter(p => p.id !== id);
         sDat();
-        if ($('detail-screen').classList.contains('active')) {
-          renderDet(true);
-        }
-        renderHome(false);
-        showToast("Homework removed! 🎉");
+        renderDet(true);
+        showToast("Photo removed.");
       }
     }
 
-    function compGAnim(id) {
+    function openPhotoViewer(imgUrl) {
+      pSnd('pop');
+      const modal = $('photo-viewer-modal');
+      const img = $('photo-viewer-img');
+      if (!modal || !img) return;
+      img.src = imgUrl;
+      modal.style.display = 'flex';
+      requestAnimationFrame(() => { modal.style.opacity = '1'; });
+    }
+
+    function closePhotoViewer() {
       pSnd('tick');
-      gNotes = gNotes.filter(n => n.id !== id);
-      sDat();
-      renderHome(false);
-      showToast("Task completed! 🎉");
+      const modal = $('photo-viewer-modal');
+      if (!modal) return;
+      modal.style.opacity = '0';
+      setTimeout(() => {
+        modal.style.display = 'none';
+        $('photo-viewer-img').src = '';
+      }, 250);
     }
 
     function addGrade() {
       pSnd('pop');
       const n = $('grade-name'), s = $('grade-score'), o = $('grade-out-of');
-      if (!n || !s || !o || !n.value || !s.value || !o.value) return;
+      if (!n.value.trim() || s.value === '' || !o.value || parseFloat(o.value) <= 0) return;
       const sub = getSub(cSubId);
       if (sub) {
         sub.grades.push({ id: Date.now().toString(), name: n.value.trim(), score: s.value, outOf: o.value });
@@ -3072,6 +3162,7 @@
         showToast("Grade recorded! 📊");
       }
     }
+
     function delGrade(id) {
       pSnd('tick');
       const s = getSub(cSubId);
@@ -3080,6 +3171,39 @@
         sDat();
         renderDet(true);
       }
+    }
+
+    function slideOut(el, done) {
+      if (!el) return done();
+      el.style.transition = 'transform .3s ease-in, opacity .3s ease, max-height .3s ease, margin .3s ease, padding .3s ease';
+      el.style.overflow = 'hidden';
+      el.style.maxHeight = el.offsetHeight + 'px';
+      requestAnimationFrame(() => {
+        el.style.transform = 'translateX(70px) scale(0.94)';
+        el.style.opacity = '0';
+        el.style.maxHeight = '0';
+        el.style.marginBottom = '0';
+        el.style.paddingTop = '0';
+        el.style.paddingBottom = '0';
+      });
+      setTimeout(done, 300);
+    }
+
+    function compHWAnim(id) {
+      pSnd('success');
+      slideOut($('hw-item-' + id), () => {
+        const s = getSub(cSubId);
+        if (s) { s.homework = s.homework.filter(h => h.id !== id); sDat(); renderDet(true); }
+      });
+    }
+
+    function compGAnim(id) {
+      pSnd('success');
+      slideOut($('global-item-' + id), () => {
+        gNotes = gNotes.filter(n => n.id !== id);
+        sDat();
+        renderHome(false);
+      });
     }
 
     function addHW() {
@@ -3335,181 +3459,104 @@
     }
 
     function initLiquidNav() {
-      const nav = $('bottom-nav');
-      const indicator = $('nav-liquid-indicator');
-      if (!nav || !indicator) return;
+      const nav = $('bottom-nav'), ind = $('nav-liquid-indicator');
+      if (!nav || !ind) return;
+      const isVert = () => window.matchMedia('(min-width: 850px)').matches;
+      let vert = false, down = null, scrubbing = false, startX = 0, startY = 0, fp = 0, cp = 0, target = null, holdT = 0, raf = 0, box = null, items = [];
+      const pos = e => vert ? e.clientY : e.clientX;
 
-      let isTouching = false;
-      let isScrubbing = false;
-      let startX = 0;
-      let startY = 0;
-      let lastX = 0;
-      let lastTimestamp = 0;
-      let currentTargetItem = null;
-      let holdTimer = null;
-      let cachedItemCenters = [];
-      let navBounds = null;
-
-      function cacheMetrics() {
-        navBounds = nav.getBoundingClientRect();
-        const items = Array.from(nav.querySelectorAll('.nav-item'));
-        cachedItemCenters = items.map(el => {
+      const measure = () => {
+        box = nav.getBoundingClientRect();
+        items = [...nav.querySelectorAll('.nav-item')].map(el => {
           const r = el.getBoundingClientRect();
-          return { el, center: r.left + r.width / 2, width: r.width };
+          return { el, c: vert ? r.top + r.height / 2 : r.left + r.width / 2, w: vert ? r.height : r.width };
         });
-      }
-
-      function getClosestNavItemFast(clientX) {
-        if (!cachedItemCenters.length) return null;
-        let closest = cachedItemCenters[0].el;
-        let minD = Infinity;
-        for (let i = 0; i < cachedItemCenters.length; i++) {
-          const d = Math.abs(clientX - cachedItemCenters[i].center);
-          if (d < minD) {
-            minD = d;
-            closest = cachedItemCenters[i].el;
-          }
+      };
+      const nearest = p => items.reduce((b, i) => Math.abs(i.c - p) < Math.abs(b.c - p) ? i : b, items[0]);
+      const clamp = p => Math.max(items[0].c, Math.min(p, items[items.length - 1].c));
+      const place = (c, stretch, squash) => {
+        const half = items[0].w / 2;
+        if (vert) {
+          ind.style.transform = `translate3d(0, ${c - box.top - half}px, 0) scale(${squash}, ${stretch})`;
+        } else {
+          ind.style.transform = `translate3d(${c - box.left - half}px, 0, 0) scale(${stretch}, ${squash})`;
         }
-        return closest;
-      }
+      };
 
-      function updateLiquidScrub(clientX) {
-        if (!navBounds) cacheMetrics();
-        const clampedX = Math.max(navBounds.left + 24, Math.min(clientX, navBounds.right - 24));
-        const relativeX = clampedX - navBounds.left;
+      const setTarget = el => {
+        if (target === el) return;
+        target = el;
+        pSnd('tick');
+        nav.querySelectorAll('.nav-item').forEach(e => e.classList.toggle('scrub-target', e === el));
+      };
 
-        const now = performance.now();
-        const dt = Math.max(now - lastTimestamp, 16);
-        const vx = (clampedX - lastX) / dt;
-        lastX = clampedX;
-        lastTimestamp = now;
+      const frame = () => {
+        if (!scrubbing) return;
+        const goal = clamp(fp), prev = cp;
+        cp += (goal - cp) * 0.3;
+        const v = Math.abs(cp - prev);
+        place(cp, 1 + Math.min(v * 0.04, 0.4), 1 - Math.min(v * 0.015, 0.15));
+        setTarget(nearest(goal).el);
+        raf = requestAnimationFrame(frame);
+      };
 
-        const stretchX = Math.min(Math.max(1 + Math.abs(vx) * 0.28, 0.88), 1.35);
-        const stretchY = Math.max(1 - Math.abs(vx) * 0.18, 0.8);
-
-        const hoveredItem = getClosestNavItemFast(clampedX);
-        if (hoveredItem && hoveredItem !== currentTargetItem) {
-          currentTargetItem = hoveredItem;
-          pSnd('tick');
-          nav.querySelectorAll('.nav-item').forEach(el => el.classList.remove('scrub-target'));
-          hoveredItem.classList.add('scrub-target');
-        }
-
-        const targetWidth = currentTargetItem ? Math.max(48, currentTargetItem.offsetWidth) : 56;
-        indicator.style.width = `${targetWidth}px`;
-        indicator.style.transform = `translate3d(${relativeX - targetWidth / 2}px, 0, 0) scale(${stretchX}, ${stretchY})`;
-      }
-
-      function startScrubbing(clientX) {
-        isScrubbing = true;
-        cacheMetrics();
+      const begin = () => {
+        scrubbing = true;
+        nav.querySelectorAll('.show-label').forEach(e => e.classList.remove('show-label'));
+        ind.classList.remove('settle');
         nav.classList.add('is-scrubbing');
-        indicator.style.opacity = '1';
+        measure(); // measured after the class applies, so positions match the fixed icon-only layout
+        cp = clamp(fp);
+        target = null;
         pSnd('pop');
-        updateLiquidScrub(clientX);
-      }
+        raf = requestAnimationFrame(frame);
+      };
 
-      function onPointerDown(clientX, clientY, targetEl) {
-        isTouching = true;
-        isScrubbing = false;
-        startX = clientX;
-        startY = clientY;
-        lastX = clientX;
-        lastTimestamp = performance.now();
-        cacheMetrics();
-        currentTargetItem = targetEl.closest('.nav-item') || getClosestNavItemFast(clientX);
-
-        clearTimeout(holdTimer);
-        holdTimer = setTimeout(() => {
-          if (isTouching && !isScrubbing) {
-            startScrubbing(clientX);
-          }
-        }, 110);
-      }
-
-      function onPointerMove(clientX, clientY, e) {
-        if (!isTouching) return;
-        const dx = clientX - startX;
-        const dy = clientY - startY;
-
-        if (!isScrubbing) {
-          if (Math.abs(dx) > 6 || Math.abs(dy) > 6) {
-            clearTimeout(holdTimer);
-            startScrubbing(clientX);
-          }
-        }
-
-        if (isScrubbing) {
-          if (e && e.cancelable) e.preventDefault();
-          requestAnimationFrame(() => updateLiquidScrub(clientX));
-        }
-      }
-
-      function onPointerUp(clientX) {
-        clearTimeout(holdTimer);
-        if (!isTouching) return;
-        isTouching = false;
-
-        const finalTarget = isScrubbing ? currentTargetItem : (getClosestNavItemFast(clientX) || currentTargetItem);
-
-        if (isScrubbing) {
+      const end = commit => {
+        clearTimeout(holdT);
+        cancelAnimationFrame(raf);
+        const item = scrubbing ? target : down;
+        if (scrubbing) {
+          const it = items.find(i => i.el === target);
+          ind.classList.add('settle');
+          if (it) place(it.c, 1, 1);
           nav.classList.remove('is-scrubbing');
-          indicator.style.opacity = '0';
-          indicator.style.transform += ' scale(0.6)';
-          nav.querySelectorAll('.nav-item').forEach(el => el.classList.remove('scrub-target'));
+          nav.querySelectorAll('.scrub-target').forEach(e => e.classList.remove('scrub-target'));
         }
-
-        if (finalTarget) {
-          const screenId = finalTarget.getAttribute('data-screen');
-          if (screenId) {
-            pSnd('tick');
-            navTo(screenId, finalTarget);
-          }
+        scrubbing = false;
+        down = null;
+        target = null;
+        if (commit && item) {
+          pSnd('tick');
+          navTo(item.getAttribute('data-screen'), item);
         }
-
-        isScrubbing = false;
-        currentTargetItem = null;
-      }
-
-      nav.addEventListener('touchstart', e => {
-        if (e.touches.length === 1) onPointerDown(e.touches[0].clientX, e.touches[0].clientY, e.target);
-      }, { passive: true });
-
-      window.addEventListener('touchmove', e => {
-        if (isTouching && e.touches.length === 1) onPointerMove(e.touches[0].clientX, e.touches[0].clientY, e);
-      }, { passive: false });
-
-      window.addEventListener('touchend', e => {
-        if (isTouching) {
-          const clientX = e.changedTouches && e.changedTouches[0] ? e.changedTouches[0].clientX : lastX;
-          onPointerUp(clientX);
-        }
-      }, { passive: true });
-
-      window.addEventListener('touchcancel', () => {
-        clearTimeout(holdTimer);
-        isTouching = false;
-        isScrubbing = false;
-        nav.classList.remove('is-scrubbing');
-        indicator.style.opacity = '0';
-      }, { passive: true });
+      };
 
       nav.addEventListener('pointerdown', e => {
-        if (e.pointerType === 'mouse' && e.button === 0) onPointerDown(e.clientX, e.clientY, e.target);
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        vert = isVert();
+        measure();
+        fp = pos(e);
+        down = e.target.closest('.nav-item') || (vert ? null : nearest(fp).el);
+        if (!down) return;
+        startX = e.clientX;
+        startY = e.clientY;
+        try { nav.setPointerCapture(e.pointerId); } catch (_) {}
+        holdT = setTimeout(() => { if (down && !scrubbing) begin(); }, 150);
       });
 
-      window.addEventListener('pointermove', e => {
-        if (e.pointerType === 'mouse' && isTouching) onPointerMove(e.clientX, e.clientY, e);
+      nav.addEventListener('pointermove', e => {
+        if (!down) return;
+        fp = pos(e);
+        if (!scrubbing && (Math.abs(e.clientX - startX) > 6 || Math.abs(e.clientY - startY) > 6)) {
+          clearTimeout(holdT);
+          begin();
+        }
+        if (scrubbing && e.cancelable) e.preventDefault();
       });
 
-      window.addEventListener('pointerup', e => {
-        if (e.pointerType === 'mouse' && isTouching) onPointerUp(e.clientX);
-      });
-
-      nav.addEventListener('click', e => {
-        e.preventDefault();
-        e.stopPropagation();
-      }, true);
+      nav.addEventListener('pointerup', () => { if (down) end(true); });
+      nav.addEventListener('pointercancel', () => end(false));
     }
 
     let aiChatHistory = safeStorage.get('org_ai_chat_hist', []);
@@ -3765,6 +3812,11 @@
   </div>
 
   <script>
+    document.addEventListener('click', e => {
+      const d = $('ai-history-dropdown');
+      if (d && d.style.display === 'flex' && !d.contains(e.target) && !e.target.closest('[onclick="toggleAiHistory()"]')) d.style.display = 'none';
+    });
+
     document.addEventListener('wheel', function(e) {
       const container = e.target.closest('.horizontal-scroll');
       if (container && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
