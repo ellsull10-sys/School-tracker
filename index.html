@@ -18,9 +18,10 @@
   <!-- Optical Character Recognition Engine -->
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
-  <!-- Realtime Database SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
   <style>
     :root {
@@ -108,6 +109,35 @@
       font-weight: 800;
       transition: opacity 0.4s ease;
     }
+
+    .auth-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 110000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      overflow-y: auto;
+      padding: max(24px, env(safe-area-inset-top)) 20px max(24px, env(safe-area-inset-bottom));
+      background: var(--bg-base);
+    }
+    .auth-panel {
+      width: 100%;
+      max-width: 420px;
+      padding: 28px;
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      background: var(--card-bg);
+      box-shadow: var(--card-shadow);
+    }
+    .auth-panel h1 { margin: 0 0 8px; font-size: 28px; }
+    .auth-panel p { margin: 0 0 22px; color: var(--text-secondary); }
+    .auth-panel label { display: block; margin: 14px 0 6px; font-size: 12px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; }
+    .auth-panel input { display: block; width: 100%; }
+    .auth-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+    .auth-google { width: 100%; margin-top: 14px; background: #4285F4 !important; }
+    .auth-error { min-height: 20px; margin-top: 12px !important; margin-bottom: 0 !important; color: var(--critical) !important; font-size: 13px; }
+    .auth-panel button:disabled { opacity: 0.6; cursor: wait; }
     
     #rotate-lock {
       display: none;
@@ -526,7 +556,7 @@
     .status-row.active-status .status-label { color: var(--text-primary); }
     
     .input-group { display: flex; gap: 8px; margin-bottom: 16px; width: 100%; }
-    input[type="text"], input[type="date"], input[type="number"], input[type="password"], textarea, select {
+    input[type="text"], input[type="date"], input[type="number"], input[type="password"], input[type="email"], textarea, select {
       flex: 1;
       min-width: 0;
       max-width: 100%;
@@ -1008,6 +1038,23 @@
 
   <div id="app-background"></div>
   <div id="splash">School Tracker</div>
+
+  <div id="login-container" class="auth-overlay" role="dialog" aria-modal="true" aria-labelledby="login-title">
+    <form id="login-form" class="auth-panel">
+      <h1 id="login-title">Welcome to School Tracker</h1>
+      <p>Sign in to continue to your tracker.</p>
+      <label for="email">Email address</label>
+      <input type="email" id="email" autocomplete="email" required>
+      <label for="password">Password</label>
+      <input type="password" id="password" autocomplete="current-password" required>
+      <div class="auth-actions">
+        <button type="submit" id="login-btn" class="add-btn">Log In</button>
+        <button type="button" id="signup-btn" class="add-btn btn-grey">Sign Up</button>
+      </div>
+      <button type="button" id="google-btn" class="add-btn auth-google">Sign in with Google</button>
+      <p id="error-msg" class="auth-error" role="alert" aria-live="polite"></p>
+    </form>
+  </div>
 
   <nav class="bottom-nav" id="bottom-nav" style="display: none;">
     <div id="nav-liquid-indicator" class="nav-liquid-indicator"></div>
@@ -1582,6 +1629,12 @@
 
     let syncActive = false;
     let db = null;
+    let auth = null;
+    let authUser = null;
+    let authReady = false;
+    let authErrorMessage = '';
+    let bootReady = false;
+    let startupComplete = false;
     let isIncomingSync = false;
     let localWriteTime = 0;
     let syncDebounceTimer = null;
@@ -1589,11 +1642,23 @@
     try {
       if (firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY") {
         firebase.initializeApp(firebaseConfig);
+        auth = firebase.auth();
         db = firebase.database();
         syncActive = true;
+        auth.onAuthStateChanged(user => {
+          authUser = user;
+          authReady = true;
+          syncAuthState();
+        }, err => {
+          authReady = true;
+          authErrorMessage = err.message || 'Unable to verify your sign-in.';
+          syncAuthState();
+        });
       }
     } catch(err) {
       console.error("Firebase init failed:", err);
+      authReady = true;
+      authErrorMessage = 'Firebase Authentication could not start. Check your connection and reload.';
     }
 
     let rawSubs = safeStorage.get('org_subjects', null);
@@ -2467,6 +2532,76 @@
       { c: "rgba(5, 150, 105, 0.28)", h: "#059669", l: "Well ahead" }
     ];
 
+    function syncAuthState() {
+      if (!authReady || !bootReady) return;
+      const login = $('login-container');
+      const tosModal = $('tos-modal');
+      if (!authUser) {
+        if (login) login.style.display = 'flex';
+        if ($('bottom-nav')) $('bottom-nav').style.display = 'none';
+        if (tosModal) { tosModal.style.display = 'none'; tosModal.style.opacity = '0'; }
+        if (authErrorMessage) $('error-msg').textContent = authErrorMessage;
+        return;
+      }
+
+      if (login) login.style.display = 'none';
+      if (startupComplete) return;
+      if (!localStorage.getItem('org_tos_agreed')) {
+        tosModal.style.display = 'flex';
+        requestAnimationFrame(() => { tosModal.style.opacity = '1'; });
+      } else {
+        continueStartup();
+      }
+    }
+
+    function setAuthBusy(busy) {
+      ['login-btn', 'signup-btn', 'google-btn'].forEach(id => { $(id).disabled = busy; });
+    }
+
+    async function loginWithEmail(event) {
+      event.preventDefault();
+      $('error-msg').textContent = '';
+      if (!auth) { $('error-msg').textContent = authErrorMessage || 'Firebase Authentication is unavailable.'; return; }
+      setAuthBusy(true);
+      try {
+        await auth.signInWithEmailAndPassword($('email').value.trim(), $('password').value);
+      } catch(err) {
+        $('error-msg').textContent = err.message;
+      } finally {
+        setAuthBusy(false);
+      }
+    }
+
+    async function signUpWithEmail() {
+      $('error-msg').textContent = '';
+      if (!auth) { $('error-msg').textContent = authErrorMessage || 'Firebase Authentication is unavailable.'; return; }
+      setAuthBusy(true);
+      try {
+        await auth.createUserWithEmailAndPassword($('email').value.trim(), $('password').value);
+      } catch(err) {
+        $('error-msg').textContent = err.message;
+      } finally {
+        setAuthBusy(false);
+      }
+    }
+
+    async function loginWithGoogle() {
+      $('error-msg').textContent = '';
+      if (!auth) { $('error-msg').textContent = authErrorMessage || 'Firebase Authentication is unavailable.'; return; }
+      setAuthBusy(true);
+      try {
+        await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+      } catch(err) {
+        $('error-msg').textContent = err.message;
+      } finally {
+        setAuthBusy(false);
+      }
+    }
+
+    $('login-form').addEventListener('submit', loginWithEmail);
+    $('signup-btn').addEventListener('click', signUpWithEmail);
+    $('google-btn').addEventListener('click', loginWithGoogle);
+
     window.addEventListener('load', () => { 
       try { appSetApply(); } catch(e) {} 
       initLiquidNav();
@@ -2475,13 +2610,8 @@
         splash.style.opacity = '0';
         setTimeout(() => { 
           splash.style.display = 'none'; 
-          if (!localStorage.getItem('org_tos_agreed')) {
-            const tosModal = $('tos-modal');
-            tosModal.style.display = 'flex';
-            requestAnimationFrame(() => { tosModal.style.opacity = '1'; });
-          } else {
-            continueStartup();
-          }
+          bootReady = true;
+          syncAuthState();
         }, 400);
       }, 500); 
     });
@@ -2510,6 +2640,8 @@
     }
 
     function continueStartup() {
+      if (!authUser || startupComplete) return;
+      startupComplete = true;
       try {
         updateAllAvatars();
 
@@ -2724,6 +2856,14 @@
         isDanger: true
       });
       if (confirmed) {
+        if (auth) {
+          try {
+            await auth.signOut();
+          } catch(err) {
+            await showModalDialog({ title: "Sign Out", message: err.message || "Could not sign out. Please try again." });
+            return;
+          }
+        }
         localStorage.clear();
         window.location.reload();
       }
