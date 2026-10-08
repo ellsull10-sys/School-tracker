@@ -511,13 +511,13 @@
     .tt-subject { font-size: 15px; font-weight: 700; line-height: 1.2; }
     
     #subjects-list { display: flex; flex-direction: column; position: relative; }
-    .card { padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 14px; transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; }
+    .card { min-height: 84px; height: auto; padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 14px; transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; }
     .card:active { transform: scale(0.97); }
     .boxes-container { display: flex; gap: 6px; flex-shrink: 0; }
     .box { width: 24px; height: 24px; border-radius: 8px; border: 2px solid rgba(0,0,0,0.15); background: rgba(255,255,255,0.95); box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); transition: all 0.2s ease; }
     .box:active { transform: scale(0.7); }
     .box.active { background-color: var(--box-color); border-color: var(--box-color); transform: scale(1.15); box-shadow: 0 4px 16px var(--box-color); }
-    .subject-title { font-size: 17px; font-weight: 600; flex: 1; line-height: 1.2; }
+    .subject-title { font-size: 17px; font-weight: 600; flex: 1; min-width: 0; line-height: 1.2; white-space: normal; overflow-wrap: normal; word-break: normal; hyphens: none; }
     
     .status-row { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-radius: 16px; margin-bottom: 8px; transition: transform 0.1s ease, background-color 0.2s ease; cursor: pointer; }
     .status-row:active { transform: scale(0.97); }
@@ -598,8 +598,8 @@
     .slider:before { position: absolute; content: ""; height: 24px; width: 24px; left: 2px; bottom: 2px; background-color: white; transition: .3s cubic-bezier(0.175, 0.885, 0.32, 1.275); border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
     input:checked + .slider { background-color: var(--success); }
     input:checked + .slider:before { transform: translateX(22px); }
-    input[type="range"] { -webkit-appearance: none; width: 100%; background: transparent; }
-    input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 2px 6px rgba(0,0,0,0.2); margin-top: -9px; cursor: pointer; }
+    input[type="range"] { appearance: none; -webkit-appearance: none; width: 100%; background: transparent; }
+    input[type="range"]::-webkit-slider-thumb { appearance: none; -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 2px 6px rgba(0,0,0,0.2); margin-top: -9px; cursor: pointer; }
     input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 6px; cursor: pointer; background: rgba(0,0,0,0.1); border-radius: 3px; }
 
     .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; font-weight: 700; font-size: 18px; }
@@ -616,6 +616,8 @@
     .cal-cell.empty:active { transform: none; }
     .cal-dots { display: flex; gap: 3px; margin-top: 4px; justify-content: center; flex-wrap: wrap; padding: 0 4px; }
     .cal-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .cal-events { display: flex; flex-direction: column; gap: 2px; align-self: stretch; width: 100%; min-width: 0; padding: 0 3px; margin-top: 3px; }
+    .event-pill { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; border-radius: 4px; padding: 1px 3px; font-size: 9px; line-height: 1.3; text-align: left; }
 
     #ai-screen.active { display: flex; flex-direction: column; height: 100vh; overflow: hidden; padding-bottom: calc(env(safe-area-inset-bottom) + 80px); }
     #ai-chat-history { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; margin-bottom: 12px; scrollbar-width: none; padding: 18px 16px; border-radius: 24px; border: 1px solid var(--card-border); background: var(--card-bg); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); box-shadow: var(--card-shadow); }
@@ -674,7 +676,7 @@
       #dynamic-timetable-section .tt-session { font-size: 13px; }
       #subjects-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
       #subjects-list .card { padding: 22px 24px; gap: 18px; border-radius: 22px; margin-bottom: 0; }
-      #subjects-list .subject-title { font-size: 20px; min-width: 0; overflow-wrap: anywhere; }
+      #subjects-list .subject-title { font-size: 20px; min-width: 0; }
       #subjects-list .card { min-width: 0; justify-content: flex-start; }
       #subjects-list .box { width: 28px; height: 28px; border-radius: 9px; }
 
@@ -1461,7 +1463,7 @@
   <div id="ai-screen" class="screen">
     <div class="header-bar cascade-item d-1" style="position:relative; z-index:100;">
       <div style="flex:1; position:relative; min-width:0;">
-        <div style="display:inline-flex; align-items:center; gap:4px; cursor:pointer;" onclick="toggleAiHistory()">
+        <div style="display:inline-flex; align-items:center; gap:8px; cursor:pointer;" onclick="toggleAiHistory()">
         <h1 style="margin:0;">AI Tutor</h1>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-secondary);"><polyline points="6 9 12 15 18 9"></polyline></svg>
       </div>
@@ -1870,12 +1872,12 @@
         const img = new Image(); 
         img.onload = () => { 
           const c = document.createElement('canvas');
-          const s = Math.min(300 / img.width, 1); 
+          const s = Math.min(150 / img.width, 1); 
           c.width = img.width * s;
           c.height = img.height * s; 
           c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); 
           if (!uData) uData = {};
-          uData.avatar = c.toDataURL('image/jpeg', 0.85);
+          uData.avatar = c.toDataURL('image/jpeg', 0.5);
           safeStorage.set('org_user', uData);
           updateAllAvatars();
           pSnd('success');
@@ -2222,7 +2224,7 @@
         
         let headerRowHtml = `<th class="tt-matrix-th-period">Period</th>`;
         activeDays.forEach(d => {
-          const dayName = ttCycleLength === 5 ? `Day ${d + 1}<br><span style="font-size:10px; opacity:0.8;">${dayNames[d % 5]}</span>` : `Day ${d + 1}<br><span style="font-size:10px; opacity:0.8;">${d < 5 ? 'W1' : 'W2'} ${dayNames[d % 5]}</span>`;
+
           headerRowHtml += `<th class="tt-matrix-th">${dayName}</th>`;
         });
 
@@ -2509,6 +2511,8 @@
 
     function continueStartup() {
       try {
+        updateAllAvatars();
+
         if (uData && uData.f) {
           initCloudListener();
           navTo('home-screen');
@@ -2802,6 +2806,23 @@
       return Math.ceil((parseDate(ds) - new Date().setHours(0,0,0,0)) / 86400000);
     }
 
+    async function ensureNotificationPermission() {
+      if (!('Notification' in window)) return false;
+      if (Notification.permission === 'granted') return true;
+      if (Notification.permission !== 'default') return false;
+      return (await Notification.requestPermission()) === 'granted';
+    }
+
+    async function scheduleHomeworkNotification(taskName, dateString) {
+      const daysLeft = gDD(dateString);
+      if (daysLeft < 0 || daysLeft > 1) return;
+      if (!await ensureNotificationPermission()) return;
+      const dueText = daysLeft === 0 ? 'today' : 'tomorrow';
+      try {
+        new Notification('Homework due soon', { body: `${taskName} is due ${dueText}.` });
+      } catch (_) {}
+    }
+
     function fmtD(ds) {
       if (!ds || !ds.includes('-')) return ds || '';
       return parseDate(ds).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
@@ -2848,6 +2869,7 @@
       const targetSub = getSub(subId);
       if (targetSub) {
         targetSub.homework.push({ id: Date.now().toString(), text: d, date: dt });
+        scheduleHomeworkNotification(d, dt);
       }
       sDat();
       pSnd('success');
@@ -3213,6 +3235,7 @@
       const s = getSub(cSubId);
       if (s) {
         s.homework.push({ id: Date.now().toString(), text: d.value.trim(), date: dt.value });
+        scheduleHomeworkNotification(d.value.trim(), dt.value);
         d.value = ''; dt.value = '';
         sDat();
         renderDet(true);
@@ -3395,6 +3418,16 @@
       for (let i = 1; i <= daysInMonth; i++) {
         const cellDateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
         const isToday = (cellDateStr === todayStr) ? 'today' : '';
+        let dayEventsHtml = '';
+        sData.forEach(sub => {
+          safeArr(sub.homework).forEach(hw => {
+            if (hw.date === cellDateStr) {
+              const color = stD[sub.status]?.h || '#64748B';
+              const text = String(hw.text || '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+              dayEventsHtml += `<div class="event-pill animate-pop-in" style="background-color: ${color}; color: white; border: none;">${text}</div>`;
+            }
+          });
+        });
         
         let dotsHtml = '';
         if (hwMap[cellDateStr]) {
@@ -3406,7 +3439,8 @@
         }
 
         gridHtml += `<div class="cal-cell ${isToday}" onclick="selectCalDate('${cellDateStr}', this)">
-            ${i}
+          <div>${i}</div>
+          <div class="cal-events">${dayEventsHtml}</div>
             <div class="cal-dots">${dotsHtml}</div>
         </div>`;
       }
@@ -3555,8 +3589,8 @@
         if (scrubbing && e.cancelable) e.preventDefault();
       });
 
-      nav.addEventListener('pointerup', () => { if (down) end(true); });
-      nav.addEventListener('pointercancel', () => end(false));
+      window.addEventListener('pointerup', e => { if (down) { const isOverNav = e.target.closest('.bottom-nav'); end(!!isOverNav); } });
+      window.addEventListener('pointercancel', () => { if (down) end(false); });
     }
 
     let aiChatHistory = safeStorage.get('org_ai_chat_hist', []);
