@@ -100,7 +100,7 @@
       contain: strict;
     }
     
-    h1, h2, h3, .subject-title, .simon-action, .ring-text, .dl-days {
+    h1, h2, h3, .subject-title, .simon-title, .widget-title, .simon-action, .ring-text, .dl-days, .dashboard-homework-button, .calendar-header, .dashboard-calendar-upcoming-title {
       font-family: 'Outfit', sans-serif;
       letter-spacing: -0.4px;
     }
@@ -152,13 +152,18 @@
     .auth-divider { display: flex; align-items: center; gap: 12px; margin: 20px 0 12px; color: var(--text-secondary); font-size: 12px; }
     .auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--card-border); }
     .auth-panel button.auth-google { display: flex; width: 100%; min-height: 46px; gap: 10px; background: var(--card-bg) !important; color: var(--text-primary) !important; border: 1px solid var(--card-border) !important; box-shadow: none !important; }
-    .google-mark { font-size: 18px; font-weight: 800; color: #4285F4; }
+    .google-mark { width: 18px; height: 18px; flex: 0 0 18px; display: block; }
     .auth-switch { display: block; width: 100%; margin-top: 16px; padding: 10px; border: 0; background: transparent; color: var(--text-secondary); font: inherit; font-size: 13px; cursor: pointer; }
     .auth-switch strong { color: var(--text-primary); }
     .auth-skip { margin-top: 4px; padding: 4px; font-size: 11px; }
     .auth-error { min-height: 20px; margin-top: 10px !important; margin-bottom: 0 !important; color: var(--critical) !important; font-size: 13px; }
     .auth-error.auth-success { color: var(--success) !important; }
     .auth-panel button:disabled { opacity: 0.6; cursor: wait; }
+    .ocr-progress { display: none; margin-top: 10px; text-align: left; }
+    .ocr-progress.visible { display: block; }
+    .ocr-progress-track { height: 8px; overflow: hidden; border-radius: 999px; background: var(--input-bg); }
+    .ocr-progress-fill { width: 0; height: 100%; border-radius: inherit; background: var(--accent-grad); transition: width 0.2s ease; }
+    .ocr-progress-status { margin-top: 6px; color: var(--text-secondary); font-size: 12px; font-weight: 600; }
     .install-prompt {
       display: none;
       position: fixed;
@@ -509,8 +514,8 @@
       animation: pulseAlert 2s infinite;
       cursor: pointer;
     }
-    .dashboard-homework-button { box-sizing: border-box; min-height: 40px; gap: 7px; padding: 8px 14px; border-radius: 14px; font-size: 13px; font-weight: 800; white-space: nowrap; }
-    .dashboard-homework-button span { font-size: 20px; line-height: 1; }
+    .dashboard-homework-button { box-sizing: border-box; min-height: 44px; gap: 8px; padding: 10px 16px; border-radius: 14px; font-size: 18px; line-height: 1.2; font-weight: 700; white-space: nowrap; }
+    .dashboard-homework-button span { font-size: 22px; line-height: 1; }
     #home-dashboard-grid > .dashboard-homework-button { grid-column: 1 / -1; width: 100%; justify-content: center; margin: 0 0 6px; }
 
     .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
@@ -518,9 +523,10 @@
     .widget:active { transform: scale(0.96); }
     .simon-widget { background: var(--accent-grad) !important; color: #FFFFFF !important; border: none !important; }
     .simon-widget::before { box-shadow: 0 10px 24px rgba(15, 23, 42, 0.3) !important; }
-    .simon-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
-    .simon-action { font-size: 17px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; width: 100%; }
-    .widget-title { font-size: 13px; font-weight: 600; color: var(--text-secondary); }
+    .simon-title, .widget-title { font-size: 15px; line-height: 1.2; font-weight: 600; margin: 0 0 8px; }
+    .simon-title { color: rgba(255,255,255,0.7); }
+    .widget-title { color: var(--text-secondary); }
+    .simon-action { font-size: 17px; font-weight: 700; line-height: 1.2; display: flex; justify-content: space-between; align-items: center; width: 100%; }
     
     .ring-container { display: flex; align-items: center; gap: 10px; margin-top: auto; }
     .circular-chart { width: 44px; height: 44px; flex-shrink: 0; }
@@ -694,6 +700,8 @@
     .delete-btn { color: var(--critical); background: none; border: none; font-weight: 400; font-size: 24px; padding: 0 8px; cursor: pointer; transition: transform 0.15s ease; }
     .delete-btn:active { transform: scale(0.8); }
     .task-card .delete-btn { color: rgba(255,255,255,0.85) !important; }
+    .task-card > div { flex: 1 1 auto; min-width: 0; }
+    .task-card > .delete-btn { flex: 0 0 auto; margin-left: auto; }
     .grade-badge { font-size: 14px; font-weight: 700; background: rgba(0,0,0,0.05); padding: 4px 10px; border-radius: 8px; }
     .average-banner { padding: 16px; text-align: center; font-weight: 700; font-size: 16px; margin-bottom: 16px; }
 
@@ -758,7 +766,7 @@
     .calendar-weekday-picker input { width: 15px !important; min-height: 15px !important; margin: 0; accent-color: var(--accent); }
     .calendar-event-form-actions { display: flex; gap: 10px; margin-top: 16px; }
     .calendar-event-form-actions button { flex: 1; min-height: 46px; }
-    #dashboard-calendar-card { margin-bottom: 20px; padding: 14px; }
+    #dashboard-calendar-card { margin-bottom: 20px; padding: 16px; }
     #dashboard-calendar-card { margin-top: 28px; }
     #dashboard-calendar-card .calendar-header { margin-bottom: 10px; font-size: 15px; }
     #dashboard-calendar-card .calendar-grid { gap: 4px; }
@@ -782,7 +790,7 @@
     }
 
     #cal-app-shell {
-      --cal-line: var(--card-border);
+      --cal-line: rgba(100, 116, 139, 0.28);
       --cal-selected-cell: color-mix(in srgb, var(--accent) 12%, var(--card-bg));
       --cal-active-pill: color-mix(in srgb, var(--accent) 16%, var(--card-bg));
       --cal-hover: rgba(128, 128, 128, 0.08);
@@ -798,7 +806,7 @@
 
     @media (prefers-color-scheme: dark) {
       #cal-app-shell {
-        --cal-line: rgba(255, 255, 255, 0.09);
+        --cal-line: rgba(255, 255, 255, 0.16);
         --cal-selected-cell: color-mix(in srgb, var(--accent) 22%, var(--card-bg));
         --cal-active-pill: color-mix(in srgb, var(--accent) 26%, var(--card-bg));
         --cal-hover: rgba(255, 255, 255, 0.07);
@@ -859,6 +867,39 @@
       color: var(--text-primary);
     }
     .cal-border { border-color: var(--cal-line) !important; }
+    #cal-app-shell *,
+    #cal-app-shell *::before,
+    #cal-app-shell *::after,
+    #event-sheet *,
+    #event-sheet *::before,
+    #event-sheet *::after,
+    #tag-modal-backdrop *,
+    #tag-modal-backdrop *::before,
+    #tag-modal-backdrop *::after,
+    #search-overlay *,
+    #search-overlay *::before,
+    #search-overlay *::after {
+      border-width: 0;
+      border-style: solid;
+      border-color: var(--cal-line);
+    }
+    #cal-app-shell .border { border-width: 1px; }
+    #cal-app-shell .border-b { border-bottom-width: 1px; }
+    #cal-app-shell .border-r { border-right-width: 1px; }
+    #cal-app-shell .border-l { border-left-width: 1px; }
+    #cal-app-shell .border-t { border-top-width: 1px; }
+    #event-sheet .border,
+    #tag-modal-backdrop .border,
+    #search-overlay .border { border-width: 1px; }
+    #event-sheet .border-t,
+    #tag-modal-backdrop .border-t,
+    #search-overlay .border-t { border-top-width: 1px; }
+    #cal-app-shell .divide-x > :not([hidden]) ~ :not([hidden]),
+    #cal-app-shell .divide-y > :not([hidden]) ~ :not([hidden]) {
+      border-color: var(--cal-line) !important;
+    }
+    #cal-app-shell .divide-x > :not([hidden]) ~ :not([hidden]) { border-left-width: 1px; }
+    #cal-app-shell .divide-y > :not([hidden]) ~ :not([hidden]) { border-top-width: 1px; }
     .cal-text-main { color: var(--text-primary); }
     .cal-text-sub { color: var(--text-secondary); }
     .cal-hover:hover { background: var(--cal-hover); }
@@ -974,6 +1015,35 @@
       padding: 0 !important;
       border-radius: 0 !important;
       color: var(--text-primary) !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      box-shadow: none !important;
+      outline: none !important;
+    }
+    #event-sheet > .flex-1 > div {
+      margin: 8px 12px;
+      border-radius: 16px;
+      background: color-mix(in srgb, var(--text-primary) 5%, transparent);
+    }
+    #event-sheet .type-tab,
+    #event-sheet #sheet-tag-pills button {
+      border-radius: 999px !important;
+      border-color: transparent !important;
+      background: color-mix(in srgb, var(--text-primary) 7%, transparent);
+    }
+    #event-sheet .cal-active-pill {
+      background: var(--accent-grad) !important;
+      color: #FFFFFF !important;
+      box-shadow: 0 2px 8px rgba(30, 58, 138, 0.2);
+    }
+    #event-sheet #lbl-start-date,
+    #event-sheet #lbl-start-time,
+    #event-sheet #lbl-end-date,
+    #event-sheet #lbl-end-time {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--text-primary) 7%, transparent);
     }
     #event-sheet select,
     #event-sheet input[type="number"],
@@ -1021,12 +1091,13 @@
       #home-screen h2 { font-size: 26px; margin-top: 32px; }
       #home-screen .top-bar { margin-bottom: 28px; }
       #home-screen .dashboard-grid { gap: 16px; }
-      #home-screen .widget { padding: 24px; min-height: 150px; }
+      #home-screen .widget { padding: 20px; min-height: 132px; }
       #home-screen .widget-title { font-size: 15px; }
-      #home-screen .circular-chart { width: 72px; height: 72px; }
-      #home-screen .ring-text { font-size: 34px; }
+      #home-screen .circular-chart { width: 64px; height: 64px; }
+      #home-screen .ring-text { font-size: 30px; }
       #home-screen .simon-title { font-size: 15px; }
-      #home-screen .simon-action { font-size: 22px; }
+      #home-screen .simon-action { font-size: 20px; }
+      #home-screen .dashboard-homework-button { min-height: 52px; padding: 12px 16px; }
       #home-iona-bottom-stack > .app-card:first-child, #home-tt-side-stack > .app-card:first-child { padding: 20px 22px !important; font-size: 19px !important; border-radius: 20px !important; }
       #home-health-card { padding: 22px; }
       #home-health-card .widget-title { font-size: 15px; }
@@ -1114,15 +1185,40 @@
       #dynamic-timetable-section .timetable-card { padding: 16px; min-height: 120px; }
     }
     @media (min-width: 1300px) {
-      .hl-left { padding-top: 48px; }
+      .hl-left { padding-top: 0; }
+      .hl-right {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(280px, 0.72fr);
+        column-gap: 24px;
+        align-items: start;
+      }
+      #dynamic-timetable-section {
+        grid-column: 1 / -1;
+        width: 100%;
+      }
+      #subj-title {
+        grid-column: 1;
+        grid-row: 2;
+      }
+      #subjects-list {
+        grid-column: 1;
+        grid-row: 3;
+        grid-template-columns: 1fr;
+        width: 100%;
+      }
+      #dashboard-calendar-card {
+        grid-column: 2;
+        grid-row: 3;
+        width: 100%;
+        margin-top: 0;
+        align-self: start;
+      }
       #dynamic-timetable-section .horizontal-scroll { display: flex; flex-wrap: nowrap; }
-      #subjects-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       #dynamic-timetable-section .tt-subject { font-size: 17px; }
       #dynamic-timetable-section .timetable-card { padding: 16px; min-height: 120px; }
     }
     @media (min-width: 1700px) {
       #dynamic-timetable-section .horizontal-scroll { display: flex; flex-wrap: nowrap; }
-      #subjects-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       #dynamic-timetable-section .tt-subject { font-size: 19px; }
       #dynamic-timetable-section .timetable-card { padding: 20px; min-height: 130px; }
     }
@@ -1368,7 +1464,7 @@
           <button type="submit" id="login-btn" class="add-btn auth-submit">Sign in with email</button>
         </form>
         <div class="auth-divider">or</div>
-        <button type="button" id="google-btn" class="add-btn auth-google google-auth-btn"><span class="google-mark" aria-hidden="true">G</span> Continue with Google</button>
+        <button type="button" id="google-btn" class="add-btn auth-google google-auth-btn"><svg class="google-mark" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> Continue with Google</button>
         <button type="button" class="auth-switch" data-auth-view="signup">New here? <strong>Create an account</strong></button>
         <button type="button" id="skip-login-btn" class="auth-switch auth-skip">Skip for now</button>
       </section>
@@ -1386,7 +1482,7 @@
           <button type="submit" id="signup-btn" class="add-btn auth-submit">Create account</button>
         </form>
         <div class="auth-divider">or</div>
-        <button type="button" id="google-signup-btn" class="add-btn auth-google google-auth-btn"><span class="google-mark" aria-hidden="true">G</span> Continue with Google</button>
+        <button type="button" id="google-signup-btn" class="add-btn auth-google google-auth-btn"><svg class="google-mark" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> Continue with Google</button>
         <button type="button" class="auth-switch" data-auth-view="login">Already have an account? <strong>Sign in</strong></button>
       </section>
       <section id="verify-view" class="auth-view" hidden>
@@ -1477,6 +1573,7 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
           Scan Timetable
         </button>
+        <div id="ob-ocr-progress" class="ocr-progress" aria-live="polite"><div class="ocr-progress-track"><div class="ocr-progress-fill"></div></div><div class="ocr-progress-status">Preparing scan...</div></div>
         <button class="add-btn btn-grey full-w-input" style="padding: 16px; font-size: 16px;" onclick="openTtEditor('manual')">Enter Manually</button>
         <button class="add-btn btn-grey full-w-input" style="padding: 16px; font-size: 16px; margin-top: 12px; background: transparent !important; color: var(--text-secondary) !important; box-shadow: none !important;" onclick="finishOnboarding()">Skip & Use Standard Subjects</button>
       </div>
@@ -1582,33 +1679,33 @@
   <div id="calendar-screen" class="screen">
     <div id="cal-app-shell" class="select-none">
       <!-- Top Header -->
-      <header class="h-14 lg:h-16 border-b cal-border px-3 sm:px-5 flex items-center justify-between cal-surface z-30 shrink-0">
+      <header class="h-16 lg:h-20 border-b cal-border px-4 sm:px-6 flex items-center justify-between cal-surface z-30 shrink-0">
         <div class="flex items-center gap-1 sm:gap-3">
-          <button type="button" id="btn-menu" class="tactile-btn w-10 h-10 rounded-full flex items-center justify-center cal-text-sub cal-hover liquid-spring border-0 bg-transparent cursor-pointer" aria-label="Toggle calendar sidebar">
+          <button type="button" id="btn-menu" class="tactile-btn w-11 h-11 rounded-full flex items-center justify-center cal-text-sub cal-hover liquid-spring border-0 bg-transparent cursor-pointer" aria-label="Toggle calendar sidebar">
             <i class="fa-solid fa-bars text-lg"></i>
           </button>
 
           <button type="button" id="btn-header-dropdown" class="tactile-btn flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl cal-hover liquid-spring border-0 bg-transparent cursor-pointer">
-            <span id="header-title" class="text-lg sm:text-xl font-google font-semibold cal-text-main tracking-tight">October 2026</span>
+            <span id="header-title" class="text-xl sm:text-2xl font-google font-bold cal-text-main tracking-tight">October 2026</span>
             <i id="header-caret" class="fa-solid fa-caret-down text-xs cal-text-sub transition-transform duration-300"></i>
           </button>
         </div>
 
         <div class="flex items-center gap-1.5 sm:gap-2">
           <div class="hidden sm:flex items-center mr-1">
-            <button type="button" id="btn-prev" class="tactile-btn w-8 h-8 rounded-full flex items-center justify-center cal-text-sub cal-hover liquid-spring border-0 bg-transparent cursor-pointer" aria-label="Previous period">
-              <i class="fa-solid fa-chevron-left text-xs"></i>
+            <button type="button" id="btn-prev" class="tactile-btn w-11 h-11 rounded-full flex items-center justify-center cal-text-sub cal-hover liquid-spring border-0 bg-transparent cursor-pointer" aria-label="Previous period">
+              <i class="fa-solid fa-chevron-left text-lg"></i>
             </button>
-            <button type="button" id="btn-next" class="tactile-btn w-8 h-8 rounded-full flex items-center justify-center cal-text-sub cal-hover liquid-spring border-0 bg-transparent cursor-pointer" aria-label="Next period">
-              <i class="fa-solid fa-chevron-right text-xs"></i>
+            <button type="button" id="btn-next" class="tactile-btn w-11 h-11 rounded-full flex items-center justify-center cal-text-sub cal-hover liquid-spring border-0 bg-transparent cursor-pointer" aria-label="Next period">
+              <i class="fa-solid fa-chevron-right text-lg"></i>
             </button>
           </div>
 
-          <button type="button" id="btn-search" class="tactile-btn w-10 h-10 rounded-full flex items-center justify-center cal-text-sub cal-hover liquid-spring border-0 bg-transparent cursor-pointer" title="Search">
-            <i class="fa-solid fa-magnifying-glass text-base"></i>
+          <button type="button" id="btn-search" class="tactile-btn w-11 h-11 rounded-full flex items-center justify-center cal-text-sub cal-hover liquid-spring border-0 bg-transparent cursor-pointer" title="Search">
+            <i class="fa-solid fa-magnifying-glass text-lg"></i>
           </button>
 
-          <button type="button" id="btn-today" class="tactile-btn px-3.5 py-1.5 border cal-border rounded-full text-xs font-google font-semibold cal-text-main cal-hover liquid-spring bg-transparent cursor-pointer">
+          <button type="button" id="btn-today" class="tactile-btn px-4 py-2 border cal-border rounded-full text-sm font-google font-semibold cal-text-main cal-hover liquid-spring bg-transparent cursor-pointer">
             Today
           </button>
 
@@ -1753,11 +1850,11 @@
           <div class="px-8 sm:px-12 pt-2 pb-4 space-y-3">
             <input id="f-title" type="text" placeholder="Add title" class="w-full text-2xl font-google font-semibold cal-text-main focus:outline-none">
             <div class="flex items-center gap-1.5 flex-wrap">
-              <button type="button" data-type="event" class="type-tab tactile-btn px-3.5 py-1.5 rounded-lg text-xs font-google font-semibold border cal-border liquid-spring cursor-pointer">Event</button>
-              <button type="button" data-type="task" class="type-tab tactile-btn px-3.5 py-1.5 rounded-lg text-xs font-google font-semibold border cal-border liquid-spring cursor-pointer">Task</button>
-              <button type="button" data-type="homework" class="type-tab tactile-btn px-3.5 py-1.5 rounded-lg text-xs font-google font-semibold border cal-border liquid-spring cursor-pointer">Homework</button>
-              <button type="button" data-type="deadline" class="type-tab tactile-btn px-3.5 py-1.5 rounded-lg text-xs font-google font-semibold border cal-border liquid-spring cursor-pointer">Deadline</button>
-              <button type="button" data-type="birthday" class="type-tab tactile-btn px-3.5 py-1.5 rounded-lg text-xs font-google font-semibold border cal-border liquid-spring cursor-pointer">Birthday</button>
+              <button type="button" data-type="event" class="type-tab tactile-btn px-3.5 py-1.5 rounded-full text-xs font-google font-semibold border liquid-spring cursor-pointer">Event</button>
+              <button type="button" data-type="task" class="type-tab tactile-btn px-3.5 py-1.5 rounded-full text-xs font-google font-semibold border liquid-spring cursor-pointer">Task</button>
+              <button type="button" data-type="homework" class="type-tab tactile-btn px-3.5 py-1.5 rounded-full text-xs font-google font-semibold border liquid-spring cursor-pointer">Homework</button>
+              <button type="button" data-type="deadline" class="type-tab tactile-btn px-3.5 py-1.5 rounded-full text-xs font-google font-semibold border liquid-spring cursor-pointer">Deadline</button>
+              <button type="button" data-type="birthday" class="type-tab tactile-btn px-3.5 py-1.5 rounded-full text-xs font-google font-semibold border liquid-spring cursor-pointer">Birthday</button>
             </div>
             <div id="f-subject-wrap" class="hidden pt-1">
               <select id="f-subject" class="w-full text-xs font-google font-semibold"></select>
@@ -2111,6 +2208,7 @@
       <p style="font-size:14px; color:var(--text-secondary); margin-top:0; margin-bottom:12px; line-height:1.4;">Upload a screenshot of your 10-day Simon timetable grid or manually configure it.</p>
       <input type="file" id="tt-upload" accept="image/*" style="display:none;" onchange="handleTimetableImage(event, 'settings')">
       <button id="scan-tt-btn" class="add-btn" style="width:100%; padding:12px; display:flex; justify-content:center; align-items:center; gap:8px;" onclick="$('tt-upload').click()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Scan Timetable</button>
+      <div id="settings-ocr-progress" class="ocr-progress" aria-live="polite"><div class="ocr-progress-track"><div class="ocr-progress-fill"></div></div><div class="ocr-progress-status">Preparing scan...</div></div>
       <button class="add-btn btn-grey" style="width:100%; padding:12px; margin-top:8px; display:flex; justify-content:center; align-items:center; gap:8px;" onclick="openTtEditor('settings')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> Edit Timetable Manually</button>
     </div>
 
@@ -3382,9 +3480,14 @@
         throw new Error('Could not find enough populated timetable rows.');
       }
       const scheduleItems = rows.flatMap(row => row.items);
-      const columns = clusterOcrAxis(scheduleItems, 'x', Math.max(12, typicalHeight * 2.4));
+      const allColumns = clusterOcrAxis(scheduleItems, 'x', Math.max(12, typicalHeight * 2.4));
+      const filteredCols = allColumns.filter(column => column.items.length >= 2);
+      const columns = filteredCols.length >= 4 ? filteredCols : allColumns;
       let cycleLength = requestedDays;
       let daysAreRows = false;
+      const isMorningGroup = subject => /COMMUNITY|WELLBEING|HOMEROOM|PASTORAL|MENTOR/.test(subject);
+      const firstColumnMorningGroups = columns[0]?.items.filter(item => isMorningGroup(item.subject)).length || 0;
+      const firstRowMorningGroups = rows[0]?.items.filter(item => isMorningGroup(item.subject)).length || 0;
 
       if (rows.length >= 9 && rows.length <= 11 && columns.length >= 4 && columns.length <= 8) {
         cycleLength = 10;
@@ -3403,6 +3506,16 @@
         cycleLength = 5;
         daysAreRows = rows.length === 5 && columns.length > 5;
       }
+      if (firstColumnMorningGroups >= 3 && firstRowMorningGroups < 3) {
+        daysAreRows = true;
+        cycleLength = requestedDays === 5 ? 5 : 10;
+      } else if (firstRowMorningGroups >= 3 && firstColumnMorningGroups < 3) {
+        daysAreRows = false;
+        cycleLength = Math.max(5, requestedDays);
+      } else if (rows.length > columns.length && rows.length >= 7 && columns.length <= 8) {
+        daysAreRows = true;
+        cycleLength = 10;
+      }
 
       const periodGroups = daysAreRows ? columns : rows;
       const periodCount = Math.max(4, Math.min(8, periodGroups.length));
@@ -3420,17 +3533,24 @@
       };
 
       if (daysAreRows) {
+        const periodColumns = columns.slice(0, periodCount);
         rows.slice(0, cycleLength).forEach((row, day) => {
           row.items.forEach(item => {
-            const period = getOcrSlot(item.x, columns, periodCount);
+            let period = 0;
+            periodColumns.forEach((column, index) => {
+              if (Math.abs(column.center - item.x) < Math.abs(periodColumns[period].center - item.x)) period = index;
+            });
             assignCell(day, period, item);
           });
         });
       } else {
         rows.slice(0, periodCount).forEach((row, period) => {
           row.items.forEach(item => {
-            const day = getOcrSlot(item.x, columns, cycleLength);
-            assignCell(day, period, item);
+            let day = 0;
+            columns.forEach((column, index) => {
+              if (Math.abs(column.center - item.x) < Math.abs(columns[day].center - item.x)) day = index;
+            });
+            if (day < cycleLength) assignCell(day, period, item);
           });
         });
       }
@@ -3500,6 +3620,16 @@
       if (!file) return;
       pSnd('pop');
       const btn = source === 'ob' ? $('ob-scan-btn') : $('scan-tt-btn');
+      const progress = source === 'ob' ? $('ob-ocr-progress') : $('settings-ocr-progress');
+      const progressFill = progress?.querySelector('.ocr-progress-fill');
+      const progressStatus = progress?.querySelector('.ocr-progress-status');
+      const updateProgress = (value, status) => {
+        const percent = Math.max(0, Math.min(100, Math.round(value)));
+        if (progressFill) progressFill.style.width = `${percent}%`;
+        if (progressStatus) progressStatus.textContent = `${status} ${percent}%`;
+      };
+      progress?.classList.add('visible');
+      updateProgress(0, 'Preparing scan...');
       const origText = btn.innerHTML;
       btn.innerHTML = '⏳ Reading Timetable (OCR)...';
       btn.style.opacity = '0.7';
@@ -3509,13 +3639,23 @@
       try {
         const image = await prepareTimetableImage(file);
         const imageVariants = createTimetableOcrVariants(image);
-        worker = await Tesseract.createWorker('eng');
+        const totalPasses = imageVariants.length * 2;
+        let completedPasses = 0;
+        worker = await Tesseract.createWorker('eng', 1, {
+          logger: message => {
+            const passProgress = Number(message.progress) || 0;
+            const overall = ((completedPasses + passProgress) / totalPasses) * 100;
+            updateProgress(overall, message.status === 'recognizing text' ? 'Reading timetable...' : 'Preparing OCR...');
+          }
+        });
         let parsed = null;
         let parseError = null;
         for (const imageVariant of imageVariants) {
           for (const pageSegMode of ['6', '11']) {
             await worker.setParameters({ tessedit_pageseg_mode: pageSegMode });
             const ret = await worker.recognize(imageVariant, {}, { blocks: true });
+            completedPasses++;
+            updateProgress((completedPasses / totalPasses) * 100, 'Checking layout...');
             try {
               const candidate = parseTimetableOcr(ret.data, ttCycleLength);
               if (!parsed || candidate.filledCount > parsed.filledCount ||
@@ -3535,6 +3675,7 @@
         safeStorage.set('org_tt_cycle_start_date', ttCycleStartDate);
         safeStorage.set('org_tt_week_parity', ttWeekParity);
         pSnd('success');
+        updateProgress(100, 'Scan complete.');
         btn.innerHTML = '✅ Schedule Parsed!';
         btn.style.background = 'var(--success)';
         btn.style.color = '#FFF';
@@ -3559,6 +3700,8 @@
         btn.style.pointerEvents = 'all';
         btn.style.background = '';
         btn.style.color = '';
+        progress?.classList.remove('visible');
+        updateProgress(0, 'Preparing scan...');
         event.target.value = '';
       }
       openTtEditor(source);
@@ -3880,19 +4023,34 @@
     $('verify-resend-btn').addEventListener('click', resendEmailVerification);
     $('verify-back-btn').addEventListener('click', useDifferentAuthAccount);
 
-    window.addEventListener('load', () => { 
+    window.addEventListener('DOMContentLoaded', () => { 
       try { appSetApply(); } catch(e) {} 
-      initLiquidNav();
-      registerServiceWorker();
       const splash = $('splash');
-      setTimeout(() => {
+      const dismissSplash = () => {
+        if (!splash) {
+          bootReady = true;
+          syncAuthState();
+          return;
+        }
         splash.style.opacity = '0';
         setTimeout(() => { 
           splash.style.display = 'none'; 
           bootReady = true;
           syncAuthState();
         }, 400);
-      }, 500); 
+      };
+
+      try {
+        initLiquidNav();
+      } catch (err) {
+        console.error('Navigation initialization failed:', err);
+      }
+      try {
+        registerServiceWorker();
+      } catch (err) {
+        console.error('Service worker initialization failed:', err);
+      }
+      setTimeout(dismissSplash, 500);
     });
 
     function toggleTosBtn(checked) {
@@ -5288,7 +5446,7 @@
         const head = document.createElement('div');
         head.className = 'grid grid-cols-7 border-b cal-border py-1.5 text-center shrink-0';
         dayNames.forEach(d => {
-          head.innerHTML += `<div class="text-[11px] font-google font-semibold cal-text-sub">${d}</div>`;
+          head.innerHTML += `<div class="text-xs font-google font-semibold cal-text-sub">${d}</div>`;
         });
         wrap.appendChild(head);
 
@@ -5348,9 +5506,9 @@
 
           const numBadge = document.createElement('span');
           if (isToday) {
-            numBadge.className = 'w-6 h-6 rounded-full cal-accent-bg text-xs font-google font-bold flex items-center justify-center shadow-sm';
+            numBadge.className = 'w-7 h-7 rounded-full cal-accent-bg text-sm font-google font-bold flex items-center justify-center shadow-sm';
           } else {
-            numBadge.className = `w-6 h-6 rounded-full text-xs font-google flex items-center justify-center ${
+            numBadge.className = `w-7 h-7 rounded-full text-sm font-google flex items-center justify-center ${
               inMonth ? 'cal-text-main font-medium' : 'cal-text-sub'
             }`;
           }
@@ -5472,8 +5630,8 @@
           const colHead = document.createElement('div');
           colHead.className = 'flex-1 py-2 flex flex-col items-center border-r cal-border last:border-r-0 cursor-pointer';
           colHead.innerHTML = `
-            <span class="text-[10px] font-google font-semibold ${isToday ? 'cal-accent-text' : 'cal-text-sub'}">${wk}</span>
-            <span class="mt-0.5 w-8 h-8 rounded-full flex items-center justify-center text-sm font-google font-bold ${
+            <span class="text-xs font-google font-semibold ${isToday ? 'cal-accent-text' : 'cal-text-sub'}">${wk}</span>
+            <span class="mt-0.5 w-9 h-9 rounded-full flex items-center justify-center text-base font-google font-bold ${
               isToday ? 'cal-accent-bg shadow-sm' : 'cal-text-main'
             }">${d.getDate()}</span>
           `;
@@ -6127,7 +6285,7 @@
       saveTagModal() {
         const name = $('tag-name-input').value.trim() || 'Tag'; const color = STATE.tempTagColor || PALETTE[0].hex;          if (STATE.editingTagId) { const t = STATE.tags.find(x => x.id === STATE.editingTagId); if (t) { t.name = name; t.color = color; } } else { STATE.tags.push({ id: 'tag_' + Date.now(), name, color, active: true }); }          safeStorage.set('org_cal_tags_v2', STATE.tags); syncCategoriesFromTags(); sDat(); this.closeTagModal(); this.renderDrawerTags(); this.renderAllSlides(); renderDashboardCalendar(); },        deleteTagModal() { if (!STATE.editingTagId || STATE.tags.length <= 1) return; const fallback = STATE.tags.find(t => t.id !== STATE.editingTagId); calendarEvents.forEach(ev => { if (ev.tagId === STATE.editingTagId) ev.tagId = fallback.id; }); STATE.tags = STATE.tags.filter(t => t.id !== STATE.editingTagId); safeStorage.set('org_cal_tags_v2', STATE.tags); syncCategoriesFromTags(); sDat(); this.closeTagModal(); this.renderDrawerTags(); this.renderAllSlides(); renderDashboardCalendar(); },        setModalType(type) { STATE.modalType = type; $$('.type-tab').forEach(btn => {
           const active = btn.dataset.type === type;
-          btn.className = `type-tab tactile-btn px-3.5 py-1.5 rounded-lg text-xs font-google font-semibold border liquid-spring cursor-pointer ${
+          btn.className = `type-tab tactile-btn px-3.5 py-1.5 rounded-full text-xs font-google font-semibold border liquid-spring cursor-pointer ${
             active
               ? 'cal-active-pill border-transparent'
               : 'cal-surface cal-border cal-text-main cal-hover'
@@ -6159,7 +6317,7 @@
           const isSel = tag.id === STATE.modalTagId;
           const pill = document.createElement('button');
           pill.type = 'button';
-          pill.className = `tactile-btn px-3 py-1.5 rounded-lg text-xs font-google font-semibold flex items-center gap-2 shrink-0 border liquid-spring cursor-pointer ${
+          pill.className = `tactile-btn px-3 py-1.5 rounded-full text-xs font-google font-semibold flex items-center gap-2 shrink-0 border liquid-spring cursor-pointer ${
             isSel
               ? 'cal-active-pill border-transparent'
               : 'cal-surface cal-border cal-text-main'
