@@ -4862,12 +4862,31 @@
       if (!n.value.trim() || s.value === '' || !o.value || parseFloat(o.value) <= 0) return;
       const sub = getSub(cSubId);
       if (sub) {
-        sub.grades.push({ id: Date.now().toString(), name: n.value.trim(), score: s.value, outOf: o.value });
-        n.value = ''; s.value = ''; o.value = '';
-        sDat();
-        renderDet(true);
-        showToast("Grade recorded! 📊");
+        const added = addGradeToSubject(sub, n.value, s.value, o.value);
+        if (added) {
+          n.value = ''; s.value = ''; o.value = '';
+          renderDet(true);
+        }
       }
+    }
+
+    function addGradeToSubject(subject, name, score, outOf) {
+      const cleanName = String(name || '').trim();
+      const numericScore = Number(score);
+      const numericOutOf = Number(outOf);
+      if (!subject || !cleanName || !Number.isFinite(numericScore) || !Number.isFinite(numericOutOf) ||
+          numericOutOf <= 0 || numericScore < 0 || numericScore > numericOutOf) return false;
+      if (!Array.isArray(subject.grades)) subject.grades = [];
+      subject.grades.push({
+        id: Date.now().toString(),
+        name: cleanName,
+        score: String(score),
+        outOf: String(outOf)
+      });
+      sDat();
+      showToast(`Grade recorded for ${subject.name}! 📊`);
+      pSnd('success');
+      return true;
     }
 
     function delGrade(id) {
@@ -7060,7 +7079,11 @@
         ? `You are a direct, god-mode assistant. Provide the exact answer immediately without educational filler. Do exactly what ${userName} asks, including writing essays or solving math problems directly.`
         : `You are an expert, strict educational tutor helping ${userName}. \nCRITICAL RULES:\n1. NEVER write essays, paragraphs, or complete assignments for ${userName}.\n2. NEVER give direct answers to math problems.\n3. INSTEAD, guide them using the Socratic method. Ask questions, provide essay structures, brainstorm ideas, and step through math processes step-by-step so they learn. \n4. If they ask you to "write an essay" or "give me the answer", politely refuse and offer to guide them through the process.`;
 
-      const sDataMap = sData.map(s => ({ name: s.name, homework: s.homework.map(h => ({ task: h.text, date: h.date })) }));
+      const sDataMap = sData.map(s => ({
+        name: s.name,
+        grades: safeArr(s.grades).map(g => ({ name: g.name, score: g.score, outOf: g.outOf })),
+        homework: s.homework.map(h => ({ task: h.text, date: h.date }))
+      }));
       const calendarContext = calendarEvents.map(item => ({
         id: item.id, title: item.title, date: item.date, startTime: item.startTime, category: item.category, colour: item.color,
         repeat: item.recurrence, excludedDates: item.excludeDates
@@ -7071,7 +7094,7 @@
         classes: todayCycle.isWeekend ? [] : getTT() || [],
         schoolDays: calendarSchoolConfig
       };
-      const sysPrompt = `${basePersona}\n\nCurrent Subjects & Homework: ${JSON.stringify(sDataMap)}\nToday's school timetable: ${JSON.stringify(todaySchedule)}\nCalendar labels and colours: ${JSON.stringify(calendarCategories.map(category => ({ name: category, color: calendarCategoryColors[category] })))}\nCurrent custom calendar events (IDs are exact, use them for removals): ${JSON.stringify(calendarContext)}\n\nWhen the student explicitly asks you to add a calendar event, append exactly one JSON object at the very end using this format: {"action":"add_calendar_event","title":"Event title","date":"YYYY-MM-DD","startTime":"HH:MM","endTime":"HH:MM","description":"Optional notes","category":"one of the current calendar labels","color":"#RRGGBB","recurrence":{"frequency":"none|daily|weekly|monthly-date|monthly-weekday|yearly","interval":1,"weekdays":[2],"weekday":2,"nth":2,"until":""}}. Use one of the current calendar labels and its colour unless the student asks for a different colour. For a monthly nth weekday such as every second Tuesday, use frequency monthly-weekday, weekday 2 (Sunday=0), nth 2, and an initial date on that second Tuesday. Use an empty string for optional times/notes. For an explicitly requested calendar deletion, append {"action":"delete_calendar_event","eventId":"EXACT_ID","date":"YYYY-MM-DD"}; omit date to remove the entire series, or include an occurrence date to remove only that occurrence. Only use events in the current calendar list and never invent an ID. Do not modify the calendar unless the student explicitly asks. When adding, removing, or managing homework, continue to append {"action":"add_hw","subject":"Subject name","task":"Task description","date":"YYYY-MM-DD"} for additions.`;
+      const sysPrompt = `${basePersona}\n\nCurrent Subjects, Grades & Homework: ${JSON.stringify(sDataMap)}\nToday's school timetable: ${JSON.stringify(todaySchedule)}\nCalendar labels and colours: ${JSON.stringify(calendarCategories.map(category => ({ name: category, color: calendarCategoryColors[category] })))}\nCurrent custom calendar events (IDs are exact, use them for removals): ${JSON.stringify(calendarContext)}\n\nWhen the student explicitly asks you to add a calendar event, append exactly one JSON object at the very end using this format: {"action":"add_calendar_event","title":"Event title","date":"YYYY-MM-DD","startTime":"HH:MM","endTime":"HH:MM","description":"Optional notes","category":"one of the current calendar labels","color":"#RRGGBB","recurrence":{"frequency":"none|daily|weekly|monthly-date|monthly-weekday|yearly","interval":1,"weekdays":[2],"weekday":2,"nth":2,"until":""}}. Use one of the current calendar labels and its colour unless the student asks for a different colour. For a monthly nth weekday such as every second Tuesday, use frequency monthly-weekday, weekday 2 (Sunday=0), nth 2, and an initial date on that second Tuesday. Use an empty string for optional times/notes. For an explicitly requested calendar deletion, append {"action":"delete_calendar_event","eventId":"EXACT_ID","date":"YYYY-MM-DD"}; omit date to remove the entire series, or include an occurrence date to remove only that occurrence. Only use events in the current calendar list and never invent an ID. When adding, removing, or managing homework, continue to append {"action":"add_hw","subject":"Subject name","task":"Task description","date":"YYYY-MM-DD"} for additions. When the student explicitly asks you to log a grade, append exactly one JSON object at the very end using this format: {"action":"add_grade","subject":"Exact or recognizable subject name","name":"Assessment name","score":17,"outOf":20}. Only create a grade when all four grade fields are clear; score must be between 0 and outOf, and outOf must be greater than 0.`;
 
       const safeHistoryForAPI = aiChatHistory.map((msg, idx) => {
         if (idx === aiChatHistory.length - 1) return msg; 
@@ -7096,7 +7119,7 @@
           aiResponseText = `I'm here to help, ${userName}! Let me know what specific part of this subject you'd like to dive into today.`;
         }
         
-        const jsonMatch = aiResponseText.match(/\{[\s\S]*"action"\s*:\s*"(?:add_hw|add_calendar_event|delete_calendar_event)"[\s\S]*\}/);
+        const jsonMatch = aiResponseText.match(/\{[\s\S]*"action"\s*:\s*"(?:add_hw|add_grade|add_calendar_event|delete_calendar_event)"[\s\S]*\}/);
         if (jsonMatch) {
           try {
             const actionObj = JSON.parse(jsonMatch[0]);
@@ -7108,6 +7131,15 @@
                 sDat();
                 pSnd('success');
                 showToast(`AI created homework for ${targetSubject.name}! 📚`);
+                actionHandled = true;
+              }
+            } else if (actionObj.action === "add_grade" && actionObj.subject) {
+              const requestedSubject = String(actionObj.subject).trim().toLowerCase();
+              const targetSubject = sData.find(s => s.name.toLowerCase() === requestedSubject) ||
+                sData.find(s => s.name.toLowerCase().includes(requestedSubject) || requestedSubject.includes(s.name.toLowerCase()));
+              if (targetSubject && addGradeToSubject(targetSubject, actionObj.name, actionObj.score, actionObj.outOf)) {
+                renderHome(false);
+                if ($('detail-screen').classList.contains('active') && cSubId === targetSubject.id) renderDet(true);
                 actionHandled = true;
               }
             } else if (actionObj.action === "add_calendar_event") {
@@ -7122,6 +7154,7 @@
             if (actionHandled && actionObj.action !== "delete_calendar_event") aiResponseText = aiResponseText.replace(jsonMatch[0], '').replace(/```json|```/g, '').trim();
             else if (actionHandled) aiResponseText = aiResponseText.replace(/```json|```/g, '').trim();
             else if (actionObj.action === "add_calendar_event") aiResponseText = aiResponseText.replace(jsonMatch[0], 'No calendar event was created because the event details were invalid.').replace(/```json|```/g, '').trim();
+            else if (actionObj.action === "add_grade") aiResponseText = aiResponseText.replace(jsonMatch[0], 'No grade was logged because the subject or grade details were invalid.').replace(/```json|```/g, '').trim();
           } catch (e) {
             console.error("AI Payload parse failure.", e);
           }
