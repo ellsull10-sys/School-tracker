@@ -108,16 +108,29 @@
     #splash {
       position: fixed;
       inset: 0;
-      background: var(--bg-base);
-      color: var(--text-primary);
+      background: #0B1120;
+      color: #FFFFFF;
       z-index: 99999;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 32px;
-      font-weight: 800;
       transition: opacity 0.4s ease;
     }
+    #splash-content { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    #splash-logo { display: flex; align-items: center; justify-content: center; white-space: nowrap; transition: opacity 0.3s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+    #splash-flasher { display: inline-block; min-width: 140px; text-align: center; font-size: clamp(2.25rem, 8vw, 3rem); font-weight: 800; letter-spacing: -0.025em; transition: all 0.06s ease-out; will-change: transform, opacity, filter; }
+    #splash-tracker { max-width: 0; opacity: 0; padding-left: 0; overflow: hidden; transition: max-width 0.85s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease 0.1s, padding-left 0.85s cubic-bezier(0.16, 1, 0.3, 1); }
+    #splash-tracker.reveal { max-width: 220px; opacity: 1; padding-left: 10px; }
+    #splash-tracker span { font-size: clamp(2.25rem, 8vw, 3rem); font-weight: 800; letter-spacing: -0.025em; color: #60A5FA; background: linear-gradient(135deg, #60A5FA, #818CF8); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    #splash-icon { position: relative; display: flex; align-items: center; justify-content: center; padding: 10px; border: 1px solid rgba(129, 140, 248, 0.3); border-radius: 16px; background: rgba(99, 102, 241, 0.2); transform: scale(0.2) rotate(-25deg); opacity: 0; margin-left: 0; transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s, opacity 0.5s ease 0.1s, margin-left 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s; }
+    #splash-icon.reveal { transform: scale(1) rotate(0deg); opacity: 1; margin-left: 14px; }
+    #splash-icon.glow { box-shadow: 0 0 40px rgba(96, 165, 250, 0.5), inset 0 0 20px rgba(167, 139, 250, 0.4); }
+    #splash-icon svg { width: 36px; height: 36px; }
+    #splash-sparks { position: absolute; inset: 0; pointer-events: none; }
+    #splash-motto { margin-top: 16px; opacity: 0; transform: translateY(12px); color: rgba(148, 163, 184, 0.8); font-size: 12px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+    #splash-motto.reveal { opacity: 1; transform: translateY(0); }
+    #splash-blast { position: absolute; top: 50%; left: 50%; width: 20px; height: 20px; margin: -10px; border-radius: 50%; background: var(--bg-base); transform: scale(0); pointer-events: none; transition: transform 0.8s cubic-bezier(0.7, 0, 0.1, 1); z-index: 50; }
+    #splash-blast.expand { transform: scale(250); }
 
     .auth-overlay {
       position: fixed;
@@ -129,6 +142,40 @@
       overflow-y: auto;
       padding: max(24px, env(safe-area-inset-top)) 20px max(24px, env(safe-area-inset-bottom));
       background: var(--bg-base);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.35s ease, visibility 0s linear 0.35s;
+    }
+    .auth-overlay.visible {
+      opacity: 1;
+      visibility: visible;
+      transition-delay: 0s;
+      will-change: opacity;
+    }
+    .auth-overlay .auth-panel {
+      opacity: 0;
+      transform: translate3d(0, 18px, 0) scale(0.97);
+      backface-visibility: hidden;
+      transition: opacity 0.4s ease 0.05s, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.05s;
+    }
+    .auth-overlay.visible .auth-panel {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) scale(1);
+      will-change: transform, opacity;
+      animation: auth-panel-jump 0.68s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    @keyframes auth-panel-jump {
+      0% { opacity: 0; transform: translate3d(0, 42px, 0) scale(0.88) rotate(-1.5deg); }
+      45% { opacity: 1; transform: translate3d(0, -10px, 0) scale(1.035) rotate(0.35deg); }
+      70% { transform: translate3d(0, 4px, 0) scale(0.99) rotate(-0.12deg); }
+      100% { opacity: 1; transform: translate3d(0, 0, 0) scale(1) rotate(0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .auth-overlay,
+      .auth-overlay .auth-panel {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+      }
     }
     .auth-panel {
       width: 100%;
@@ -1496,10 +1543,10 @@
   <div id="tos-modal" style="display:none;position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.4);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity .3s ease;">
     <div class="app-card" style="padding:28px 24px;width:100%;max-width:440px;">
       <h2 style="margin-top:0;margin-bottom:14px;font-size:22px;text-align:center;">Terms of Service</h2>
-      <p style="font-size:14px;color:var(--text-secondary);line-height:1.55;margin:0 auto 20px;">By using this app, you agree that your personal data may be stored and processed, and you commit to using the platform appropriately and lawfully.</p>
+      <p style="font-size:14px;color:var(--text-secondary);line-height:1.55;margin:0 auto 20px;">By using this app, you <strong>agree</strong> that your personal data may be stored and processed, and you commit to using the platform <strong>appropriately</strong> and <strong>lawfully</strong>.</p>
       <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:22px;">
         <input type="checkbox" id="tos-checkbox" onchange="toggleTosBtn(this.checked)">
-        <label for="tos-checkbox">I have read and agree to the terms.</label>
+        <label for="tos-checkbox">I have read and <strong>agree</strong> to the terms.</label>
       </div>
       <button id="tos-btn" disabled onclick="acceptTos()">Next</button>
     </div>
@@ -1515,7 +1562,30 @@
     </div>
   </div>
   <div id="app-background"></div>
-  <div id="splash">School Tracker</div>
+  <div id="splash" aria-label="Loading School Tracker">
+    <div id="splash-blast"></div>
+    <div id="splash-content">
+      <div id="splash-logo">
+        <span id="splash-flasher">Plan</span>
+        <div id="splash-tracker"><span>Tracker</span></div>
+        <div id="splash-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="url(#splash-icon-gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <defs>
+              <linearGradient id="splash-icon-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#60A5FA"></stop>
+                <stop offset="100%" stop-color="#818CF8"></stop>
+              </linearGradient>
+            </defs>
+            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+            <path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1Z"></path>
+            <path d="m9 14 2 2 4-4"></path>
+          </svg>
+          <div id="splash-sparks"></div>
+        </div>
+      </div>
+      <div id="splash-motto">Your digital diary</div>
+    </div>
+  </div>
 
   <div id="login-container" class="auth-overlay" role="dialog" aria-modal="true" aria-labelledby="login-title">
     <div class="auth-panel">
@@ -2409,8 +2479,7 @@
   </div>
 
   <script>
-    const $ = id => document.getElementById(id);
-    const $$ = sel => document.querySelectorAll(sel);
+    const $ = id => document.getElementById(id); const $$ = sel => document.querySelectorAll(sel);
 
     const safeArr = obj => {
       if (!obj) return [];
@@ -2418,75 +2487,171 @@
       return arr.filter(x => x !== null && typeof x !== 'undefined');
     };
 
-    const normSubs = list => safeArr(list).filter(s => s && s.name).map(s => ({
-      ...s,
-      homework: safeArr(s.homework).filter(h => h && h.date),
-      notes: s.notes || "",
-      grades: safeArr(s.grades).filter(g => g && g.score),
-      photos: safeArr(s.photos).filter(p => p && p.img)
-    }));
-
+    // --- MISSING UTILITIES & VARIABLES PATCH ---
     const safeStorage = {
-      get: (key, fallback) => {
-        try {
-          const item = localStorage.getItem(key);
-          return item ? JSON.parse(item) : fallback;
-        } catch(e) {
-          return fallback;
-        }
-      },
-      set: (key, val) => {
-        try {
-          localStorage.setItem(key, JSON.stringify(val));
-        } catch(e) {
-          console.warn("Storage quota exceeded or unavailable", e);
-        }
-      }
+      get: (key, def) => { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : def; } catch(e) { return def; } },
+      set: (key, val) => { try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {} }
     };
 
-    function showToast(msg, dur = 2400) {
+    function showToast(msg, dur) {
+      if (!dur) dur = 3000;
       const t = $('app-toast');
       if (!t) return;
-      t.innerText = msg;
+      t.textContent = msg;
       t.classList.add('show');
-      clearTimeout(t._timer);
-      t._timer = setTimeout(() => t.classList.remove('show'), dur);
+      setTimeout(() => t.classList.remove('show'), dur);
     }
 
-    function showModalDialog({ title = "Notice", message = "", confirmText = "OK", cancelText = null, isDanger = false }) {
+    function showModalDialog(opts) {
+      const title = opts.title;
+      const message = opts.message;
+      const confirmText = opts.confirmText || 'OK';
+      const cancelText = opts.cancelText || 'Cancel';
+      const isDanger = opts.isDanger || false;
+
       return new Promise(resolve => {
-        const modal = $('app-dialog-modal');
-        $('app-dialog-title').innerText = title;
-        $('app-dialog-msg').innerText = message;
-        const confirmBtn = $('app-dialog-confirm');
-        const cancelBtn = $('app-dialog-cancel');
-
-        confirmBtn.innerText = confirmText;
-        confirmBtn.className = isDanger ? 'add-btn btn-danger' : 'add-btn';
-
-        if (cancelText) {
-          cancelBtn.style.display = 'block';
-          cancelBtn.innerText = cancelText;
-        } else {
-          cancelBtn.style.display = 'none';
-        }
-
-        modal.style.display = 'flex';
-        requestAnimationFrame(() => modal.classList.add('visible'));
-
-        const close = (val) => {
-          modal.classList.remove('visible');
-          setTimeout(() => { modal.style.display = 'none'; }, 200);
-          confirmBtn.onclick = null;
-          cancelBtn.onclick = null;
-          resolve(val);
+        const m = $('app-dialog-modal');
+        if(!m) return resolve(false);
+        $('app-dialog-title').textContent = title;
+        $('app-dialog-msg').textContent = message;
+        const cBtn = $('app-dialog-confirm');
+        cBtn.textContent = confirmText;
+        cBtn.className = isDanger ? 'add-btn btn-danger' : 'add-btn';
+        $('app-dialog-cancel').textContent = cancelText;
+        m.style.display = 'flex';
+        requestAnimationFrame(() => m.classList.add('visible'));
+        
+        const cleanup = () => {
+          m.classList.remove('visible');
+          setTimeout(() => { m.style.display = 'none'; }, 200);
+          cBtn.onclick = null;
+          $('app-dialog-cancel').onclick = null;
         };
-
-        confirmBtn.onclick = () => close(true);
-        cancelBtn.onclick = () => close(false);
+        
+        cBtn.onclick = () => { cleanup(); resolve(true); };
+        $('app-dialog-cancel').onclick = () => { cleanup(); resolve(false); };
       });
     }
 
+    function getSub(id) { return sData.find(s => s.id === id); }
+
+    function normSubs(arr) {
+      return arr.map(s => ({
+        id: s.id || Date.now().toString() + Math.random(),
+        name: s.name || 'Unnamed Subject',
+        status: typeof s.status === 'number' ? s.status : 2,
+        homework: safeArr(s.homework),
+        notes: s.notes || '',
+        grades: safeArr(s.grades),
+        photos: safeArr(s.photos)
+      }));
+    }
+
+    // Theme Controllers
+    function toggleBg() { appSet.bgEnabled = $('bg-toggle').checked; appSetApply(); saveAppSettings(); }
+    function saveAppSettings() { safeStorage.set('org_settings', appSet); queueCloudWrite(); }
+    function appSetApply(updateUI) {
+      if (updateUI === undefined) updateUI = true;
+      if (appSet.bgEnabled && appSet.bgImage) {
+        $('app-background').style.backgroundImage = `url('${appSet.bgImage}')`;
+        const opac = appSet.bgOpacity !== undefined ? appSet.bgOpacity : 50;
+        $('app-background').style.opacity = opac / 100; } else {$('app-background').style.backgroundImage = 'none';
+      }
+      const themeType = appSet.themeType || 'gradient';
+      const root = document.documentElement;
+      if (themeType === 'solid') {
+        root.style.setProperty('--accent-grad', appSet.solidColor || '#1E3A8A');
+        root.style.setProperty('--accent', appSet.solidColor || '#1E3A8A');
+      } else {
+        const c1 = appSet.gradColor1 || '#475569';
+        const c2 = appSet.gradColor2 || '#0F172A';
+        const dir = appSet.gradDir || '135deg';
+        root.style.setProperty('--accent-grad', dir === 'radial' ? `radial-gradient(circle, ${c1}, ${c2})` : `linear-gradient(${dir}, ${c1}, ${c2})`);
+        root.style.setProperty('--accent', c1);
+      }
+      if (updateUI) {
+        if ($('bg-toggle'))$('bg-toggle').checked = !!appSet.bgEnabled;
+        const opVal = appSet.bgOpacity !== undefined ? appSet.bgOpacity : 50;
+        if ($('bg-opacity-slider'))$('bg-opacity-slider').value = opVal;
+        if ($('opacity-val'))$('opacity-val').textContent = opVal;
+        updateThemeUI();
+      }
+    }
+    function updateThemeUI() {
+      const type = appSet.themeType || 'gradient';
+      if ($('theme-solid-controls'))$('theme-solid-controls').style.display = type === 'solid' ? 'flex' : 'none';
+      if ($('theme-gradient-controls'))$('theme-gradient-controls').style.display = type === 'gradient' ? 'flex' : 'none';
+      if (type === 'solid') {
+        if ($('theme-btn-solid'))$('theme-btn-solid').className = 'add-btn';
+        if ($('theme-btn-grad'))$('theme-btn-grad').className = 'add-btn btn-grey';
+        const col = appSet.solidColor || '#1E3A8A';
+        if ($('theme-solid-input'))$('theme-solid-input').value = col;
+        if ($('solid-color-hex'))$('solid-color-hex').textContent = col.toUpperCase();
+        if ($('theme-preview-strip'))$('theme-preview-strip').style.background = col;
+      } else {
+        if ($('theme-btn-grad'))$('theme-btn-grad').className = 'add-btn';
+        if ($('theme-btn-solid'))$('theme-btn-solid').className = 'add-btn btn-grey';
+        const c1 = appSet.gradColor1 || '#475569';
+        const c2 = appSet.gradColor2 || '#0F172A';
+        const dir = appSet.gradDir || '135deg';
+        if ($('theme-grad-input-1'))$('theme-grad-input-1').value = c1;
+        if ($('grad-color-1-hex'))$('grad-color-1-hex').textContent = c1.toUpperCase();
+        if ($('theme-grad-input-2'))$('theme-grad-input-2').value = c2;
+        if ($('grad-color-2-hex'))$('grad-color-2-hex').textContent = c2.toUpperCase();
+        if ($('theme-grad-direction'))$('theme-grad-direction').value = dir;
+        if ($('theme-preview-strip'))$('theme-preview-strip').style.background = dir === 'radial' ? `radial-gradient(circle, ${c1}, ${c2})` : `linear-gradient(${dir}, ${c1}, ${c2})`;
+      }
+    }
+    function setThemeType(type) { pSnd('tick'); appSet.themeType = type; appSetApply(); saveAppSettings(); }
+    function updateSolidColor(hex) { appSet.solidColor = hex; appSetApply(); saveAppSettings(); }
+    function updateGradColors(c1, c2) { if (c1) appSet.gradColor1 = c1; if (c2) appSet.gradColor2 = c2; appSetApply(); saveAppSettings(); }
+    function updateGradDirection(dir) { appSet.gradDir = dir; appSetApply(); saveAppSettings(); }
+    function applyThemePreset(preset) {
+      pSnd('tick'); appSet.themeType = 'gradient'; appSet.gradDir = '135deg';
+      if (preset === 'navy') { appSet.gradColor1 = '#475569'; appSet.gradColor2 = '#0F172A'; }
+      if (preset === 'emerald') { appSet.gradColor1 = '#10B981'; appSet.gradColor2 = '#064E3B'; }
+      if (preset === 'purple') { appSet.gradColor1 = '#8B5CF6'; appSet.gradColor2 = '#2E1065'; }
+      if (preset === 'sunset') { appSet.gradColor1 = '#F43F5E'; appSet.gradColor2 = '#881337'; }
+      if (preset === 'amber') { appSet.gradColor1 = '#F59E0B'; appSet.gradColor2 = '#78350F'; }
+      if (preset === 'cyan') { appSet.gradColor1 = '#06B6D4'; appSet.gradColor2 = '#083344'; }
+      appSetApply(); saveAppSettings();
+    }
+    function resetThemeColor() {
+      pSnd('tick'); appSet.themeType = 'gradient'; appSet.gradColor1 = '#475569'; appSet.gradColor2 = '#0F172A';
+      appSet.gradDir = '135deg'; appSet.solidColor = '#1E3A8A'; appSetApply(); saveAppSettings(); showToast("Theme reset to default");
+    }
+
+    // --- CRITICAL MISSING VARIABLES ADDED ---
+    let selectedCalDateStr = '';
+    let authErrorMessage = '';
+
+    let authReady = false;
+    let bootReady = false;
+    let authUser = null;
+    let guestMode = false;
+    let startupComplete = false;
+    let auth = null;
+    let db = null;
+    let syncActive = true;
+    let isIncomingSync = false;
+    let pendingCloudWrite = false;
+    let cloudReady = false;
+    let cloudRef = null;
+    let cloudUid = null;
+    let syncDebounceTimer = null;
+    let localWriteTime = 0;
+    let cSubId = null;
+
+    // Load saved data immediately to prevent a blank dashboard
+    let sData = safeStorage.get('org_subjects', []);
+    let gNotes = safeStorage.get('org_global', []);
+    let dlData = safeStorage.get('org_deadlines', []);
+    let calendarEvents = safeStorage.get('org_calendar_events', []);
+    let ring = safeStorage.get('org_ring', { score: 0 });
+    let uData = safeStorage.get('org_user', null);
+    let appSet = safeStorage.get('org_settings', { bgEnabled: false, bgOpacity: 50 });
+
+    // --- FIREBASE INITIALIZATION ADDED HERE ---
     const firebaseConfig = {
       apiKey: "AIzaSyAqw5hcUSv6x4MMjRTdgHk7nbtgkHvDXlk",
       authDomain: "school-tracker-880f9.firebaseapp.com",
@@ -2497,272 +2662,59 @@
       appId: "1:190541703025:web:3156546de0b0224614b8d0",
       measurementId: "G-0L3GRJ3R5R"
     };
-
-    let syncActive = false;
-    let db = null;
-    let auth = null;
-    let authUser = null;
-    let guestMode = false;
-    let cloudRef = null;
-    let cloudUid = null;
-    let cloudReady = false;
-    let authReady = false;
-    let authErrorMessage = '';
-    let bootReady = false;
-    let startupComplete = false;
-    let isIncomingSync = false;
-    let localWriteTime = 0;
-    let syncDebounceTimer = null;
-
-    try {
-      if (firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY") {
-        firebase.initializeApp(firebaseConfig);
-        auth = firebase.auth();
-        db = firebase.database();
-        syncActive = true;
-        auth.onAuthStateChanged(user => {
-          const previousUid = authUser && authUser.uid;
-          authUser = user;
-          if (user) guestMode = false;
-          authReady = true;
-          updateSettingsAccountState(user);
-          if (previousUid && (!user || user.uid !== previousUid) && cloudRef) {
-            cloudRef.off();
-            cloudRef = null;
-            cloudUid = null;
-            cloudReady = false;
-          }
-          if (user && startupComplete) initCloudListener();
-          syncAuthState();
-        }, err => {
-          authReady = true;
-          authErrorMessage = friendlyAuthError(err);
-          syncAuthState();
-        });
-      } else {
-        authReady = true;
-        authErrorMessage = 'Firebase Authentication is not configured for this app.';
-      }
-    } catch(err) {
-      console.error("Firebase init failed:", err);
-      authReady = true;
-      authErrorMessage = friendlyAuthError(err);
+  
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
     }
 
-    let rawSubs = safeStorage.get('org_subjects', null);
-    let sData = safeArr(rawSubs);
-    
-    if (sData.length === 0) {
-      sData = [ "English", "Mathematics", "Science", "Humanities", "Health & Physical Education (HPE)", "Religious Education" ]
-        .map(n => ({ id: n.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase(), name: n, status: 2, homework: [], notes: "", grades: [], photos: [] }));
-    } else {
-      sData = normSubs(sData);
-    }
+    auth = firebase.auth();
+    db = firebase.database();
 
-    const getSub = id => sData.find(s => s && s.id === id);
-
-    let gNotes = safeArr(safeStorage.get('org_global', [])).filter(n => n && n.date); 
-    let dlData = safeArr(safeStorage.get('org_deadlines', [])).filter(d => d && d.date); 
-    let calendarEvents = normalizeCalendarEvents(safeStorage.get('org_calendar_events', []));
-    let editingCalendarEventId = null;
-    let selectedCalDateStr = localDateString();
-    
-    let tStr = new Date().toDateString(); 
-    let ring = safeStorage.get('org_ring', { date: tStr, score: 0 }); 
-    if (!ring || ring.date !== tStr) ring = { date: tStr, score: 0 }; 
-    if (ring.score > 3) ring.score = 3;
-    let cSubId = null;
-
-    let uData = safeStorage.get('org_user', null);
-    
-    // Default palette: Darker, richer navy gradient
-    let appSet = safeStorage.get('org_settings', {
-      bgEnabled: false,
-      bgOpacity: 50,
-      bgImage: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=100&w=1200&auto=format&fit=crop',
-      themeType: 'gradient',
-      solidColor: '#1E3A8A',
-      grad1: '#475569',
-      grad2: '#0F172A',
-      gradDir: '135deg'
+    auth.onAuthStateChanged((user) => {
+      authUser = user;
+      authReady = true; 
+      syncAuthState();
     });
 
-    function getGradCSS(c1, c2, dir) {
-      if (dir === 'radial') {
-        return `radial-gradient(circle at center, ${c1}, ${c2})`;
-      }
-      return `linear-gradient(${dir || '135deg'}, ${c1}, ${c2})`;
+// src/main.js
+    function queueCloudWrite() {
+      if (!syncActive || !db || !authUser || isIncomingSync) return;
+      pendingCloudWrite = true;
+      if (!cloudReady || !cloudRef || cloudUid !== authUser.uid) return;
+      clearTimeout(syncDebounceTimer);
+      syncDebounceTimer = setTimeout(writeCloudData, 300);
     }
 
-    function appSetApply(syncControls = true) {
-      const b = $('app-background');
-      const mT = $('theme-color-meta');
-      const root = document.documentElement;
+function writeCloudData() {
+  if (!syncActive || !db || !authUser || isIncomingSync) return;
+  if (!cloudRef || cloudUid !== authUser.uid) return;
 
-      // Apply dynamic accent color / gradient
-      if (appSet.themeType === 'solid') {
-        const col = appSet.solidColor || '#1E3A8A';
-        root.style.setProperty('--accent', col);
-        root.style.setProperty('--accent-grad', col);
-        if ($('theme-preview-strip')) $('theme-preview-strip').style.background = col;
-      } else {
-        const c1 = appSet.grad1 || '#475569';
-        const c2 = appSet.grad2 || '#0F172A';
-        const dir = appSet.gradDir || '135deg';
-        const gradCSS = getGradCSS(c1, c2, dir);
-        root.style.setProperty('--accent', c1);
-        root.style.setProperty('--accent-grad', gradCSS);
-        if ($('theme-preview-strip')) $('theme-preview-strip').style.background = gradCSS;
-      }
-      
-      let isBirthday = false;
-      if (uData && uData.dob) {
-        const today = new Date();
-        const dob = new Date(uData.dob);
-        if (today.getMonth() === dob.getMonth() && today.getDate() === dob.getDate()) {
-          isBirthday = true;
-        }
-      }
+  const dataToSync = {
+    subjects: sData,
+    global: gNotes,
+    deadlines: dlData,
+    calendarEvents: calendarEvents,
+    ring: ring,
+    user: uData,
+    settings: appSet
+  };
 
-      if ($('birthday-banner')) {
-        $('birthday-banner').style.display = isBirthday ? 'block' : 'none';
-      }
-
-      if (appSet.bgEnabled) {
-        b.style.opacity = appSet.bgOpacity / 100;
-        b.style.backgroundImage = `url('${appSet.bgImage}')`;
-        document.body.classList.add('bg-active');
-        document.documentElement.classList.add('bg-active');
-        if (mT) mT.setAttribute('content', '#000000');
-      } else {
-        b.style.opacity = 0;
-        document.body.classList.remove('bg-active');
-        document.documentElement.classList.remove('bg-active');
-        if (mT) mT.setAttribute('content', window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? '#000000' : '#F2F2F7');
-      }
-      
-      if ($('bg-toggle')) $('bg-toggle').checked = appSet.bgEnabled;
-      if ($('bg-opacity-slider')) $('bg-opacity-slider').value = appSet.bgOpacity;
-      if ($('opacity-val')) $('opacity-val').innerText = appSet.bgOpacity;
-      if (syncControls) syncThemeControls();
-    }
-
-    function syncThemeControls() {
-      const isGrad = appSet.themeType !== 'solid';
-      const gradBtn = $('theme-btn-grad');
-      const solidBtn = $('theme-btn-solid');
-      const gradControls = $('theme-gradient-controls');
-      const solidControls = $('theme-solid-controls');
-      
-      if (gradBtn && solidBtn && gradControls && solidControls) {
-        if (isGrad) {
-          gradBtn.className = 'add-btn';
-          solidBtn.className = 'add-btn btn-grey';
-          gradControls.style.display = 'flex';
-          solidControls.style.display = 'none';
-        } else {
-          solidBtn.className = 'add-btn';
-          gradBtn.className = 'add-btn btn-grey';
-          solidControls.style.display = 'flex';
-          gradControls.style.display = 'none';
-        }
-      }
-
-      if ($('theme-solid-input')) $('theme-solid-input').value = appSet.solidColor || '#1E3A8A';
-      if ($('solid-color-hex')) $('solid-color-hex').innerText = (appSet.solidColor || '#1E3A8A').toUpperCase();
-      if ($('theme-grad-input-1')) $('theme-grad-input-1').value = appSet.grad1 || '#475569';
-      if ($('grad-color-1-hex')) $('grad-color-1-hex').innerText = (appSet.grad1 || '#475569').toUpperCase();
-      if ($('theme-grad-input-2')) $('theme-grad-input-2').value = appSet.grad2 || '#0F172A';
-      if ($('grad-color-2-hex')) $('grad-color-2-hex').innerText = (appSet.grad2 || '#0F172A').toUpperCase();
-      if ($('theme-grad-direction')) $('theme-grad-direction').value = appSet.gradDir || '135deg';
-    }
-
-    function setThemeType(type) {
-      pSnd('tick');
-      appSet.themeType = type;
-      appSetApply();
-      safeStorage.set('org_settings', appSet);
-    }
-
-    function updateSolidColor(val) {
-      appSet.solidColor = val;
-      appSet.themeType = 'solid';
-      if ($('solid-color-hex')) $('solid-color-hex').innerText = val.toUpperCase();
-      appSetApply(false);
-      safeStorage.set('org_settings', appSet);
-    }
-
-    function updateGradColors(c1, c2) {
-      if (c1) appSet.grad1 = c1;
-      if (c2) appSet.grad2 = c2;
-      appSet.themeType = 'gradient';
-      if ($('grad-color-1-hex')) $('grad-color-1-hex').innerText = (appSet.grad1 || '#475569').toUpperCase();
-      if ($('grad-color-2-hex')) $('grad-color-2-hex').innerText = (appSet.grad2 || '#0F172A').toUpperCase();
-      appSetApply(false);
-      safeStorage.set('org_settings', appSet);
-    }
-
-    function updateGradDirection(dir) {
-      pSnd('tick');
-      appSet.gradDir = dir;
-      appSet.themeType = 'gradient';
-      appSetApply();
-      safeStorage.set('org_settings', appSet);
-    }
-
-    function applyThemePreset(preset) {
-      pSnd('pop');
-      appSet.themeType = 'gradient';
-      if (preset === 'navy') {
-        appSet.grad1 = '#475569';
-        appSet.grad2 = '#0F172A';
-      } else if (preset === 'emerald') {
-        appSet.grad1 = '#10B981';
-        appSet.grad2 = '#064E3B';
-      } else if (preset === 'purple') {
-        appSet.grad1 = '#8B5CF6';
-        appSet.grad2 = '#2E1065';
-      } else if (preset === 'sunset') {
-        appSet.grad1 = '#F43F5E';
-        appSet.grad2 = '#881337';
-      } else if (preset === 'midnight') {
-        appSet.grad1 = '#475569';
-        appSet.grad2 = '#0F172A';
-      } else if (preset === 'amber') {
-        appSet.grad1 = '#F59E0B';
-        appSet.grad2 = '#78350F';
-      } else if (preset === 'cyan') {
-        appSet.grad1 = '#06B6D4';
-        appSet.grad2 = '#083344';
-      }
-      appSetApply();
-      safeStorage.set('org_settings', appSet);
-      showToast("Preset applied! ✨");
-    }
-
-    function resetThemeColor() {
-      pSnd('tick');
-      appSet.themeType = 'gradient';
-      appSet.grad1 = '#475569';
-      appSet.grad2 = '#0F172A';
-      appSet.solidColor = '#1E3A8A';
-      appSet.gradDir = '135deg';
-      appSetApply();
-      safeStorage.set('org_settings', appSet);
-      showToast("Reset to default gradient");
-    }
-
-    function toggleBg() {
-      appSet.bgEnabled = $('bg-toggle').checked;
-      appSetApply();
-      safeStorage.set('org_settings', appSet);
-    }
+  db.ref(`users/${authUser.uid}`).set(dataToSync)
+    .then(() => {
+      pendingCloudWrite = false;
+      showToast("Data synced successfully!", 3000);
+    })
+    .catch((error) => {
+      console.error("Sync failed:", error);
+      showToast("Sync failed. Please try again later.", 3000);
+    });
+}
 
     function updBgOpac(v) {
       appSet.bgOpacity = v;
       if (appSet.bgEnabled) $('app-background').style.opacity = v / 100;
       $('opacity-val').innerText = v;
-      safeStorage.set('org_settings', appSet);
+      saveAppSettings();
     }
 
     function handleBgUp(e) {
@@ -2781,7 +2733,7 @@
           appSet.bgImage = c.toDataURL('image/jpeg', 0.65);
           appSet.bgEnabled = true;
           appSetApply();
-          safeStorage.set('org_settings', appSet);
+          saveAppSettings();
         };
         img.src = ev.target.result;
       };
@@ -2796,7 +2748,7 @@
       appSetApply();
       $('bg-upload').value = '';
       $('app-background').style.backgroundImage = 'none';
-      safeStorage.set('org_settings', appSet);
+      saveAppSettings();
       showToast("Background reset to default");
     }
 
@@ -3372,6 +3324,7 @@
       safeStorage.set('org_ttcyc', ttCyc);
       safeStorage.set('org_tt_cycle_length', ttCycleLength);
       safeStorage.set('org_tt_cycle_start_date', ttCycleStartDate);
+      queueCloudWrite();
       
       const activeDays = getCycleDayIndices(ttCycleLength);
       const allSubs = [];
@@ -3802,6 +3755,7 @@
         safeStorage.set('org_tt_cycle_length', ttCycleLength);
         safeStorage.set('org_tt_cycle_start_date', ttCycleStartDate);
         safeStorage.set('org_tt_week_parity', ttWeekParity);
+        queueCloudWrite();
         pSnd('success');
         updateProgress(100, 'Scan complete.');
         btn.innerHTML = '✅ Schedule Parsed!';
@@ -3891,13 +3845,26 @@
       { c: "rgba(5, 150, 105, 0.28)", h: "#059669", l: "Well ahead" }
     ];
 
+    function setAuthOverlayVisible(visible) {
+      const login = $('login-container');
+      if (!login) return;
+      if (visible) {
+        login.style.display = 'flex';
+        requestAnimationFrame(() => login.classList.add('visible'));
+      } else {
+        login.classList.remove('visible');
+        setTimeout(() => {
+          if (!login.classList.contains('visible')) login.style.display = 'none';
+        }, 350);
+      }
+    }
+
     function syncAuthState() {
       if (!authReady || !bootReady) return;
-      const login = $('login-container');
       const tosModal = $('tos-modal');
       if (!authUser) {
         if (guestMode) {
-          if (login) login.style.display = 'none';
+          setAuthOverlayVisible(false);
           updateSettingsAccountState(null);
           if (startupComplete) return;
           if (!localStorage.getItem('org_tos_agreed')) {
@@ -3908,7 +3875,7 @@
           }
           return;
         }
-        if (login) login.style.display = 'flex';
+        setAuthOverlayVisible(true);
         if ($('bottom-nav')) $('bottom-nav').style.display = 'none';
         if (tosModal) { tosModal.style.display = 'none'; tosModal.style.opacity = '0'; }
         showAuthView('login');
@@ -3917,7 +3884,7 @@
       }
 
       if (requiresEmailVerification(authUser)) {
-        if (login) login.style.display = 'flex';
+        setAuthOverlayVisible(true);
         if ($('bottom-nav')) $('bottom-nav').style.display = 'none';
         if (tosModal) { tosModal.style.display = 'none'; tosModal.style.opacity = '0'; }
         showAuthView('verify');
@@ -3925,7 +3892,7 @@
         return;
       }
 
-      if (login) login.style.display = 'none';
+      setAuthOverlayVisible(false);
       $('error-msg').textContent = '';
       if (startupComplete) return;
       if (!localStorage.getItem('org_tos_agreed')) {
@@ -3956,7 +3923,7 @@
       guestMode = false;
       updateSettingsAccountState(null);
       showAuthView('login');
-      $('login-container').style.display = 'flex';
+      setAuthOverlayVisible(true);
       if ($('bottom-nav')) $('bottom-nav').style.display = 'none';
     }
 
@@ -4151,6 +4118,90 @@
     $('verify-resend-btn').addEventListener('click', resendEmailVerification);
     $('verify-back-btn').addEventListener('click', useDifferentAuthAccount);
 
+    const splashWords = ['Plan', 'Schedule', 'Study', 'Focus', 'School'];
+    const waitForSplash = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+    function fireSplashSparks() {
+      const container = $('splash-sparks');
+      if (!container) return;
+      container.replaceChildren();
+      const colors = ['#60A5FA', '#A78BFA', '#818CF8', '#F8FAFC'];
+      const fragment = document.createDocumentFragment();
+      for (let i = 0; i < 12; i++) {
+        const spark = document.createElement('div');
+        spark.style.cssText = `position:absolute;width:6px;height:6px;border-radius:50%;background:${colors[i % colors.length]};left:50%;top:50%;transform:translate(-50%,-50%) scale(1);transition:transform .6s cubic-bezier(.16,1,.3,1),opacity .5s ease-out;`;
+        fragment.appendChild(spark);
+        const angle = (Math.PI * 2 * i) / 12 + (Math.random() * 0.5 - 0.25);
+        const distance = Math.floor(Math.random() * 35) + 45;
+        requestAnimationFrame(() => {
+          spark.style.transform = `translate(calc(-50% + ${Math.cos(angle) * distance}px), calc(-50% + ${Math.sin(angle) * distance}px)) scale(0)`;
+          spark.style.opacity = '0';
+        });
+      }
+      container.appendChild(fragment);
+    }
+
+    async function playSplashChoreography(onComplete) {
+      const splash = $('splash');
+      const content = $('splash-content');
+      const logo = $('splash-logo');
+      const flasher = $('splash-flasher');
+      const tracker = $('splash-tracker');
+      const icon = $('splash-icon');
+      const motto = $('splash-motto');
+      const blast = $('splash-blast');
+      if (!splash || !content || !logo || !flasher || !tracker || !icon || !motto || !blast) {
+        onComplete();
+        return;
+      }
+
+      document.body.style.overflow = 'hidden';
+      splash.style.display = 'flex';
+      splash.style.opacity = '1';
+      content.style.opacity = '1';
+      content.style.transform = 'scale(1)';
+      logo.style.opacity = '1';
+      logo.style.transform = 'scale(1)';
+      motto.classList.remove('reveal');
+      tracker.classList.remove('reveal');
+      icon.classList.remove('reveal', 'glow');
+      blast.classList.remove('expand');
+      flasher.style.opacity = '1';
+      flasher.style.filter = 'blur(0)';
+      flasher.style.transform = 'scale(1)';
+      flasher.textContent = splashWords[0];
+
+      await waitForSplash(150);
+      for (let i = 0; i < splashWords.length; i++) {
+        if (i !== 0) {
+          flasher.style.opacity = '0';
+          flasher.style.filter = 'blur(3px)';
+          flasher.style.transform = 'scale(0.96)';
+          await waitForSplash(65);
+        }
+        flasher.textContent = splashWords[i];
+        flasher.style.opacity = '1';
+        flasher.style.filter = 'blur(0)';
+        flasher.style.transform = 'scale(1)';
+        await waitForSplash(i === splashWords.length - 1 ? 150 : 80);
+      }
+
+      tracker.classList.add('reveal');
+      icon.classList.add('reveal');
+      await waitForSplash(350);
+      icon.classList.add('glow');
+      fireSplashSparks();
+      await waitForSplash(150);
+      motto.classList.add('reveal');
+      await waitForSplash(750);
+      blast.classList.add('expand');
+      await waitForSplash(350);
+      content.style.opacity = '0';
+      content.style.transform = 'scale(0.95)';
+      await waitForSplash(150);
+      onComplete();
+    }
+
     function startAppShell() {
       try { appSetApply(); } catch(e) {} 
       const splash = $('splash');
@@ -4163,6 +4214,7 @@
         splash.style.opacity = '0';
         setTimeout(() => { 
           splash.style.display = 'none'; 
+          document.body.style.overflow = '';
           bootReady = true;
           syncAuthState();
         }, 400);
@@ -4178,7 +4230,7 @@
       } catch (err) {
         console.error('Service worker initialization failed:', err);
       }
-      setTimeout(dismissSplash, 500);
+      playSplashChoreography(dismissSplash);
     }
 
     if (document.readyState === 'loading') {
@@ -4194,7 +4246,7 @@
         bootReady = true;
         syncAuthState();
       }
-    }, 2500);
+    }, 6500);
 
     function toggleTosBtn(checked) {
       const btn = $('tos-btn');
@@ -4242,19 +4294,25 @@
     }
 
     function writeCloudData() {
-      if (!syncActive || !db || !authUser || !cloudReady || !cloudRef || isIncomingSync) return;
+      if (!syncActive || !db || !authUser || !cloudReady || !cloudRef || isIncomingSync || cloudUid !== authUser.uid) return;
+      const uid = authUser.uid;
+      const targetRef = cloudRef;
       const userData = uData ? { ...uData } : null;
       if (userData) delete userData.syncPin;
       localWriteTime = Date.now();
       const writeTime = localWriteTime;
-      cloudRef.set({
+      targetRef.set({
         sData, gNotes, dlData, calendarEvents, ring, ttCyc, ttCycleLength, ttWeekParity, ttCycleStartDate,
+        appSet, remindersEnabled,
         calendarCategoryData: calendarCategories.map(name => ({ name, color: calendarCategoryColors[name] || '#8B5CF6' })),
         calendarSchoolDays: calendarSchoolConfig,
         uData: userData, lastUpdated: writeTime
       })
         .then(() => {
-          if (authUser && authUser.uid === cloudUid && $('sync-status')) {
+          if (authUser && authUser.uid === uid && cloudUid === uid) {
+            pendingCloudWrite = false;
+          }
+          if (authUser && authUser.uid === uid && cloudUid === uid && $('sync-status')) {
             $('sync-status').innerText = 'Synced to your account';
             $('sync-status').style.color = 'var(--success)';
           }
@@ -4262,7 +4320,10 @@
         .catch(err => {
           console.error('Firebase write error:', err);
           if ($('sync-status')) {
-            $('sync-status').innerText = 'Sync unavailable. Check database permissions.';
+            const message = err && err.code === 'PERMISSION_DENIED'
+              ? 'Sync unavailable: Firebase rules denied this account.'
+              : 'Sync unavailable. Check your connection.';
+            $('sync-status').innerText = message;
             $('sync-status').style.color = 'var(--critical)';
           }
         });
@@ -4283,6 +4344,16 @@
         if (!authUser || authUser.uid !== uid) return;
         const cloudData = snap.val();
         if (cloudData && cloudData.lastUpdated === localWriteTime && localWriteTime) return;
+        if (pendingCloudWrite) {
+          cloudReady = true;
+          if ($('sync-status')) {
+            $('sync-status').innerText = 'Uploading changes to your account...';
+            $('sync-status').style.color = 'var(--text-secondary)';
+          }
+          clearTimeout(syncDebounceTimer);
+          syncDebounceTimer = setTimeout(writeCloudData, 0);
+          return;
+        }
         if (cloudData) {
           isIncomingSync = true;
           if (cloudData.uData) {
@@ -4322,6 +4393,15 @@
           if (cloudData.ttCycleStartDate) {
             ttCycleStartDate = normalizeCycleStartDate(cloudData.ttCycleStartDate) || ttCycleStartDate;
             safeStorage.set('org_tt_cycle_start_date', ttCycleStartDate);
+          }
+          if (cloudData.appSet && typeof cloudData.appSet === 'object') {
+            appSet = { ...appSet, ...cloudData.appSet };
+            safeStorage.set('org_settings', appSet);
+            appSetApply(false);
+          }
+          if (typeof cloudData.remindersEnabled === 'boolean') {
+            remindersEnabled = cloudData.remindersEnabled;
+            safeStorage.set('org_reminders_enabled', remindersEnabled);
           }
           
           let curTStr = new Date().toDateString();
@@ -4372,7 +4452,10 @@
         console.error('Firebase sync listener error:', err);
         cloudReady = false;
         if ($('sync-status')) {
-          $('sync-status').innerText = 'Sync unavailable. Check database permissions.';
+          const message = err && err.code === 'PERMISSION_DENIED'
+            ? 'Sync unavailable: Firebase rules denied this account.'
+            : 'Sync unavailable. Check your connection.';
+          $('sync-status').innerText = message;
           $('sync-status').style.color = 'var(--critical)';
         }
       });
@@ -4479,10 +4562,7 @@
       updHUI();
       renderMiniAlert();
 
-      if (syncActive && db && authUser && cloudReady && !isIncomingSync) {
-        clearTimeout(syncDebounceTimer);
-        syncDebounceTimer = setTimeout(writeCloudData, 300);
-      }
+      queueCloudWrite();
     }
 
     function addRSc() {
@@ -4563,7 +4643,7 @@
           : Notification.permission;
         if (permission === 'granted') {
           remindersEnabled = true;
-          safeStorage.set('org_reminders_enabled', true);
+          saveReminderSetting();
           if ($('reminders-toggle')) $('reminders-toggle').checked = true;
           status.textContent = 'Notifications enabled on this device.';
           button.textContent = 'Notifications enabled';
@@ -4585,14 +4665,14 @@
     async function toggleReminderSetting(enabled) {
       if (!enabled) {
         remindersEnabled = false;
-        safeStorage.set('org_reminders_enabled', false);
+        saveReminderSetting();
         clearTimeout(calendarReminderTimer);
         $('notification-status').textContent = 'Reminders are turned off.';
         return;
       }
       if ('Notification' in window && Notification.permission === 'granted') {
         remindersEnabled = true;
-        safeStorage.set('org_reminders_enabled', true);
+        saveReminderSetting();
         $('notification-status').textContent = 'Notifications enabled on this device.';
         scheduleCalendarReminders();
         return;
