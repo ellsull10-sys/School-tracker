@@ -3565,44 +3565,31 @@
       }
       const scheduleItems = rows.flatMap(row => row.items);
       const allColumns = clusterOcrAxis(scheduleItems, 'x', Math.max(12, typicalHeight * 2.4));
-      const filteredCols = allColumns.filter(column => column.items.length >= 2);
-      const columns = filteredCols.length >= 4 ? filteredCols : allColumns;
-      let cycleLength = requestedDays;
-      let daysAreRows = false;
+      const minColumnItems = Math.max(2, Math.floor(rows.length * 0.35));
+      const minRowItems = Math.max(2, Math.floor(allColumns.length * 0.35));
+      let columns = allColumns.filter(column => column.items.length >= 2);
+      while (columns.length > 1 && columns[0].items.length < minColumnItems) columns.shift();
+      while (columns.length > 1 && columns[columns.length - 1].items.length < minColumnItems) columns.pop();
+      let trimmedRows = rows.slice();
+      while (trimmedRows.length > 1 && trimmedRows[0].items.length < minRowItems) trimmedRows.shift();
+      while (trimmedRows.length > 1 && trimmedRows[trimmedRows.length - 1].items.length < minRowItems) trimmedRows.pop();
+      if (columns.length < 4 || trimmedRows.length < 4) {
+        throw new Error('Could not find enough timetable columns and rows.');
+      }
+      const orientedRows = trimmedRows;
       const isMorningGroup = subject => /COMMUNITY|WELLBEING|HOMEROOM|PASTORAL|MENTOR/.test(subject);
       const firstColumnMorningGroups = columns[0]?.items.filter(item => isMorningGroup(item.subject)).length || 0;
-      const firstRowMorningGroups = rows[0]?.items.filter(item => isMorningGroup(item.subject)).length || 0;
-
-      if (rows.length >= 9 && rows.length <= 11 && columns.length >= 4 && columns.length <= 8) {
-        cycleLength = 10;
-        daysAreRows = true;
-      } else if (rows.length === 5 && columns.length >= 6 && columns.length <= 8) {
-        cycleLength = 5;
-        daysAreRows = true;
-      } else if (rows.length === 5 && columns.length === 4 && requestedDays === 10) {
-        cycleLength = 5;
-        daysAreRows = true;
-      } else if (columns.length >= 8 && columns.length <= 10 && rows.length >= 4 && rows.length <= 8) {
-        cycleLength = 10;
-      } else if (columns.length >= 4 && columns.length <= 5 && rows.length >= 4 && rows.length <= 8) {
-        cycleLength = 5;
-      } else if (rows.length >= 4 && rows.length <= 8 && columns.length >= 4 && columns.length <= 8 && requestedDays === 5) {
-        cycleLength = 5;
-        daysAreRows = rows.length === 5 && columns.length > 5;
-      }
-      if (firstColumnMorningGroups >= 3 && firstRowMorningGroups < 3) {
-        daysAreRows = true;
-        cycleLength = requestedDays === 5 ? 5 : 10;
-      } else if (firstRowMorningGroups >= 3 && firstColumnMorningGroups < 3) {
-        daysAreRows = false;
-        cycleLength = Math.max(5, requestedDays);
-      } else if (rows.length > columns.length && rows.length >= 7 && columns.length <= 8) {
-        daysAreRows = true;
-        cycleLength = 10;
-      }
-
-      const periodGroups = daysAreRows ? columns : rows;
+      const lastColumnMorningGroups = columns[columns.length - 1]?.items.filter(item => isMorningGroup(item.subject)).length || 0;
+      const firstRowMorningGroups = orientedRows[0]?.items.filter(item => isMorningGroup(item.subject)).length || 0;
+      const lastRowMorningGroups = orientedRows[orientedRows.length - 1]?.items.filter(item => isMorningGroup(item.subject)).length || 0;
+      const rowsHavePeriodAnchors = firstRowMorningGroups >= 3 || lastRowMorningGroups >= 3;
+      const columnsHavePeriodAnchors = firstColumnMorningGroups >= 3 || lastColumnMorningGroups >= 3;
+      const columnsArePeriods = !rowsHavePeriodAnchors;
+      const periodGroups = columnsArePeriods ? columns : orientedRows;
       const periodCount = Math.max(4, Math.min(8, periodGroups.length));
+      const cycleLength = columnsArePeriods
+        ? (orientedRows.length <= 5 ? 5 : 10)
+        : (columns.length <= 5 ? 5 : 10);
       const timetable = {};
       const confidenceGrid = {};
       for (let day = 0; day < cycleLength; day++) {
@@ -3616,25 +3603,21 @@
         }
       };
 
-      if (daysAreRows) {
+      if (columnsArePeriods) {
         const periodColumns = columns.slice(0, periodCount);
-        rows.slice(0, cycleLength).forEach((row, day) => {
+        orientedRows.slice(0, cycleLength).forEach((row, day) => {
           row.items.forEach(item => {
-            let period = 0;
-            periodColumns.forEach((column, index) => {
-              if (Math.abs(column.center - item.x) < Math.abs(periodColumns[period].center - item.x)) period = index;
-            });
+            const period = getOcrSlot(item.x, periodColumns, periodCount);
             assignCell(day, period, item);
           });
         });
       } else {
-        rows.slice(0, periodCount).forEach((row, period) => {
+        const periodRows = orientedRows.slice(0, 8);
+        const dayColumns = columns.slice(0, requestedDays);
+        periodRows.forEach((row, period) => {
           row.items.forEach(item => {
-            let day = 0;
-            columns.forEach((column, index) => {
-              if (Math.abs(column.center - item.x) < Math.abs(columns[day].center - item.x)) day = index;
-            });
-            if (day < cycleLength) assignCell(day, period, item);
+            const day = getOcrSlot(item.x, dayColumns, dayColumns.length);
+            if (day < cycleLength && period < periodCount) assignCell(day, period, item);
           });
         });
       }
