@@ -2153,9 +2153,9 @@
          </select>
        </div>
        <div>
-         <label style="font-size:12px; font-weight:700; color:var(--text-secondary); text-transform: uppercase; margin-bottom: 6px; display: block;">Periods Per Day</label>
+         <label style="font-size:12px; font-weight:700; color:var(--text-secondary); text-transform: uppercase; margin-bottom: 6px; display: block;">Sessions Per Day</label>
          <select id="tt-period-count" class="full-w-input" onchange="renderTtEditorGrid()">
-            <option value="4">4 Periods</option><option value="5">5 Periods</option><option value="6" selected>6 Periods</option><option value="7">7 Periods</option><option value="8">8 Periods</option>
+            <option value="8" selected>8 Sessions</option>
          </select>
        </div>
        <div style="display: flex; gap: 8px; margin-top: 4px;">
@@ -3037,9 +3037,8 @@
     } catch(e){}
 
     function getPeriodLabels(count) {
-      if (count === 8) return ["Morning Group", "Session 1", "Session 2", "Session 3", "Session 4", "Session 5", "Session 6", "Afternoon Group"];
       const labels = [];
-      for (let i = 1; i <= count; i++) labels.push(`Period ${i}`);
+      for (let i = 1; i <= count; i++) labels.push(`Session ${i}`);
       return labels;
     }
 
@@ -3221,9 +3220,7 @@
       const activeDays = getCycleDayIndices(ttCycleLength);
       activeDays.forEach(d => { if (!tempTtCyc[d]) tempTtCyc[d] = Array(6).fill(''); });
 
-      let pCount = tempTtCyc[0] ? tempTtCyc[0].length : 6;
-      if (pCount < 4) pCount = 6;
-      if (pCount > 8) pCount = 8;
+      const pCount = 8;
       
       $('tt-cycle-type').value = ttCycleLength.toString();
       $('tt-period-count').value = pCount.toString();
@@ -3271,21 +3268,21 @@
       const container = $('tt-editor-container');
 
       if (ttViewMode === 'grid') {
-        // --- MASTER GRID MATRIX VIEW ---
+        // --- MASTER GRID: days are rows, sessions are columns; keep ttCyc[day][session] unchanged ---
         const labels = getPeriodLabels(pCount);
         
-        let headerRowHtml = `<th class="tt-matrix-th-period">Period</th>`;
-        activeDays.forEach(d => {
-          const dayName = dayNames[d % 5];
-          const dayLabel = ttCycleLength === 5 ? dayName : `W${Math.floor(d / 5) + 1} ${dayName}`;
-          headerRowHtml += `<th class="tt-matrix-th">${dayLabel}</th>`;
-        });
+        let headerRowHtml = `<th class="tt-matrix-th-period">Day</th>`;
+        for (let p = 0; p < pCount; p++) {
+          headerRowHtml += `<th class="tt-matrix-th">${labels[p] || `Session ${p + 1}`}</th>`;
+        }
 
         let bodyRowsHtml = '';
-        for (let p = 0; p < pCount; p++) {
+        activeDays.forEach(d => {
           bodyRowsHtml += `<tr>`;
-          bodyRowsHtml += `<td class="tt-matrix-td-period">${labels[p] || `Period ${p + 1}`}</td>`;
-          activeDays.forEach(d => {
+          const dayName = dayNames[d % 5];
+          const dayLabel = ttCycleLength === 5 ? dayName : `W${Math.floor(d / 5) + 1} ${dayName}`;
+          bodyRowsHtml += `<td class="tt-matrix-td-period">${dayLabel}</td>`;
+          for (let p = 0; p < pCount; p++) {
             const val = tempTtCyc[d] && tempTtCyc[d][p] ? tempTtCyc[d][p] : '';
             
             // Build dynamic dropdown options
@@ -3300,9 +3297,9 @@
                   ${cellOptionsHtml}
                 </select>
               </td>`;
-          });
+          }
           bodyRowsHtml += `</tr>`;
-        }
+        });
 
         container.innerHTML = `
           <div class="tt-matrix-table-wrap">
@@ -3312,7 +3309,7 @@
             </table>
           </div>
           <div style="font-size: 12px; color: var(--text-secondary); text-align: center; margin-top: 4px;">
-            ⇄ Swipe horizontally on mobile to view all ${ttCycleLength} days
+            ⇄ Swipe horizontally on mobile to view all ${pCount} sessions
           </div>
         `;
       } else {
@@ -3419,6 +3416,27 @@
       const typicalGap = medianValue(gaps);
       if (!typicalGap) return closest;
       return Math.max(0, Math.min(count - 1, Math.round((value - groups[0].center) / typicalGap)));
+    }
+
+    function mapOcrRowsToPeriods(rows, periodCount) {
+      if (!rows.length) return [];
+      if (rows.length >= periodCount) {
+        return rows.slice(0, periodCount).map((row, period) => ({ row, period }));
+      }
+
+      const isGroupRow = row => row.items.some(item => /COMMUNITY|WELLBEING|HOMEROOM|PASTORAL|MENTOR/i.test(item.subject));
+      const firstIsGroup = isGroupRow(rows[0]);
+      const lastIsGroup = isGroupRow(rows[rows.length - 1]);
+      let missingPeriod = -1;
+
+      if (!firstIsGroup && lastIsGroup) {
+        missingPeriod = 0;
+      }
+
+      return rows.map((row, index) => ({
+        row,
+        period: index >= missingPeriod && missingPeriod >= 0 ? index + 1 : index
+      })).filter(entry => entry.period < periodCount);
     }
 
     function extractTimetableSubject(text) {
@@ -3559,34 +3577,35 @@
 
       const typicalHeight = medianValue(items.map(item => item.height));
       const allRows = clusterOcrAxis(items, 'y', Math.max(8, typicalHeight * 1.35));
-      const rows = allRows.filter(row => row.items.length >= 2);
+      const rows = allRows.filter(row => row.items.length > 0);
       if (rows.length < 4) {
         throw new Error('Could not find enough populated timetable rows.');
       }
       const scheduleItems = rows.flatMap(row => row.items);
       const allColumns = clusterOcrAxis(scheduleItems, 'x', Math.max(12, typicalHeight * 2.4));
       const minColumnItems = Math.max(2, Math.floor(rows.length * 0.35));
-      const minRowItems = Math.max(2, Math.floor(allColumns.length * 0.35));
       let columns = allColumns.filter(column => column.items.length >= 2);
       while (columns.length > 1 && columns[0].items.length < minColumnItems) columns.shift();
       while (columns.length > 1 && columns[columns.length - 1].items.length < minColumnItems) columns.pop();
-      let trimmedRows = rows.slice();
-      while (trimmedRows.length > 1 && trimmedRows[0].items.length < minRowItems) trimmedRows.shift();
-      while (trimmedRows.length > 1 && trimmedRows[trimmedRows.length - 1].items.length < minRowItems) trimmedRows.pop();
-      if (columns.length < 4 || trimmedRows.length < 4) {
+      if (columns.length < 4 || rows.length < 4) {
         throw new Error('Could not find enough timetable columns and rows.');
       }
-      const orientedRows = trimmedRows;
-      const isMorningGroup = subject => /COMMUNITY|WELLBEING|HOMEROOM|PASTORAL|MENTOR/.test(subject);
-      const firstColumnMorningGroups = columns[0]?.items.filter(item => isMorningGroup(item.subject)).length || 0;
-      const lastColumnMorningGroups = columns[columns.length - 1]?.items.filter(item => isMorningGroup(item.subject)).length || 0;
+      const orientedRows = rows;
+      const isMorningGroup = subject => /COMMUNITY|WELLBEING|HOMEROOM|PASTORAL|MENTOR/i.test(subject);
       const firstRowMorningGroups = orientedRows[0]?.items.filter(item => isMorningGroup(item.subject)).length || 0;
       const lastRowMorningGroups = orientedRows[orientedRows.length - 1]?.items.filter(item => isMorningGroup(item.subject)).length || 0;
-      const rowsHavePeriodAnchors = firstRowMorningGroups >= 3 || lastRowMorningGroups >= 3;
-      const columnsHavePeriodAnchors = firstColumnMorningGroups >= 3 || lastColumnMorningGroups >= 3;
-      const columnsArePeriods = !rowsHavePeriodAnchors;
+      const rowsHavePeriodAnchors = firstRowMorningGroups > 0 || lastRowMorningGroups > 0;
+      const dayRowScore = Math.abs(rows.length - requestedDays) + Math.abs(columns.length - 8);
+      const dayColumnScore = Math.abs(rows.length - 8) + Math.abs(columns.length - requestedDays);
+      const columnsArePeriods = dayRowScore < dayColumnScore
+        ? true
+        : dayColumnScore < dayRowScore
+          ? false
+          : !rowsHavePeriodAnchors;
       const periodGroups = columnsArePeriods ? columns : orientedRows;
-      const periodCount = Math.max(4, Math.min(8, periodGroups.length));
+      const periodCount = columnsArePeriods
+        ? Math.max(4, Math.min(8, periodGroups.length))
+        : 8;
       const cycleLength = columnsArePeriods
         ? (orientedRows.length <= 5 ? 5 : 10)
         : (columns.length <= 5 ? 5 : 10);
@@ -3604,7 +3623,23 @@
       };
 
       if (columnsArePeriods) {
-        const periodColumns = columns.slice(0, periodCount);
+        const isGroupColumn = column => column.items.some(item => /COMMUNITY|WELLBEING|HOMEROOM|PASTORAL|MENTOR/i.test(item.subject));
+        let periodColumns = columns.slice(0, periodCount);
+        if (columns.length > periodCount) {
+          let bestWindow = periodColumns;
+          let bestScore = -Infinity;
+          for (let start = 0; start <= columns.length - periodCount; start++) {
+            const candidate = columns.slice(start, start + periodCount);
+            const edgeScore = (isGroupColumn(candidate[0]) ? 2 : 0) + (isGroupColumn(candidate[candidate.length - 1]) ? 2 : 0);
+            const densityScore = candidate.reduce((sum, column) => sum + column.items.length, 0) / Math.max(1, candidate.length);
+            const score = edgeScore * 1000 + densityScore;
+            if (score > bestScore) {
+              bestScore = score;
+              bestWindow = candidate;
+            }
+          }
+          periodColumns = bestWindow;
+        }
         orientedRows.slice(0, cycleLength).forEach((row, day) => {
           row.items.forEach(item => {
             const period = getOcrSlot(item.x, periodColumns, periodCount);
@@ -3612,11 +3647,17 @@
           });
         });
       } else {
-        const periodRows = orientedRows.slice(0, 8);
-        const dayColumns = columns.slice(0, requestedDays);
-        periodRows.forEach((row, period) => {
+        const isGroupRow = row => row.items.some(item => /COMMUNITY|WELLBEING|HOMEROOM|PASTORAL|MENTOR/i.test(item.subject));
+        const firstRowIsGroup = isGroupRow(orientedRows[0]);
+        const lastRowIsGroup = isGroupRow(orientedRows[orientedRows.length - 1]);
+        const leadingRowOffset = orientedRows.length > periodCount && !firstRowIsGroup && lastRowIsGroup ? 1 : 0;
+        const periodRows = orientedRows
+          .slice(leadingRowOffset, leadingRowOffset + periodCount)
+          .map((row, period) => ({ row, period }));
+        const dayColumns = allColumns;
+        periodRows.forEach(({ row, period }) => {
           row.items.forEach(item => {
-            const day = getOcrSlot(item.x, dayColumns, dayColumns.length);
+            const day = getOcrSlot(item.x, dayColumns, cycleLength);
             if (day < cycleLength && period < periodCount) assignCell(day, period, item);
           });
         });
@@ -4090,7 +4131,7 @@
     $('verify-resend-btn').addEventListener('click', resendEmailVerification);
     $('verify-back-btn').addEventListener('click', useDifferentAuthAccount);
 
-    window.addEventListener('DOMContentLoaded', () => { 
+    function startAppShell() {
       try { appSetApply(); } catch(e) {} 
       const splash = $('splash');
       const dismissSplash = () => {
@@ -4118,7 +4159,22 @@
         console.error('Service worker initialization failed:', err);
       }
       setTimeout(dismissSplash, 500);
-    });
+    }
+
+    if (document.readyState === 'loading') {
+      window.addEventListener('DOMContentLoaded', startAppShell, { once: true });
+    } else {
+      startAppShell();
+    }
+    setTimeout(() => {
+      const splash = $('splash');
+      if (splash && splash.style.display !== 'none') {
+        splash.style.opacity = '0';
+        splash.style.display = 'none';
+        bootReady = true;
+        syncAuthState();
+      }
+    }, 2500);
 
     function toggleTosBtn(checked) {
       const btn = $('tos-btn');
@@ -4880,7 +4936,7 @@
                 else if (d === 1) { txt = 'Homework due in 1 day'; }
                 hwText = `<div style="font-size:11px; margin-top:6px; font-weight:600; color:${sC}; line-height:1.2;">${txt}</div>`;
               }
-              return `<div class="timetable-card app-card" data-tt-sub="${m?m.id:''}" style="background-color: ${m?stD[m.status].c:'var(--card-bg)'}; border-color: ${m?stD[m.status].h:'var(--card-border)'};" ${m?`onclick="openDet('${m.id}')"`:''}><div class="tt-session">${sLab[i]||`Period ${i+1}`}</div><div class="tt-subject">${cN}</div>${hwText}</div>`; 
+              return `<div class="timetable-card app-card" data-tt-sub="${m?m.id:''}" style="background-color: ${m?stD[m.status].c:'var(--card-bg)'}; border-color: ${m?stD[m.status].h:'var(--card-border)'};" ${m?`onclick="openDet('${m.id}')"`:''}><div class="tt-session">${sLab[i]||`Session ${i+1}`}</div><div class="tt-subject">${cN}</div>${hwText}</div>`;
             }).join('')}</div><div class="schedule-swipe-hint">Swipe or use the arrows to see all periods</div>`;
         }
       }
