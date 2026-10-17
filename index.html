@@ -519,6 +519,48 @@
     #home-dashboard-grid > .dashboard-homework-button { grid-column: 1 / -1; width: 100%; justify-content: center; margin: 0 0 6px; }
 
     .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    #home-weather-card {
+      position: relative;
+      min-height: 112px;
+      margin-bottom: 12px;
+      padding: 15px 16px;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.9), rgba(14, 116, 144, 0.82));
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.28);
+    }
+    #home-weather-card::after {
+      content: '';
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      right: -50px;
+      top: -70px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.16);
+      filter: blur(4px);
+    }
+    .weather-content { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .weather-temp { font: 800 34px/1 'Outfit', sans-serif; letter-spacing: -1px; }
+    .weather-condition { margin-top: 4px; font-size: 12px; font-weight: 700; opacity: 0.9; }
+    .weather-place { margin-top: 8px; font-size: 11px; font-weight: 700; }
+    .weather-subtle { font-size: 10px; opacity: 0.7; font-weight: 500; }
+    .weather-bom { display: inline-flex; align-items: center; margin-top: 7px; padding: 4px 9px; border-radius: 999px; color: #0f172a; background: rgba(255,255,255,0.9); font-size: 10px; font-weight: 800; text-decoration: none; }
+    .weather-art { width: 82px; height: 66px; flex: 0 0 82px; }
+    .weather-art .weather-sun { transform-origin: 50% 50%; animation: weatherSunPulse 3s ease-in-out infinite; }
+    .weather-art .weather-cloud { animation: weatherCloudFloat 4s ease-in-out infinite; }
+    .weather-art .weather-rain { animation: weatherRain 1.2s linear infinite; }
+    @keyframes weatherSunPulse { 50% { transform: scale(1.08); opacity: 0.8; } }
+    @keyframes weatherCloudFloat { 50% { transform: translateX(4px); } }
+    @keyframes weatherRain { to { transform: translateY(10px); opacity: 0; } }
+    #home-dashboard-grid.other-layout #home-ring-card { grid-column: 1 / -1; }
+    #f-location-map-wrap { margin: 0 20px 10px; padding: 8px; border-radius: 16px; background: var(--input-bg); }
+    #f-location-map { display: block; width: 100%; height: 170px; border: 0; border-radius: 12px; }
+    #f-location-map-link { display: block; margin-top: 6px; color: var(--accent); font-size: 11px; font-weight: 700; text-align: right; text-decoration: none; }
+    #f-location-suggestions { position: absolute; top: calc(100% - 4px); left: 48px; right: 20px; z-index: 20; overflow: hidden; border: 1px solid var(--card-border); border-radius: 12px; background: var(--card-bg); box-shadow: 0 12px 28px rgba(0,0,0,0.16); }
+    .location-suggestion { display: block; width: 100%; padding: 10px 12px; border: 0; border-bottom: 1px solid var(--card-border); background: transparent; color: var(--text-primary); font: inherit; font-size: 12px; text-align: left; cursor: pointer; }
+    .location-suggestion:last-child { border-bottom: 0; }
+    .location-suggestion:hover { background: var(--input-bg); }
     .widget { padding: 16px; display: flex; flex-direction: column; justify-content: space-between; height: 100%; min-height: 100px; text-decoration: none; cursor: pointer; transition: transform 0.1s ease; }
     .widget:active { transform: scale(0.96); }
     .simon-widget { background: var(--accent-grad) !important; color: #FFFFFF !important; border: none !important; }
@@ -788,6 +830,19 @@
       background: var(--bg-base);
       transition: background 0.3s ease;
     }
+    @keyframes calTabEnter {
+      0% { opacity: 0; transform: translateY(14px) scale(0.985); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    #calendar-screen.active #cal-app-shell {
+      animation: calTabEnter 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    #calendar-screen.active #cal-app-shell > header {
+      animation: calTabEnter 0.42s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
+    }
+    #calendar-screen.active #calendar-stage {
+      animation: calTabEnter 0.42s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+    }
 
     #cal-app-shell {
       --cal-line: rgba(100, 116, 139, 0.28);
@@ -814,6 +869,7 @@
     }
 
     @media (min-width: 850px) {
+      #iona-title-badge img { width: 44px !important; height: 44px !important; }
       #calendar-screen.active {
         position: fixed;
         inset: 0 0 0 100px;
@@ -826,7 +882,6 @@
         padding: 0;
         overflow: hidden;
         background: var(--bg-base);
-        animation: none;
         transform: none;
         contain: none;
       }
@@ -1446,6 +1501,16 @@
       <button id="tos-btn" disabled onclick="acceptTos()">Next</button>
     </div>
   </div>
+  <div id="app-dialog-modal" role="dialog" aria-modal="true" aria-labelledby="app-dialog-title">
+    <div class="app-card" style="padding: 24px; width: 100%; max-width: 380px; text-align: center; display: flex; flex-direction: column; gap: 14px;">
+      <h2 id="app-dialog-title" style="margin: 0; font-size: 20px;">Notice</h2>
+      <p id="app-dialog-msg" style="margin: 0; font-size: 14px; color: var(--text-secondary); line-height: 1.5;"></p>
+      <div style="display: flex; gap: 10px; margin-top: 6px;">
+        <button type="button" id="app-dialog-cancel" class="add-btn btn-grey" style="flex: 1; min-height: 44px;">Cancel</button>
+        <button type="button" id="app-dialog-confirm" class="add-btn" style="flex: 1; min-height: 44px;">OK</button>
+      </div>
+    </div>
+  </div>
   <div id="app-background"></div>
   <div id="splash">School Tracker</div>
 
@@ -1541,6 +1606,7 @@
             <option value="" disabled selected>Select Institution</option>
             <option value="Iona College Geelong">Iona College Geelong</option>
             <option value="Teen Tutors">Teen Tutors</option>
+            <option value="Other">Other</option>
           </select>
         </div>
 
@@ -1584,7 +1650,7 @@
     <div class="top-bar">
       <div class="flex-col" style="flex: 1; margin-left: 4px;">
         <div id="user-greeting" style="font-size: 13px; font-weight: 700; color: var(--text-secondary); margin-bottom: 2px; display: flex; align-items: center; gap: 4px; opacity: 0.9;"></div>
-        <h1 style="margin-left: 0;">Dashboard</h1>
+        <h1 style="margin-left: 0; display: inline-flex; align-items: center; gap: 12px; line-height: 1.1;"><span>Dashboard</span><span id="iona-title-badge" style="display: none; align-items: center; justify-content: center;"><img src="https://www.google.com/s2/favicons?domain=iona.vic.edu.au&sz=128" alt="Iona College Geelong" style="width: 38px; height: 38px; object-fit: contain; display: block;" onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 26 26%22%3E%3Crect width=%2226%22 height=%2226%22 rx=%227%22 fill=%22%230f2a4a%22/%3E%3Cpath d=%22M13 4v18M7 10h12M9 7h8%22 stroke=%22%23d4af37%22 stroke-width=%222%22 stroke-linecap=%22round%22/%3E%3Cpath d=%22M6 19h14l-7 4z%22 fill=%22%23d4af37%22/%3E%3C/svg%3E';"></span></h1>
       </div>
       <div style="display: flex; gap: 10px; align-items: center;">
         <div id="home-mini-alert" class="mini-alert" style="display:none;" onclick="navTo('calendar-screen')"></div>
@@ -1594,6 +1660,18 @@
 
     <div class="home-layout">
       <div class="hl-left">
+        <div id="home-weather-card" class="app-card cascade-item d-1" aria-live="polite">
+          <div class="weather-content">
+            <div>
+              <div id="home-weather-temp" class="weather-temp">--°C</div>
+              <div id="home-weather-condition" class="weather-condition">Loading weather...</div>
+              <div id="home-weather-place" class="weather-place">Detecting location</div>
+              <div class="weather-subtle">Based on your location</div>
+              <a id="home-weather-bom" class="weather-bom" href="https://www.bom.gov.au/" target="_blank" rel="noopener noreferrer">BOM ↗</a>
+            </div>
+            <svg id="home-weather-art" class="weather-art" viewBox="0 0 100 80" aria-hidden="true"></svg>
+          </div>
+        </div>
         <div class="dashboard-grid cascade-item d-1" id="home-dashboard-grid">
           <div id="home-ring-card" class="widget app-card">
             <div class="widget-title">Today's Goal</div>
@@ -1765,7 +1843,7 @@
               <span>Schedule</span>
             </button>
             <button type="button" data-view="day" class="drawer-view-btn w-full flex items-center gap-4 pl-6 pr-4 py-2.5 rounded-r-full text-sm font-google font-medium cal-text-main cal-hover liquid-spring border-0 bg-transparent cursor-pointer">
-              <i class="fa-regular fa-calendar-day w-5 text-center text-base"></i>
+              <i class="fa-solid fa-calendar-day w-5 text-center text-base"></i>
               <span>Day</span>
             </button>
             <button type="button" data-view="3day" class="drawer-view-btn w-full flex items-center gap-4 pl-6 pr-4 py-2.5 rounded-r-full text-sm font-google font-medium cal-text-main cal-hover liquid-spring border-0 bg-transparent cursor-pointer">
@@ -1937,9 +2015,14 @@
           </div>
 
           <!-- Location Row -->
-          <div class="px-5 py-3.5 flex items-center gap-5 cal-text-sub">
+          <div class="px-5 py-3.5 flex items-center gap-5 cal-text-sub relative">
             <i class="fa-solid fa-location-dot w-5 text-center text-base"></i>
             <input type="text" id="f-location" placeholder="Add location" class="w-full text-[15px] focus:outline-none">
+            <div id="f-location-suggestions" hidden></div>
+          </div>
+          <div id="f-location-map-wrap" hidden>
+            <iframe id="f-location-map" title="Event location map" loading="lazy"></iframe>
+            <a id="f-location-map-link" href="#" target="_blank" rel="noopener noreferrer">Open in Maps ↗</a>
           </div>
 
           <!-- Guests Row -->
@@ -2713,7 +2796,10 @@
       appSet.bgEnabled = false;
       appSet.bgOpacity = 50;
       appSetApply();
+      $('bg-upload').value = '';
+      $('app-background').style.backgroundImage = 'none';
       safeStorage.set('org_settings', appSet);
+      showToast("Background reset to default");
     }
 
     function updateAllAvatars() {
@@ -4560,8 +4646,136 @@
       goHome();
     }
 
+    const WEATHER_FALLBACK = { lat: -38.1499, lon: 144.3617 };
+    const WEATHER_CACHE_KEY = 'org_weather_cache_v1';
+    let weatherRequest = null;
+    const WEATHER_CODES = {
+      0: ['Clear Sky', 'clear'], 1: ['Mainly Clear', 'clear'], 2: ['Partly Cloudy', 'cloud'],
+      3: ['Overcast', 'cloud'], 45: ['Foggy', 'cloud'], 48: ['Rime Fog', 'cloud'],
+      51: ['Light Drizzle', 'rain'], 53: ['Drizzle', 'rain'], 55: ['Heavy Drizzle', 'rain'],
+      61: ['Light Rain', 'rain'], 63: ['Rain', 'rain'], 65: ['Heavy Rain', 'rain'],
+      71: ['Light Snow', 'cloud'], 73: ['Snow', 'cloud'], 75: ['Heavy Snow', 'cloud'],
+      80: ['Rain Showers', 'rain'], 81: ['Rain Showers', 'rain'], 82: ['Heavy Showers', 'rain'],
+      95: ['Thunderstorm', 'rain'], 96: ['Thunderstorm', 'rain'], 99: ['Thunderstorm', 'rain']
+    };
+
+    function weatherArt(type, isDay) {
+      if (type === 'rain') return `<g class="weather-cloud" fill="rgba(255,255,255,.86)"><path d="M22 47h49a12 12 0 0 0 0-24 19 19 0 0 0-36-3 14 14 0 0 0-13 27z"/></g><g class="weather-rain" stroke="#bde7ff" stroke-width="3" stroke-linecap="round"><path d="M31 58l-4 9M47 58l-4 9M63 58l-4 9"/></g>`;
+      if (type === 'cloud') return `<circle class="weather-sun" cx="67" cy="25" r="12" fill="#ffd166"/><g class="weather-cloud" fill="rgba(255,255,255,.88)"><path d="M18 51h49a12 12 0 0 0 0-24 19 19 0 0 0-36-3 14 14 0 0 0-13 27z"/></g>`;
+      return `<g class="weather-sun" fill="#ffd166"><circle cx="50" cy="38" r="16"/><path d="M50 7v10M50 59v10M19 38H9M91 38H81M28 16l7 7M72 59l7 7M72 17l-7 7M28 60l7-7" stroke="#ffe29a" stroke-width="3" stroke-linecap="round"/></g>${isDay ? '' : '<circle cx="78" cy="18" r="2" fill="#fff"/><circle cx="87" cy="31" r="1.5" fill="#fff"/>'}`;
+    }
+
+    function renderWeather(data, place, coords, placeInfo) {
+      const temp = $('home-weather-temp');
+      const condition = $('home-weather-condition');
+      const location = $('home-weather-place');
+      const art = $('home-weather-art');
+      const bom = $('home-weather-bom');
+      const code = Number(data.weather_code);
+      const meta = WEATHER_CODES[code] || ['Current Conditions', 'cloud'];
+      const displayPlace = place || 'Nearby';
+      if (temp) temp.textContent = `${Math.round(Number(data.temperature_2m))}°C`;
+      if (condition) condition.textContent = meta[0];
+      if (location) location.textContent = displayPlace;
+      if (art) art.innerHTML = weatherArt(meta[1], Number(data.is_day) === 1);
+      if (bom) {
+        const stateCodes = { victoria: 'vic', 'new south wales': 'nsw', queensland: 'qld', 'western australia': 'wa', 'south australia': 'sa', tasmania: 'tas', 'australian capital territory': 'act', 'northern territory': 'nt' };
+        const state = String((placeInfo && (placeInfo.principalSubdivision || placeInfo.region)) || '').trim().toLowerCase();
+        let stateCode = stateCodes[state] || state.match(/\b(vic|nsw|qld|wa|sa|tas|act|nt)\b/)?.[1];
+        const locality = String((placeInfo && (placeInfo.locality || placeInfo.city || placeInfo.town)) || displayPlace).trim();
+        const slug = locality.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+        if (!stateCode && /^(geelong|highton)$/i.test(locality)) stateCode = 'vic';
+        if (!stateCode && coords && Math.abs(Number(coords.lat) - WEATHER_FALLBACK.lat) < 0.5 && Math.abs(Number(coords.lon) - WEATHER_FALLBACK.lon) < 0.8) stateCode = 'vic';
+        if (stateCode && slug) bom.href = `https://www.bom.gov.au/places/${stateCode}/${slug}/`;
+        bom.textContent = `BOM • ${displayPlace} ↗`;
+      }
+    }
+
+    async function initWeatherWidget() {
+      const card = $('home-weather-card');
+      if (!card) return;
+      if (weatherRequest) return weatherRequest;
+      const cached = sessionStorage.getItem(WEATHER_CACHE_KEY);
+      if (cached) {
+        try {
+          const parsed = JSON.parse(cached);
+          if (Date.now() - parsed.timestamp < 15 * 60 * 1000) {
+            renderWeather(parsed.weather, parsed.place, parsed.coords, parsed.placeInfo);
+            return;
+          }
+        } catch (error) {
+          console.warn('Weather cache unavailable:', error);
+        }
+      }
+      weatherRequest = (async () => {
+        let coords;
+        try {
+          coords = await new Promise(resolve => {
+            if (!navigator.geolocation) return resolve(null);
+            let settled = false;
+            const finish = value => {
+              if (!settled) {
+                settled = true;
+                resolve(value);
+              }
+            };
+            const timeout = setTimeout(() => finish(null), 3500);
+            navigator.geolocation.getCurrentPosition(
+              result => { clearTimeout(timeout); finish({ lat: result.coords.latitude, lon: result.coords.longitude }); },
+              () => { clearTimeout(timeout); finish(null); },
+              { enableHighAccuracy: false, timeout: 3500, maximumAge: 900000 }
+            );
+          });
+        } catch (error) {
+          console.warn('Geolocation unavailable:', error);
+        }
+        let placeInfo = null;
+        if (!coords) {
+          try {
+            const ipResponse = await fetch('https://ipapi.co/json/');
+            if (ipResponse.ok) {
+              const ip = await ipResponse.json();
+              if (Number.isFinite(Number(ip.latitude)) && Number.isFinite(Number(ip.longitude))) {
+                coords = { lat: Number(ip.latitude), lon: Number(ip.longitude) };
+                placeInfo = { city: ip.city, region: ip.region };
+              }
+            }
+          } catch (error) {
+            console.warn('IP location unavailable:', error);
+          }
+        }
+        coords = coords || WEATHER_FALLBACK;
+        try {
+          const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&current=temperature_2m,weather_code,is_day&timezone=auto`;
+          const weatherResponse = await fetch(weatherUrl);
+          if (!weatherResponse.ok) throw new Error('Weather service request failed');
+          const weatherJson = await weatherResponse.json();
+          const weather = weatherJson.current;
+          try {
+            const placeUrl = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${coords.lat}&longitude=${coords.lon}&localityLanguage=en`;
+            const placeResponse = await fetch(placeUrl);
+            if (placeResponse.ok) placeInfo = { ...(placeInfo || {}), ...(await placeResponse.json()) };
+          } catch (error) {
+            console.warn('Reverse geocoding unavailable:', error);
+          }
+          const place = (placeInfo && (placeInfo.locality || placeInfo.city || placeInfo.principalSubdivision)) || 'Nearby';
+          renderWeather(weather, place, coords, placeInfo);
+          sessionStorage.setItem(WEATHER_CACHE_KEY, JSON.stringify({ timestamp: Date.now(), weather, place, coords, placeInfo }));
+        } catch (error) {
+          console.warn('Weather unavailable:', error);
+          if ($('home-weather-condition')) $('home-weather-condition').textContent = 'Weather unavailable';
+          if ($('home-weather-place')) $('home-weather-place').textContent = 'Try again later';
+          if ($('home-weather-art')) $('home-weather-art').innerHTML = weatherArt('clear', true);
+        } finally {
+          weatherRequest = null;
+        }
+      })();
+      return weatherRequest;
+    }
+
     function renderHome(isInit = false) {
       const a = isInit ? 'cascade-item' : '';
+      initWeatherWidget();
       renderDashboardCalendar();
       if (isInit) {
         updRUI();
@@ -4571,18 +4785,22 @@
       }
 
       const isIona = uData && (uData.s === "Iona College Geelong");
+      const isOther = uData && (uData.s === "Other");
       const simonCard = $('home-simon-card');
       const ttSideStack = $('home-tt-side-stack');
       const ionaBottomStack = $('home-iona-bottom-stack');
       const dashGrid = $('home-dashboard-grid');
+      const ionaBadge = $('iona-title-badge');
 
       if (dashGrid) {
         dashGrid.style.gridTemplateColumns = '1fr 1fr';
-        if (isIona) {
+        dashGrid.classList.toggle('other-layout', !!isOther);
+        if (isIona || isOther) {
           if (simonCard) simonCard.style.display = 'flex';
           if (ttSideStack) ttSideStack.style.display = 'none';
           if (ionaBottomStack) ionaBottomStack.style.display = 'block';
           dashGrid.style.marginBottom = '12px';
+          if (isOther && simonCard) simonCard.style.display = 'none';
         } else {
           if (simonCard) simonCard.style.display = 'none';
           if (ttSideStack) ttSideStack.style.display = 'flex';
@@ -4590,6 +4808,7 @@
           dashGrid.style.marginBottom = '20px';
         }
       }
+      if (ionaBadge) ionaBadge.style.display = isIona ? 'inline-flex' : 'none';
 
       if (dlData.length > 0) {
         $('deadline-section').style.display = 'block';
@@ -5176,7 +5395,9 @@
         { id: 'tag_personal', name: 'Personal', color: '#9334e6', active: true },
         { id: 'tag_family', name: 'Family', color: '#fbbc04', active: true }
       ]),
-      events: []
+      events: [],
+      locationLat: null,
+      locationLon: null
     };
 
     if (!['schedule', 'day', '3day', 'week', 'month'].includes(STATE.view)) STATE.view = 'month';
@@ -5187,6 +5408,11 @@
       STATE.tags.forEach(t => { calendarCategoryColors[t.name] = t.color; });
     }
     syncCategoriesFromTags();
+
+    function optionalCoordinate(value) {
+      const number = typeof value === 'number' || (typeof value === 'string' && value.trim() !== '') ? Number(value) : NaN;
+      return Number.isFinite(number) ? number : null;
+    }
 
     function normalizeCalendarEvents(events) {
       return safeArr(events).filter(ev => ev && typeof ev === 'object' && String(ev.title || '').trim()).map((ev, index) => {
@@ -5212,6 +5438,8 @@
             recurUnit: ev.recurUnit || 'days',
             guests: String(ev.guests || ''),
             location: String(ev.location || ''),
+            locationLat: optionalCoordinate(ev.locationLat),
+            locationLon: optionalCoordinate(ev.locationLon),
             description: String(ev.description || '').slice(0, 800),
             reminderMinutes: Number(ev.reminderMinutes) || 0,
             excludeDates: safeArr(ev.excludeDates)
@@ -5243,7 +5471,9 @@
           recurInterval: parseInt(ev.recurrence?.interval) || 1,
           recurUnit: 'days',
           guests: '',
-          location: '',
+          location: String(ev.location || ''),
+          locationLat: optionalCoordinate(ev.locationLat),
+          locationLon: optionalCoordinate(ev.locationLon),
           description: String(ev.description || '').slice(0, 800),
           reminderMinutes: Number(ev.reminderMinutes) || 0,
           excludeDates: safeArr(ev.excludeDates)
@@ -5702,9 +5932,11 @@
 
         const scrollWrap = document.createElement('div');
         scrollWrap.className = 'flex-1 overflow-y-auto no-scrollbar flex relative';
+        scrollWrap.classList.add('items-stretch');
 
         const timeAxis = document.createElement('div');
-        timeAxis.className = 'w-12 shrink-0 border-r cal-border select-none';
+        timeAxis.className = 'w-12 shrink-0 border-r cal-border select-none min-h-[1344px]';
+        timeAxis.style.minHeight = '1344px';
         for (let h = 0; h < 24; h++) {
           const lbl = h === 0 ? '' : (h < 12 ? `${h} am` : (h === 12 ? '12 pm' : `${h - 12} pm`));
           timeAxis.innerHTML += `<div class="h-[56px] pr-2 text-right text-[10px] cal-text-sub relative -top-2">${lbl}</div>`;
@@ -5712,11 +5944,13 @@
         scrollWrap.appendChild(timeAxis);
 
         const colsWrap = document.createElement('div');
-        colsWrap.className = 'flex-1 flex relative';
+        colsWrap.className = 'flex-1 flex relative items-stretch min-h-[1344px]';
+        colsWrap.style.minHeight = '1344px';
 
         cols.forEach(d => {
           const col = document.createElement('div');
-          col.className = 'flex-1 border-r cal-border last:border-r-0 relative';
+          col.className = 'flex-1 border-r cal-border last:border-r-0 relative min-h-[1344px]';
+          col.style.minHeight = '1344px';
 
           for (let h = 0; h < 24; h++) {
             const slot = document.createElement('div');
@@ -6020,6 +6254,20 @@
         };
         $('sheet-btn-save').onclick = () => this.saveEventFromSheet();
         $('sheet-btn-delete').onclick = () => this.deleteCurrentEvent();
+        let locationSearchTimer = null;
+        $('f-location').oninput = (e) => {
+          const query = e.target.value.trim();
+          STATE.locationLat = null;
+          STATE.locationLon = null;
+          this.hideLocationMap();
+          clearTimeout(locationSearchTimer);
+          if (query.length < 3) {
+            this.renderLocationSuggestions([]);
+            return;
+          }
+          locationSearchTimer = setTimeout(() => this.searchLocations(query), 300);
+        };
+        $('f-location').onblur = () => setTimeout(() => this.renderLocationSuggestions([]), 180);
 
         $$('.type-tab').forEach(tab => {
           tab.onclick = () => this.setModalType(tab.dataset.type);
@@ -6356,8 +6604,12 @@
 
       openCreateSheet(presetStart = null) {
         STATE.editingEventId = null;
+        STATE.locationLat = null;
+        STATE.locationLon = null;
         $('sheet-btn-delete').classList.add('hidden');$('f-title').value = '';
         $('f-guests').value = '';$('f-location').value = '';
+        this.hideLocationMap();
+        this.renderLocationSuggestions([]);
         $('f-desc').value = '';$('f-allday').checked = false;
         $('wrap-start-time').classList.remove('hidden');$('wrap-end-time').classList.remove('hidden');
 
@@ -6383,10 +6635,15 @@
 
       openEditSheet(ev) {
         STATE.editingEventId = ev.id;
+        STATE.locationLat = optionalCoordinate(ev.locationLat);
+        STATE.locationLon = optionalCoordinate(ev.locationLon);
         $('sheet-btn-delete').classList.remove('hidden');
 
         $('f-title').value = ev.title || '';
         $('f-guests').value = ev.guests || '';$('f-location').value = ev.location || '';
+        this.renderLocationSuggestions([]);
+        if (STATE.locationLat !== null && STATE.locationLon !== null) this.showLocationMap(STATE.locationLat, STATE.locationLon, ev.location || '');
+        else this.hideLocationMap();
         $('f-desc').value = ev.description || '';$('f-allday').checked = !!ev.allDay;
 
         $('wrap-start-time').classList.toggle('hidden', !!ev.allDay);$('wrap-end-time').classList.toggle('hidden', !!ev.allDay);
@@ -6422,6 +6679,67 @@
         requestAnimationFrame(() => {
           sheet.classList.remove('translate-y-full');
         });
+      },
+
+      async searchLocations(query) {
+        try {
+          const localUrl = `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&countrycodes=au&q=${encodeURIComponent(query)}`;
+          let response = await fetch(localUrl, { headers: { Accept: 'application/json' } });
+          if (!response.ok) throw new Error(`Location search failed (${response.status})`);
+          let results = await response.json();
+          if (!results.length) {
+            const worldwideUrl = `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&q=${encodeURIComponent(query)}`;
+            response = await fetch(worldwideUrl, { headers: { Accept: 'application/json' } });
+            if (!response.ok) throw new Error(`Location search failed (${response.status})`);
+            results = await response.json();
+          }
+          this.renderLocationSuggestions(results);
+        } catch (error) {
+          console.warn('Location autocomplete unavailable:', error);
+          this.renderLocationSuggestions([]);
+        }
+      },
+
+      renderLocationSuggestions(results) {
+        const box = $('f-location-suggestions');
+        if (!box) return;
+        box.innerHTML = '';
+        if (!results.length) {
+          box.hidden = true;
+          return;
+        }
+        results.forEach(result => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'location-suggestion';
+          button.textContent = result.display_name;
+          button.onclick = () => {
+            $('f-location').value = result.display_name;
+            STATE.locationLat = Number(result.lat);
+            STATE.locationLon = Number(result.lon);
+            this.renderLocationSuggestions([]);
+            this.showLocationMap(STATE.locationLat, STATE.locationLon, result.display_name);
+          };
+          box.appendChild(button);
+        });
+        box.hidden = false;
+      },
+
+      showLocationMap(lat, lon, address) {
+        if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
+        const wrap = $('f-location-map-wrap');
+        const map = $('f-location-map');
+        const link = $('f-location-map-link');
+        const delta = 0.008;
+        map.src = `https://www.openstreetmap.org/export/embed.html?bbox=${lon - delta}%2C${lat - delta}%2C${lon + delta}%2C${lat + delta}&layer=mapnik&marker=${lat}%2C${lon}`;
+        link.href = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=15/${lat}/${lon}`;
+        link.dataset.address = address || '';
+        wrap.hidden = false;
+      },
+
+      hideLocationMap() {
+        const wrap = $('f-location-map-wrap');
+        if (wrap) wrap.hidden = true;
       },
 
       closeEventSheet() {
@@ -6491,6 +6809,8 @@
           recurUnit: $('f-recur-unit').value || 'days',
           guests: $('f-guests').value.trim(),
           location: $('f-location').value.trim(),
+          locationLat: optionalCoordinate(STATE.locationLat),
+          locationLon: optionalCoordinate(STATE.locationLon),
           description: $('f-desc').value.trim(),
           excludeDates: []
         };
