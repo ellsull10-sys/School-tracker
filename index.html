@@ -2994,6 +2994,13 @@
       { tag: 'ECO', name: 'Economics' }, { tag: 'LEG', name: 'Legal Studies' }, { tag: 'LAW', name: 'Legal Studies' }, { tag: 'ETA', name: 'English - The Ancients' },
       { tag: 'VCE', name: 'VCE Pathway' }, { tag: 'VET', name: 'VET Pathway' }
     ];
+    const codeByTag = new Map(codeMap.map(entry => [entry.tag, entry.name]));
+    const codeTagsByLength = new Map();
+    codeMap.forEach(entry => {
+      if (!codeTagsByLength.has(entry.tag.length)) codeTagsByLength.set(entry.tag.length, []);
+      codeTagsByLength.get(entry.tag.length).push(entry);
+    });
+    const timetableSubjectCache = new Map();
 
     function mapCodeToSubject(token) {
       return extractTimetableSubject(token);
@@ -3395,12 +3402,14 @@
       sorted.forEach(item => {
         const group = groups[groups.length - 1];
         if (!group || item[axis] - group.center > tolerance) {
-          groups.push({ center: item[axis], items: [item] });
+          groups.push({ center: item[axis], items: [item], _axisTotal: item[axis] });
         } else {
           group.items.push(item);
-          group.center = group.items.reduce((sum, current) => sum + current[axis], 0) / group.items.length;
+          group._axisTotal += item[axis];
+          group.center = group._axisTotal / group.items.length;
         }
       });
+      groups.forEach(group => { delete group._axisTotal; });
       return groups;
     }
 
@@ -3444,11 +3453,18 @@
       const normalized = clean.replace(/^([0-9OIL]{1,2})/, prefix =>
         prefix.replace(/[OIL]/g, character => character === 'O' ? '0' : '1')
       );
+      if (timetableSubjectCache.has(normalized)) return timetableSubjectCache.get(normalized);
       const match = normalized.match(/^(\d{1,2})([A-Z]{2,3})([A-Z0-9]{1,3})$/);
-      if (!match) return '';
+      if (!match) {
+        timetableSubjectCache.set(normalized, '');
+        return '';
+      }
       const tag = match[2];
-      const exact = codeMap.find(entry => entry.tag === tag);
-      if (exact) return exact.name;
+      const exact = codeByTag.get(tag);
+      if (exact) {
+        timetableSubjectCache.set(normalized, exact);
+        return exact;
+      }
       const distance = (left, right) => {
         const row = Array.from({ length: right.length + 1 }, (_, index) => index);
         for (let i = 1; i <= left.length; i++) {
@@ -3462,8 +3478,12 @@
         }
         return row[right.length];
       };
-      const likelyNames = [...new Set(codeMap.filter(entry => entry.tag.length === tag.length && distance(entry.tag, tag) === 1).map(entry => entry.name))];
-      return likelyNames.length === 1 ? likelyNames[0] : '';
+      const likelyNames = [...new Set((codeTagsByLength.get(tag.length) || [])
+        .filter(entry => distance(entry.tag, tag) === 1)
+        .map(entry => entry.name))];
+      const result = likelyNames.length === 1 ? likelyNames[0] : '';
+      timetableSubjectCache.set(normalized, result);
+      return result;
     }
 
     function parseOcrDate(match, defaultYear) {
@@ -4921,10 +4941,13 @@
           ts.innerHTML = `${heading}<div class="calendar-dashboard-upcoming-empty">No classes have been added for today yet.</div>`;
         } else {
           const sLab = getPeriodLabels(tt ? tt.length : 6);
+          const subjectsByName = new Map(sData
+            .filter(subject => subject && subject.name)
+            .map(subject => [String(subject.name).toLowerCase(), subject]));
           ts.innerHTML = `${heading}
             <div class="horizontal-scroll" role="region" aria-label="Today's schedule, scroll horizontally to see all periods">${safeArr(tt).map((cN, i) => { 
               if (!cN || cN.trim() === '') return '';
-              const m = sData.find(s => s.name && cN && String(s.name).toLowerCase() === String(cN).toLowerCase()); 
+              const m = subjectsByName.get(String(cN).toLowerCase());
               let hwText = '';
               if (m && m.homework && m.homework.length > 0) {
                 const upc = [...m.homework].sort((x, y) => new Date(x.date) - new Date(y.date))[0];
