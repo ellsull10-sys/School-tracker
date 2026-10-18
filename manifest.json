@@ -3,8 +3,8 @@
   "short_name": "Tracker",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#1C2B39",
-  "theme_color": "#1C2B39",
+  "background_color": "#0B1120",
+  "theme_color": "#0B1120"
   "orientation": "portrait",
   "icons": [
     {
