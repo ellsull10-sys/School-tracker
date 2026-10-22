@@ -146,13 +146,16 @@
       z-index: 1;
     }
     #splash-hole-circle {
-      transform-origin: 500px 500px;
+      transform-origin: center;
+      transform-box: fill-box;
       transform: scale(0);
-      transition: transform 0.5s cubic-bezier(0.25, 1, 0.3, 1);
+      r: 0;
+      transition: transform 0.6s cubic-bezier(0.25, 1, 0.3, 1), r 0.6s cubic-bezier(0.25, 1, 0.3, 1);
       will-change: transform;
     }
     #splash-blast.expand #splash-hole-circle {
-      transform: scale(1);
+      transform: scale(1.5);
+      r: 1500; /* Safari iOS will use this directly to expand the hole */
     }
 
     .auth-overlay {
@@ -313,8 +316,11 @@
       z-index: 1;
       padding: 16px;
       padding-top: calc(env(safe-area-inset-top) + 16px);
-      padding-bottom: 110px;
+      padding-bottom: 132px; /* Increased to account for the lifted nav bar */
       display: none;
+    }
+    @media (display-mode: standalone) {
+      .screen { padding-bottom: 110px; }
     }
     .screen.active {
       display: block;
@@ -413,9 +419,10 @@
 
     .bottom-nav {
       position: fixed;
-      bottom: max(20px, env(safe-area-inset-bottom));
+      bottom: calc(env(safe-area-inset-bottom) + 36px); /* Lifted higher to clear standard Safari UI */
       left: 50%;
-      transform: translateX(-50%);
+      transform: translate3d(-50%, 0, 0);
+      backface-visibility: hidden;
       display: flex;
       gap: 6px;
       padding: 8px;
@@ -433,6 +440,11 @@
       -webkit-user-select: none;
       isolation: isolate;
       cursor: grab;
+    }
+    @media (display-mode: standalone) {
+      .bottom-nav {
+        bottom: max(20px, env(safe-area-inset-bottom)); /* Snug to the bottom when installed as PWA */
+      }
     }
     @media (prefers-color-scheme: dark) {
       .bottom-nav { 
@@ -457,6 +469,8 @@
       box-shadow: 0 10px 28px rgba(15, 23, 42, 0.4), inset 0 1.5px 2px rgba(255, 255, 255, 0.5), inset 0 -1.5px 2px rgba(0, 0, 0, 0.25);
       transition: opacity 0.18s ease;
       will-change: transform, opacity;
+      backface-visibility: hidden;
+      transform-style: preserve-3d;
     }
     .nav-liquid-indicator.settle { transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
     /* While scrubbing every item is a fixed icon-only size, so layout never shifts under the finger */
@@ -582,8 +596,8 @@
       animation: pulseAlert 2s infinite;
       cursor: pointer;
     }
-    .dashboard-homework-button { box-sizing: border-box; min-height: 44px; gap: 8px; padding: 10px 16px; border-radius: 14px; font-size: 18px; line-height: 1.2; font-weight: 700; white-space: nowrap; }
-    .dashboard-homework-button span { font-size: 22px; line-height: 1; }
+    .dashboard-homework-button { box-sizing: border-box; min-height: 58px; gap: 10px; padding: 12px 16px; border-radius: 16px; font-size: 20px; line-height: 1.2; font-weight: 800; white-space: nowrap; }
+    .dashboard-homework-button span { font-size: 24px; line-height: 1; font-weight: 800; }
     #home-dashboard-grid > .dashboard-homework-button { grid-column: 1 / -1; width: 100%; justify-content: center; margin: 0 0 6px; }
 
     .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
@@ -636,7 +650,7 @@
     .simon-title, .widget-title { font-size: 15px; line-height: 1.2; font-weight: 600; margin: 0 0 8px; }
     .simon-title { color: rgba(255,255,255,0.7); }
     .widget-title { color: var(--text-secondary); }
-    .simon-action { font-size: 17px; font-weight: 700; line-height: 1.2; display: flex; justify-content: space-between; align-items: center; width: 100%; }
+    .simon-action { font-size: 20px; font-weight: 800; line-height: 1.2; display: flex; justify-content: space-between; align-items: center; width: 100%; }
     
     .ring-container { display: flex; align-items: center; gap: 10px; margin-top: auto; }
     .circular-chart { width: 44px; height: 44px; flex-shrink: 0; }
@@ -975,11 +989,14 @@
       display: flex;
       flex-direction: column;
       width: 100%;
-      height: calc(100dvh - env(safe-area-inset-bottom) - 76px);
+      height: calc(100dvh - env(safe-area-inset-bottom) - 96px); /* Shortened so nothing hides under lifted nav */
       background: var(--bg-base);
       color: var(--text-primary);
       overflow: hidden;
       position: relative;
+    }
+    @media (display-mode: standalone) {
+      #cal-app-shell { height: calc(100dvh - env(safe-area-inset-bottom) - 76px); }
     }
 
     @media (prefers-color-scheme: dark) {
@@ -1310,8 +1327,8 @@
       #home-screen .circular-chart { width: 64px; height: 64px; }
       #home-screen .ring-text { font-size: 30px; }
       #home-screen .simon-title { font-size: 15px; }
-      #home-screen .simon-action { font-size: 20px; }
-      #home-screen .dashboard-homework-button { min-height: 52px; padding: 12px 16px; }
+      #home-screen .simon-action { font-size: 22px; font-weight: 800; }
+      #home-screen .dashboard-homework-button { min-height: 64px; padding: 16px 20px; font-size: 22px; border-radius: 18px; }
       #home-iona-bottom-stack > .app-card:first-child, #home-tt-side-stack > .app-card:first-child { padding: 20px 22px !important; font-size: 19px !important; border-radius: 20px !important; }
       #home-health-card { padding: 22px; }
       #home-health-card .widget-title { font-size: 15px; }
@@ -1752,21 +1769,23 @@
   </div>
   <!-- School Setup Modal -->
   <div id="cal-setup-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[160000] hidden items-center justify-center p-4">
-    <div class="cal-surface-solid border cal-border w-full max-w-md rounded-2xl shadow-xl p-6 flex flex-col gap-4 max-h-[90vh] overflow-y-auto no-scrollbar">
+    <div class="cal-surface-solid border cal-border w-full max-w-md rounded-2xl shadow-xl p-6 flex flex-col gap-5 max-h-[90vh] overflow-y-auto no-scrollbar">
       <h2 class="text-2xl font-google font-bold m-0 text-center">School Calendar Setup</h2>
       <p class="text-sm cal-text-sub m-0 text-center leading-snug">Set your typical school hours and known holiday dates. We'll automatically block out your weekdays.</p>
 
-      <div class="bg-[var(--input-bg)] border cal-border rounded-xl p-4 space-y-3 mt-2">
-        <label class="block text-[11px] font-bold cal-text-main uppercase tracking-wider mb-1">School Day Times</label>
-        <div class="flex gap-3">
-          <div class="flex-1">
-            <label class="block text-[10px] font-semibold cal-text-sub mb-1 uppercase">Start Time</label>
-            <input type="time" id="setup-school-start" class="w-full min-h-[40px] px-3 rounded-lg border cal-border bg-[var(--card-bg)] cal-text-main font-semibold focus:outline-none" value="08:45">
-          </div>
-          <div class="flex-1">
-            <label class="block text-[10px] font-semibold cal-text-sub mb-1 uppercase">End Time</label>
-            <input type="time" id="setup-school-end" class="w-full min-h-[40px] px-3 rounded-lg border cal-border bg-[var(--card-bg)] cal-text-main font-semibold focus:outline-none" value="15:15">
-          </div>
+      <div class="bg-[var(--input-bg)] border cal-border rounded-xl p-4 space-y-4">
+        <div>
+           <label class="block text-[11px] font-bold cal-text-main uppercase tracking-wider mb-2">School Day Times</label>
+           <div class="flex gap-3">
+             <div class="flex-1">
+               <label class="block text-[10px] font-semibold cal-text-sub mb-1 uppercase">Start Time</label>
+               <input type="time" id="setup-school-start" class="w-full min-h-[44px] px-3 rounded-xl border cal-border bg-[var(--card-bg)] cal-text-main font-semibold focus:outline-none" value="08:45">
+             </div>
+             <div class="flex-1">
+               <label class="block text-[10px] font-semibold cal-text-sub mb-1 uppercase">End Time</label>
+               <input type="time" id="setup-school-end" class="w-full min-h-[44px] px-3 rounded-xl border cal-border bg-[var(--card-bg)] cal-text-main font-semibold focus:outline-none" value="15:15">
+             </div>
+           </div>
         </div>
       </div>
 
@@ -1774,14 +1793,23 @@
         <label class="block text-[11px] font-bold cal-text-main uppercase tracking-wider mb-1">School Holidays (Optional)</label>
         <p class="text-[10px] cal-text-sub m-0 mb-3">School won't be added during these break dates.</p>
         <div class="space-y-3">
-          <div class="flex gap-2 items-center"><span class="text-xs font-bold cal-text-sub w-12">Break 1</span><input type="date" id="setup-hol-1-start" class="flex-1 text-xs px-2 py-2 rounded-md border cal-border bg-[var(--card-bg)]"><input type="date" id="setup-hol-1-end" class="flex-1 text-xs px-2 py-2 rounded-md border cal-border bg-[var(--card-bg)]"></div>
-          <div class="flex gap-2 items-center"><span class="text-xs font-bold cal-text-sub w-12">Break 2</span><input type="date" id="setup-hol-2-start" class="flex-1 text-xs px-2 py-2 rounded-md border cal-border bg-[var(--card-bg)]"><input type="date" id="setup-hol-2-end" class="flex-1 text-xs px-2 py-2 rounded-md border cal-border bg-[var(--card-bg)]"></div>
-          <div class="flex gap-2 items-center"><span class="text-xs font-bold cal-text-sub w-12">Break 3</span><input type="date" id="setup-hol-3-start" class="flex-1 text-xs px-2 py-2 rounded-md border cal-border bg-[var(--card-bg)]"><input type="date" id="setup-hol-3-end" class="flex-1 text-xs px-2 py-2 rounded-md border cal-border bg-[var(--card-bg)]"></div>
-          <div class="flex gap-2 items-center"><span class="text-xs font-bold cal-text-sub w-12">Break 4</span><input type="date" id="setup-hol-4-start" class="flex-1 text-xs px-2 py-2 rounded-md border cal-border bg-[var(--card-bg)]"><input type="date" id="setup-hol-4-end" class="flex-1 text-xs px-2 py-2 rounded-md border cal-border bg-[var(--card-bg)]"></div>
+          <div class="flex gap-2 items-center"><span class="text-xs font-bold cal-text-sub w-14">Break 1</span><input type="date" id="setup-hol-1-start" class="flex-1 text-sm px-2 py-2.5 rounded-lg border cal-border bg-[var(--card-bg)] cal-text-main"><input type="date" id="setup-hol-1-end" class="flex-1 text-sm px-2 py-2.5 rounded-lg border cal-border bg-[var(--card-bg)] cal-text-main"></div>
+          <div class="flex gap-2 items-center"><span class="text-xs font-bold cal-text-sub w-14">Break 2</span><input type="date" id="setup-hol-2-start" class="flex-1 text-sm px-2 py-2.5 rounded-lg border cal-border bg-[var(--card-bg)] cal-text-main"><input type="date" id="setup-hol-2-end" class="flex-1 text-sm px-2 py-2.5 rounded-lg border cal-border bg-[var(--card-bg)] cal-text-main"></div>
+          <div class="flex gap-2 items-center"><span class="text-xs font-bold cal-text-sub w-14">Break 3</span><input type="date" id="setup-hol-3-start" class="flex-1 text-sm px-2 py-2.5 rounded-lg border cal-border bg-[var(--card-bg)] cal-text-main"><input type="date" id="setup-hol-3-end" class="flex-1 text-sm px-2 py-2.5 rounded-lg border cal-border bg-[var(--card-bg)] cal-text-main"></div>
+          <div class="flex gap-2 items-center"><span class="text-xs font-bold cal-text-sub w-14">Break 4</span><input type="date" id="setup-hol-4-start" class="flex-1 text-sm px-2 py-2.5 rounded-lg border cal-border bg-[var(--card-bg)] cal-text-main"><input type="date" id="setup-hol-4-end" class="flex-1 text-sm px-2 py-2.5 rounded-lg border cal-border bg-[var(--card-bg)] cal-text-main"></div>
         </div>
       </div>
 
-      <button type="button" onclick="finishCalSetup()" class="tactile-btn mt-1 w-full py-3.5 rounded-xl cal-accent-bg text-white font-google font-bold text-[15px] shadow-lg border-0 cursor-pointer">Generate Calendar</button>
+      <div class="flex flex-col gap-3 mt-2">
+         <button type="button" onclick="finishCalSetup()" class="tactile-btn w-full py-3.5 rounded-xl cal-accent-bg text-white font-google font-bold text-[15px] shadow-lg border-0 cursor-pointer">Generate Calendar</button>
+         <div class="flex items-center justify-between px-1">
+           <label class="flex items-center gap-2 cursor-pointer text-xs font-semibold cal-text-sub">
+             <input type="checkbox" id="setup-skip-forever" class="w-4 h-4 rounded border-gray-300 text-[var(--accent)] focus:ring-[var(--accent)]">
+             Don't ask again
+           </label>
+           <button type="button" onclick="skipCalSetup()" class="text-xs font-bold cal-text-sub border-0 bg-transparent cursor-pointer hover:text-[var(--text-primary)] transition-colors">Skip</button>
+         </div>
+      </div>
     </div>
   </div>
 
@@ -2519,6 +2547,11 @@
       <button id="scan-tt-btn" class="add-btn" style="width:100%; padding:12px; display:flex; justify-content:center; align-items:center; gap:8px;" onclick="$('tt-upload').click()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Scan Timetable</button>
       <div id="settings-ocr-progress" class="ocr-progress" aria-live="polite"><div class="ocr-progress-track"><div class="ocr-progress-fill"></div></div><div class="ocr-progress-status">Preparing scan...</div></div>
       <button class="add-btn btn-grey" style="width:100%; padding:12px; margin-top:8px; display:flex; justify-content:center; align-items:center; gap:8px;" onclick="openTtEditor('settings')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> Edit Timetable Manually</button>
+      
+      <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--card-border);">
+         <p style="font-size:13px; color:var(--text-secondary); margin-top:0; margin-bottom:12px; line-height:1.4;">Need to rebuild your school days?</p>
+         <button class="add-btn btn-danger full-w-input" style="padding:12px; font-size:14px;" onclick="resetSchoolCalendar()">Reset Generated School Days</button>
+      </div>
     </div>
 
     <h3 class="cascade-item">Subject Manager</h3>
@@ -6288,10 +6321,14 @@
               ? `<span class="truncate leading-none">${escapeCalendarText(prefix + displayTitle)}</span>`
               : `<span>&nbsp;</span>`;
 
-            pill.addEventListener('click', (e) => {
-              e.stopPropagation();
-              if (!Carousel.wasDragged) App.openEditSheet(ev);
-            });
+            if (!isSchool) {
+              pill.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (!Carousel.wasDragged) App.openEditSheet(ev);
+              });
+            } else {
+              pill.style.cursor = 'default';
+            }
 
             stack.appendChild(pill);
           }
@@ -6389,8 +6426,8 @@
             const pillColor = isSchool ? '#E2E8F0' : (isHw ? '#2563EB' : (ev.color || tag.color));
 
             const pill = document.createElement('div');
-            pill.className = `mx-1 px-1.5 py-0.5 rounded text-[11px] font-google font-semibold truncate cursor-pointer ${
-              isSchool ? 'text-slate-700' : 'text-white'
+            pill.className = `mx-1 px-1.5 py-0.5 rounded text-[11px] font-google font-semibold truncate ${
+              isSchool ? 'text-slate-700 cursor-default' : 'text-white cursor-pointer'
             }`;
             pill.style.backgroundColor = pillColor;
             if (isSchool) pill.style.color = '#334155';
@@ -6398,10 +6435,14 @@
             const prefix = ev.type === 'birthday' ? '🎂 ' : ((ev.type === 'task' || ev.type === 'homework') ? '✓ ' : (ev.type === 'deadline' ? '! ' : ''));
             const displayTitle = getHwDisplayTitle(ev, d);
             pill.textContent = prefix + displayTitle;
-            pill.addEventListener('click', (e) => {
-              e.stopPropagation();
-              App.openEditSheet(ev);
-            });
+            
+            if (!isSchool) {
+              pill.addEventListener('click', (e) => {
+                e.stopPropagation();
+                App.openEditSheet(ev);
+              });
+            }
+            
             cell.appendChild(pill);
           });
 
@@ -6461,8 +6502,8 @@
             const blockColor = isSchool ? '#E2E8F0' : (isHw ? '#2563EB' : (ev.color || tag.color));
 
             const block = document.createElement('div');
-            block.className = `absolute left-1 right-1 rounded-lg px-2 py-1 text-xs font-google shadow-sm cursor-pointer overflow-hidden z-10 ${
-              isSchool ? 'text-slate-700' : 'text-white'
+            block.className = `absolute left-1 right-1 rounded-lg px-2 py-1 text-xs font-google shadow-sm overflow-hidden z-10 ${
+              isSchool ? 'text-slate-700 cursor-default' : 'text-white cursor-pointer'
             }`;
             block.style.top = `${startHr * 56}px`;
             block.style.height = `${Math.max(24, (endHr - startHr) * 56 - 2)}px`;
@@ -6476,10 +6517,14 @@
               <div class="font-semibold truncate text-[11px] leading-tight">${escapeCalendarText(prefix + displayTitle)}</div>
               <div class="text-[10px] opacity-90 truncate">${DateUtils.formatSheetTime(DateUtils.toInputTime(s))}</div>
             `;
-            block.addEventListener('click', (evClick) => {
-              evClick.stopPropagation();
-              if (!Carousel.wasDragged) App.openEditSheet(ev);
-            });
+            
+            if (!isSchool) {
+              block.addEventListener('click', (evClick) => {
+                evClick.stopPropagation();
+                if (!Carousel.wasDragged) App.openEditSheet(ev);
+              });
+            }
+            
             col.appendChild(block);
           });
 
@@ -6505,7 +6550,8 @@
 
         for (let i = 0; i < 60; i++) {
           const d = DateUtils.addDays(base, i);
-          const evs = EventEngine.getEventsForDay(d);
+          // Filter out school blocks so they don't clog the schedule feed
+          const evs = EventEngine.getEventsForDay(d).filter(ev => !(ev.title === 'School' || (ev.id && String(ev.id).startsWith('ev_school_'))));
           if (evs.length === 0) continue;
           found = true;
 
@@ -6535,8 +6581,8 @@
             const cardColor = isSchool ? '#E2E8F0' : (isHw ? '#2563EB' : (ev.color || tag.color));
 
             const card = document.createElement('div');
-            card.className = `px-3.5 py-2.5 rounded-xl cursor-pointer shadow-sm flex items-center justify-between liquid-spring hover:opacity-95 ${
-              isSchool ? 'text-slate-700' : 'text-white'
+            card.className = `px-3.5 py-2.5 rounded-xl shadow-sm flex items-center justify-between liquid-spring hover:opacity-95 ${
+              isSchool ? 'text-slate-700 cursor-default' : 'text-white cursor-pointer'
             }`;
             card.style.backgroundColor = cardColor;
             if (isSchool) card.style.color = '#334155';
@@ -6557,7 +6603,11 @@
               </div>
               ${ev.recurrence && ev.recurrence !== 'none' ? '<i class="fa-solid fa-repeat text-xs opacity-80"></i>' : ''}
             `;
-            card.addEventListener('click', () => App.openEditSheet(ev));
+            
+            if (!isSchool) {
+              card.addEventListener('click', () => App.openEditSheet(ev));
+            }
+            
             right.appendChild(card);
           });
 
@@ -7506,11 +7556,49 @@
     }
 
     function promptCalendarSchoolSetup() {
-      if (appSet.calendarSetupDone) return;
+      if (appSet.calendarSetupDone || appSet.calendarSetupSkippedForever) return;
       const modal = $('cal-setup-modal');
       if (modal) {
         modal.classList.remove('hidden');
         modal.classList.add('flex');
+        if ($('setup-skip-forever')) $('setup-skip-forever').checked = false;
+      }
+    }
+
+    function skipCalSetup() {
+      pSnd('tick');
+      if ($('setup-skip-forever') && $('setup-skip-forever').checked) {
+        appSet.calendarSetupSkippedForever = true;
+      }
+      appSet.calendarSetupDone = true;
+      saveAppSettings();
+      const modal = $('cal-setup-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    async function resetSchoolCalendar() {
+      pSnd('tick');
+      const ok = await showModalDialog({
+        title: "Reset School Days", 
+        message: "This will remove all automatically generated school days from your calendar. Continue?", 
+        confirmText: "Reset", 
+        cancelText: "Cancel", 
+        isDanger: true
+      });
+      if (ok) {
+        calendarEvents = calendarEvents.filter(e => !(e.id && String(e.id).startsWith('ev_school_')));
+        appSet.calendarSetupDone = false;
+        appSet.calendarSetupSkippedForever = false;
+        saveAppSettings();
+        sDat();
+        if ($('calendar-screen').classList.contains('active')) {
+          App.renderAllSlides();
+          renderDashboardCalendar();
+        }
+        showToast("School days removed.");
       }
     }
 
@@ -7665,7 +7753,10 @@
         d.setHours(0, 0, 0, 0);
         d.setDate(d.getDate() + offset);
         const ds = localDateString(d);
-        getCalendarItemsForDate(ds).forEach(item => upcoming.push({ ...item, date: ds, isToday: offset === 0 }));
+        getCalendarItemsForDate(ds).forEach(item => {
+          const isSchool = item.text === 'School' || (item.id && String(item.id).startsWith('ev_school_'));
+          if (!isSchool) upcoming.push({ ...item, date: ds, isToday: offset === 0 });
+        });
       }
       if ($('dashboard-calendar-upcoming')) {$('dashboard-calendar-upcoming').innerHTML = upcoming.length ? upcoming.slice(0, 5).map(item => `
           <div class="dashboard-calendar-upcoming-item" onclick="openCalendarScreen('${item.date}')">
@@ -7825,9 +7916,11 @@
       const place = (c, stretch, squash) => {
         const half = items[0].w / 2;
         if (vert) {
-          ind.style.transform = `translate3d(0, ${c - box.top - half}px, 0) scale(${squash}, ${stretch})`;
+          const yPos = Math.round((c - box.top - half) * 10) / 10;
+          ind.style.transform = `translate3d(0, ${yPos}px, 0) scale(${squash}, ${stretch})`;
         } else {
-          ind.style.transform = `translate3d(${c - box.left - half}px, 0, 0) scale(${stretch}, ${squash})`;
+          const xPos = Math.round((c - box.left - half) * 10) / 10;
+          ind.style.transform = `translate3d(${xPos}px, 0, 0) scale(${stretch}, ${squash})`;
         }
       };
 
@@ -7847,12 +7940,17 @@
         
         const goal = clamp(fp), prev = cp;
         
-        const lerp = 1 - Math.pow(1 - 0.3, dt / 16.666);
+        // Exponential decay for buttery smooth framerate-independent easing
+        const lerp = 1 - Math.exp(-0.024 * dt);
         cp += (goal - cp) * lerp;
         
         const v = Math.abs(cp - prev) / Math.max(1, (dt / 16.666));
         
-        place(cp, 1 + Math.min(v * 0.04, 0.4), 1 - Math.min(v * 0.015, 0.15));
+        // Round scale to 2 decimals to prevent GPU rendering stress
+        const stretch = Math.round((1 + Math.min(v * 0.04, 0.4)) * 100) / 100;
+        const squash = Math.round((1 - Math.min(v * 0.015, 0.15)) * 100) / 100;
+        
+        place(cp, stretch, squash);
         setTarget(nearest(goal).el);
         raf = requestAnimationFrame(frame);
       };
