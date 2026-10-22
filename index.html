@@ -4099,6 +4099,12 @@
         if (guestMode) {
           setAuthOverlayVisible(false);
           updateSettingsAccountState(null);
+          
+          // Re-show the bottom navigation if we skip login from the Settings screen
+          if ($('bottom-nav') && !$('onboarding-screen').classList.contains('active') && !$('onboarding-tt-screen').classList.contains('active')) {
+            $('bottom-nav').style.display = 'flex';
+          }
+          
           if (startupComplete) return;
           if (!localStorage.getItem('org_tos_agreed')) {
             tosModal.style.display = 'flex';
@@ -4127,6 +4133,12 @@
 
       setAuthOverlayVisible(false);
       $('error-msg').textContent = '';
+      
+      // Re-show the bottom navigation after a successful login from the Settings screen
+      if ($('bottom-nav') && !$('onboarding-screen').classList.contains('active') && !$('onboarding-tt-screen').classList.contains('active')) {
+        $('bottom-nav').style.display = 'flex';
+      }
+      
       if (startupComplete) return;
       if (!localStorage.getItem('org_tos_agreed')) {
         tosModal.style.display = 'flex';
