@@ -3164,14 +3164,17 @@
     function normalizeTtCyc(cyc) {
       if (!cyc || typeof cyc !== 'object') return {};
       const res = {};
-      const hasLegacy = [7, 8, 9, 10, 11].some(k => cyc[k]);
+      
+      const keys = Object.keys(cyc).map(Number);
+      const isLegacy = (keys.includes(10) || keys.includes(11)) && !keys.includes(5) && !keys.includes(6);
+      
       for (let k in cyc) {
         const numK = parseInt(k);
         // Map the safe " " back to "" so the app treats it correctly as empty
         let mappedArray = Array.isArray(cyc[k]) ? cyc[k].map(v => (v === " " ? "" : v)) : [];
-        if (hasLegacy && numK >= 7 && numK <= 11) {
+        if (isLegacy && numK >= 7 && numK <= 11) {
           res[numK - 2] = mappedArray;
-        } else if (numK >= 0 && numK <= 9) {
+        } else {
           res[numK] = mappedArray;
         }
       }
@@ -7835,11 +7838,20 @@
         nav.querySelectorAll('.nav-item').forEach(e => e.classList.toggle('scrub-target', e === el));
       };
 
-      const frame = () => {
+      let lastTime = performance.now();
+      
+      const frame = (time) => {
         if (!scrubbing) return;
+        const dt = Math.min(time - lastTime, 32);
+        lastTime = time;
+        
         const goal = clamp(fp), prev = cp;
-        cp += (goal - cp) * 0.3;
-        const v = Math.abs(cp - prev);
+        
+        const lerp = 1 - Math.pow(1 - 0.3, dt / 16.666);
+        cp += (goal - cp) * lerp;
+        
+        const v = Math.abs(cp - prev) / Math.max(1, (dt / 16.666));
+        
         place(cp, 1 + Math.min(v * 0.04, 0.4), 1 - Math.min(v * 0.015, 0.15));
         setTarget(nearest(goal).el);
         raf = requestAnimationFrame(frame);
@@ -7854,6 +7866,7 @@
         cp = clamp(fp);
         target = null;
         pSnd('pop');
+        lastTime = performance.now();
         raf = requestAnimationFrame(frame);
       };
 
