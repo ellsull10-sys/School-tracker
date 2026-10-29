@@ -2803,9 +2803,6 @@
             <div id="sp-now-device" class="sp-device-indicator" style="display:none; cursor:pointer;" onclick="toggleDeviceList()" title="Click to change device"></div>
             <div id="sp-device-list" style="display:none; flex-direction:column; gap:6px; margin-top:8px; padding-top:8px; border-top:1px solid var(--card-border);"></div>
           </div>
-          <button id="sp-like-btn" class="sp-ctrl-btn" style="flex-shrink:0; border:none; background:transparent; font-size:22px; color:var(--text-secondary); width:40px; height:40px;" onclick="toggleLikeCurrentTrack()" title="Save to Liked Songs">
-            <i class="fa-regular fa-heart"></i>
-          </button>
         </div>
 
         <div>
@@ -8685,7 +8682,8 @@
         scope: SPOTIFY_SCOPES,
         code_challenge_method: 'S256',
         code_challenge: codeChallenge,
-        redirect_uri: getSpotifyRedirectUri()
+        redirect_uri: getSpotifyRedirectUri(),
+        show_dialog: 'true'
       });
       window.location.href = `https://accounts.spotify.com/authorize?${params.toString()}`;
     }
@@ -9220,49 +9218,49 @@
     }
 
     async function toggleLikeCurrentTrack() {
-  if (!spCurrentTrackId) {
-    showToast('No track playing to like.');
-    return;
-  }
-  pSnd('pop');
-  const token = await getValidSpotifyToken();
-  if (!token) return;
+      if (!spCurrentTrackId) {
+        showToast('No track playing to like.');
+        return;
+      }
+      pSnd('pop');
+      const token = await getValidSpotifyToken();
+      if (!token) return;
 
-  const willLike = !spCurrentTrackLiked;
-  spCurrentTrackLiked = willLike;
-  updateLikeButtonUI();
-
-  try {
-    const method = willLike ? 'PUT' : 'DELETE';
-    
-    // FIX: Supply Content-Type and JSON body, which Spotify requires to safely handle PUT/DELETE requests.
-    const res = await fetch(`https://api.spotify.com/v1/me/tracks`, {
-      method,
-      headers: { 
-        Authorization: `Bearer ${token}`, 
-        'Content-Type': 'application/json' 
-      },
-      body: JSON.stringify({ ids: [spCurrentTrackId] })
-    });
-    
-    if (res.status === 403) {
-      spCurrentTrackLiked = !willLike;
+      const willLike = !spCurrentTrackLiked;
+      spCurrentTrackLiked = willLike;
       updateLikeButtonUI();
-      showToast('Permission denied. Please click Disconnect and Connect again.');
-      return;
-    }
 
-    if (res.ok || res.status === 200 || res.status === 204) {
-      showToast(willLike ? 'Added to Liked Songs! ♥' : 'Removed from Liked Songs');
-    } else {
-      throw new Error('Failed');
+      try {
+        const method = willLike ? 'PUT' : 'DELETE';
+        const res = await fetch(`https://api.spotify.com/v1/me/tracks?ids=${encodeURIComponent(spCurrentTrackId)}`, {
+          method,
+          headers: { 
+            Authorization: `Bearer ${token}`, 
+            'Content-Type': 'application/json' 
+          },
+          body: JSON.stringify({ ids: [spCurrentTrackId] })
+        });
+        
+        if (res.status === 401 || res.status === 403) {
+          spCurrentTrackLiked = !willLike;
+          updateLikeButtonUI();
+          showToast('Permission missing. Tap Disconnect, then Connect again.');
+          return;
+        }
+
+        if (res.ok || res.status === 200 || res.status === 204) {
+          showToast(willLike ? 'Added to Liked Songs! ♥' : 'Removed from Liked Songs');
+          loadUserSpotifyPlaylists();
+        } else {
+          throw new Error(`HTTP ${res.status}`);
+        }
+      } catch (e) {
+        console.warn('Like toggle error:', e);
+        spCurrentTrackLiked = !willLike;
+        updateLikeButtonUI();
+        showToast('Failed to update Liked Songs. Try reconnecting Spotify.');
+      }
     }
-  } catch (e) {
-    spCurrentTrackLiked = !willLike;
-    updateLikeButtonUI();
-    showToast('Failed to update. Reconnect Spotify if needed.');
-  }
-}
 
     async function loadRecentlyPlayed() {
       const section = $('sp-recently-played-section');
@@ -9319,6 +9317,15 @@
       }
     }
 
+    let spModalTrackUris = [];
+
+    function handlePlaylistCardClick(el) {
+      const id = el.getAttribute('data-pl-id');
+      const name = el.getAttribute('data-pl-name') || 'Playlist';
+      const img = el.getAttribute('data-pl-img') || '';
+      openPlaylistModal(id, name, img);
+    }
+
     async function openPlaylistModal(playlistId, playlistName, coverUrl) {
       pSnd('pop');
       const modal = $('sp-playlist-modal');
@@ -9331,47 +9338,93 @@
       modal.style.display = 'flex';
       title.textContent = playlistName;
       sub.textContent = 'Loading songs...';
-      cover.style.backgroundImage = coverUrl ? `url('${coverUrl}')` : 'none';
+
+      if (playlistId === 'LIKED_SONGS') {
+        cover.style.backgroundImage = 'linear-gradient(135deg, #450af5, #8e8ee5)';
+        cover.innerHTML = '<span style="color:#FFF; font-size:28px; display:flex; height:100%; align-items:center; justify-content:center;">♥</span>';
+      } else {
+        cover.innerHTML = '';
+        cover.style.backgroundImage = coverUrl ? `url("${coverUrl}")` : 'none';
+      }
+
       tracksBox.innerHTML = '<div style="padding:24px; text-align:center; font-size:13px; color:var(--text-secondary);">Loading tracks...</div>';
 
       const token = await getValidSpotifyToken();
-      if (!token) return;
+      if (!token) {
+        tracksBox.innerHTML = '<div style="padding:24px; text-align:center; font-size:13px; color:var(--critical);">Session expired. Please reconnect Spotify.</div>';
+        return;
+      }
 
       try {
-        const res = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks?limit=100`, {
+        const endpoint = playlistId === 'LIKED_SONGS'
+          ? 'https://api.spotify.com/v1/me/tracks?limit=50'
+          : `https://api.spotify.com/v1/playlists/${encodeURIComponent(playlistId)}/tracks?market=from_token&limit=100`;
+
+        const res = await fetch(endpoint, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        if (!res.ok) throw new Error('Playlist load failed');
+
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+
         const data = await res.json();
-        const items = (data.items || []).filter(it => it && it.track);
+        const rawItems = data.items || [];
+        const tracks = rawItems
+          .map(it => it ? (it.track || it.item || (it.uri ? it : null)) : null)
+          .filter(t => t && t.uri && t.name);
 
-        sub.textContent = `${items.length} songs • Tap any song to play`;
+        spModalTrackUris = tracks.map(t => t.uri);
+        sub.textContent = `${tracks.length} songs • Tap any song to play`;
 
-        if (!items.length) {
-          tracksBox.innerHTML = '<div style="padding:24px; text-align:center; font-size:13px; color:var(--text-secondary);">No playable songs in this playlist.</div>';
+        const playAllAction = playlistId === 'LIKED_SONGS'
+          ? `playLikedSongs(); closePlaylistModal();`
+          : `playPlaylistOnDevice('${escapeCalendarText(playlistId)}'); closePlaylistModal();`;
+
+        const playAllBanner = `
+          <div style="padding:4px 4px 8px; display:flex; justify-content:flex-end;">
+            <button class="add-btn sp-green-btn" style="min-height:36px; padding:0 18px; border-radius:999px; font-size:13px; display:inline-flex; align-items:center; gap:6px;" onclick="${playAllAction}">
+              <i class="fa-solid fa-play" style="font-size:11px;"></i> Play All
+            </button>
+          </div>
+        `;
+
+        if (!tracks.length) {
+          tracksBox.innerHTML = playAllBanner + '<div style="padding:24px; text-align:center; font-size:13px; color:var(--text-secondary);">Individual tracks cannot be listed for this playlist, but you can tap Play All above!</div>';
           return;
         }
 
-        tracksBox.innerHTML = items.map((it, idx) => {
-          const t = it.track;
+        tracksBox.innerHTML = playAllBanner + tracks.map((t, idx) => {
           const artist = (t.artists || []).map(a => a.name).join(', ');
           const dur = fmtSpMs(t.duration_ms);
           return `
-            <div class="list-item" style="padding:10px 14px; margin-bottom:0; border-radius:14px; cursor:pointer; background:var(--input-bg); display:flex; align-items:center; gap:12px; transition:transform 0.15s ease;" onclick="playTrackFromPlaylist('${playlistId}', '${t.uri}')">
+            <div class="list-item" data-pl-id="${escapeCalendarText(playlistId)}" data-track-uri="${escapeCalendarText(t.uri)}" data-track-idx="${idx}" style="padding:10px 14px; margin-bottom:0; border-radius:14px; cursor:pointer; background:var(--input-bg); display:flex; align-items:center; gap:12px; transition:transform 0.15s ease;" onclick="playTrackFromModalEl(this)">
               <span style="font-size:12px; font-weight:700; color:var(--text-secondary); width:20px; text-align:right;">${idx + 1}</span>
               <div style="flex:1; min-width:0;">
                 <div style="font-weight:700; font-size:13.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeCalendarText(t.name)}</div>
                 <div style="font-size:11px; color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeCalendarText(artist)}</div>
               </div>
               <span style="font-size:11px; font-weight:600; color:var(--text-secondary);">${dur}</span>
-              <button class="sp-ctrl-btn" style="width:32px; height:32px; border:none; background:rgba(29,185,84,0.15); color:#1DB954;" title="Play">
+              <button type="button" class="sp-ctrl-btn" style="width:32px; height:32px; border:none; background:rgba(29,185,84,0.15); color:#1DB954; pointer-events:none;" title="Play">
                 <i class="fa-solid fa-play" style="font-size:12px;"></i>
               </button>
             </div>
           `;
         }).join('');
       } catch (e) {
-        tracksBox.innerHTML = '<div style="padding:24px; text-align:center; font-size:13px; color:var(--critical);">Could not load playlist songs.</div>';
+        console.warn('Playlist track fetch error:', e);
+        const fallbackAction = playlistId === 'LIKED_SONGS'
+          ? `playLikedSongs(); closePlaylistModal();`
+          : `playPlaylistOnDevice('${escapeCalendarText(playlistId)}'); closePlaylistModal();`;
+        sub.textContent = 'Direct playback available';
+        tracksBox.innerHTML = `
+          <div style="padding:24px 16px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:12px;">
+            <div style="font-size:13px; color:var(--text-secondary); line-height:1.45;">Spotify restricts viewing individual songs for this type of playlist, but you can still play it directly:</div>
+            <button class="add-btn sp-green-btn" style="min-height:44px; padding:0 24px; border-radius:999px; font-size:14px;" onclick="${fallbackAction}">
+              <i class="fa-solid fa-play" style="margin-right:6px;"></i> Play Playlist Now
+            </button>
+          </div>
+        `;
       }
     }
 
@@ -9381,7 +9434,14 @@
       if (modal) modal.style.display = 'none';
     }
 
-    async function playTrackFromPlaylist(playlistId, trackUri) {
+    function playTrackFromModalEl(el) {
+      const playlistId = el.getAttribute('data-pl-id');
+      const trackUri = el.getAttribute('data-track-uri');
+      const idx = parseInt(el.getAttribute('data-track-idx') || '0', 10);
+      playTrackFromPlaylist(playlistId, trackUri, idx);
+    }
+
+    async function playTrackFromPlaylist(playlistId, trackUri, trackIdx = 0) {
       pSnd('pop');
       closePlaylistModal();
       const token = await getValidSpotifyToken();
@@ -9391,19 +9451,39 @@
       $('sp-now-title').textContent = 'Loading...';
       $('sp-now-artist').textContent = 'Starting track...';
       
-      // CRITICAL GLITCH FIX
       spIgnorePollUntil = Date.now() + 4000; 
 
       try {
         const url = `https://api.spotify.com/v1/me/player/play` + (activeDeviceId ? `?device_id=${activeDeviceId}` : '');
-        await fetch(url, {
-          method: 'PUT',
-          headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({
+        let payload;
+
+        if (playlistId === 'LIKED_SONGS') {
+          const queue = spModalTrackUris.length
+            ? spModalTrackUris.slice(trackIdx).concat(spModalTrackUris.slice(0, trackIdx))
+            : [trackUri];
+          payload = { uris: queue.slice(0, 50) };
+        } else {
+          payload = {
             context_uri: `spotify:playlist:${playlistId}`,
             offset: { uri: trackUri }
-          })
+          };
+        }
+
+        const res = await fetch(url, {
+          method: 'PUT',
+          headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
         });
+
+        // Fallback if offset URI is rejected by Spotify for a specific playlist
+        if (!res.ok && playlistId !== 'LIKED_SONGS') {
+          await fetch(url, {
+            method: 'PUT',
+            headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ uris: [trackUri] })
+          });
+        }
+
         spIsPlaying = true;
         $('sp-play-toggle').innerHTML = '<i class="fa-solid fa-pause" style="font-size:20px;"></i>';
         setTimeout(() => refreshSpotifyState(true), 1500);
@@ -9411,57 +9491,54 @@
     }
 
     async function loadUserSpotifyPlaylists() {
-  const container = $('sp-user-playlists');
-  if (!container) return;
-  const token = await getValidSpotifyToken();
-  if (!token) return;
+      const container = $('sp-user-playlists');
+      if (!container) return;
+      const token = await getValidSpotifyToken();
+      if (!token) return;
 
-  container.innerHTML = '<div style="font-size:13px; color:var(--text-secondary);">Loading your library...</div>';
-  try {
-    const [plRes, likedRes] = await Promise.all([
-      fetch('https://api.spotify.com/v1/me/playlists?limit=50', { headers: { Authorization: `Bearer ${token}` } }),
-      fetch('https://api.spotify.com/v1/me/tracks?limit=1', { headers: { Authorization: `Bearer ${token}` } }).catch(() => null)
-    ]);
+      container.innerHTML = '<div style="font-size:13px; color:var(--text-secondary);">Loading your library...</div>';
+      try {
+        const [plRes, likedRes] = await Promise.all([
+          fetch('https://api.spotify.com/v1/me/playlists?limit=50', { headers: { Authorization: `Bearer ${token}` } }),
+          fetch('https://api.spotify.com/v1/me/tracks?limit=1', { headers: { Authorization: `Bearer ${token}` } }).catch(() => null)
+        ]);
 
-    let html = '';
+        let html = '';
 
-    // Liked Songs card
-    let likedCountText = 'Saved tracks';
-    if (likedRes && likedRes.ok) {
-      const likedData = await likedRes.json();
-      if (typeof likedData.total === 'number') likedCountText = `${likedData.total} songs`;
-    }
-    html += `<div class="app-card sp-playlist-card" onclick="playLikedSongs()">
-      <div class="sp-playlist-cover" style="background: linear-gradient(135deg, #450af5, #8e8ee5); display:flex; align-items:center; justify-content:center; color:#FFF; font-size:36px; box-shadow: inset 0 0 20px rgba(0,0,0,0.15);">♥</div>
-      <div style="font-weight:700; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Liked Songs</div>
-      <div style="font-size:11px; color:var(--text-secondary);">${likedCountText}</div>
-    </div>`;
-
-    if (plRes.ok) {
-      const plData = await plRes.json();
-      const items = plData.items || [];
-      html += items.map(p => {
-        if (!p) return '';
-        const img = p.images?.[0]?.url || '';
-        const count = p.tracks?.total !== undefined ? `${p.tracks.total} tracks` : 'Playlist';
-        
-        // FIX: Escape double quotes and newlines to prevent breaking the HTML attribute
-        const safeName = (p.name || 'Playlist').replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, ' ').replace(/\r/g, '');
-        
-        return `<div class="app-card sp-playlist-card" onclick="openPlaylistModal('${p.id}', '${safeName}', '${img}')">
-          <div class="sp-playlist-cover" style="${img ? `background-image:url('${img}')` : 'background:rgba(29,185,84,0.15)'}"></div>
-          <div style="font-weight:700; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeCalendarText(p.name)}</div>
-          <div style="font-size:11px; color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeCalendarText(count)} • Tap to view</div>
+        // Liked Songs card now opens the song viewer modal!
+        let likedCountText = 'Saved tracks';
+        if (likedRes && likedRes.ok) {
+          const likedData = await likedRes.json();
+          if (typeof likedData.total === 'number') likedCountText = `${likedData.total} songs`;
+        }
+        html += `<div class="app-card sp-playlist-card" data-pl-id="LIKED_SONGS" data-pl-name="Liked Songs" data-pl-img="" onclick="handlePlaylistCardClick(this)">
+          <div class="sp-playlist-cover" style="background: linear-gradient(135deg, #450af5, #8e8ee5); display:flex; align-items:center; justify-content:center; color:#FFF; font-size:36px; box-shadow: inset 0 0 20px rgba(0,0,0,0.15);">♥</div>
+          <div style="font-weight:700; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Liked Songs</div>
+          <div style="font-size:11px; color:var(--text-secondary);">${escapeCalendarText(likedCountText)} • Tap to view</div>
         </div>`;
-      }).join('');
-    }
 
-    container.innerHTML = html;
-  } catch (e) {
-    console.warn('Failed to load playlists:', e);
-    container.innerHTML = '<div style="font-size:13px; color:var(--critical);">Could not load library.</div>';
-  }
-}
+        if (plRes.ok) {
+          const plData = await plRes.json();
+          const items = plData.items || [];
+          html += items.map(p => {
+            if (!p) return '';
+            const img = p.images?.[0]?.url || '';
+            const totalTracks = p.tracks?.total ?? p.items?.total;
+            const count = totalTracks !== undefined ? `${totalTracks} tracks` : 'Playlist';
+            return `<div class="app-card sp-playlist-card" data-pl-id="${escapeCalendarText(p.id)}" data-pl-name="${escapeCalendarText(p.name || 'Playlist')}" data-pl-img="${escapeCalendarText(img)}" onclick="handlePlaylistCardClick(this)">
+              <div class="sp-playlist-cover" style="${img ? `background-image:url(&quot;${escapeCalendarText(img)}&quot;)` : 'background:rgba(29,185,84,0.15)'}"></div>
+              <div style="font-weight:700; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeCalendarText(p.name)}</div>
+              <div style="font-size:11px; color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeCalendarText(count)} • Tap to view</div>
+            </div>`;
+          }).join('');
+        }
+
+        container.innerHTML = html;
+      } catch (e) {
+        console.warn('Failed to load playlists:', e);
+        container.innerHTML = '<div style="font-size:13px; color:var(--critical);">Could not load library.</div>';
+      }
+    }
 
     async function playLikedSongs() {
       pSnd('pop');
