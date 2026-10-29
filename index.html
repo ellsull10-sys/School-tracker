@@ -1313,12 +1313,12 @@
 
     .home-layout { display: flex; flex-direction: column; }
     @media (min-width: 850px) {
-      .screen { width: 100%; max-width: 1760px; margin: 0 auto; padding: 32px 48px 48px 124px; }
+      .screen { width: 100%; max-width: 1440px; margin: 0 auto; padding: 32px 40px 48px 110px; }
       body:not(.bg-active) {
         background-image: radial-gradient(900px 520px at 88% -8%, rgba(100, 116, 139, 0.16), transparent 70%), radial-gradient(760px 520px at 4% 108%, rgba(15, 23, 42, 0.10), transparent 70%);
         background-attachment: fixed;
       }
-      .home-layout { display: grid; grid-template-columns: minmax(400px, 500px) minmax(0, 1fr); gap: 44px; align-items: start; }
+      .home-layout { display: grid; grid-template-columns: minmax(320px, 420px) minmax(0, 1fr); gap: 32px; align-items: start; justify-content: center; }
       .hl-left, .hl-right { display: flex; flex-direction: column; min-width: 0; }
 
       /* Dashboard: roomier, bigger, livelier */
@@ -8368,15 +8368,32 @@
     function formatAiText(text) {
       if (!text) return '';
       let f = text;
-      f = f.replace(/\$\$(.*?)\$\$/g, '$1').replace(/\$(.*?)\$/g, '$1');
+      
+      const codeBlocks = [];
+      f = f.replace(/```([\s\S]*?)```/g, (match, code) => {
+        codeBlocks.push(code);
+        return `%%%CODEBLOCK_${codeBlocks.length - 1}%%%`;
+      });
+
       f = f.replace(/^---+/gm, '<hr style="border: none; border-top: 1px solid rgba(0,0,0,0.1); margin: 12px 0;">');
       f = f.replace(/^###\s+(.*)$/gm, '<strong style="display:block; font-size:16px; margin-top:12px; margin-bottom:4px;">$1</strong>');
       f = f.replace(/^##\s+(.*)$/gm, '<strong style="display:block; font-size:17px; margin-top:14px; margin-bottom:6px;">$1</strong>');
       f = f.replace(/^#\s+(.*)$/gm, '<strong style="display:block; font-size:18px; margin-top:16px; margin-bottom:8px;">$1</strong>');
       f = f.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\*(.*?)\*/g, '<em>$1</em>');
-      f = f.replace(/^\s*[\*\-]\s+(.*)$/gm, '<div style="display:flex; gap:8px; margin-bottom:6px; margin-top:2px;"><span style="color:var(--accent);">•</span><span>$1</span></div>');
-      f = f.replace(/^\s*(\d+\.)\s+(.*)$/gm, '<div style="display:flex; gap:8px; margin-bottom:6px; margin-top:2px;"><span style="color:var(--accent); font-weight:600;">$1</span><span>$2</span></div>');
-      f = f.replace(/\n\n/g, '<div style="height:8px;"></div>').replace(/(?<!>)\n(?!<)/g, ' '); 
+      
+      f = f.replace(/^\s*[\*\-]\s+(.*)$/gm, '<div style="display:flex; gap:8px; margin-bottom:4px; margin-top:2px;"><span style="color:var(--accent);">•</span><span>$1</span></div>');
+      f = f.replace(/^\s*(\d+\.)\s+(.*)$/gm, '<div style="display:flex; gap:8px; margin-bottom:4px; margin-top:2px;"><span style="color:var(--accent); font-weight:600;">$1</span><span>$2</span></div>');
+      
+      f = f.replace(/\n/g, '<br>');
+      f = f.replace(/(<br>\s*){2,}/g, '<div style="height:12px;"></div>');
+      f = f.replace(/<\/div><br>/g, '</div>');
+      f = f.replace(/<br><div/g, '<div');
+
+      f = f.replace(/%%%CODEBLOCK_(\d+)%%%/g, (match, index) => {
+        const cleanCode = codeBlocks[index].replace(/</g, '&lt;').replace(/>/g, '&gt;').trim();
+        return `<div style="background: rgba(0,0,0,0.06); padding: 14px; border-radius: 12px; overflow-x: auto; font-family: monospace; font-size: 13px; margin: 10px 0; white-space: pre-wrap; word-break: break-word;">${cleanCode}</div>`;
+      });
+
       return f;
     }
 
@@ -8424,6 +8441,8 @@
         ? `You are a direct, god-mode assistant. Provide the exact answer immediately without educational filler. Do exactly what ${userName} asks, including writing essays or solving math problems directly.`
         : `You are an expert, strict educational tutor helping ${userName}. \nCRITICAL RULES:\n1. NEVER write essays, paragraphs, or complete assignments for ${userName}.\n2. NEVER give direct answers to math problems.\n3. INSTEAD, guide them using the Socratic method. Ask questions, provide essay structures, brainstorm ideas, and step through math processes step-by-step so they learn. \n4. If they ask you to "write an essay" or "give me the answer", politely refuse and offer to guide them through the process.`;
 
+      const formattingRules = `\n\nCRITICAL FORMATTING RULES:\n1. NEVER use LaTeX for math (no \\binom, \\frac, \\text, or $ symbols). Use standard plain text (e.g. 3/4, ^2, 10C2). \n2. For diagrams, tables, or ASCII art, wrap them EXACTLY in standard Markdown code blocks (\`\`\`).\n3. Speak clearly, kindly, and concisely. Use short paragraphs and bullet points.`;
+
       const sDataMap = sData.map(s => ({
         name: s.name,
         grades: safeArr(s.grades).map(g => ({ name: g.name, score: g.score, outOf: g.outOf })),
@@ -8439,7 +8458,7 @@
         classes: todayCycle.isWeekend ? [] : getTT() || [],
         schoolDays: calendarSchoolConfig
       };
-      const sysPrompt = `${basePersona}\n\nCurrent Subjects, Grades & Homework: ${JSON.stringify(sDataMap)}\nToday's school timetable: ${JSON.stringify(todaySchedule)}\nCalendar labels and colours: ${JSON.stringify(calendarCategories.map(category => ({ name: category, color: calendarCategoryColors[category] })))}\nCurrent custom calendar events (IDs are exact, use them for removals): ${JSON.stringify(calendarContext)}\n\nWhen the student explicitly asks you to add a calendar event, append exactly one JSON object at the very end using this format: {"action":"add_calendar_event","title":"Event title","date":"YYYY-MM-DD","startTime":"HH:MM","endTime":"HH:MM","description":"Optional notes","category":"one of the current calendar labels","color":"#RRGGBB","recurrence":{"frequency":"none|daily|weekly|monthly-date|monthly-weekday|yearly","interval":1,"weekdays":[2],"weekday":2,"nth":2,"until":""}}. Use one of the current calendar labels and its colour unless the student asks for a different colour. For a monthly nth weekday such as every second Tuesday, use frequency monthly-weekday, weekday 2 (Sunday=0), nth 2, and an initial date on that second Tuesday. Use an empty string for optional times/notes. For an explicitly requested calendar deletion, append {"action":"delete_calendar_event","eventId":"EXACT_ID","date":"YYYY-MM-DD"}; omit date to remove the entire series, or include an occurrence date to remove only that occurrence. Only use events in the current calendar list and never invent an ID. When adding, removing, or managing homework, continue to append {"action":"add_hw","subject":"Subject name","task":"Task description","date":"YYYY-MM-DD"} for additions. When the student explicitly asks you to log a grade, append exactly one JSON object at the very end using this format: {"action":"add_grade","subject":"Exact or recognizable subject name","name":"Assessment name","score":17,"outOf":20}. Only create a grade when all four grade fields are clear; score must be between 0 and outOf, and outOf must be greater than 0.`;
+      const sysPrompt = `${basePersona}${formattingRules}\n\nCurrent Subjects, Grades & Homework: ${JSON.stringify(sDataMap)}\nToday's school timetable: ${JSON.stringify(todaySchedule)}\nCalendar labels and colours: ${JSON.stringify(calendarCategories.map(category => ({ name: category, color: calendarCategoryColors[category] })))}\nCurrent custom calendar events (IDs are exact, use them for removals): ${JSON.stringify(calendarContext)}\n\nWhen the student explicitly asks you to add a calendar event, append exactly one JSON object at the very end using this format: {"action":"add_calendar_event","title":"Event title","date":"YYYY-MM-DD","startTime":"HH:MM","endTime":"HH:MM","description":"Optional notes","category":"one of the current calendar labels","color":"#RRGGBB","recurrence":{"frequency":"none|daily|weekly|monthly-date|monthly-weekday|yearly","interval":1,"weekdays":[2],"weekday":2,"nth":2,"until":""}}. Use one of the current calendar labels and its colour unless the student asks for a different colour. For a monthly nth weekday such as every second Tuesday, use frequency monthly-weekday, weekday 2 (Sunday=0), nth 2, and an initial date on that second Tuesday. Use an empty string for optional times/notes. For an explicitly requested calendar deletion, append {"action":"delete_calendar_event","eventId":"EXACT_ID","date":"YYYY-MM-DD"}; omit date to remove the entire series, or include an occurrence date to remove only that occurrence. Only use events in the current calendar list and never invent an ID. When adding, removing, or managing homework, continue to append {"action":"add_hw","subject":"Subject name","task":"Task description","date":"YYYY-MM-DD"} for additions. When the student explicitly asks you to log a grade, append exactly one JSON object at the very end using this format: {"action":"add_grade","subject":"Exact or recognizable subject name","name":"Assessment name","score":17,"outOf":20}. Only create a grade when all four grade fields are clear; score must be between 0 and outOf, and outOf must be greater than 0.`;
 
       const safeHistoryForAPI = aiChatHistory.map((msg, idx) => {
         if (idx === aiChatHistory.length - 1) return msg; 
@@ -9201,44 +9220,49 @@
     }
 
     async function toggleLikeCurrentTrack() {
-      if (!spCurrentTrackId) {
-        showToast('No track playing to like.');
-        return;
-      }
-      pSnd('pop');
-      const token = await getValidSpotifyToken();
-      if (!token) return;
+  if (!spCurrentTrackId) {
+    showToast('No track playing to like.');
+    return;
+  }
+  pSnd('pop');
+  const token = await getValidSpotifyToken();
+  if (!token) return;
 
-      const willLike = !spCurrentTrackLiked;
-      spCurrentTrackLiked = willLike;
+  const willLike = !spCurrentTrackLiked;
+  spCurrentTrackLiked = willLike;
+  updateLikeButtonUI();
+
+  try {
+    const method = willLike ? 'PUT' : 'DELETE';
+    
+    // FIX: Supply Content-Type and JSON body, which Spotify requires to safely handle PUT/DELETE requests.
+    const res = await fetch(`https://api.spotify.com/v1/me/tracks`, {
+      method,
+      headers: { 
+        Authorization: `Bearer ${token}`, 
+        'Content-Type': 'application/json' 
+      },
+      body: JSON.stringify({ ids: [spCurrentTrackId] })
+    });
+    
+    if (res.status === 403) {
+      spCurrentTrackLiked = !willLike;
       updateLikeButtonUI();
-
-      try {
-        const method = willLike ? 'PUT' : 'DELETE';
-        // Changed to use the query parameter format, which Spotify strongly prefers for this endpoint
-        const res = await fetch(`https://api.spotify.com/v1/me/tracks?ids=${spCurrentTrackId}`, {
-          method,
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        
-        if (res.status === 403) {
-          spCurrentTrackLiked = !willLike;
-          updateLikeButtonUI();
-          showToast('Permission denied. Please click Disconnect and Connect again.');
-          return;
-        }
-
-        if (res.ok || res.status === 200 || res.status === 204) {
-          showToast(willLike ? 'Added to Liked Songs! ♥' : 'Removed from Liked Songs');
-        } else {
-          throw new Error('Failed');
-        }
-      } catch (e) {
-        spCurrentTrackLiked = !willLike;
-        updateLikeButtonUI();
-        showToast('Failed to update. Reconnect Spotify if needed.');
-      }
+      showToast('Permission denied. Please click Disconnect and Connect again.');
+      return;
     }
+
+    if (res.ok || res.status === 200 || res.status === 204) {
+      showToast(willLike ? 'Added to Liked Songs! ♥' : 'Removed from Liked Songs');
+    } else {
+      throw new Error('Failed');
+    }
+  } catch (e) {
+    spCurrentTrackLiked = !willLike;
+    updateLikeButtonUI();
+    showToast('Failed to update. Reconnect Spotify if needed.');
+  }
+}
 
     async function loadRecentlyPlayed() {
       const section = $('sp-recently-played-section');
@@ -9387,54 +9411,57 @@
     }
 
     async function loadUserSpotifyPlaylists() {
-      const container = $('sp-user-playlists');
-      if (!container) return;
-      const token = await getValidSpotifyToken();
-      if (!token) return;
+  const container = $('sp-user-playlists');
+  if (!container) return;
+  const token = await getValidSpotifyToken();
+  if (!token) return;
 
-      container.innerHTML = '<div style="font-size:13px; color:var(--text-secondary);">Loading your library...</div>';
-      try {
-        const [plRes, likedRes] = await Promise.all([
-          fetch('https://api.spotify.com/v1/me/playlists?limit=50', { headers: { Authorization: `Bearer ${token}` } }),
-          fetch('https://api.spotify.com/v1/me/tracks?limit=1', { headers: { Authorization: `Bearer ${token}` } }).catch(() => null)
-        ]);
+  container.innerHTML = '<div style="font-size:13px; color:var(--text-secondary);">Loading your library...</div>';
+  try {
+    const [plRes, likedRes] = await Promise.all([
+      fetch('https://api.spotify.com/v1/me/playlists?limit=50', { headers: { Authorization: `Bearer ${token}` } }),
+      fetch('https://api.spotify.com/v1/me/tracks?limit=1', { headers: { Authorization: `Bearer ${token}` } }).catch(() => null)
+    ]);
 
-        let html = '';
+    let html = '';
 
-        // Liked Songs card
-        let likedCountText = 'Saved tracks';
-        if (likedRes && likedRes.ok) {
-          const likedData = await likedRes.json();
-          if (typeof likedData.total === 'number') likedCountText = `${likedData.total} songs`;
-        }
-        html += `<div class="app-card sp-playlist-card" onclick="playLikedSongs()">
-          <div class="sp-playlist-cover" style="background: linear-gradient(135deg, #450af5, #8e8ee5); display:flex; align-items:center; justify-content:center; color:#FFF; font-size:36px; box-shadow: inset 0 0 20px rgba(0,0,0,0.15);">♥</div>
-          <div style="font-weight:700; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Liked Songs</div>
-          <div style="font-size:11px; color:var(--text-secondary);">${likedCountText}</div>
-        </div>`;
-
-        if (plRes.ok) {
-          const plData = await plRes.json();
-          const items = plData.items || [];
-          html += items.map(p => {
-            if (!p) return '';
-            const img = p.images?.[0]?.url || '';
-            const count = p.tracks?.total !== undefined ? `${p.tracks.total} tracks` : 'Playlist';
-            const safeName = (p.name || 'Playlist').replace(/'/g, "\\'");
-            return `<div class="app-card sp-playlist-card" onclick="openPlaylistModal('${p.id}', '${safeName}', '${img}')">
-              <div class="sp-playlist-cover" style="${img ? `background-image:url('${img}')` : 'background:rgba(29,185,84,0.15)'}"></div>
-              <div style="font-weight:700; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeCalendarText(p.name)}</div>
-              <div style="font-size:11px; color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeCalendarText(count)} • Tap to view</div>
-            </div>`;
-          }).join('');
-        }
-
-        container.innerHTML = html;
-      } catch (e) {
-        console.warn('Failed to load playlists:', e);
-        container.innerHTML = '<div style="font-size:13px; color:var(--critical);">Could not load library.</div>';
-      }
+    // Liked Songs card
+    let likedCountText = 'Saved tracks';
+    if (likedRes && likedRes.ok) {
+      const likedData = await likedRes.json();
+      if (typeof likedData.total === 'number') likedCountText = `${likedData.total} songs`;
     }
+    html += `<div class="app-card sp-playlist-card" onclick="playLikedSongs()">
+      <div class="sp-playlist-cover" style="background: linear-gradient(135deg, #450af5, #8e8ee5); display:flex; align-items:center; justify-content:center; color:#FFF; font-size:36px; box-shadow: inset 0 0 20px rgba(0,0,0,0.15);">♥</div>
+      <div style="font-weight:700; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Liked Songs</div>
+      <div style="font-size:11px; color:var(--text-secondary);">${likedCountText}</div>
+    </div>`;
+
+    if (plRes.ok) {
+      const plData = await plRes.json();
+      const items = plData.items || [];
+      html += items.map(p => {
+        if (!p) return '';
+        const img = p.images?.[0]?.url || '';
+        const count = p.tracks?.total !== undefined ? `${p.tracks.total} tracks` : 'Playlist';
+        
+        // FIX: Escape double quotes and newlines to prevent breaking the HTML attribute
+        const safeName = (p.name || 'Playlist').replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, ' ').replace(/\r/g, '');
+        
+        return `<div class="app-card sp-playlist-card" onclick="openPlaylistModal('${p.id}', '${safeName}', '${img}')">
+          <div class="sp-playlist-cover" style="${img ? `background-image:url('${img}')` : 'background:rgba(29,185,84,0.15)'}"></div>
+          <div style="font-weight:700; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeCalendarText(p.name)}</div>
+          <div style="font-size:11px; color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeCalendarText(count)} • Tap to view</div>
+        </div>`;
+      }).join('');
+    }
+
+    container.innerHTML = html;
+  } catch (e) {
+    console.warn('Failed to load playlists:', e);
+    container.innerHTML = '<div style="font-size:13px; color:var(--critical);">Could not load library.</div>';
+  }
+}
 
     async function playLikedSongs() {
       pSnd('pop');
