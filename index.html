@@ -149,16 +149,7 @@
       z-index: 1;
     }
     #splash-hole-circle {
-      transform-origin: center;
-      transform-box: fill-box;
-      transform: scale(0);
-      r: 0;
-      transition: transform 0.6s cubic-bezier(0.25, 1, 0.3, 1), r 0.6s cubic-bezier(0.25, 1, 0.3, 1);
-      will-change: transform;
-    }
-    #splash-blast.expand #splash-hole-circle {
-      transform: scale(1.5);
-      r: 1500; /* Safari iOS will use this directly to expand the hole */
+      will-change: auto;
     }
 
     .auth-overlay {
@@ -475,7 +466,7 @@
       backface-visibility: hidden;
       transform-style: preserve-3d;
     }
-    .nav-liquid-indicator.settle { transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
+    .nav-liquid-indicator.settle { opacity: 0 !important; transition: opacity 0.12s ease, transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
     /* While scrubbing every item is a fixed icon-only size, so layout never shifts under the finger */
     .bottom-nav.is-scrubbing .nav-item { transition: color 0.15s ease, transform 0.2s ease !important; }
     .bottom-nav.is-scrubbing .nav-item .nav-label { opacity: 0 !important; width: 0 !important; transform: none !important; transition: none !important; }
@@ -1698,7 +1689,7 @@
       <defs>
         <mask id="splash-hole">
           <rect x="-1000" y="-1000" width="3000" height="3000" fill="white"></rect>
-          <circle id="splash-hole-circle" cx="500" cy="500" r="1200" fill="black"></circle>
+          <circle id="splash-hole-circle" cx="500" cy="500" r="0" fill="black"></circle>
         </mask>
       </defs>
       <rect x="-1000" y="-1000" width="3000" height="3000" fill="#0B1120" mask="url(#splash-hole)"></rect>
@@ -3210,17 +3201,21 @@
         const img = new Image(); 
         img.onload = () => { 
           const c = document.createElement('canvas');
-          const s = Math.min(150 / img.width, 1); 
-          c.width = img.width * s;
-          c.height = img.height * s; 
-          c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); 
+          const maxDim = 600;
+          const s = Math.min(maxDim / Math.max(img.width, img.height), 1); 
+          c.width = Math.round(img.width * s);
+          c.height = Math.round(img.height * s); 
+          const ctx = c.getContext('2d');
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+          ctx.drawImage(img, 0, 0, c.width, c.height); 
           if (!uData) uData = {};
-          uData.avatar = c.toDataURL('image/jpeg', 0.5);
+          uData.avatar = c.toDataURL('image/jpeg', 0.92);
           safeStorage.set('org_user', uData);
           writeCloudData();
           updateAllAvatars();
           pSnd('success');
-          showToast("Profile avatar updated! 📷");
+          showToast("Profile avatar updated in HD! 📷");
         }; 
         img.src = ev.target.result; 
       };
@@ -4614,6 +4609,8 @@
       tracker.classList.remove('reveal');
       icon.classList.remove('reveal', 'glow');
       blast.classList.remove('expand');
+      const holeCircle = $('splash-hole-circle');
+      if (holeCircle) holeCircle.setAttribute('r', '0');
       const reelWords = ['Plan', 'Schedule', 'Study', 'Focus', 'Plan', 'Study', 'Schedule', 'Focus', 'School'];
       flasher.innerHTML = `<div id="splash-reel">${reelWords.map(w => `<span class="splash-word">${w}</span>`).join('')}</div>`;
       const reel = $('splash-reel');
@@ -4658,10 +4655,25 @@
       content.style.opacity = '0';
       content.style.transform = 'scale(0.95)';
 
-      // 4. Trigger fast aperture expansion
+      // 4. Trigger cross-platform SVG aperture expansion (works on iOS Safari, Android, & Desktop)
       blast.classList.add('expand');
-
-      await waitForSplash(520);
+      if (holeCircle) {
+        const duration = 540;
+        const startTime = performance.now();
+        const maxRadius = 1800;
+        await new Promise(resolve => {
+          function stepCircle(now) {
+            const t = Math.min(1, (now - startTime) / duration);
+            const eased = 1 - Math.pow(1 - t, 3); // Smooth cubic ease-out
+            holeCircle.setAttribute('r', String(eased * maxRadius));
+            if (t < 1) requestAnimationFrame(stepCircle);
+            else resolve();
+          }
+          requestAnimationFrame(stepCircle);
+        });
+      } else {
+        await waitForSplash(520);
+      }
       onComplete();
     }
 
@@ -8171,10 +8183,13 @@
         scrubbing = true;
         nav.querySelectorAll('.show-label').forEach(e => e.classList.remove('show-label'));
         ind.classList.remove('settle');
+        ind.style.opacity = '1';
         nav.classList.add('is-scrubbing');
         measure(); // measured after the class applies, so positions match the fixed icon-only layout
         cp = clamp(fp);
-        target = null;
+        place(cp, 1, 1);
+        target = nearest(cp).el;
+        nav.querySelectorAll('.nav-item').forEach(e => e.classList.toggle('scrub-target', e === target));
         pSnd('pop');
         lastTime = performance.now();
         raf = requestAnimationFrame(frame);
@@ -8183,13 +8198,23 @@
       const end = commit => {
         clearTimeout(holdT);
         cancelAnimationFrame(raf);
-        const item = scrubbing ? target : down;
+        const item = scrubbing ? (target || nearest(clamp(fp)).el) : down;
         if (scrubbing) {
-          const it = items.find(i => i.el === target);
-          ind.classList.add('settle');
+          const it = items.find(i => i.el === item);
           if (it) place(it.c, 1, 1);
+          ind.classList.add('settle');
+          ind.style.opacity = '0';
           nav.classList.remove('is-scrubbing');
           nav.querySelectorAll('.scrub-target').forEach(e => e.classList.remove('scrub-target'));
+          setTimeout(() => {
+            if (!scrubbing) {
+              ind.classList.remove('settle');
+              ind.style.transform = 'translate3d(0, 0, 0) scale(1, 1)';
+            }
+          }, 160);
+        } else {
+          ind.style.opacity = '0';
+          nav.classList.remove('is-scrubbing');
         }
         scrubbing = false;
         down = null;
@@ -8223,8 +8248,16 @@
         if (scrubbing && e.cancelable) e.preventDefault();
       });
 
-      window.addEventListener('pointerup', e => { if (down) { const isOverNav = e.target.closest('.bottom-nav'); end(!!isOverNav); } });
+      const finishPointer = e => {
+        if (!down) return;
+        try { if (e && e.pointerId !== undefined) nav.releasePointerCapture(e.pointerId); } catch (_) {}
+        end(true);
+      };
+
+      window.addEventListener('pointerup', finishPointer);
       window.addEventListener('pointercancel', () => { if (down) end(false); });
+      window.addEventListener('touchend', () => { if (down) end(true); }, { passive: true });
+      window.addEventListener('touchcancel', () => { if (down) end(false); }, { passive: true });
     }
 
     let aiChatHistory = safeStorage.get('org_ai_chat_hist', []);
@@ -8649,7 +8682,11 @@
     let spCurrentTrackLiked = false;
 
     function getSpotifyRedirectUri() {
-      return window.location.origin + window.location.pathname;
+      let path = window.location.pathname;
+      if (path.endsWith('/index.html')) {
+        path = path.slice(0, -10);
+      }
+      return window.location.origin + path;
     }
 
     function generateRandomString(length) {
