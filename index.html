@@ -29,6 +29,7 @@
 
 <!-- Optical Character Recognition Engine -->
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@7/dist/tesseract.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js"></script>
 
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -824,6 +825,9 @@
     .average-banner { padding: 16px; text-align: center; font-weight: 700; font-size: 16px; margin-bottom: 16px; }
 
     .photo-gallery { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 24px; margin-bottom: -16px; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .subject-file-card { flex: 0 0 190px; min-height: 95px; display: flex; align-items: center; gap: 10px; padding: 14px; border-radius: 14px; background: var(--card-bg); border: 1px solid var(--card-border); cursor: pointer; }
+    .subject-file-card .file-icon { font-size: 26px; }
+    .subject-file-card .file-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 700; }
     .photo-card { flex: 0 0 130px; height: 95px; scroll-snap-align: start; border-radius: 14px; background-size: cover; background-position: center; border: 1px solid var(--card-border); position: relative; }
     .del-photo { position: absolute; top: -6px; right: -6px; background: var(--critical); color: #FFFFFF; border: none; width: 22px; height: 22px; border-radius: 50%; font-weight: bold; font-size: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
     
@@ -1290,7 +1294,7 @@
     .ai-msg.user { justify-content: flex-end; }
     .ai-msg.assistant { justify-content: flex-start; }
     
-    .ai-bubble { max-width: 82%; padding: 12px 16px; border-radius: 20px; font-size: 15px; line-height: 1.4; word-wrap: break-word; }
+    .ai-bubble { max-width: min(92%, 760px); padding: 14px 16px; border-radius: 20px; font-size: 15px; line-height: 1.55; overflow-wrap: anywhere; word-break: normal; white-space: normal; }
     .ai-msg.user .ai-bubble { background: var(--accent-grad); color: #FFFFFF; border-bottom-right-radius: 4px; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15); }
     .ai-msg.assistant .ai-bubble { background: rgba(120, 120, 128, 0.14); border: 1px solid var(--card-border); color: var(--text-primary); border-bottom-left-radius: 4px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
     
@@ -1300,6 +1304,27 @@
     #ai-img-preview { display: flex; gap: 10px; flex-wrap: wrap; }
     .ai-img-thumb { position: relative; width: 60px; height: 60px; border-radius: 12px; background-size: cover; background-position: center; border: 1px solid var(--card-border); }
     .ai-del-thumb { position: absolute; top: -6px; right: -6px; background: var(--critical); color: white; width: 20px; height: 20px; border-radius: 50%; border: none; font-size: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    #ai-file-preview { display: flex; gap: 8px; flex-wrap: wrap; }
+    .ai-file-chip { display: inline-flex; align-items: center; gap: 8px; max-width: 100%; padding: 8px 10px; border-radius: 12px; background: color-mix(in srgb, var(--accent) 10%, transparent); border: 1px solid var(--card-border); color: var(--text-primary); font-size: 12px; font-weight: 700; }
+    .ai-file-chip span { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .ai-file-chip button { border: 0; background: transparent; color: var(--text-secondary); cursor: pointer; font-size: 18px; line-height: 1; padding: 0; }
+    .ai-file-card { display: inline-flex; align-items: center; gap: 8px; padding: 7px 10px; margin-bottom: 8px; border-radius: 10px; background: rgba(120,120,128,0.12); font-size: 12px; font-weight: 700; }
+    #photo-viewer-modal { display: none; position: fixed; inset: 0; z-index: 120000; align-items: center; justify-content: center; padding: 20px; background: rgba(0,0,0,0.78); opacity: 0; transition: opacity 0.25s ease; }
+    #attachment-viewer-modal { display: none; position: fixed; inset: 0; z-index: 120000; align-items: center; justify-content: center; padding: 20px; background: rgba(0,0,0,0.78); opacity: 0; transition: opacity 0.25s ease; }
+    #photo-viewer-modal .photo-viewer-card, #attachment-viewer-modal .photo-viewer-card { position: relative; display: flex; flex-direction: column; gap: 12px; width: min(100%, 760px); max-height: 92vh; padding: 14px; border-radius: 22px; background: var(--card-bg); box-shadow: 0 24px 70px rgba(0,0,0,0.45); }
+    #photo-viewer-img { display: block; width: 100%; max-height: calc(92vh - 100px); object-fit: contain; border-radius: 14px; background: rgba(0,0,0,0.12); }
+    #attachment-viewer-frame { display: none; width: 100%; height: min(70vh, 720px); border: 0; border-radius: 14px; background: #fff; }
+    #attachment-viewer-content { display: none; max-height: min(70vh, 720px); overflow: auto; padding: 20px; border-radius: 14px; background: #fff; color: #1c1c1e; line-height: 1.6; user-select: text; -webkit-user-select: text; }
+    .photo-viewer-actions { display: flex; gap: 8px; }
+    .photo-viewer-actions button { flex: 1; min-height: 44px; }
+    .subject-file-card button.subject-file-view { position: relative; inset: auto; width: auto; height: auto; padding: 7px 9px; border: 0; border-radius: 9px; background: var(--accent-grad); color: #fff; font-size: 11px; font-weight: 800; cursor: pointer; }
+    #ai-screen.ai-context-panel { position: fixed; inset: 0 0 0 auto; z-index: 110000; width: min(520px, 100vw); max-width: none; margin: 0; padding: 24px; padding-bottom: 24px; background: var(--bg-base); border-left: 1px solid var(--card-border); box-shadow: -20px 0 50px rgba(0,0,0,0.18); }
+    @media (max-width: 849px) {
+      #ai-screen.ai-context-panel { padding: calc(env(safe-area-inset-top) + 16px) 16px calc(env(safe-area-inset-bottom) + 16px); }
+    }
+    #ai-screen.ai-context-panel .ai-context-banner { display: flex; }
+    .ai-context-banner { display: none; align-items: center; gap: 10px; padding: 10px 12px; margin: 0 0 10px; border-radius: 14px; background: color-mix(in srgb, var(--accent) 10%, var(--card-bg)); border: 1px solid var(--card-border); font-size: 13px; font-weight: 700; }
+    .ai-context-banner img { width: 42px; height: 42px; object-fit: cover; border-radius: 9px; }
     @keyframes chatFadeIn { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
     .home-layout { display: flex; flex-direction: column; }
@@ -2461,10 +2486,10 @@
     </div>
     <div id="detail-statuses" class="cascade-item d-2"></div>
     <div class="cascade-item d-3 flex-between" style="margin-top:20px; margin-bottom:8px;">
-      <h3 style="margin:0;">Captured Notes</h3>
-      <button class="add-btn flex-between" style="padding:6px 14px; font-size:13px; gap:6px;" onclick="$('camera-input').click()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Scan</button>
+      <h3 style="margin:0;">Images & Files</h3>
+      <button class="add-btn flex-between" style="padding:6px 14px; font-size:13px; gap:6px;" onclick="$('camera-input').click()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Add</button>
     </div>
-    <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none" onchange="processPhoto(event)">
+    <input type="file" id="camera-input" accept="image/*,.pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" capture="environment" style="display:none" onchange="processSubjectAttachment(event)">
     <div class="photo-gallery cascade-item d-4" id="photo-gallery"></div>
     <h3 class="cascade-item d-5">Homework</h3>
     <div class="input-group cascade-item d-6"><input type="text" id="hw-desc" placeholder="Homework description..."><input type="date" id="hw-date"><button class="add-btn" onclick="addHW()">Add</button></div>
@@ -2655,16 +2680,43 @@
     </div>
     <div id="ai-chat-history" class="cascade-item d-2"></div>
     <div id="ai-input-wrapper" class="app-card cascade-item d-3">
+      <div id="ai-context-banner" class="ai-context-banner"><img id="ai-context-thumb" alt="Image being discussed"><span>Ask questions about this subject image</span><button class="btn-grey" style="margin-left:auto; border:0; border-radius:9px; padding:6px 9px; cursor:pointer;" onclick="clearAiContext()">Close</button></div>
       <div id="ai-img-preview"></div>
+      <div id="ai-file-preview"></div>
       <div class="ai-controls">
         <input type="file" id="ai-img-upload" accept="image/*" style="display:none;" onchange="handleAiImg(event)">
+        <input type="file" id="ai-file-upload" accept=".pdf,.txt,.md,.csv,.doc,.docx,application/pdf,text/plain,text/markdown,text/csv,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" style="display:none;" onchange="handleAiFile(event)">
         <button class="icon-btn btn-grey" onclick="document.getElementById('ai-img-upload').click()">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+        </button>
+        <button class="icon-btn btn-grey" aria-label="Attach a file" title="Attach a PDF or file" onclick="document.getElementById('ai-file-upload').click()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="8" y1="13" x2="16" y2="13"></line><line x1="8" y1="17" x2="16" y2="17"></line></svg>
         </button>
         <input type="text" id="ai-text-input" placeholder="Message Tutor..." onkeypress="if(event.key==='Enter') sendAiMsg()">
         <button class="icon-btn" onclick="sendAiMsg()">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
         </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="photo-viewer-modal" role="dialog" aria-modal="true" aria-label="Captured subject image">
+    <div class="photo-viewer-card">
+      <button class="icon-btn" aria-label="Close image" onclick="closePhotoViewer()" style="position:absolute; top:10px; right:10px; z-index:1; width:36px !important; height:36px !important; min-width:36px !important; min-height:36px !important;">×</button>
+      <img id="photo-viewer-img" alt="Captured subject note">
+      <div class="photo-viewer-actions">
+        <button class="add-btn" onclick="askAiAboutCurrentPhoto()">Ask AI about this image</button>
+        <button class="add-btn btn-grey" onclick="closePhotoViewer()">Done</button>
+      </div>
+
+      <div id="attachment-viewer-modal" role="dialog" aria-modal="true" aria-label="Subject file viewer">
+        <div class="photo-viewer-card">
+          <button class="icon-btn" aria-label="Close file" onclick="closeAttachmentViewer()" style="position:absolute; top:10px; right:10px; z-index:1; width:36px !important; height:36px !important; min-width:36px !important; min-height:36px !important;">×</button>
+          <div id="attachment-viewer-title" style="font-weight:800; padding-right:42px;"></div>
+          <iframe id="attachment-viewer-frame" title="PDF preview"></iframe>
+          <div id="attachment-viewer-content"></div>
+          <div class="photo-viewer-actions"><button class="add-btn btn-grey" onclick="closeAttachmentViewer()">Done</button></div>
+        </div>
       </div>
     </div>
   </div>
@@ -2923,7 +2975,8 @@
         homework: safeArr(s.homework),
         notes: s.notes || '',
         grades: safeArr(s.grades),
-        photos: safeArr(s.photos)
+        photos: safeArr(s.photos),
+        attachments: safeArr(s.attachments)
       }));
     }
 
@@ -3036,6 +3089,7 @@
     let ring = safeStorage.get('org_ring', { score: 0 });
     let uData = safeStorage.get('org_user', null);
     let appSet = safeStorage.get('org_settings', { bgEnabled: false, bgOpacity: 50 });
+    sData = normSubs(sData);
 
     // --- FIREBASE INITIALIZATION ADDED HERE ---
     const firebaseConfig = {
@@ -3292,6 +3346,7 @@
       });
       const scr = $(screenId);
       if (scr) scr.classList.add('active');
+      if (screenId !== 'ai-screen') $('ai-screen')?.classList.remove('ai-context-panel');
       window.scrollTo(0,0);
       if (screenId === 'home-screen') { cSubId = null; if (uData && uData.f) renderHome(false); }
       if (screenId === 'profile-screen' && !hasProfileChanges()) populateProfileEditor();
@@ -5697,9 +5752,16 @@
       }
       
       const pG = $('photo-gallery');
-      if (s.photos.length > 0) {
+      const attachments = [
+        ...safeArr(s.photos).map(p => ({ ...p, kind: 'image' })),
+        ...safeArr(s.attachments).map(file => ({ ...file, kind: 'file' }))
+      ];
+      if (attachments.length > 0) {
         pG.style.display = 'flex';
-        pG.innerHTML = s.photos.map(p => `<div class="photo-card cascade-item" style="animation-delay: 0.15s; background-image: url('${p.img}'); cursor: pointer;" onclick="openPhotoViewer('${p.img}')"><button class="del-photo" onclick="event.stopPropagation(); delPhoto('${p.id}')">×</button></div>`).join('');
+        pG.innerHTML = attachments.map(item => item.kind === 'image'
+          ? `<div class="photo-card cascade-item" style="animation-delay: 0.15s; background-image: url('${item.img}'); cursor: pointer;" onclick="openPhotoViewer('${item.img}')"><button class="del-photo" onclick="event.stopPropagation(); delPhoto('${item.id}')">×</button></div>`
+          : `<div class="subject-file-card cascade-item" onclick="downloadSubjectAttachment('${item.id}')"><div class="file-icon">${item.type === 'application/pdf' || String(item.name || '').toLowerCase().endsWith('.pdf') ? '📕' : '📄'}</div><div style="min-width:0; flex:1;"><div class="file-name">${escapeAiText(item.name)}</div><div style="font-size:11px; color:var(--text-secondary); margin-top:4px;">Tap to download</div></div><button type="button" class="subject-file-view" onclick="event.stopPropagation(); downloadSubjectAttachment('${item.id}')">Download</button><button type="button" class="del-photo" onclick="event.stopPropagation(); delAttachment('${item.id}')">×</button></div>`
+        ).join('');
       } else {
         pG.style.display = 'none';
         pG.innerHTML = '';
@@ -5726,12 +5788,24 @@
     
     function goHome() { navTo('home-screen'); }
 
-    function processPhoto(e) {
+    function processSubjectAttachment(e) {
       const f = e.target.files[0];
       if (!f) return;
       pSnd('pop');
       const r = new FileReader();
       r.onload = ev => {
+        if (!f.type.startsWith('image/')) {
+          const sub = getSub(cSubId);
+          if (sub) {
+            if (!Array.isArray(sub.attachments)) sub.attachments = [];
+            sub.attachments.push({ id: Date.now().toString(), name: f.name, type: f.type, data: ev.target.result });
+            sDat();
+            renderDet(true);
+            showToast("File added & synced.");
+          }
+          e.target.value = '';
+          return;
+        }
         const img = new Image();
         img.onload = () => {
           const c = document.createElement('canvas');
@@ -5755,6 +5829,84 @@
       r.readAsDataURL(f);
     }
 
+    function processPhoto(e) {
+      processSubjectAttachment(e);
+    }
+
+    function openSubjectAttachment(id) {
+      const sub = getSub(cSubId);
+      const file = sub && safeArr(sub.attachments).find(item => String(item.id) === String(id));
+      if (!file) return;
+      const modal = $('attachment-viewer-modal');
+      const title = $('attachment-viewer-title');
+      const frame = $('attachment-viewer-frame');
+      const content = $('attachment-viewer-content');
+      title.textContent = file.name;
+      frame.style.display = 'none';
+      content.style.display = 'none';
+      if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+        frame.src = file.data;
+        frame.style.display = 'block';
+      } else if (file.name.toLowerCase().endsWith('.docx') && window.mammoth) {
+        content.innerHTML = '<div style="color:var(--text-secondary);">Loading document...</div>';
+        content.style.display = 'block';
+        fetch(file.data).then(response => response.arrayBuffer()).then(arrayBuffer =>
+          window.mammoth.convertToHtml({ arrayBuffer })
+        ).then(result => {
+          content.innerHTML = result.value || '<p>This document has no readable text.</p>';
+        }).catch(() => {
+          content.innerHTML = '<p>This Word document could not be previewed here. Please download it to open it.</p>';
+        });
+      } else {
+        content.innerHTML = '<p>This Word format cannot be previewed in the browser. Please download it to open it.</p>';
+        content.style.display = 'block';
+      }
+      modal.style.display = 'flex';
+      requestAnimationFrame(() => { modal.style.opacity = '1'; });
+    }
+
+    function downloadSubjectAttachment(id) {
+      const sub = getSub(cSubId);
+      const file = sub && safeArr(sub.attachments).find(item => String(item.id) === String(id));
+      if (!file || !file.data) {
+        showToast('This file is not available yet.');
+        return;
+      }
+      const link = document.createElement('a');
+      link.href = file.data;
+      link.download = file.name || 'school-tracker-file';
+      link.rel = 'noopener';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      pSnd('success');
+      showToast('Download started.');
+    }
+
+    function closeAttachmentViewer() {
+      const modal = $('attachment-viewer-modal');
+      if (!modal) return;
+      modal.style.opacity = '0';
+      setTimeout(() => {
+        modal.style.display = 'none';
+        $('attachment-viewer-frame').src = '';
+        $('attachment-viewer-content').innerHTML = '';
+      }, 250);
+    }
+
+    function delAttachment(id) {
+      const sub = getSub(cSubId);
+      if (!sub) return;
+      const removedFile = safeArr(sub.attachments).find(file => String(file.id) === String(id));
+      sub.attachments = safeArr(sub.attachments).filter(file => String(file.id) !== String(id));
+      if (removedFile && $('attachment-viewer-modal')?.style.display === 'flex') closeAttachmentViewer();
+      sDat();
+      safeStorage.set('org_subjects', sData);
+      renderDet(true);
+      pSnd('tick');
+      showToast("File removed.");
+    }
+
     function delPhoto(id) {
       pSnd('tick');
       const s = getSub(cSubId);
@@ -5768,6 +5920,7 @@
 
     function openPhotoViewer(imgUrl) {
       pSnd('pop');
+      currentPhotoUrl = imgUrl;
       const modal = $('photo-viewer-modal');
       const img = $('photo-viewer-img');
       if (!modal || !img) return;
@@ -5784,6 +5937,7 @@
       setTimeout(() => {
         modal.style.display = 'none';
         $('photo-viewer-img').src = '';
+        currentPhotoUrl = null;
       }, 250);
     }
 
@@ -8263,6 +8417,9 @@
     let aiChatHistory = safeStorage.get('org_ai_chat_hist', []);
     let aiChatSessions = safeStorage.get('org_ai_sessions', []);
     let currentAiImageBase64 = null;
+    let currentAiFile = null;
+    let currentAiContextImage = null;
+    let currentPhotoUrl = null;
 
     function checkGodMode() {
       const isUnlocked = localStorage.getItem('org_ai_unlocked') === 'true';
@@ -8332,10 +8489,77 @@
       reader.readAsDataURL(file);
     }
 
+    function handleAiFile(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      if (file.size > 6 * 1024 * 1024) {
+        showToast('Please choose a file smaller than 6 MB.');
+        e.target.value = '';
+        return;
+      }
+      pSnd('pop');
+      const reader = new FileReader();
+      reader.onload = ev => {
+        currentAiFile = {
+          name: file.name,
+          type: file.type || 'application/octet-stream',
+          size: file.size,
+          data: ev.target.result
+        };
+        renderAiFilePreview();
+      };
+      reader.readAsDataURL(file);
+      e.target.value = '';
+    }
+
+    function renderAiFilePreview() {
+      const preview = document.getElementById('ai-file-preview');
+      if (!preview) return;
+      preview.innerHTML = currentAiFile
+        ? `<div class="ai-file-chip"><span>📄 ${escapeAiText(currentAiFile.name)}</span><button aria-label="Remove file" onclick="clearAiFile()">×</button></div>`
+        : '';
+    }
+
+    function clearAiFile() {
+      currentAiFile = null;
+      renderAiFilePreview();
+    }
+
+    function escapeAiText(value) {
+      return String(value || '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+    }
+
     function clearAiImg() {
       currentAiImageBase64 = null;
       const preview = document.getElementById('ai-img-preview');
       if (preview) preview.innerHTML = '';
+    }
+
+    function askAiAboutCurrentPhoto() {
+      if (!currentPhotoUrl) return;
+      currentAiContextImage = currentPhotoUrl;
+      currentAiImageBase64 = currentPhotoUrl;
+      const thumb = document.getElementById('ai-context-thumb');
+      if (thumb) thumb.src = currentPhotoUrl;
+      closePhotoViewer();
+      const detailScreen = $('detail-screen');
+      navTo('ai-screen');
+      if (detailScreen) detailScreen.classList.add('active');
+      document.getElementById('ai-screen')?.classList.add('ai-context-panel');
+      document.getElementById('ai-text-input')?.focus();
+      pSnd('success');
+    }
+
+    function clearAiContext() {
+      currentAiContextImage = null;
+      currentAiImageBase64 = null;
+      const imagePreview = document.getElementById('ai-img-preview');
+      if (imagePreview) imagePreview.innerHTML = '';
+      if (!currentAiImageBase64) {
+        const banner = document.getElementById('ai-context-banner');
+        if (banner) banner.style.display = 'none';
+      }
+      document.getElementById('ai-screen')?.classList.remove('ai-context-panel');
     }
 
     function toggleAiHistory() {
@@ -8360,7 +8584,10 @@
         let title = "Previous Chat";
         if (firstUserMsg) {
           if (typeof firstUserMsg.content === 'string') title = firstUserMsg.content;
-          else if (Array.isArray(firstUserMsg.content)) title = firstUserMsg.content.find(c => c.type === 'text')?.text || "Image Upload";
+          else if (Array.isArray(firstUserMsg.content)) {
+            const file = firstUserMsg.content.find(c => c.type === 'file')?.file;
+            title = firstUserMsg.content.find(c => c.type === 'text')?.text || (file ? file.filename : "Image Upload");
+          }
         }
         if (title.length > 25) title = title.substring(0, 25) + '...';
         return `<div class="list-item app-card" style="padding:12px 16px; margin-bottom:0; cursor:pointer; background:var(--input-bg); border:none;" onclick="loadAiSession(${i})"><div style="font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${title}</div></div>`;
@@ -8397,7 +8624,7 @@
 
     function formatAiText(text) {
       if (!text) return '';
-      let f = text;
+      let f = escapeAiText(text);
       
       const codeBlocks = [];
       f = f.replace(/```([\s\S]*?)```/g, (match, code) => {
@@ -8433,33 +8660,42 @@
       const historyHTML = aiChatHistory.map(msg => {
         let textPart = typeof msg.content === 'string' ? msg.content : msg.content.find(c => c.type === 'text')?.text || '';
         let imgPart = typeof msg.content === 'object' && Array.isArray(msg.content) ? msg.content.find(c => c.type === 'image_url')?.image_url.url : null;
+        const filePart = typeof msg.content === 'object' && Array.isArray(msg.content) ? msg.content.find(c => c.type === 'file')?.file : null;
         let imgHTML = imgPart ? `<img src="${imgPart}" style="max-width:100%; border-radius:8px; margin-bottom:8px; display:block;">` : '';
-        return `<div class="ai-msg ${msg.role}"><div class="ai-bubble">${imgHTML}${formatAiText(textPart)}</div></div>`;
+        const fileHTML = filePart ? `<div class="ai-file-card">📄 <span>${escapeAiText(filePart.filename || 'Attached file')}</span></div>` : '';
+        return `<div class="ai-msg ${msg.role}"><div class="ai-bubble">${imgHTML}${fileHTML}${formatAiText(textPart)}</div></div>`;
       }).join('');
       chatBox.innerHTML = initialGreeting + historyHTML;
       chatBox.scrollTop = chatBox.scrollHeight;
+      const banner = document.getElementById('ai-context-banner');
+      if (banner) banner.style.display = currentAiContextImage ? 'flex' : 'none';
+      const thumb = document.getElementById('ai-context-thumb');
+      if (thumb && currentAiContextImage) thumb.src = currentAiContextImage;
+      renderAiFilePreview();
     }
 
     async function sendAiMsg() {
       const inputEl = document.getElementById('ai-text-input');
       const text = inputEl.value.trim();
-      if (!text && !currentAiImageBase64) return;
+      if (!text && !currentAiImageBase64 && !currentAiContextImage && !currentAiFile) return;
       pSnd('pop');
       
       let newUserMsg = { role: "user" };
-      if (currentAiImageBase64) {
-        newUserMsg.content = [
-          { type: "text", text: text || "Please analyze this image." },
-          { type: "image_url", image_url: { url: currentAiImageBase64 } }
-        ];
+      const imageToSend = currentAiImageBase64 || currentAiContextImage;
+      if (imageToSend || currentAiFile) {
+        newUserMsg.content = [{ type: "text", text: text || (imageToSend ? "Please analyze this image." : "Please review this file.") }];
+        if (imageToSend) newUserMsg.content.push({ type: "image_url", image_url: { url: imageToSend } });
+        if (currentAiFile) newUserMsg.content.push({ type: "file", file: { filename: currentAiFile.name, file_data: currentAiFile.data } });
       } else {
         newUserMsg.content = text;
       }
       
       aiChatHistory.push(newUserMsg);
+      safeStorage.set('org_ai_chat_hist', aiChatHistory);
       renderAiChat();
       inputEl.value = '';
       clearAiImg(); 
+      clearAiFile();
       
       const chatBox = document.getElementById('ai-chat-history');
       chatBox.insertAdjacentHTML('beforeend', `<div id="ai-loading" class="ai-msg assistant"><div class="ai-bubble" style="opacity:0.6;">Thinking...</div></div>`);
