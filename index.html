@@ -1984,7 +1984,8 @@
   <div id="tos-modal" style="display:none;position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.4);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity .3s ease;">
     <div class="app-card" style="padding:28px 24px;width:100%;max-width:440px;">
       <h2 style="margin-top:0;margin-bottom:14px;font-size:22px;text-align:center;">Terms of Service</h2>
-      <p style="font-size:14px;color:var(--text-secondary);line-height:1.55;margin:0 auto 20px;">By using this app, you <strong>agree</strong> that your personal data may be stored and processed, and you commit to using the platform <strong>appropriately</strong> and <strong>lawfully</strong>.</p>
+      <p style="font-size:14px;color:var(--text-secondary);line-height:1.55;margin:0 auto 12px;">By using this app, you <strong>agree</strong> to use the platform <strong>appropriately</strong> and <strong>lawfully</strong>.</p>
+      <p style="font-size:13px;color:var(--text-secondary);line-height:1.5;margin:0 auto 20px;padding:12px;border-radius:12px;background:var(--input-bg);border:1px solid var(--card-border);"><strong>Privacy & Storage Notice:</strong> Server chats and file transfers are <strong>not end-to-end encrypted</strong>—do not share passwords, addresses, or sensitive personal information. Messages are relayed via the server and saved locally on your device, where they are <strong>automatically deleted after 10 days</strong>.</p>
       <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:22px;">
         <input type="checkbox" id="tos-checkbox" onchange="toggleTosBtn(this.checked)">
         <label for="tos-checkbox">I have read and <strong>agree</strong> to the terms.</label>
@@ -3310,39 +3311,73 @@
         background: rgba(0, 0, 0, 0.03);
       }
 
-      /* Mobile Top Bar */
+      /* Mobile Top Bar (Thumb-Friendly & High Contrast) */
       .dc-mobile-bar {
         display: flex;
         flex-direction: column;
-        border-bottom: 1px solid var(--dc-border);
-        background: var(--dc-side);
+        border-bottom: 1.5px solid var(--dc-border);
+        background: color-mix(in srgb, var(--card-bg) 96%, var(--bg-base));
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
         flex-shrink: 0;
+        z-index: 10;
       }
       .dc-mob-row {
         display: flex;
         align-items: center;
-        gap: 8px;
-        padding: 8px 12px;
+        gap: 10px;
+        padding: 10px 14px;
         overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
       }
       .dc-pill {
-        padding: 6px 12px;
+        position: relative;
+        min-height: 40px;
+        padding: 9px 16px;
         border-radius: 999px;
-        border: 1px solid var(--dc-border);
+        border: 1.5px solid var(--dc-border);
         background: var(--input-bg);
-        color: var(--text-secondary);
-        font-size: 12.5px;
+        color: var(--text-primary);
+        font-family: 'Outfit', sans-serif;
+        font-size: 14px;
         font-weight: 700;
         white-space: nowrap;
         cursor: pointer;
         display: inline-flex;
         align-items: center;
-        gap: 6px;
+        justify-content: center;
+        gap: 8px;
+        flex-shrink: 0;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        transition: transform 0.12s ease, background 0.2s ease, border-color 0.2s ease;
+      }
+      .dc-pill:active {
+        transform: scale(0.95);
       }
       .dc-pill.active {
         background: var(--accent-grad);
         color: #FFFFFF;
         border-color: transparent;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);
+      }
+      .dc-unread-dot {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 18px;
+        height: 18px;
+        padding: 0 5px;
+        border-radius: 999px;
+        background: var(--critical);
+        color: #FFFFFF;
+        font-size: 10.5px;
+        font-weight: 800;
+        line-height: 1;
+      }
+      .dc-srv-btn .dc-unread-dot {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        border: 2px solid var(--bg-base);
       }
 
       /* 3. Main Chat & File Stage */
@@ -3447,6 +3482,18 @@
       .dc-react-pill.reacted {
         border-color: var(--accent);
         background: var(--dc-active);
+      }
+
+      /* Lift Create Server modal above the bottom navigation bar */
+      #dc-create-modal {
+        z-index: 146000;
+        padding-bottom: calc(env(safe-area-inset-bottom) + 115px) !important;
+      }
+      @media (min-width: 850px) {
+        #dc-create-modal {
+          align-items: center;
+          padding-bottom: 24px !important;
+        }
       }
     </style>
 
@@ -3995,21 +4042,942 @@
       syncDebounceTimer = setTimeout(writeCloudData, 300);
     }
 
-    // --- REAL-TIME DISCORD MESSAGING & FILE TRANSFER (SIGNED-IN USERS ONLY) ---
+    // --- SPARK-OPTIMIZED DISCORD RELAY & 10-DAY LOCAL STORAGE ENGINE ---
     const DC_CHANNELS = [
       { id: 'general', label: 'general', icon: 'fa-hashtag' },
       { id: 'files', label: 'files-and-transfers', icon: 'fa-folder-open' },
       { id: 'homework', label: 'homework-help', icon: 'fa-book' }
     ];
+    const DC_TEN_DAYS_MS = 10 * 24 * 60 * 60 * 1000;
+    const DC_RELAY_TTL_MS = 24 * 60 * 60 * 1000;
 
     let dcState = {
       activeCode: safeStorage.get('org_dc_active_code', ''),
       activeChannel: 'general',
       myCodes: safeStorage.get('org_dc_my_codes', []),
+      localStore: safeStorage.get('org_dc_local_cache_v1', {}), // { [code]: { meta, channels: { general: {}, homework: {} }, files: {} } }
       servers: {},
       listeners: {},
+      unread: {},
+      lastSeenTs: safeStorage.get('org_dc_last_seen', {}),
       replyTo: null
     };
+
+    // Purge any local messages or files older than 10 days to keep device storage lean
+    function purgeExpiredLocalDiscordData() {
+      const cutoff = Date.now() - DC_TEN_DAYS_MS;
+      let changed = false;
+
+      Object.keys(dcState.localStore || {}).forEach(code => {
+        const box = dcState.localStore[code];
+        if (!box) return;
+
+        if (box.channels && typeof box.channels === 'object') {
+          Object.keys(box.channels).forEach(ch => {
+            const msgs = box.channels[ch];
+            if (!msgs || typeof msgs !== 'object') return;
+            Object.keys(msgs).forEach(id => {
+              if ((msgs[id]?.ts || 0) < cutoff) {
+                delete msgs[id];
+                changed = true;
+              }
+            });
+          });
+        }
+
+        if (box.files && typeof box.files === 'object') {
+          Object.keys(box.files).forEach(fId => {
+            if ((box.files[fId]?.ts || 0) < cutoff) {
+              delete box.files[fId];
+              changed = true;
+            }
+          });
+        }
+      });
+
+      if (changed) saveDcLocalCache();
+    }
+
+    function saveDcLocalCache() {
+      try {
+        localStorage.setItem('org_dc_local_cache_v1', JSON.stringify(dcState.localStore));
+      } catch (e) {
+        // If localStorage is full, prune oldest messages/files across servers and retry
+        Object.values(dcState.localStore).forEach(box => {
+          if (box.files) {
+            const sortedF = Object.values(box.files).sort((a, b) => (a.ts || 0) - (b.ts || 0));
+            if (sortedF.length > 2) delete box.files[sortedF[0].id];
+          }
+          if (box.channels) {
+            Object.values(box.channels).forEach(chObj => {
+              const sortedM = Object.values(chObj || {}).sort((a, b) => (a.ts || 0) - (b.ts || 0));
+              if (sortedM.length > 15) {
+                sortedM.slice(0, sortedM.length - 15).forEach(m => delete chObj[m.id]);
+              }
+            });
+          }
+        });
+        try {
+          localStorage.setItem('org_dc_local_cache_v1', JSON.stringify(dcState.localStore));
+        } catch (_) {}
+      }
+    }
+
+    function ensureLocalServerBox(code, meta = {}) {
+      if (!dcState.localStore[code]) {
+        dcState.localStore[code] = {
+          meta: { code, name: meta.name || 'Server', ownerUid: meta.ownerUid || '', members: meta.members || {} },
+          channels: { general: {}, homework: {} },
+          files: {}
+        };
+      } else if (meta.name) {
+        dcState.localStore[code].meta = { ...dcState.localStore[code].meta, ...meta };
+      }
+      return dcState.localStore[code];
+    }
+
+    async function notifyDiscordActivity(srvName, chanLabel, author, text, isFile = false) {
+      pSnd('pop');
+      const preview = isFile ? `Sent a file: ${text}` : text;
+      showToast(`💬 ${srvName} (#${chanLabel}) — ${author}: ${preview.slice(0, 48)}`, 4000);
+
+      if (!remindersEnabled) return;
+      if (!await ensureNotificationPermission()) return;
+      try {
+        const options = {
+          body: `${author} in #${chanLabel}: ${preview}`,
+          tag: `dc_${srvName}_${chanLabel}`
+        };
+        const registration = 'serviceWorker' in navigator
+          ? await navigator.serviceWorker.getRegistration()
+          : null;
+        if (registration) await registration.showNotification(`${srvName} • New Message`, options);
+        else new Notification(`${srvName} • New Message`, options);
+      } catch (_) {}
+    }
+
+    function makeStudyGroupCode() {
+      const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      const bytes = new Uint8Array(8);
+      crypto.getRandomValues(bytes);
+      return Array.from(bytes, b => alphabet[b % alphabet.length]).join('');
+    }
+
+    function studyGroupLink(code = dcState.activeCode) {
+      return `${window.location.origin}${window.location.pathname}?studyGroup=${encodeURIComponent(code)}`;
+    }
+
+    function getDcUser() {
+      if (!authUser) return null;
+      const fullName = (uData && uData.f) ? `${uData.f} ${uData.l || ''}`.trim() : (authUser.displayName || authUser.email.split('@')[0]);
+      return {
+        uid: authUser.uid,
+        name: fullName,
+        email: authUser.email || '',
+        avatar: (uData && uData.avatar) ? uData.avatar : ''
+      };
+    }
+
+    function saveDcLocal() {
+      safeStorage.set('org_dc_my_codes', dcState.myCodes);
+      safeStorage.set('org_dc_active_code', dcState.activeCode);
+      saveDcLocalCache();
+    }
+
+    function initStudyGroupSync() {
+      purgeExpiredLocalDiscordData();
+      if (!authUser || !db) {
+        renderDiscordApp();
+        return;
+      }
+      if (studyGroupCode && !dcState.myCodes.includes(studyGroupCode)) {
+        joinDiscordServerByCode(studyGroupCode, true);
+        return;
+      }
+      dcState.myCodes.forEach(code => attachServerListener(code));
+      if (!dcState.activeCode && dcState.myCodes.length > 0) {
+        dcState.activeCode = dcState.myCodes[0];
+      }
+      renderDiscordApp();
+    }
+
+    // Relay-and-Delete Listener: Receives packets from Firebase, saves locally, then deletes them from Firebase
+    function attachServerListener(code) {
+      if (!db || !authUser || dcState.listeners[code]) return;
+      const ref = db.ref(`studyGroups/${code}`);
+      const fn = snap => {
+        const val = snap.val();
+        const me = getDcUser();
+        if (!val || !me) return;
+
+        const localBox = ensureLocalServerBox(code, {
+          name: val.name,
+          ownerUid: val.ownerUid,
+          members: val.members || {}
+        });
+
+        // Register current user in lightweight member presence list
+        if (!val.members || !val.members[me.uid]) {
+          ref.child(`members/${me.uid}`).set({
+            uid: me.uid,
+            name: me.name,
+            role: val.ownerUid === me.uid ? 'Owner' : 'Member',
+            lastSeen: Date.now()
+          });
+        }
+
+        const memberIds = Object.keys(val.members || {});
+        const relayPackets = val.relay && typeof val.relay === 'object' ? Object.values(val.relay) : [];
+        let receivedNewFromOther = null;
+        let localUpdated = false;
+
+        relayPackets.forEach(pkt => {
+          if (!pkt || !pkt.id) return;
+
+          // 1. Ingest packet into local device storage
+          if (pkt.kind === 'delete') {
+            if (localBox.channels?.[pkt.channel]?.[pkt.targetId]) {
+              delete localBox.channels[pkt.channel][pkt.targetId];
+              localUpdated = true;
+            }
+          } else if (pkt.kind === 'react') {
+            const targetMsg = localBox.channels?.[pkt.channel]?.[pkt.targetId];
+            if (targetMsg) {
+              if (!targetMsg.reactions) targetMsg.reactions = {};
+              const arr = safeArr(targetMsg.reactions[pkt.emoji]);
+              targetMsg.reactions[pkt.emoji] = arr.includes(pkt.uid) ? arr.filter(u => u !== pkt.uid) : [...arr, pkt.uid];
+              localUpdated = true;
+            }
+          } else {
+            // Standard message or file packet
+            const chan = pkt.channel || 'general';
+            if (!localBox.channels[chan]) localBox.channels[chan] = {};
+            const isBrandNew = !localBox.channels[chan][pkt.id];
+
+            if (isBrandNew) {
+              localBox.channels[chan][pkt.id] = {
+                id: pkt.id,
+                uid: pkt.uid,
+                author: pkt.author,
+                text: pkt.text || '',
+                ts: pkt.ts || Date.now(),
+                replyTo: pkt.replyTo || '',
+                fileName: pkt.fileName || '',
+                fileType: pkt.fileType || '',
+                fileData: pkt.fileData || '',
+                reactions: {}
+              };
+              if (pkt.fileData && pkt.fileId) {
+                if (!localBox.files) localBox.files = {};
+                localBox.files[pkt.fileId] = {
+                  id: pkt.fileId,
+                  name: pkt.fileName,
+                  type: pkt.fileType,
+                  data: pkt.fileData,
+                  senderName: pkt.author,
+                  ts: pkt.ts || Date.now()
+                };
+              }
+              localUpdated = true;
+
+              if (pkt.uid !== me.uid && (pkt.ts || 0) > (dcState.lastSeenTs[code] || 0)) {
+                receivedNewFromOther = pkt;
+              }
+            }
+          }
+
+          // 2. Acknowledge receipt & delete from Firebase once all members have received it (or after 24h TTL)
+          const acks = pkt.acks || {};
+          const isExpiredRelay = (Date.now() - (pkt.ts || 0)) > DC_RELAY_TTL_MS;
+          const allReceived = memberIds.length > 0 && memberIds.every(uid => uid === pkt.uid || uid === me.uid || acks[uid]);
+
+          if (allReceived || isExpiredRelay) {
+            ref.child(`relay/${pkt.id}`).remove().catch(() => {});
+          } else if (!acks[me.uid]) {
+            ref.child(`relay/${pkt.id}/acks/${me.uid}`).set(true).catch(() => {});
+          }
+        });
+
+        if (localUpdated) {
+          purgeExpiredLocalDiscordData();
+          saveDcLocalCache();
+        }
+
+        if (receivedNewFromOther) {
+          const chanKey = receivedNewFromOther.channel || 'general';
+          const isViewing = $('study-group-screen')?.classList.contains('active') &&
+            dcState.activeCode === code &&
+            dcState.activeChannel === chanKey;
+
+          if (!isViewing) {
+            dcState.unread[code] = (dcState.unread[code] || 0) + 1;
+            notifyDiscordActivity(
+              localBox.meta.name || 'Server',
+              chanKey,
+              receivedNewFromOther.author || 'Member',
+              receivedNewFromOther.fileName || receivedNewFromOther.text || 'New message',
+              Boolean(receivedNewFromOther.fileName)
+            );
+          } else {
+            dcState.lastSeenTs[code] = Date.now();
+            safeStorage.set('org_dc_last_seen', dcState.lastSeenTs);
+          }
+        }
+
+        dcState.servers[code] = localBox;
+        if ($('study-group-screen')?.classList.contains('active')) {
+          renderDiscordApp();
+        }
+      };
+      ref.on('value', fn);
+      dcState.listeners[code] = { ref, fn };
+    }
+
+    function renderStudyGroup() {
+      purgeExpiredLocalDiscordData();
+      renderDiscordApp();
+    }
+
+    function renderDiscordApp() {
+      const rail = $('dc-rail');
+      const sidebar = $('dc-sidebar');
+      const mobServers = $('dc-mob-servers');
+      const mobChannels = $('dc-mob-channels');
+      const header = $('dc-stage-header');
+      const body = $('dc-stage-body');
+      const composer = $('dc-composer');
+      const membersPanel = $('dc-members-panel');
+      if (!rail || !header || !body) return;
+
+      const me = getDcUser();
+
+      if (!me || !db) {
+        rail.innerHTML = '';
+        if (sidebar) sidebar.innerHTML = '';
+        if (mobServers) mobServers.innerHTML = '';
+        if (mobChannels) mobChannels.innerHTML = '';
+        if (composer) composer.style.display = 'none';
+        if (membersPanel) membersPanel.style.display = 'none';
+        header.innerHTML = `<div style="font-family:'Outfit',sans-serif; font-weight:800; font-size:18px;">Messages & Servers</div>`;
+        body.innerHTML = `
+          <div style="margin:auto; max-width:380px; text-align:center; padding:24px; display:flex; flex-direction:column; gap:14px; align-items:center;">
+            <div style="width:56px; height:56px; border-radius:18px; background:var(--accent-grad); color:#fff; display:flex; align-items:center; justify-content:center; font-size:24px;">
+              <i class="fa-solid fa-lock"></i>
+            </div>
+            <h2 style="margin:0; font-size:22px;">Sign In Required</h2>
+            <p style="margin:0; font-size:14px; color:var(--text-secondary); line-height:1.5;">Direct messaging, servers, and file transfers are only available for signed-in accounts.</p>
+            <button type="button" class="add-btn" style="min-height:46px; padding:0 24px;" onclick="loginFromSettings()">Sign In to Continue</button>
+          </div>
+        `;
+        return;
+      }
+
+      const joinedServers = dcState.myCodes
+        .map(c => ({ code: c, box: dcState.localStore[c] }))
+        .filter(s => s.box && s.box.meta);
+      const activeBox = dcState.activeCode ? dcState.localStore[dcState.activeCode] : null;
+
+      // 1. Left Server Rail (Desktop)
+      rail.innerHTML = `
+        <button type="button" class="dc-srv-btn ${!activeBox ? 'active' : ''}" title="Home / Join Server" onclick="selectDcServer('')">
+          <i class="fa-solid fa-comments"></i>
+        </button>
+        <div class="dc-divider"></div>
+        ${joinedServers.map(({ code, box }) => {
+          const initials = String(box.meta.name || 'S').split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+          const uCount = dcState.unread[code] || 0;
+          return `
+            <button type="button" class="dc-srv-btn ${dcState.activeCode === code ? 'active' : ''}" title="${escapeCalendarText(box.meta.name)}" onclick="selectDcServer('${code}')">
+              ${escapeCalendarText(initials)}
+              ${uCount > 0 ? `<span class="dc-unread-dot">${uCount}</span>` : ''}
+            </button>`;
+        }).join('')}
+        <button type="button" class="dc-srv-btn" style="border-style:dashed; color:var(--success);" title="Create Server" onclick="openMobileSheet('dc-create-modal')">
+          <i class="fa-solid fa-plus"></i>
+        </button>
+      `;
+
+      // Mobile Server Bar
+      if (mobServers) {
+        mobServers.innerHTML = `
+          <button type="button" class="dc-pill ${!activeBox ? 'active' : ''}" onclick="selectDcServer('')"><i class="fa-solid fa-comments"></i> Servers</button>
+          ${joinedServers.map(({ code, box }) => {
+            const uCount = dcState.unread[code] || 0;
+            return `
+              <button type="button" class="dc-pill ${dcState.activeCode === code ? 'active' : ''}" onclick="selectDcServer('${code}')">
+                <span>${escapeCalendarText(box.meta.name)}</span>
+                ${uCount > 0 ? `<span class="dc-unread-dot">${uCount}</span>` : ''}
+              </button>`;
+          }).join('')}
+          <button type="button" class="dc-pill" style="color:var(--success); border-style:dashed;" onclick="openMobileSheet('dc-create-modal')">+ Create</button>
+        `;
+      }
+
+      // 2. Home / Join View when no server is selected
+      if (!activeBox) {
+        if (sidebar) {
+          sidebar.innerHTML = `
+            <div class="dc-srv-header"><span>Direct & Servers</span></div>
+            <div class="dc-chan-list">
+              <div class="dc-cat">YOUR SERVERS (${joinedServers.length})</div>
+              ${joinedServers.map(({ code, box }) => `
+                <button type="button" class="dc-chan-btn" onclick="selectDcServer('${code}')">
+                  <i class="fa-solid fa-server"></i>
+                  <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeCalendarText(box.meta.name)}</span>
+                </button>
+              `).join('') || '<div style="padding:8px; font-size:12.5px; color:var(--text-secondary);">No servers joined yet.</div>'}
+            </div>
+            <div class="dc-user-footer">
+              <div class="dc-avatar" style="width:32px; height:32px; font-size:12px; ${me.avatar ? `background-image:url('${me.avatar}')` : ''}">${me.avatar ? '' : escapeCalendarText(me.name.charAt(0))}</div>
+              <div style="flex:1; min-width:0;">
+                <div style="font-size:13px; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeCalendarText(me.name)}</div>
+                <div style="font-size:11px; color:var(--success); font-weight:600;">● Local Cache (10d)</div>
+              </div>
+            </div>
+          `;
+        }
+        if (mobChannels) mobChannels.style.display = 'none';
+        if (composer) composer.style.display = 'none';
+        if (membersPanel) membersPanel.style.display = 'none';
+
+        header.innerHTML = `
+          <div style="font-family:'Outfit',sans-serif; font-weight:800; font-size:18px;">Servers & Messaging</div>
+          <button type="button" class="add-btn" style="min-height:36px; padding:0 14px; font-size:13px;" onclick="openMobileSheet('dc-create-modal')">+ Create Server</button>
+        `;
+
+        body.innerHTML = `
+          <div style="max-width:460px; width:100%; margin:auto; display:flex; flex-direction:column; gap:16px;">
+            <div class="app-card" style="padding:20px; display:flex; flex-direction:column; gap:12px;">
+              <h2 style="margin:0; font-size:19px;">Join a Server with Invite Code</h2>
+              <div class="input-group" style="margin:0;">
+                <input type="text" id="dc-join-code-input" maxlength="12" placeholder="Enter invite code..." style="text-transform:uppercase;">
+                <button type="button" class="add-btn" onclick="joinDiscordServerByCode($('dc-join-code-input').value)">Join</button>
+              </div>
+            </div>
+
+            <div class="app-card" style="padding:20px; display:flex; flex-direction:column; gap:12px;">
+              <h2 style="margin:0; font-size:19px;">Start a New Server</h2>
+              <p style="margin:0; font-size:13px; color:var(--text-secondary); line-height:1.45;">Messages are unencrypted and saved locally on your device for <strong>10 days</strong> before automatic deletion. Do not share sensitive personal info.</p>
+              <button type="button" class="add-btn btn-grey full-w-input" style="min-height:46px;" onclick="openMobileSheet('dc-create-modal')">Create New Server</button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // 3. Active Server View
+      const code = dcState.activeCode;
+      const meta = activeBox.meta || {};
+      const membersList = meta.members ? Object.values(meta.members) : [];
+
+      if (sidebar) {
+        sidebar.innerHTML = `
+          <div class="dc-srv-header">
+            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeCalendarText(meta.name)}</span>
+            <button type="button" class="gs-close-btn" title="Copy Invite Link" onclick="copyDiscordInvite('${code}')"><i class="fa-solid fa-user-plus" style="font-size:12px;"></i></button>
+          </div>
+          <div class="dc-chan-list">
+            <div class="dc-cat">TEXT & FILE CHANNELS</div>
+            ${DC_CHANNELS.map(ch => `
+              <button type="button" class="dc-chan-btn ${dcState.activeChannel === ch.id ? 'active' : ''}" onclick="selectDcChannel('${ch.id}')">
+                <i class="fa-solid ${ch.icon}"></i>
+                <span>${ch.label}</span>
+              </button>
+            `).join('')}
+            <div class="dc-cat" style="margin-top:12px;">SERVER INVITE</div>
+            <div style="padding:8px 10px; border-radius:12px; background:var(--input-bg); border:1px solid var(--dc-border); display:flex; align-items:center; justify-content:space-between;">
+              <span style="font-family:monospace; font-weight:800; font-size:13px;">${code}</span>
+              <button type="button" class="dc-act-btn" onclick="copyDiscordInvite('${code}')">Copy</button>
+            </div>
+            <div style="padding:8px 10px; font-size:11px; color:var(--text-secondary); line-height:1.4;">
+              🔒 Unencrypted • Auto-deletes locally after 10 days.
+            </div>
+            <button type="button" class="dc-chan-btn" style="color:var(--critical); margin-top:auto;" onclick="leaveDiscordServer('${code}')">
+              <i class="fa-solid fa-right-from-bracket"></i>
+              <span>Leave Server</span>
+            </button>
+          </div>
+          <div class="dc-user-footer">
+            <div class="dc-avatar" style="width:32px; height:32px; font-size:12px; ${me.avatar ? `background-image:url('${me.avatar}')` : ''}">${me.avatar ? '' : escapeCalendarText(me.name.charAt(0))}</div>
+            <div style="flex:1; min-width:0;">
+              <div style="font-size:13px; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeCalendarText(me.name)}</div>
+              <div style="font-size:11px; color:var(--success); font-weight:600;">● Online</div>
+            </div>
+          </div>
+        `;
+      }
+
+      if (mobChannels) {
+        mobChannels.style.display = 'flex';
+        mobChannels.innerHTML = DC_CHANNELS.map(ch => `
+          <button type="button" class="dc-pill ${dcState.activeChannel === ch.id ? 'active' : ''}" onclick="selectDcChannel('${ch.id}')">
+            <i class="fa-solid ${ch.icon}"></i> ${ch.label}
+          </button>
+        `).join('') + `<button type="button" class="dc-pill" onclick="copyDiscordInvite('${code}')"><i class="fa-solid fa-link"></i> ${code}</button>`;
+      }
+
+      const activeChObj = DC_CHANNELS.find(c => c.id === dcState.activeChannel) || DC_CHANNELS[0];
+      header.innerHTML = `
+        <div style="display:flex; align-items:center; gap:8px; min-width:0;">
+          <i class="fa-solid ${activeChObj.icon}" style="color:var(--text-secondary);"></i>
+          <span style="font-family:'Outfit',sans-serif; font-weight:800; font-size:17px;">${activeChObj.label}</span>
+          <span style="font-size:12px; color:var(--text-secondary); margin-left:6px;">• ${membersList.length} member${membersList.length === 1 ? '' : 's'}</span>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <button type="button" class="add-btn btn-grey" style="min-height:34px; padding:0 12px; font-size:12px;" onclick="$('dc-file-input').click()"><i class="fa-solid fa-upload" style="margin-right:5px;"></i>Send File</button>
+          <button type="button" class="add-btn btn-danger" style="min-height:34px; padding:0 10px; font-size:12px;" onclick="leaveDiscordServer('${code}')">Leave</button>
+        </div>
+      `;
+
+      if (membersPanel) {
+        membersPanel.style.display = 'block';
+        membersPanel.innerHTML = `
+          <div class="dc-cat" style="padding-top:0;">MEMBERS — ${membersList.length}</div>
+          <div style="display:flex; flex-direction:column; gap:8px; margin-top:8px;">
+            ${membersList.map(m => `
+              <div style="display:flex; align-items:center; gap:10px; padding:6px 8px; border-radius:10px;">
+                <div class="dc-avatar" style="width:30px; height:30px; font-size:12px;">${escapeCalendarText((m.name || 'U').charAt(0))}</div>
+                <div style="min-width:0; flex:1;">
+                  <div style="font-size:13px; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeCalendarText(m.name)}</div>
+                  <div style="font-size:10.5px; color:var(--text-secondary);">${escapeCalendarText(m.role || 'Member')}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      // Files Channel View (Local 10-day storage)
+      if (dcState.activeChannel === 'files') {
+        if (composer) composer.style.display = 'none';
+        const filesObj = activeBox.files && typeof activeBox.files === 'object' ? Object.values(activeBox.files) : [];
+        filesObj.sort((a, b) => (b.ts || 0) - (a.ts || 0));
+
+        body.innerHTML = `
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+            <div style="font-size:12.5px; font-weight:700; color:var(--text-secondary);">Local Files (${filesObj.length}) • Auto-deleted after 10 days</div>
+            <button type="button" class="add-btn" style="min-height:38px; font-size:13px;" onclick="$('dc-file-input').click()"><i class="fa-solid fa-file-arrow-up" style="margin-right:6px;"></i>Upload File</button>
+          </div>
+          ${filesObj.length ? filesObj.map(f => `
+            <div class="dc-file-card">
+              <div style="display:flex; align-items:center; gap:12px; min-width:0;">
+                <div class="dc-avatar" style="border-radius:12px;"><i class="fa-solid ${String(f.type || '').startsWith('image/') ? 'fa-image' : 'fa-file-lines'}"></i></div>
+                <div style="min-width:0;">
+                  <div style="font-weight:700; font-size:14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeCalendarText(f.name)}</div>
+                  <div style="font-size:11.5px; color:var(--text-secondary);">Sent by ${escapeCalendarText(f.senderName || 'Member')} • ${new Date(f.ts || Date.now()).toLocaleDateString()}</div>
+                </div>
+              </div>
+              <div style="display:flex; gap:6px; flex-shrink:0;">
+                ${String(f.type || '').startsWith('image/') ? `<button type="button" class="add-btn btn-grey" style="min-height:34px; padding:0 10px; font-size:12px;" onclick="openPhotoViewer('${f.data}')">View</button>` : ''}
+                <button type="button" class="add-btn" style="min-height:34px; padding:0 12px; font-size:12px;" onclick="downloadDiscordFile('${code}', '${f.id}')">Download</button>
+              </div>
+            </div>
+          `).join('') : '<div style="margin:auto; text-align:center; color:var(--text-secondary); font-size:14px;">No files received yet. Files are stored locally on your device for 10 days.</div>'}
+        `;
+        return;
+      }
+
+      // Text Channel View (#general or #homework-help)
+      const chanMsgsObj = activeBox.channels && activeBox.channels[dcState.activeChannel] ? Object.values(activeBox.channels[dcState.activeChannel]) : [];
+      chanMsgsObj.sort((a, b) => (a.ts || 0) - (b.ts || 0));
+
+      const noticeBanner = `<div style="padding:8px 12px; border-radius:12px; background:var(--input-bg); border:1px solid var(--dc-border); font-size:11.5px; color:var(--text-secondary); text-align:center;">⚠️ Chats are not encrypted—do not share personal information. Messages save locally and auto-delete after 10 days.</div>`;
+
+      body.innerHTML = noticeBanner + (chanMsgsObj.length ? chanMsgsObj.map(m => {
+        const isMine = m.uid === me.uid;
+        const reactions = m.reactions && typeof m.reactions === 'object' ? m.reactions : {};
+        return `
+          <div class="dc-msg">
+            <div class="dc-avatar">${escapeCalendarText((m.author || 'U').charAt(0))}</div>
+            <div style="flex:1; min-width:0;">
+              <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                <strong style="font-size:14px;">${escapeCalendarText(m.author)}</strong>
+                <span style="font-size:11px; color:var(--text-secondary);">${new Date(m.ts || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                <div style="margin-left:auto; display:flex; gap:4px;">
+                  <button type="button" class="dc-act-btn" onclick="reactDiscordMsg('${code}', '${m.id}', '👍')">👍</button>
+                  <button type="button" class="dc-act-btn" onclick="setDiscordReply('${escapeCalendarText(m.author)}', '${escapeCalendarText((m.text || m.fileName || '').slice(0, 40))}')">Reply</button>
+                  ${isMine ? `<button type="button" class="dc-act-btn" style="color:var(--critical);" onclick="deleteDiscordMsg('${code}', '${m.id}')">×</button>` : ''}
+                </div>
+              </div>
+              ${m.replyTo ? `<div style="font-size:11.5px; color:var(--text-secondary); border-left:2px solid var(--accent); padding-left:8px; margin:3px 0;">Replying to ${escapeCalendarText(m.replyTo)}</div>` : ''}
+              ${m.text ? `<div style="font-size:14.5px; line-height:1.45; margin-top:2px; overflow-wrap:anywhere;">${escapeCalendarText(m.text)}</div>` : ''}
+              ${m.fileData ? (String(m.fileType || '').startsWith('image/')
+                ? `<img src="${m.fileData}" style="max-width:260px; max-height:190px; border-radius:12px; margin-top:8px; display:block; cursor:pointer;" onclick="openPhotoViewer('${m.fileData}')">`
+                : `<div class="dc-file-card" style="margin-top:8px; max-width:340px;">
+                    <span style="font-size:13px; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">📎 ${escapeCalendarText(m.fileName)}</span>
+                    <button type="button" class="add-btn" style="min-height:32px; padding:0 10px; font-size:12px;" onclick="downloadDataUri('${m.fileData}', '${escapeCalendarText(m.fileName)}')">Download</button>
+                  </div>`
+              ) : ''}
+              <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:5px;">
+                ${Object.entries(reactions).map(([em, users]) => {
+                  const arr = safeArr(users);
+                  if (!arr.length) return '';
+                  return `<button type="button" class="dc-react-pill ${arr.includes(me.uid) ? 'reacted' : ''}" onclick="reactDiscordMsg('${code}', '${m.id}', '${em}')">${em} ${arr.length}</button>`;
+                }).join('')}
+              </div>
+            </div>
+          </div>`;
+      }).join('') : `<div style="margin:auto; text-align:center; color:var(--text-secondary); font-size:14px;">Welcome to <strong>#${activeChObj.label}</strong>! Send a message or attach a file below.</div>`);
+
+      body.scrollTop = body.scrollHeight;
+
+      if (composer) {
+        composer.style.display = 'flex';
+        composer.innerHTML = `
+          ${dcState.replyTo ? `
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:5px 10px; border-radius:8px; background:var(--input-bg); font-size:12px; color:var(--text-secondary);">
+              <span>Replying to <strong>${escapeCalendarText(dcState.replyTo)}</strong></span>
+              <button type="button" style="border:0; background:transparent; cursor:pointer; color:var(--text-secondary);" onclick="dcState.replyTo=null; renderDiscordApp();">×</button>
+            </div>
+          ` : ''}
+          <div style="display:flex; gap:8px; align-items:center;">
+            <button type="button" class="icon-btn btn-grey" title="Transfer file or image" onclick="$('dc-file-input').click()"><i class="fa-solid fa-plus"></i></button>
+            <input type="text" id="dc-msg-input" class="full-w-input" style="flex:1 !important;" placeholder="Message #${activeChObj.label}..." onkeypress="if(event.key==='Enter') sendDiscordMsg()">
+            <button type="button" class="icon-btn" onclick="sendDiscordMsg()"><i class="fa-solid fa-paper-plane"></i></button>
+          </div>
+        `;
+      }
+    }
+
+    function selectDcServer(code) {
+      pSnd('tick');
+      dcState.activeCode = code;
+      dcState.replyTo = null;
+      if (code) {
+        dcState.unread[code] = 0;
+        dcState.lastSeenTs[code] = Date.now();
+        safeStorage.set('org_dc_last_seen', dcState.lastSeenTs);
+      }
+      saveDcLocal();
+      renderDiscordApp();
+    }
+
+    function selectDcChannel(chanId) {
+      pSnd('tick');
+      dcState.activeChannel = chanId;
+      dcState.replyTo = null;
+      renderDiscordApp();
+    }
+
+    function setDiscordReply(author, snippet) {
+      dcState.replyTo = `${author}: ${snippet}`;
+      renderDiscordApp();
+      $('dc-msg-input')?.focus();
+    }
+
+    async function createDiscordServer() {
+      const me = getDcUser();
+      if (!me || !db) { showToast('Sign in to create a server.'); return; }
+      const name = $('dc-new-srv-name')?.value.trim();
+      if (!name) { showToast('Enter a server name.'); return; }
+
+      const code = makeStudyGroupCode();
+      // Only lightweight metadata lives in Firebase; messages are relayed & deleted
+      const serverMeta = {
+        code,
+        name,
+        ownerUid: me.uid,
+        createdAt: Date.now(),
+        members: {
+          [me.uid]: { uid: me.uid, name: me.name, role: 'Owner', lastSeen: Date.now() }
+        }
+      };
+
+      try {
+        if (firebase.database) firebase.database().goOnline();
+        await db.ref(`studyGroups/${code}`).set(serverMeta);
+        ensureLocalServerBox(code, serverMeta);
+        if (!dcState.myCodes.includes(code)) dcState.myCodes.push(code);
+        dcState.activeCode = code;
+        dcState.activeChannel = 'general';
+        saveDcLocal();
+        attachServerListener(code);
+        $('dc-new-srv-name').value = '';
+        closeMobileSheet('dc-create-modal');
+        pSnd('success');
+        renderDiscordApp();
+        showToast(`Server "${name}" created!`);
+      } catch (e) {
+        console.error('Create Server Error:', e);
+        showToast(e?.code === 'PERMISSION_DENIED' ? 'Firebase rules denied studyGroups.' : 'Could not create server.');
+      }
+    }
+
+    async function joinDiscordServerByCode(rawCode, silent = false) {
+      const me = getDcUser();
+      if (!me || !db) { if (!silent) showToast('Sign in to join a server.'); return; }
+      const code = String(rawCode || '').trim().toUpperCase();
+      if (!/^[A-Z2-9]{6,12}$/.test(code)) {
+        if (!silent) showToast('Enter a valid invite code.');
+        return;
+      }
+      try {
+        const snap = await db.ref(`studyGroups/${code}`).once('value');
+        const val = snap.val();
+        if (!val || !val.name) {
+          if (!silent) showToast('Server not found.');
+          return;
+        }
+        await db.ref(`studyGroups/${code}/members/${me.uid}`).set({
+          uid: me.uid,
+          name: me.name,
+          role: val.ownerUid === me.uid ? 'Owner' : 'Member',
+          lastSeen: Date.now()
+        });
+        ensureLocalServerBox(code, { name: val.name, ownerUid: val.ownerUid, members: val.members });
+        if (!dcState.myCodes.includes(code)) dcState.myCodes.push(code);
+        dcState.activeCode = code;
+        dcState.activeChannel = 'general';
+        saveDcLocal();
+        attachServerListener(code);
+        pSnd('success');
+        renderDiscordApp();
+        showToast(`Joined ${val.name}!`);
+      } catch (e) {
+        if (!silent) showToast('Could not join server.');
+      }
+    }
+
+    function leaveDiscordServer(code) {
+      const me = getDcUser();
+      if (me && db) {
+        db.ref(`studyGroups/${code}/members/${me.uid}`).remove().catch(() => {});
+      }
+      if (dcState.listeners[code]) {
+        dcState.listeners[code].ref.off('value', dcState.listeners[code].fn);
+        delete dcState.listeners[code];
+      }
+      delete dcState.servers[code];
+      delete dcState.localStore[code];
+      dcState.myCodes = dcState.myCodes.filter(c => c !== code);
+      dcState.activeCode = dcState.myCodes[0] || '';
+      saveDcLocal();
+      renderDiscordApp();
+      showToast('Left server & cleared local cache.');
+    }
+
+    async function copyDiscordInvite(code) {
+      try {
+        await navigator.clipboard.writeText(studyGroupLink(code));
+        showToast(`Invite link & code (${code}) copied!`);
+      } catch (e) {
+        showToast(`Invite code: ${code}`);
+      }
+    }
+
+    // Sends message locally first, pushes transient packet to Firebase relay, and cleans up after delivery
+    async function sendDiscordMsg(filePayload = null) {
+      const me = getDcUser();
+      const code = dcState.activeCode;
+      if (!me || !db || !code) return;
+      const input = $('dc-msg-input');
+      const text = input ? input.value.trim() : '';
+      if (!text && !filePayload) return;
+
+      const chan = dcState.activeChannel === 'files' ? 'general' : dcState.activeChannel;
+      const msgId = `m_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
+      const now = Date.now();
+      const localBox = ensureLocalServerBox(code);
+      if (!localBox.channels[chan]) localBox.channels[chan] = {};
+
+      const msgObj = {
+        id: msgId,
+        uid: me.uid,
+        author: me.name,
+        text,
+        ts: now,
+        replyTo: dcState.replyTo || '',
+        fileName: filePayload ? filePayload.name : '',
+        fileType: filePayload ? filePayload.type : '',
+        fileData: filePayload ? filePayload.data : '',
+        reactions: {}
+      };
+
+      // 1. Save immediately on sender's local device
+      localBox.channels[chan][msgId] = msgObj;
+      if (filePayload && filePayload.fileId) {
+        if (!localBox.files) localBox.files = {};
+        localBox.files[filePayload.fileId] = {
+          id: filePayload.fileId,
+          name: filePayload.name,
+          type: filePayload.type,
+          data: filePayload.data,
+          senderName: me.name,
+          ts: now
+        };
+      }
+      saveDcLocalCache();
+
+      if (input) input.value = '';
+      dcState.replyTo = null;
+      pSnd('pop');
+      renderDiscordApp();
+
+      // 2. Push transient packet to Firebase relay (deleted once recipients receive it)
+      const relayPacket = {
+        ...msgObj,
+        channel: chan,
+        fileId: filePayload ? filePayload.fileId : '',
+        acks: { [me.uid]: true }
+      };
+      try {
+        const relayRef = db.ref(`studyGroups/${code}/relay/${msgId}`);
+        await relayRef.set(relayPacket);
+        // If sender is the only member currently in the server, clean up relay immediately
+        const memberKeys = Object.keys(localBox.meta?.members || {});
+        if (memberKeys.length <= 1) {
+          setTimeout(() => relayRef.remove().catch(() => {}), 800);
+        }
+      } catch (e) {
+        showToast('Saved locally; relay offline.');
+      }
+    }
+
+    function handleDiscordFileUpload(e) {
+      const file = e.target.files[0];
+      e.target.value = '';
+      const me = getDcUser();
+      const code = dcState.activeCode;
+      if (!file || !me || !db || !code) return;
+      if (file.size > 2.5 * 1024 * 1024) {
+        showToast('Please choose a file smaller than 2.5 MB.');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const fileId = `f_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
+        // Compress images so local storage and Spark bandwidth stay tiny
+        if (file.type.startsWith('image/')) {
+          const img = new Image();
+          img.onload = async () => {
+            const c = document.createElement('canvas');
+            const s = Math.min(800 / Math.max(img.width, img.height), 1);
+            c.width = Math.round(img.width * s);
+            c.height = Math.round(img.height * s);
+            c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+            const compressed = c.toDataURL('image/jpeg', 0.72);
+            await sendDiscordMsg({ fileId, name: file.name, type: 'image/jpeg', data: compressed });
+            pSnd('success');
+            showToast(`Sent "${file.name}"!`);
+          };
+          img.src = reader.result;
+          return;
+        }
+        await sendDiscordMsg({ fileId, name: file.name, type: file.type || 'application/octet-stream', data: reader.result });
+        pSnd('success');
+        showToast(`Transferred "${file.name}"!`);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function downloadDiscordFile(code, fileId) {
+      const box = dcState.localStore[code];
+      const file = box && box.files && box.files[fileId];
+      if (!file || !file.data) { showToast('File expired or unavailable.'); return; }
+      downloadDataUri(file.data, file.name);
+    }
+
+    async function reactDiscordMsg(code, msgId, emoji) {
+      const me = getDcUser();
+      const box = dcState.localStore[code];
+      if (!me || !box) return;
+      const chan = dcState.activeChannel;
+      const target = box.channels?.[chan]?.[msgId];
+      if (!target) return;
+
+      if (!target.reactions) target.reactions = {};
+      const arr = safeArr(target.reactions[emoji]);
+      target.reactions[emoji] = arr.includes(me.uid) ? arr.filter(u => u !== me.uid) : [...arr, me.uid];
+      saveDcLocalCache();
+      renderDiscordApp();
+
+      if (db) {
+        const pktId = `rx_${Date.now()}_${Math.random().toString(36).slice(2, 5)}`;
+        db.ref(`studyGroups/${code}/relay/${pktId}`).set({
+          id: pktId, kind: 'react', channel: chan, targetId: msgId, emoji, uid: me.uid, ts: Date.now(), acks: { [me.uid]: true }
+        }).catch(() => {});
+      }
+    }
+
+    async function deleteDiscordMsg(code, msgId) {
+      const me = getDcUser();
+      const box = dcState.localStore[code];
+      const chan = dcState.activeChannel;
+      if (box?.channels?.[chan]?.[msgId]) {
+        delete box.channels[chan][msgId];
+        saveDcLocalCache();
+        renderDiscordApp();
+      }
+      if (me && db) {
+        const pktId = `del_${Date.now()}_${Math.random().toString(36).slice(2, 5)}`;
+        db.ref(`studyGroups/${code}/relay/${pktId}`).set({
+          id: pktId, kind: 'delete', channel: chan, targetId: msgId, uid: me.uid, ts: Date.now(), acks: { [me.uid]: true }
+        }).catch(() => {});
+      }
+    }
+
+    function downloadDataUri(dataUri, filename) {
+      if (!dataUri) return;
+      const cleanName = filename || 'download';
+      try {
+        if (dataUri.startsWith('data:')) {
+          const [header, base64Data] = dataUri.split(',');
+          const mimeMatch = header.match(/data:([^;]+)/);
+          const mime = mimeMatch ? mimeMatch[1] : 'application/octet-stream';
+          const byteString = atob(base64Data);
+          const ab = new ArrayBuffer(byteString.length);
+          const ia = new Uint8Array(ab);
+          for (let i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+          }
+          const blob = new Blob([ab], { type: mime });
+          const blobUrl = URL.createObjectURL(blob);
+
+          const a = document.createElement('a');
+          a.href = blobUrl;
+          a.download = cleanName;
+          a.rel = 'noopener';
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+
+          setTimeout(() => URL.revokeObjectURL(blobUrl), 15000);
+          showToast(`Downloading "${cleanName}"...`);
+          return;
+        }
+      } catch (err) {
+        console.warn('Blob download fallback:', err);
+      }
+
+      const a = document.createElement('a');
+      a.href = dataUri;
+      a.download = cleanName;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+
+    async function notifyDiscordActivity(srvName, chanLabel, author, text, isFile = false) {
+      pSnd('pop');
+      const preview = isFile ? `Sent a file: ${text}` : text;
+      showToast(`💬 ${srvName} (#${chanLabel}) — ${author}: ${preview.slice(0, 48)}`, 4000);
+
+      if (!remindersEnabled) return;
+      if (!await ensureNotificationPermission()) return;
+      try {
+        const options = {
+          body: `${author} in #${chanLabel}: ${preview}`,
+          tag: `dc_${srvName}_${chanLabel}`
+        };
+        const registration = 'serviceWorker' in navigator
+          ? await navigator.serviceWorker.getRegistration()
+          : null;
+        if (registration) await registration.showNotification(`${srvName} • New Message`, options);
+        else new Notification(`${srvName} • New Message`, options);
+      } catch (_) {}
+    }
 
     function makeStudyGroupCode() {
       const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -4059,9 +5027,50 @@
       const ref = db.ref(`studyGroups/${code}`);
       const fn = snap => {
         const val = snap.val();
+        const me = getDcUser();
         if (val) {
+          const prev = dcState.servers[code];
           dcState.servers[code] = val;
-          const me = getDcUser();
+
+          // Detect brand-new incoming messages from other members
+          if (prev && me && val.channels) {
+            const seenCutoff = dcState.lastSeenTs[code] || 0;
+            let newestMsg = null;
+            let newestChan = 'general';
+
+            Object.entries(val.channels).forEach(([chanKey, msgsObj]) => {
+              const prevMsgs = (prev.channels && prev.channels[chanKey]) || {};
+              Object.values(msgsObj || {}).forEach(m => {
+                if (m && m.id && !prevMsgs[m.id] && m.uid !== me.uid && (m.ts || 0) > seenCutoff) {
+                  if (!newestMsg || (m.ts || 0) > (newestMsg.ts || 0)) {
+                    newestMsg = m;
+                    newestChan = chanKey;
+                  }
+                }
+              });
+            });
+
+            if (newestMsg) {
+              const isViewingThisChat = $('study-group-screen')?.classList.contains('active') &&
+                dcState.activeCode === code &&
+                dcState.activeChannel === newestChan;
+
+              if (!isViewingThisChat) {
+                dcState.unread[code] = (dcState.unread[code] || 0) + 1;
+                notifyDiscordActivity(
+                  val.name || 'Server',
+                  newestChan,
+                  newestMsg.author || 'Member',
+                  newestMsg.fileName || newestMsg.text || 'New activity',
+                  Boolean(newestMsg.fileName)
+                );
+              } else {
+                dcState.lastSeenTs[code] = Date.now();
+                safeStorage.set('org_dc_last_seen', dcState.lastSeenTs);
+              }
+            }
+          }
+
           if (me && (!val.members || !val.members[me.uid])) {
             ref.child(`members/${me.uid}`).set({
               uid: me.uid,
@@ -4132,9 +5141,11 @@
         <div class="dc-divider"></div>
         ${joinedServers.map(({ code, data }) => {
           const initials = String(data.name || 'S').split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+          const uCount = dcState.unread[code] || 0;
           return `
             <button type="button" class="dc-srv-btn ${dcState.activeCode === code ? 'active' : ''}" title="${escapeCalendarText(data.name)}" onclick="selectDcServer('${code}')">
               ${escapeCalendarText(initials)}
+              ${uCount > 0 ? `<span class="dc-unread-dot">${uCount}</span>` : ''}
             </button>`;
         }).join('')}
         <button type="button" class="dc-srv-btn" style="border-style:dashed; color:var(--success);" title="Create Server" onclick="openMobileSheet('dc-create-modal')">
@@ -4146,9 +5157,14 @@
       if (mobServers) {
         mobServers.innerHTML = `
           <button type="button" class="dc-pill ${!activeSrv ? 'active' : ''}" onclick="selectDcServer('')"><i class="fa-solid fa-comments"></i> Servers</button>
-          ${joinedServers.map(({ code, data }) => `
-            <button type="button" class="dc-pill ${dcState.activeCode === code ? 'active' : ''}" onclick="selectDcServer('${code}')">${escapeCalendarText(data.name)}</button>
-          `).join('')}
+          ${joinedServers.map(({ code, data }) => {
+            const uCount = dcState.unread[code] || 0;
+            return `
+              <button type="button" class="dc-pill ${dcState.activeCode === code ? 'active' : ''}" onclick="selectDcServer('${code}')">
+                <span>${escapeCalendarText(data.name)}</span>
+                ${uCount > 0 ? `<span class="dc-unread-dot">${uCount}</span>` : ''}
+              </button>`;
+          }).join('')}
           <button type="button" class="dc-pill" style="color:var(--success); border-style:dashed;" onclick="openMobileSheet('dc-create-modal')">+ Create</button>
         `;
       }
@@ -4378,6 +5394,11 @@
       pSnd('tick');
       dcState.activeCode = code;
       dcState.replyTo = null;
+      if (code) {
+        dcState.unread[code] = 0;
+        dcState.lastSeenTs[code] = Date.now();
+        safeStorage.set('org_dc_last_seen', dcState.lastSeenTs);
+      }
       saveDcLocal();
       renderDiscordApp();
     }
@@ -4407,6 +5428,7 @@
         name,
         ownerUid: me.uid,
         createdAt: Date.now(),
+        payload: { homework: [], deadlines: [], files: {} },
         members: {
           [me.uid]: { uid: me.uid, name: me.name, avatar: me.avatar, role: 'Owner', lastSeen: Date.now() }
         },
@@ -4415,6 +5437,7 @@
       };
 
       try {
+        if (firebase.database) firebase.database().goOnline();
         await db.ref(`studyGroups/${code}`).set(serverPayload);
         dcState.servers[code] = serverPayload;
         if (!dcState.myCodes.includes(code)) dcState.myCodes.push(code);
@@ -4428,7 +5451,11 @@
         renderDiscordApp();
         showToast(`Server "${name}" created!`);
       } catch (e) {
-        showToast('Could not create server. Check connection.');
+        console.error('Create Server Error:', e);
+        const msg = (e && e.code === 'PERMISSION_DENIED')
+          ? 'Firebase permission denied on studyGroups. Check Database Rules.'
+          : `Error: ${e?.message || 'Check connection.'}`;
+        showToast(msg, 4500);
       }
     }
 
@@ -4588,9 +5615,44 @@
 
     function downloadDataUri(dataUri, filename) {
       if (!dataUri) return;
+      const cleanName = filename || 'download';
+      try {
+        // Convert Data URI to a Blob URL so iOS Safari & Android Chrome allow saving files reliably
+        if (dataUri.startsWith('data:')) {
+          const [header, base64Data] = dataUri.split(',');
+          const mimeMatch = header.match(/data:([^;]+)/);
+          const mime = mimeMatch ? mimeMatch[1] : 'application/octet-stream';
+          const byteString = atob(base64Data);
+          const ab = new ArrayBuffer(byteString.length);
+          const ia = new Uint8Array(ab);
+          for (let i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+          }
+          const blob = new Blob([ab], { type: mime });
+          const blobUrl = URL.createObjectURL(blob);
+
+          const a = document.createElement('a');
+          a.href = blobUrl;
+          a.download = cleanName;
+          a.rel = 'noopener';
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+
+          setTimeout(() => URL.revokeObjectURL(blobUrl), 15000);
+          showToast(`Downloading "${cleanName}"...`);
+          return;
+        }
+      } catch (err) {
+        console.warn('Blob download fallback:', err);
+      }
+
+      // Fallback for standard URLs
       const a = document.createElement('a');
       a.href = dataUri;
-      a.download = filename || 'download';
+      a.download = cleanName;
+      a.target = '_blank';
+      a.rel = 'noopener';
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -7380,15 +8442,8 @@
         showToast('This file is not available yet.');
         return;
       }
-      const link = document.createElement('a');
-      link.href = file.data;
-      link.download = file.name || 'school-tracker-file';
-      link.rel = 'noopener';
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+      downloadDataUri(file.data, file.name || 'school-tracker-file');
       pSnd('success');
-      showToast('Download started.');
     }
 
     function closeAttachmentViewer() {
@@ -11863,8 +12918,10 @@
         html += matchedActions.map(a => pushItem(a.title, a.sub, a.icon, '', a.run)).join('');
       }
 
-      // 1B. Joined Servers
-      const matchedServers = Object.values(dcState.servers || {}).filter(s => s && s.name && (q ? s.name.toLowerCase().includes(q) : false));
+      // 1B. Joined Servers (Local Cache)
+      const matchedServers = Object.values(dcState.localStore || {})
+        .map(box => box?.meta)
+        .filter(s => s && s.name && (q ? s.name.toLowerCase().includes(q) : false));
       if (matchedServers.length) {
         html += `<div class="gs-section-label">Servers</div>`;
         html += matchedServers.map(s => pushItem(s.name, `Open server (${s.code})`, 'fa-comments', '#2563EB', () => { navTo('study-group-screen'); selectDcServer(s.code); })).join('');
