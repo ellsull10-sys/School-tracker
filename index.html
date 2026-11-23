@@ -1680,6 +1680,264 @@
       transform: translate3d(-50%, 0, 0);
       opacity: 1;
     }
+
+    /* Global Command & Search Modal */
+    #global-search-modal,
+    #global-search-modal * {
+      box-sizing: border-box;
+    }
+    #global-search-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 145000;
+      background: rgba(0, 0, 0, 0.48);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      align-items: flex-start;
+      justify-content: center;
+      padding: max(48px, calc(env(safe-area-inset-top) + 24px)) 16px 24px;
+      opacity: 0;
+      transition: opacity 0.22s ease;
+    }
+    #global-search-modal.visible {
+      opacity: 1;
+    }
+    .gs-card {
+      width: 100%;
+      max-width: 500px;
+      max-height: 78vh;
+      display: flex;
+      flex-direction: column;
+      border-radius: 24px;
+      overflow: hidden;
+      background: color-mix(in srgb, var(--card-bg) 96%, var(--bg-base));
+      border: 1px solid var(--card-border);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.32);
+    }
+    .gs-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--card-border);
+      flex-shrink: 0;
+    }
+    #global-search-modal #gs-input {
+      flex: 1;
+      min-width: 0;
+      width: 100%;
+      border: none !important;
+      background: transparent !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      box-shadow: none !important;
+      padding: 4px 0 !important;
+      margin: 0 !important;
+      border-radius: 0 !important;
+      font-size: 16px !important;
+      font-weight: 600;
+      line-height: 1.4;
+      color: var(--text-primary);
+      outline: none !important;
+    }
+    .gs-close-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(128, 128, 128, 0.16);
+      color: var(--text-secondary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: transform 0.12s ease, background 0.15s ease;
+    }
+    .gs-close-btn:active {
+      transform: scale(0.9);
+    }
+    .gs-results {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 18px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      scrollbar-width: none;
+    }
+    .gs-results::-webkit-scrollbar {
+      display: none;
+    }
+    .gs-section-label {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: var(--text-secondary);
+      padding: 2px 4px;
+      margin: 0;
+    }
+    .gs-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: var(--input-bg);
+      border: 1px solid var(--card-border);
+      cursor: pointer;
+      transition: transform 0.12s ease, background 0.15s ease;
+    }
+    .gs-item:active {
+      transform: scale(0.98);
+    }
+    .gs-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent-grad);
+      color: #FFFFFF;
+      flex-shrink: 0;
+      font-size: 15px;
+    }
+    .gs-item-body {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .gs-item-title {
+      font-weight: 700;
+      font-size: 14.5px;
+      line-height: 1.3;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .gs-item-sub {
+      font-size: 12.5px;
+      line-height: 1.3;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Mobile-Only 5-Icon Navigation & Popup Menus (< 850px) */
+    @media (max-width: 849px) {
+      .nav-item.desktop-only-nav {
+        display: none !important;
+      }
+      /* Hide inline dashboard Add Homework, My Tasks input, and Add Deadline input on mobile */
+      #home-dashboard-grid > .dashboard-homework-button,
+      #task-input-card,
+      #add-dl-title,
+      #add-dl-card {
+        display: none !important;
+      }
+      .nav-item.mobile-add-btn {
+        background: var(--accent-grad) !important;
+        color: #FFFFFF !important;
+        box-shadow: 0 6px 16px rgba(15, 23, 42, 0.28);
+        padding: 12px 15px !important;
+      }
+    }
+    @media (min-width: 850px) {
+      .nav-item.mobile-only-nav {
+        display: none !important;
+      }
+    }
+
+    /* Mobile Popup Sheets (Add Menu & More Menu) */
+    .mobile-sheet-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 146000;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      align-items: flex-end;
+      justify-content: center;
+      padding: 16px 16px max(28px, calc(env(safe-area-inset-bottom) + 16px));
+      opacity: 0;
+      transition: opacity 0.22s ease;
+    }
+    .mobile-sheet-backdrop.visible {
+      opacity: 1;
+    }
+    .mobile-sheet-card {
+      width: 100%;
+      max-width: 440px;
+      border-radius: 26px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: color-mix(in srgb, var(--card-bg) 96%, var(--bg-base));
+      border: 1px solid var(--card-border);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+      transform: translateY(24px);
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .mobile-sheet-backdrop.visible .mobile-sheet-card {
+      transform: translateY(0);
+    }
+    .mobile-sheet-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2px 4px 6px;
+    }
+    .mobile-sheet-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin: 0;
+    }
+    .mobile-sheet-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .mobile-grid-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 16px 8px;
+      border-radius: 18px;
+      background: var(--input-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-primary);
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.12s ease;
+    }
+    .mobile-grid-item:active {
+      transform: scale(0.95);
+    }
+    .mobile-grid-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent-grad);
+      color: #FFFFFF;
+    }
   </style>
 </head>
 <body>
@@ -1837,35 +2095,147 @@
 
   <nav class="bottom-nav" id="bottom-nav" style="display: none;">
     <div id="nav-liquid-indicator" class="nav-liquid-indicator"></div>
+    <!-- 1. Home (Both) -->
     <div class="nav-item active" data-screen="home-screen">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
       <span class="nav-label">Home</span>
     </div>
+    <!-- 2. Calendar (Both) -->
     <div class="nav-item" data-screen="calendar-screen">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
       <span class="nav-label">Calendar</span>
     </div>
-    <div class="nav-item" data-screen="ai-screen">
+    <!-- 3. Mobile-Only Center Add (+) Button -->
+    <div class="nav-item mobile-only-nav mobile-add-btn" data-screen="mobile-add-trigger">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      <span class="nav-label">Add</span>
+    </div>
+    <!-- Desktop-Only Tabs -->
+    <div class="nav-item desktop-only-nav" data-screen="ai-screen">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12c-2.4 0-4.6-1-6.4-2.6A9.5 9.5 0 0 0 12 3a9.5 9.5 0 0 0-2.6 6.4C7.6 11 5.4 12 3 12c2.4 0 4.6 1 6.4 2.6A9.5 9.5 0 0 0 12 21a9.5 9.5 0 0 0 2.6-6.4C16.4 13 18.6 12 21 12z"></path></svg>
       <span class="nav-label">Tutor</span>
     </div>
-    <div class="nav-item" data-screen="study-group-screen">
+    <div class="nav-item desktop-only-nav" data-screen="study-group-screen">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3"></circle><circle cx="17" cy="9" r="3"></circle><path d="M2 21v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2"></path><path d="M17 14h1a4 4 0 0 1 4 4v1"></path></svg>
       <span class="nav-label">Groups</span>
     </div>
-    <div class="nav-item" data-screen="spotify-screen">
+    <div class="nav-item desktop-only-nav" data-screen="spotify-screen">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424c-.18.295-.563.387-.857.207-2.35-1.434-5.305-1.76-8.786-.963-.335.077-.67-.133-.746-.469-.077-.336.132-.67.469-.746 3.809-.87 7.076-.496 9.713 1.115.293.18.386.563.207.856zm1.224-2.722c-.226.367-.706.482-1.072.257-2.687-1.652-6.785-2.131-9.965-1.166-.413.127-.848-.106-.973-.517-.125-.413.108-.848.52-.973 3.632-1.102 8.147-.568 11.234 1.328.366.226.48.707.256 1.071zm.105-2.835C14.692 8.95 9.375 8.775 6.297 9.71c-.493.15-1.016-.129-1.166-.623-.148-.495.13-1.015.625-1.165 3.532-1.073 9.404-.866 13.115 1.337.445.264.59.838.327 1.282-.264.443-.838.59-1.283.326z"/></svg>
       <span class="nav-label">Spotify</span>
     </div>
+    <!-- 4. Settings (Both) -->
     <div class="nav-item" data-screen="settings-screen">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
       <span class="nav-label">Settings</span>
     </div>
-    <div class="nav-item" data-screen="profile-screen">
+    <div class="nav-item desktop-only-nav" data-screen="search-trigger">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <span class="nav-label">Search</span>
+    </div>
+    <div class="nav-item desktop-only-nav" data-screen="profile-screen">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
       <span class="nav-label">Profile</span>
     </div>
+    <!-- 5. Mobile-Only Far Right More Menu Button -->
+    <div class="nav-item mobile-only-nav" data-screen="mobile-more-trigger">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect></svg>
+      <span class="nav-label">More</span>
+    </div>
   </nav>
+
+  <!-- Mobile Quick Add Sheet (Homework, Deadline, Task) -->
+  <div id="mobile-add-modal" class="mobile-sheet-backdrop" role="dialog" aria-modal="true" aria-label="Quick Add" onclick="if(event.target===this) closeMobileSheet('mobile-add-modal')">
+    <div class="mobile-sheet-card">
+      <div class="mobile-sheet-header">
+        <h3 class="mobile-sheet-title">Add New</h3>
+        <button type="button" class="gs-close-btn" aria-label="Close" onclick="closeMobileSheet('mobile-add-modal')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+        </button>
+      </div>
+      <div id="mobile-add-options" style="display:flex; flex-direction:column; gap:10px;">
+        <div class="gs-item" onclick="closeMobileSheet('mobile-add-modal'); openAddHw();">
+          <div class="gs-icon" style="background:#2563EB;"><i class="fa-solid fa-book-open"></i></div>
+          <div class="gs-item-body">
+            <div class="gs-item-title">Add Homework</div>
+            <div class="gs-item-sub">Assign a task to one of your subjects</div>
+          </div>
+          <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-secondary);"></i>
+        </div>
+        <div class="gs-item" onclick="showMobileInlineCreator('deadline')">
+          <div class="gs-icon" style="background:#fa7b17;"><i class="fa-solid fa-hourglass-half"></i></div>
+          <div class="gs-item-body">
+            <div class="gs-item-title">Add Deadline</div>
+            <div class="gs-item-sub">Create a countdown for an upcoming SAC or exam</div>
+          </div>
+          <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-secondary);"></i>
+        </div>
+        <div class="gs-item" onclick="showMobileInlineCreator('task')">
+          <div class="gs-icon" style="background:#10B981;"><i class="fa-solid fa-check-double"></i></div>
+          <div class="gs-item-body">
+            <div class="gs-item-title">Add Task</div>
+            <div class="gs-item-sub">Add a general to-do item to My Tasks</div>
+          </div>
+          <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-secondary);"></i>
+        </div>
+      </div>
+      <!-- Inline Form for Deadline or Task on Mobile -->
+      <div id="mobile-inline-creator" style="display:none; flex-direction:column; gap:12px; padding-top:4px;">
+        <input type="text" id="mob-create-text" class="full-w-input" placeholder="Description...">
+        <input type="date" id="mob-create-date" class="full-w-input">
+        <div style="display:flex; gap:8px;">
+          <button type="button" class="add-btn btn-grey" style="flex:1; min-height:46px;" onclick="resetMobileAddSheet()">Back</button>
+          <button type="button" class="add-btn" style="flex:1; min-height:46px;" onclick="submitMobileInlineCreator()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile More Menu Popup (Tutor, Groups, Spotify, Search, Profile) -->
+  <div id="mobile-more-modal" class="mobile-sheet-backdrop" role="dialog" aria-modal="true" aria-label="More Features" onclick="if(event.target===this) closeMobileSheet('mobile-more-modal')">
+    <div class="mobile-sheet-card">
+      <div class="mobile-sheet-header">
+        <h3 class="mobile-sheet-title">Menu</h3>
+        <button type="button" class="gs-close-btn" aria-label="Close" onclick="closeMobileSheet('mobile-more-modal')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+        </button>
+      </div>
+      <div class="mobile-sheet-grid">
+        <button type="button" class="mobile-grid-item" onclick="closeMobileSheet('mobile-more-modal'); openGlobalSearch();">
+          <div class="mobile-grid-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+          <span>Search</span>
+        </button>
+        <button type="button" class="mobile-grid-item" onclick="closeMobileSheet('mobile-more-modal'); navTo('ai-screen');">
+          <div class="mobile-grid-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+          <span>AI Tutor</span>
+        </button>
+        <button type="button" class="mobile-grid-item" onclick="closeMobileSheet('mobile-more-modal'); navTo('study-group-screen');">
+          <div class="mobile-grid-icon"><i class="fa-solid fa-user-group"></i></div>
+          <span>Groups</span>
+        </button>
+        <button type="button" class="mobile-grid-item" onclick="closeMobileSheet('mobile-more-modal'); navTo('spotify-screen');">
+          <div class="mobile-grid-icon" style="background:linear-gradient(135deg,#1DB954,#15883e);"><i class="fa-brands fa-spotify"></i></div>
+          <span>Spotify</span>
+        </button>
+        <button type="button" class="mobile-grid-item" onclick="closeMobileSheet('mobile-more-modal'); navTo('profile-screen');">
+          <div class="mobile-grid-icon"><i class="fa-solid fa-user"></i></div>
+          <span>Profile</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="global-search-modal" role="dialog" aria-modal="true" aria-label="Global Search" onclick="if(event.target===this) closeGlobalSearch()">
+    <div class="app-card gs-card">
+      <div class="gs-header">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="gs-input" placeholder="Search events, homework, or actions..." oninput="runGlobalSearch(this.value)">
+        <button type="button" class="gs-close-btn" aria-label="Close search" onclick="closeGlobalSearch()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+        </button>
+      </div>
+      <div id="gs-results" class="gs-results"></div>
+    </div>
+  </div>
 
   <div id="onboarding-screen" class="screen">
     <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height: 80vh; text-align:center;">
@@ -2853,6 +3223,102 @@
       }
       .sp-pill:active { transform: scale(0.94); }
       .sp-pill.active { background: linear-gradient(135deg, #1DB954, #15883e); color: #FFF; border-color: transparent; }
+
+      /* Desktop-Only Widescreen Music UI (>= 850px) */
+      @media (min-width: 850px) {
+        #spotify-screen {
+          max-width: 1480px !important;
+          width: 100%;
+          padding: 32px 44px 48px 114px;
+        }
+        #spotify-screen .header-bar h1 {
+          font-size: 40px;
+        }
+        #sp-live-section.sp-desktop-ready {
+          display: grid !important;
+          grid-template-columns: 360px minmax(0, 1fr);
+          gap: 28px;
+          align-items: start;
+        }
+        .sp-desktop-left {
+          position: sticky;
+          top: 24px;
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+        .sp-desktop-left .sp-now-playing {
+          margin-bottom: 0;
+          padding: 24px;
+          border-radius: 24px;
+        }
+        .sp-desktop-left .sp-track-row {
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          gap: 16px;
+        }
+        .sp-desktop-left .sp-art {
+          width: 100%;
+          max-width: 240px;
+          height: auto;
+          aspect-ratio: 1 / 1;
+          border-radius: 22px;
+          box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+        }
+        .sp-desktop-left .sp-meta {
+          width: 100%;
+        }
+        .sp-desktop-left .sp-title {
+          font-size: 22px;
+          white-space: normal;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+        }
+        .sp-desktop-left .sp-artist {
+          font-size: 14px;
+        }
+        .sp-desktop-right {
+          min-width: 0;
+          display: flex;
+          flex-direction: column;
+        }
+        .sp-desktop-right > h3:first-child {
+          margin-top: 0;
+        }
+        .sp-desktop-right .sp-grid {
+          grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+          gap: 16px;
+        }
+        .sp-desktop-right .sp-playlist-card {
+          padding: 14px;
+          border-radius: 18px;
+        }
+        /* Widescreen Playlist Modal on Desktop */
+        #sp-playlist-modal > .app-card {
+          max-width: 920px !important;
+          max-height: 84vh !important;
+          border-radius: 28px !important;
+        }
+        #sp-modal-cover {
+          width: 96px !important;
+          height: 96px !important;
+          border-radius: 16px !important;
+        }
+        #sp-modal-title {
+          font-size: 24px !important;
+        }
+        #sp-modal-tracks {
+          display: grid !important;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 10px !important;
+          padding: 18px 20px !important;
+        }
+        #sp-modal-tracks > div:first-child {
+          grid-column: 1 / -1;
+        }
+      }
     </style>
 
     <div class="header-bar cascade-item d-1">
@@ -2875,62 +3341,66 @@
     </div>
 
     <!-- Active Remote Playback Deck -->
-    <div id="sp-live-section" style="display:none;">
-      <div class="app-card sp-now-playing cascade-item d-2">
-        <div class="sp-track-row" style="position:relative;">
-          <div id="sp-now-art" class="sp-art">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+    <div id="sp-live-section" class="sp-desktop-ready" style="display:none;">
+      <div class="sp-desktop-left">
+        <div class="app-card sp-now-playing cascade-item d-2">
+          <div class="sp-track-row" style="position:relative;">
+            <div id="sp-now-art" class="sp-art">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+            </div>
+            <div class="sp-meta">
+              <div id="sp-now-title" class="sp-title">Ready to play</div>
+              <div id="sp-now-artist" class="sp-artist">Pick a playlist below to start listening</div>
+              <div id="sp-now-device" class="sp-device-indicator" style="display:none; cursor:pointer;" onclick="toggleDeviceList()" title="Click to change device"></div>
+              <div id="sp-device-list" style="display:none; flex-direction:column; gap:6px; margin-top:8px; padding-top:8px; border-top:1px solid var(--card-border);"></div>
+            </div>
           </div>
-          <div class="sp-meta">
-            <div id="sp-now-title" class="sp-title">Ready to play</div>
-            <div id="sp-now-artist" class="sp-artist">Pick a playlist below to start listening</div>
-            <div id="sp-now-device" class="sp-device-indicator" style="display:none; cursor:pointer;" onclick="toggleDeviceList()" title="Click to change device"></div>
-            <div id="sp-device-list" style="display:none; flex-direction:column; gap:6px; margin-top:8px; padding-top:8px; border-top:1px solid var(--card-border);"></div>
+
+          <div>
+            <div class="sp-progress-bar" onclick="scrubSpotify(event)"><div id="sp-progress-fill" class="sp-progress-fill"></div></div>
+            <div class="flex-between" style="font-size:11px; font-weight:700; color:var(--text-secondary); margin-top:6px;">
+              <span id="sp-time-cur">0:00</span>
+              <span id="sp-time-tot">0:00</span>
+            </div>
+          </div>
+
+          <div class="sp-controls">
+            <button class="sp-ctrl-btn" onclick="spotifyCmd('previous')" aria-label="Previous track"><i class="fa-solid fa-backward-step"></i></button>
+            <button id="sp-play-toggle" class="sp-play-btn" onclick="spotifyTogglePlay()" aria-label="Play or Pause"><i class="fa-solid fa-play" style="font-size:20px;"></i></button>
+            <button class="sp-ctrl-btn" onclick="spotifyCmd('next')" aria-label="Next track"><i class="fa-solid fa-forward-step"></i></button>
           </div>
         </div>
+      </div>
 
-        <div>
-          <div class="sp-progress-bar" onclick="scrubSpotify(event)"><div id="sp-progress-fill" class="sp-progress-fill"></div></div>
-          <div class="flex-between" style="font-size:11px; font-weight:700; color:var(--text-secondary); margin-top:6px;">
-            <span id="sp-time-cur">0:00</span>
-            <span id="sp-time-tot">0:00</span>
-          </div>
+      <div class="sp-desktop-right">
+        <!-- Spotify Search -->
+        <h3 class="cascade-item d-3">Search Music</h3>
+        <div class="input-group cascade-item d-3" style="margin-bottom:14px;">
+          <input type="text" id="sp-search-input" placeholder="Search for songs, artists, or playlists..." onkeypress="if(event.key==='Enter') searchSpotify()">
+          <button class="add-btn" onclick="searchSpotify()">Search</button>
+        </div>
+        <div id="sp-search-results" class="sp-grid cascade-item d-3" style="margin-bottom: 20px;"></div>
+
+        <!-- Recently Played Shelf -->
+        <div id="sp-recently-played-section" style="display:none;">
+          <h3 class="cascade-item d-3">Recently Played</h3>
+          <div id="sp-recently-played" class="horizontal-scroll cascade-item d-3" style="margin-bottom:18px; padding-bottom:14px; gap:14px;"></div>
         </div>
 
-        <div class="sp-controls">
-          <button class="sp-ctrl-btn" onclick="spotifyCmd('previous')" aria-label="Previous track"><i class="fa-solid fa-backward-step"></i></button>
-          <button id="sp-play-toggle" class="sp-play-btn" onclick="spotifyTogglePlay()" aria-label="Play or Pause"><i class="fa-solid fa-play" style="font-size:20px;"></i></button>
-          <button class="sp-ctrl-btn" onclick="spotifyCmd('next')" aria-label="Next track"><i class="fa-solid fa-forward-step"></i></button>
+        <!-- Quick Curated Study Playlists -->
+        <h3 class="cascade-item d-3">Curated Focus Tracks</h3>
+        <div class="horizontal-scroll cascade-item d-3" style="margin-bottom:14px; padding-bottom:14px;">
+          <button class="sp-pill" onclick="playPlaylistOnDevice('37i9dQZF1DWZeKCadgRdKQ')">Deep Focus</button>
+          <button class="sp-pill" onclick="playPlaylistOnDevice('37i9dQZF1DWWQRwui0ExPn')">Lo-Fi Beats</button>
+          <button class="sp-pill" onclick="playPlaylistOnDevice('37i9dQZF1DX8NTLI2TtZa6')">Intense Studying</button>
+          <button class="sp-pill" onclick="playPlaylistOnDevice('37i9dQZF1DX4sWSpwq3LiO')">Peaceful Piano</button>
+          <button class="sp-pill" onclick="playPlaylistOnDevice('37i9dQZF1DX9sIqqvKsjG8')">Instrumental Study</button>
         </div>
-      </div>
 
-      <!-- Spotify Search -->
-      <h3 class="cascade-item d-3">Search Music</h3>
-      <div class="input-group cascade-item d-3" style="margin-bottom:14px;">
-        <input type="text" id="sp-search-input" placeholder="Search for songs, artists, or playlists..." onkeypress="if(event.key==='Enter') searchSpotify()">
-        <button class="add-btn" onclick="searchSpotify()">Search</button>
+        <!-- User's Personal Playlists -->
+        <h3 class="cascade-item d-4">Your Library</h3>
+        <div id="sp-user-playlists" class="sp-grid cascade-item d-4"></div>
       </div>
-      <div id="sp-search-results" class="sp-grid cascade-item d-3" style="margin-bottom: 20px;"></div>
-
-      <!-- PlayStation-Style Recently Played Shelf -->
-      <div id="sp-recently-played-section" style="display:none;">
-        <h3 class="cascade-item d-3">Recently Played</h3>
-        <div id="sp-recently-played" class="horizontal-scroll cascade-item d-3" style="margin-bottom:18px; padding-bottom:14px; gap:14px;"></div>
-      </div>
-
-      <!-- Quick Curated Study Playlists -->
-      <h3 class="cascade-item d-3">Curated Focus Tracks</h3>
-      <div class="horizontal-scroll cascade-item d-3" style="margin-bottom:14px; padding-bottom:14px;">
-        <button class="sp-pill" onclick="playPlaylistOnDevice('37i9dQZF1DWZeKCadgRdKQ')">Deep Focus</button>
-        <button class="sp-pill" onclick="playPlaylistOnDevice('37i9dQZF1DWWQRwui0ExPn')">Lo-Fi Beats</button>
-        <button class="sp-pill" onclick="playPlaylistOnDevice('37i9dQZF1DX8NTLI2TtZa6')">Intense Studying</button>
-        <button class="sp-pill" onclick="playPlaylistOnDevice('37i9dQZF1DX4sWSpwq3LiO')">Peaceful Piano</button>
-        <button class="sp-pill" onclick="playPlaylistOnDevice('37i9dQZF1DX9sIqqvKsjG8')">Instrumental Study</button>
-      </div>
-
-      <!-- User's Personal Playlists -->
-      <h3 class="cascade-item d-4">Your Library</h3>
-      <div id="sp-user-playlists" class="sp-grid cascade-item d-4"></div>
     </div>
 
     <!-- Playlist Song Viewer Modal -->
@@ -3554,7 +4024,34 @@
       showToast('Profile changes saved.');
     }
 
+    function highlightNavPill(navEl) {
+      if (!navEl) return;
+      $$('.nav-item').forEach(nav => nav.classList.remove('active', 'show-label'));
+      navEl.classList.add('active');
+      const navBar = $('bottom-nav');
+      if (navBar && navBar.style.display !== 'none' && window.matchMedia('(min-width: 850px)').matches) {
+        const lbl = navEl.querySelector('.nav-label');
+        if (lbl) navEl.style.setProperty('--pill-w', (44 + lbl.offsetWidth) + 'px');
+        navEl.classList.add('show-label');
+        clearTimeout(navEl._lt);
+        navEl._lt = setTimeout(() => navEl.classList.remove('show-label'), 2200);
+      }
+    }
+
     function navTo(screenId, navElement = null) {
+      if (screenId === 'search-trigger') {
+        highlightNavPill(navElement || document.querySelector('.nav-item[data-screen="search-trigger"]'));
+        openGlobalSearch();
+        return;
+      }
+      if (screenId === 'mobile-add-trigger') {
+        openMobileAddSheet();
+        return;
+      }
+      if (screenId === 'mobile-more-trigger') {
+        openMobileSheet('mobile-more-modal');
+        return;
+      }
       pSnd('swoosh');
       $$('.screen').forEach(s => {
         s.classList.remove('active');
@@ -8505,10 +9002,12 @@
 
       const measure = () => {
         box = nav.getBoundingClientRect();
-        items = [...nav.querySelectorAll('.nav-item')].map(el => {
-          const r = el.getBoundingClientRect();
-          return { el, c: vert ? r.top + r.height / 2 : r.left + r.width / 2, w: vert ? r.height : r.width };
-        });
+        items = [...nav.querySelectorAll('.nav-item')]
+          .filter(el => el.offsetParent !== null)
+          .map(el => {
+            const r = el.getBoundingClientRect();
+            return { el, c: vert ? r.top + r.height / 2 : r.left + r.width / 2, w: vert ? r.height : r.width };
+          });
       };
       const nearest = p => items.reduce((b, i) => Math.abs(i.c - p) < Math.abs(b.c - p) ? i : b, items[0]);
       const clamp = p => Math.max(items[0].c, Math.min(p, items[items.length - 1].c));
@@ -9432,7 +9931,7 @@
       }
 
       if (connectCard) connectCard.style.display = 'none';
-      if (liveSection) liveSection.style.display = 'block';
+      if (liveSection) liveSection.style.display = window.matchMedia('(min-width: 850px)').matches ? 'grid' : 'block';
       if (discBtn) discBtn.style.display = 'inline-flex';
 
       if (window.Spotify) {
@@ -10274,6 +10773,230 @@
         setTimeout(() => refreshSpotifyState(true), 1500);
       } catch (e) {}
     }
+
+    // --- MOBILE POPUP MENUS & INLINE CREATORS ---
+    let mobileCreateType = 'task';
+
+    function openMobileSheet(modalId) {
+      pSnd('pop');
+      const modal = $(modalId);
+      if (!modal) return;
+      modal.style.display = 'flex';
+      requestAnimationFrame(() => modal.classList.add('visible'));
+    }
+
+    function closeMobileSheet(modalId) {
+      const modal = $(modalId);
+      if (!modal) return;
+      modal.classList.remove('visible');
+      setTimeout(() => { modal.style.display = 'none'; }, 220);
+    }
+
+    function openMobileAddSheet() {
+      resetMobileAddSheet();
+      openMobileSheet('mobile-add-modal');
+    }
+
+    function resetMobileAddSheet() {
+      const opts = $('mobile-add-options');
+      const form = $('mobile-inline-creator');
+      const title = document.querySelector('#mobile-add-modal .mobile-sheet-title');
+      if (opts) opts.style.display = 'flex';
+      if (form) form.style.display = 'none';
+      if (title) title.textContent = 'Add New';
+    }
+
+    function showMobileInlineCreator(type) {
+      pSnd('tick');
+      mobileCreateType = type;
+      const opts = $('mobile-add-options');
+      const form = $('mobile-inline-creator');
+      const title = document.querySelector('#mobile-add-modal .mobile-sheet-title');
+      const input = $('mob-create-text');
+      const dateInput = $('mob-create-date');
+
+      if (opts) opts.style.display = 'none';
+      if (form) form.style.display = 'flex';
+      if (title) title.textContent = type === 'deadline' ? 'New Deadline' : 'New Task';
+      if (input) {
+        input.value = '';
+        input.placeholder = type === 'deadline' ? 'E.g., Legal SAC...' : 'Task description...';
+      }
+      if (dateInput) dateInput.value = '';
+      setTimeout(() => input?.focus(), 60);
+    }
+
+    function submitMobileInlineCreator() {
+      const text = $('mob-create-text')?.value.trim();
+      const date = $('mob-create-date')?.value;
+      if (!text || !date) {
+        pSnd('tick');
+        showToast('Please enter both a description and a date.');
+        return;
+      }
+      pSnd('pop');
+      if (mobileCreateType === 'deadline') {
+        dlData.push({ id: Date.now().toString(), name: text, date });
+        showToast('Deadline added! 🎯');
+      } else {
+        gNotes.push({ id: Date.now().toString(), text, date });
+        showToast('Task added! 📌');
+      }
+      sDat();
+      pSnd('success');
+      closeMobileSheet('mobile-add-modal');
+      renderHome(false);
+    }
+
+    // --- GLOBAL SEARCH & QUICK ACTIONS ---
+    function openGlobalSearch() {
+      pSnd('pop');
+      const modal = $('global-search-modal');
+      const input = $('gs-input');
+      if (!modal || !input) return;
+      modal.style.display = 'flex';
+      requestAnimationFrame(() => modal.classList.add('visible'));
+      input.value = '';
+      runGlobalSearch('');
+      setTimeout(() => input.focus(), 60);
+    }
+
+    function closeGlobalSearch() {
+      const modal = $('global-search-modal');
+      if (!modal) return;
+      modal.classList.remove('visible');
+      setTimeout(() => { modal.style.display = 'none'; }, 200);
+
+      // Restore the blue active pill to whichever screen is currently open
+      const activeScreen = document.querySelector('.screen.active');
+      if (activeScreen) {
+        const navMatch = document.querySelector(`.nav-item[data-screen="${activeScreen.id}"]`);
+        if (navMatch) {
+          $$('.nav-item').forEach(nav => nav.classList.remove('active', 'show-label'));
+          navMatch.classList.add('active');
+        }
+      }
+    }
+
+    const globalQuickActions = [
+      { id: 'act-hw', title: 'Add Homework', sub: 'Create a new subject homework task', icon: 'fa-plus', run: () => openAddHw() },
+      { id: 'act-ev', title: 'Create Calendar Event', sub: 'Schedule an event, birthday, or reminder', icon: 'fa-calendar-plus', run: () => { navTo('calendar-screen'); setTimeout(() => App.openCreateSheet(), 120); } },
+      { id: 'act-task', title: 'Add Quick Task', sub: 'Jump to My Tasks on Dashboard', icon: 'fa-check-double', run: () => { navTo('home-screen'); setTimeout(() => $('global-task')?.focus(), 120); } },
+      { id: 'act-dl', title: 'Add Deadline', sub: 'Add an upcoming SAC or exam countdown', icon: 'fa-hourglass-half', run: () => { navTo('home-screen'); setTimeout(() => $('dl-name')?.focus(), 120); } },
+      { id: 'act-ai', title: 'Ask AI Tutor', sub: 'Get step-by-step study help', icon: 'fa-wand-magic-sparkles', run: () => { navTo('ai-screen'); setTimeout(() => $('ai-text-input')?.focus(), 120); } },
+      { id: 'act-tt', title: 'Edit Timetable', sub: 'Configure your school cycle & classes', icon: 'fa-table-cells', run: () => openTtEditor('settings') },
+      { id: 'act-sp', title: 'Open Study Beats (Spotify)', sub: 'Control music playback', icon: 'fa-music', run: () => navTo('spotify-screen') }
+    ];
+
+    let gsActionHandlers = [];
+
+    function triggerGsItem(idx) {
+      closeGlobalSearch();
+      if (gsActionHandlers[idx]) gsActionHandlers[idx]();
+    }
+
+    function runGlobalSearch(rawQuery) {
+      const container = $('gs-results');
+      if (!container) return;
+      const q = rawQuery.toLowerCase().trim();
+      gsActionHandlers = [];
+
+      const pushItem = (title, subtitle, iconClass, colorBg, handler) => {
+        const idx = gsActionHandlers.length;
+        gsActionHandlers.push(handler);
+        const bgStyle = colorBg ? `background:${colorBg};` : '';
+        return `
+          <div class="gs-item" onclick="triggerGsItem(${idx})">
+            <div class="gs-icon" style="${bgStyle}"><i class="fa-solid ${iconClass}"></i></div>
+            <div class="gs-item-body">
+              <div class="gs-item-title">${escapeCalendarText(title)}</div>
+              <div class="gs-item-sub">${escapeCalendarText(subtitle)}</div>
+            </div>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-secondary); flex-shrink:0;"></i>
+          </div>`;
+      };
+
+      let html = '';
+
+      // 1. Quick Actions
+      const matchedActions = globalQuickActions.filter(a => !q || a.title.toLowerCase().includes(q) || a.sub.toLowerCase().includes(q));
+      if (matchedActions.length) {
+        html += `<div class="gs-section-label">Actions</div>`;
+        html += matchedActions.map(a => pushItem(a.title, a.sub, a.icon, '', a.run)).join('');
+      }
+
+      // 2. Subjects
+      const matchedSubs = sData.filter(s => s && s.name && (q ? s.name.toLowerCase().includes(q) : false));
+      if (matchedSubs.length) {
+        html += `<div class="gs-section-label">Subjects</div>`;
+        html += matchedSubs.map(s => pushItem(s.name, 'Open subject notes, grades & homework', 'fa-book', stD[s.status]?.h || '', () => openDet(s.id))).join('');
+      }
+
+      // 3. Homework, Tasks & Deadlines
+      const hwHits = [];
+      sData.forEach(s => {
+        safeArr(s.homework).forEach(h => {
+          if (h && (!q || h.text.toLowerCase().includes(q) || s.name.toLowerCase().includes(q))) {
+            hwHits.push({ title: h.text, sub: `${s.name} • Due ${fmtD(h.date)}`, subId: s.id });
+          }
+        });
+      });
+      gNotes.forEach(n => {
+        if (n && (!q || n.text.toLowerCase().includes(q))) {
+          hwHits.push({ title: n.text, sub: `My Tasks • Due ${fmtD(n.date)}`, isTask: true });
+        }
+      });
+      dlData.forEach(d => {
+        if (d && (!q || d.name.toLowerCase().includes(q))) {
+          hwHits.push({ title: d.name, sub: `Deadline • ${fmtD(d.date)}`, isDl: true });
+        }
+      });
+
+      if (hwHits.length && (q || hwHits.length <= 5)) {
+        html += `<div class="gs-section-label">Homework & Tasks</div>`;
+        html += hwHits.slice(0, 8).map(item => pushItem(
+          item.title,
+          item.sub,
+          item.isDl ? 'fa-flag' : 'fa-list-check',
+          item.isDl ? '#fa7b17' : '#2563EB',
+          () => item.subId ? openDet(item.subId) : navTo('home-screen')
+        )).join('');
+      }
+
+      // 4. Calendar Events
+      const matchedEvents = calendarEvents.filter(ev => {
+        if (!ev || (ev.id && String(ev.id).startsWith('ev_school_'))) return false;
+        if (!q) return false;
+        return (ev.title && ev.title.toLowerCase().includes(q)) ||
+               (ev.description && ev.description.toLowerCase().includes(q)) ||
+               (ev.location && ev.location.toLowerCase().includes(q));
+      });
+
+      if (matchedEvents.length) {
+        html += `<div class="gs-section-label">Calendar Events</div>`;
+        html += matchedEvents.slice(0, 8).map(ev => {
+          const dStr = ev.date || localDateString(new Date(ev.start));
+          return pushItem(ev.title, `${fmtD(dStr)}${ev.location ? ' • ' + ev.location : ''}`, 'fa-calendar-day', ev.color || '#4285f4', () => openCalendarScreen(dStr));
+        }).join('');
+      }
+
+      if (!html) {
+        html = `<div style="text-align:center; padding:28px 12px; color:var(--text-secondary); font-size:13px;">No matching actions, homework, or events found.</div>`;
+      }
+
+      container.innerHTML = html;
+    }
+
+    document.addEventListener('keydown', e => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        const modal = $('global-search-modal');
+        if (modal && modal.style.display === 'flex') closeGlobalSearch();
+        else openGlobalSearch();
+      } else if (e.key === 'Escape' && $('global-search-modal')?.style.display === 'flex') {
+        closeGlobalSearch();
+      }
+    });
 
     handleSpotifyCallback();
   </script>
