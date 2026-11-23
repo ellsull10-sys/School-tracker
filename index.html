@@ -1843,16 +1843,30 @@
         display: none !important;
       }
       .nav-item.mobile-add-btn {
-        background: var(--accent-grad) !important;
-        color: #FFFFFF !important;
-        box-shadow: 0 6px 16px rgba(15, 23, 42, 0.28);
-        padding: 12px 15px !important;
+        padding: 12px 14px;
       }
     }
     @media (min-width: 850px) {
-      .nav-item.mobile-only-nav {
+      .nav-item.mobile-only-nav,
+      .mobile-only-setting {
         display: none !important;
       }
+    }
+
+    .nav-custom-chip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: var(--input-bg);
+      border: 1px solid var(--card-border);
+      cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+    .nav-custom-chip.selected {
+      border-color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 12%, var(--input-bg));
     }
 
     /* Mobile Popup Sheets (Add Menu & More Menu) */
@@ -2095,97 +2109,93 @@
 
   <nav class="bottom-nav" id="bottom-nav" style="display: none;">
     <div id="nav-liquid-indicator" class="nav-liquid-indicator"></div>
-    <!-- 1. Home (Both) -->
-    <div class="nav-item active" data-screen="home-screen">
+    <div class="nav-item active" data-nav-key="home" data-screen="home-screen">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
       <span class="nav-label">Home</span>
     </div>
-    <!-- 2. Calendar (Both) -->
-    <div class="nav-item" data-screen="calendar-screen">
+    <div class="nav-item" data-nav-key="calendar" data-screen="calendar-screen">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
       <span class="nav-label">Calendar</span>
     </div>
-    <!-- 3. Mobile-Only Center Add (+) Button -->
-    <div class="nav-item mobile-only-nav mobile-add-btn" data-screen="mobile-add-trigger">
+    <div class="nav-item mobile-only-nav mobile-add-btn" data-nav-key="add" data-screen="mobile-add-screen">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
       <span class="nav-label">Add</span>
     </div>
-    <!-- Desktop-Only Tabs -->
-    <div class="nav-item desktop-only-nav" data-screen="ai-screen">
+    <div class="nav-item desktop-only-nav" data-nav-key="tutor" data-screen="ai-screen">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12c-2.4 0-4.6-1-6.4-2.6A9.5 9.5 0 0 0 12 3a9.5 9.5 0 0 0-2.6 6.4C7.6 11 5.4 12 3 12c2.4 0 4.6 1 6.4 2.6A9.5 9.5 0 0 0 12 21a9.5 9.5 0 0 0 2.6-6.4C16.4 13 18.6 12 21 12z"></path></svg>
       <span class="nav-label">Tutor</span>
     </div>
-    <div class="nav-item desktop-only-nav" data-screen="study-group-screen">
+    <div class="nav-item desktop-only-nav" data-nav-key="groups" data-screen="study-group-screen">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3"></circle><circle cx="17" cy="9" r="3"></circle><path d="M2 21v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2"></path><path d="M17 14h1a4 4 0 0 1 4 4v1"></path></svg>
       <span class="nav-label">Groups</span>
     </div>
-    <div class="nav-item desktop-only-nav" data-screen="spotify-screen">
+    <div class="nav-item desktop-only-nav" data-nav-key="spotify" data-screen="spotify-screen">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424c-.18.295-.563.387-.857.207-2.35-1.434-5.305-1.76-8.786-.963-.335.077-.67-.133-.746-.469-.077-.336.132-.67.469-.746 3.809-.87 7.076-.496 9.713 1.115.293.18.386.563.207.856zm1.224-2.722c-.226.367-.706.482-1.072.257-2.687-1.652-6.785-2.131-9.965-1.166-.413.127-.848-.106-.973-.517-.125-.413.108-.848.52-.973 3.632-1.102 8.147-.568 11.234 1.328.366.226.48.707.256 1.071zm.105-2.835C14.692 8.95 9.375 8.775 6.297 9.71c-.493.15-1.016-.129-1.166-.623-.148-.495.13-1.015.625-1.165 3.532-1.073 9.404-.866 13.115 1.337.445.264.59.838.327 1.282-.264.443-.838.59-1.283.326z"/></svg>
       <span class="nav-label">Spotify</span>
     </div>
-    <!-- 4. Settings (Both) -->
-    <div class="nav-item" data-screen="settings-screen">
+    <div class="nav-item" data-nav-key="settings" data-screen="settings-screen">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
       <span class="nav-label">Settings</span>
     </div>
-    <div class="nav-item desktop-only-nav" data-screen="search-trigger">
+    <div class="nav-item desktop-only-nav" data-nav-key="search" data-screen="search-trigger">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
       <span class="nav-label">Search</span>
     </div>
-    <div class="nav-item desktop-only-nav" data-screen="profile-screen">
+    <div class="nav-item desktop-only-nav" data-nav-key="profile" data-screen="profile-screen">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
       <span class="nav-label">Profile</span>
     </div>
-    <!-- 5. Mobile-Only Far Right More Menu Button -->
-    <div class="nav-item mobile-only-nav" data-screen="mobile-more-trigger">
+    <!-- Locked 5th Slot: Mobile-Only Far Right More Menu Button -->
+    <div class="nav-item mobile-only-nav" data-nav-key="more" data-screen="mobile-more-trigger">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect></svg>
       <span class="nav-label">More</span>
     </div>
   </nav>
 
-  <!-- Mobile Quick Add Sheet (Homework, Deadline, Task) -->
-  <div id="mobile-add-modal" class="mobile-sheet-backdrop" role="dialog" aria-modal="true" aria-label="Quick Add" onclick="if(event.target===this) closeMobileSheet('mobile-add-modal')">
-    <div class="mobile-sheet-card">
-      <div class="mobile-sheet-header">
-        <h3 class="mobile-sheet-title">Add New</h3>
-        <button type="button" class="gs-close-btn" aria-label="Close" onclick="closeMobileSheet('mobile-add-modal')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
-        </button>
+  <!-- Full-Screen Mobile Add Tab -->
+  <div id="mobile-add-screen" class="screen">
+    <div class="header-bar cascade-item d-1">
+      <h1 id="mobile-add-screen-title" style="margin-left: 4px; flex: 1;">Add New</h1>
+      <div class="profile-avatar-mini" onclick="navTo('profile-screen')"></div>
+    </div>
+
+    <div id="mobile-add-options" class="cascade-item d-2" style="display:flex; flex-direction:column; gap:14px; margin-top:8px;">
+      <div class="app-card" style="padding:18px; display:flex; align-items:center; gap:16px; cursor:pointer;" onclick="openAddHw()">
+        <div class="gs-icon" style="width:48px; height:48px; border-radius:15px; background:#2563EB; font-size:18px;"><i class="fa-solid fa-book-open"></i></div>
+        <div class="gs-item-body">
+          <div class="gs-item-title" style="font-size:17px;">Add Homework</div>
+          <div class="gs-item-sub" style="font-size:13px;">Assign homework to one of your subjects</div>
+        </div>
+        <i class="fa-solid fa-chevron-right" style="font-size:14px; color:var(--text-secondary);"></i>
       </div>
-      <div id="mobile-add-options" style="display:flex; flex-direction:column; gap:10px;">
-        <div class="gs-item" onclick="closeMobileSheet('mobile-add-modal'); openAddHw();">
-          <div class="gs-icon" style="background:#2563EB;"><i class="fa-solid fa-book-open"></i></div>
-          <div class="gs-item-body">
-            <div class="gs-item-title">Add Homework</div>
-            <div class="gs-item-sub">Assign a task to one of your subjects</div>
-          </div>
-          <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-secondary);"></i>
+
+      <div class="app-card" style="padding:18px; display:flex; align-items:center; gap:16px; cursor:pointer;" onclick="showMobileInlineCreator('deadline')">
+        <div class="gs-icon" style="width:48px; height:48px; border-radius:15px; background:#fa7b17; font-size:18px;"><i class="fa-solid fa-hourglass-half"></i></div>
+        <div class="gs-item-body">
+          <div class="gs-item-title" style="font-size:17px;">Add Deadline</div>
+          <div class="gs-item-sub" style="font-size:13px;">Create a countdown for an upcoming SAC or exam</div>
         </div>
-        <div class="gs-item" onclick="showMobileInlineCreator('deadline')">
-          <div class="gs-icon" style="background:#fa7b17;"><i class="fa-solid fa-hourglass-half"></i></div>
-          <div class="gs-item-body">
-            <div class="gs-item-title">Add Deadline</div>
-            <div class="gs-item-sub">Create a countdown for an upcoming SAC or exam</div>
-          </div>
-          <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-secondary);"></i>
-        </div>
-        <div class="gs-item" onclick="showMobileInlineCreator('task')">
-          <div class="gs-icon" style="background:#10B981;"><i class="fa-solid fa-check-double"></i></div>
-          <div class="gs-item-body">
-            <div class="gs-item-title">Add Task</div>
-            <div class="gs-item-sub">Add a general to-do item to My Tasks</div>
-          </div>
-          <i class="fa-solid fa-chevron-right" style="font-size:12px; color:var(--text-secondary);"></i>
-        </div>
+        <i class="fa-solid fa-chevron-right" style="font-size:14px; color:var(--text-secondary);"></i>
       </div>
-      <!-- Inline Form for Deadline or Task on Mobile -->
-      <div id="mobile-inline-creator" style="display:none; flex-direction:column; gap:12px; padding-top:4px;">
-        <input type="text" id="mob-create-text" class="full-w-input" placeholder="Description...">
-        <input type="date" id="mob-create-date" class="full-w-input">
-        <div style="display:flex; gap:8px;">
-          <button type="button" class="add-btn btn-grey" style="flex:1; min-height:46px;" onclick="resetMobileAddSheet()">Back</button>
-          <button type="button" class="add-btn" style="flex:1; min-height:46px;" onclick="submitMobileInlineCreator()">Save</button>
+
+      <div class="app-card" style="padding:18px; display:flex; align-items:center; gap:16px; cursor:pointer;" onclick="showMobileInlineCreator('task')">
+        <div class="gs-icon" style="width:48px; height:48px; border-radius:15px; background:#10B981; font-size:18px;"><i class="fa-solid fa-check-double"></i></div>
+        <div class="gs-item-body">
+          <div class="gs-item-title" style="font-size:17px;">Add Task</div>
+          <div class="gs-item-sub" style="font-size:13px;">Add a general to-do item to My Tasks</div>
         </div>
+        <i class="fa-solid fa-chevron-right" style="font-size:14px; color:var(--text-secondary);"></i>
+      </div>
+    </div>
+
+    <!-- Full-Screen Inline Form for Deadline or Task -->
+    <div id="mobile-inline-creator" class="app-card cascade-item d-2" style="display:none; padding:18px; flex-direction:column; gap:14px; margin-top:8px;">
+      <div id="mobile-inline-label" style="font-size:13px; font-weight:700; color:var(--text-secondary); text-transform:uppercase;">Details</div>
+      <input type="text" id="mob-create-text" class="full-w-input" placeholder="Description...">
+      <input type="date" id="mob-create-date" class="full-w-input">
+      <div style="display:flex; gap:10px; margin-top:4px;">
+        <button type="button" class="add-btn btn-grey" style="flex:1; min-height:48px;" onclick="resetMobileAddSheet()">Back</button>
+        <button type="button" class="add-btn" style="flex:1; min-height:48px;" onclick="submitMobileInlineCreator()">Save</button>
       </div>
     </div>
   </div>
@@ -2840,16 +2850,16 @@
   <div id="add-hw-screen" class="screen">
     <div class="header-bar cascade-item d-1">
       <button class="back-btn" onclick="navTo('home-screen')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Back</button>
-      <h1 style="margin:0;">New Task</h1>
+      <h1 style="margin:0;">Add Homework</h1>
     </div>
     <div class="app-card cascade-item d-2" style="padding: 16px; display: flex; flex-direction: column; gap: 12px; width: 100%; box-sizing: border-box;">
       <div style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:4px; text-transform:uppercase;">Homework Details</div>
-      <input type="text" id="global-new-hw-desc" class="full-w-input" placeholder="Task description...">
+      <input type="text" id="global-new-hw-desc" class="full-w-input" placeholder="Homework description...">
       <select id="global-new-hw-sub" class="full-w-input"></select>
       <input type="date" id="global-new-hw-date" class="full-w-input">
       <button class="add-btn full-w-input" style="margin-top: 4px; padding: 14px; display: flex; justify-content: center; align-items: center; gap: 8px;" onclick="saveGlobalHw()">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-        Save Task
+        Save Homework
       </button>
     </div>
   </div>
@@ -2938,6 +2948,13 @@
       <div style="display:flex; margin-top:10px;">
         <button type="button" class="add-btn btn-grey" style="flex:1; padding:10px; font-size:13.5px;" onclick="resetUiScale()">Reset Scale (50%)</button>
       </div>
+    </div>
+
+    <h3 class="mobile-only-setting">Navigation Bar</h3>
+    <div class="app-card setting-row mobile-only-setting">
+      <p style="font-size:13px; color:var(--text-secondary); margin:0; line-height:1.4;">Choose up to 4 tabs for your bottom bar. The <strong>More</strong> menu always stays in the last slot.</p>
+      <div id="mobile-nav-customizer-list" style="display:flex; flex-direction:column; gap:8px;"></div>
+      <button type="button" class="add-btn btn-grey" style="padding:10px; font-size:13px;" onclick="resetMobileNavTabs()">Reset Default Bar</button>
     </div>
 
     <h3 class="cascade-item d-8">Timetable Scanner</h3>
@@ -4044,11 +4061,8 @@
         openGlobalSearch();
         return;
       }
-      if (screenId === 'mobile-add-trigger') {
-        openMobileAddSheet();
-        return;
-      }
       if (screenId === 'mobile-more-trigger') {
+        highlightNavPill(navElement || document.querySelector('.nav-item[data-screen="mobile-more-trigger"]'));
         openMobileSheet('mobile-more-modal');
         return;
       }
@@ -4076,6 +4090,7 @@
           const labelMap = {
             'home-screen': 'Home',
             'calendar-screen': 'Calendar',
+            'mobile-add-screen': 'Add',
             'ai-screen': 'Tutor',
             'study-group-screen': 'Groups',
             'spotify-screen': 'Spotify',
@@ -4102,7 +4117,8 @@
         }, 2200);
       }
 
-      if (screenId === 'settings-screen') { appSetApply(); rendSet(); checkGodMode(); updateReminderSettingUI(); }
+      if (screenId === 'mobile-add-screen') { resetMobileAddSheet(); }
+      if (screenId === 'settings-screen') { appSetApply(); rendSet(); checkGodMode(); updateReminderSettingUI(); applyMobileNavConfig(); }
       if (screenId === 'calendar-screen') { renderCalendar(); promptCalendarSchoolSetup(); }
       if (screenId === 'ai-screen') renderAiChat();
       if (screenId === 'study-group-screen') {
@@ -10774,6 +10790,128 @@
       } catch (e) {}
     }
 
+    // --- MOBILE NAVIGATION CUSTOMIZER (4 SLOTS + LOCKED MORE MENU) ---
+    const MOBILE_NAV_OPTIONS = [
+      { key: 'home', label: 'Home', icon: 'fa-house', action: () => navTo('home-screen') },
+      { key: 'calendar', label: 'Calendar', icon: 'fa-calendar-days', action: () => navTo('calendar-screen') },
+      { key: 'add', label: 'Add', icon: 'fa-plus', action: () => navTo('mobile-add-screen') },
+      { key: 'tutor', label: 'AI Tutor', icon: 'fa-wand-magic-sparkles', action: () => navTo('ai-screen') },
+      { key: 'groups', label: 'Study Groups', icon: 'fa-user-group', action: () => navTo('study-group-screen') },
+      { key: 'spotify', label: 'Spotify', icon: 'fa-music', action: () => navTo('spotify-screen') },
+      { key: 'search', label: 'Search', icon: 'fa-magnifying-glass', action: () => openGlobalSearch() },
+      { key: 'settings', label: 'Settings', icon: 'fa-gear', action: () => navTo('settings-screen') },
+      { key: 'profile', label: 'Profile', icon: 'fa-user', action: () => navTo('profile-screen') }
+    ];
+    const DEFAULT_MOBILE_NAV = ['home', 'calendar', 'add', 'settings'];
+
+    function getSelectedMobileNavKeys() {
+      const saved = Array.isArray(appSet.mobileNavTabs) ? appSet.mobileNavTabs : DEFAULT_MOBILE_NAV;
+      const valid = saved.filter(k => MOBILE_NAV_OPTIONS.some(o => o.key === k));
+      return valid.length ? valid.slice(0, 4) : [...DEFAULT_MOBILE_NAV];
+    }
+
+    function applyMobileNavConfig() {
+      const nav = $('bottom-nav');
+      if (!nav) return;
+      const isMobile = window.matchMedia('(max-width: 849px)').matches;
+      const selectedKeys = getSelectedMobileNavKeys();
+      const moreItem = nav.querySelector('.nav-item[data-nav-key="more"]');
+
+      nav.querySelectorAll('.nav-item').forEach(el => {
+        const key = el.dataset.navKey;
+        if (!key || key === 'more') return;
+        if (!isMobile) {
+          el.style.display = '';
+          el.style.order = '';
+          return;
+        }
+        const slotIdx = selectedKeys.indexOf(key);
+        if (slotIdx !== -1) {
+          el.style.setProperty('display', 'flex', 'important');
+          el.style.order = String(slotIdx + 1);
+        } else {
+          el.style.setProperty('display', 'none', 'important');
+          el.style.order = '';
+        }
+      });
+
+      if (moreItem) {
+        moreItem.style.order = isMobile ? '99' : '';
+      }
+
+      // Populate the More popup with whichever tabs are NOT currently pinned to the bar
+      const moreGrid = document.querySelector('#mobile-more-modal .mobile-sheet-grid');
+      if (moreGrid) {
+        const overflowOptions = MOBILE_NAV_OPTIONS.filter(opt => !selectedKeys.includes(opt.key));
+        moreGrid.innerHTML = overflowOptions.map(opt => {
+          const bg = opt.key === 'spotify' ? 'background:linear-gradient(135deg,#1DB954,#15883e);' : '';
+          return `
+            <button type="button" class="mobile-grid-item" onclick="closeMobileSheet('mobile-more-modal'); triggerMobileOverflow('${opt.key}')">
+              <div class="mobile-grid-icon" style="${bg}"><i class="fa-solid ${opt.icon}"></i></div>
+              <span>${opt.label === 'Quick Add (+)' ? 'Add' : opt.label}</span>
+            </button>`;
+        }).join('');
+      }
+
+      renderMobileNavCustomizer();
+    }
+
+    function triggerMobileOverflow(key) {
+      const opt = MOBILE_NAV_OPTIONS.find(o => o.key === key);
+      if (opt) opt.action();
+    }
+
+    function renderMobileNavCustomizer() {
+      const list = $('mobile-nav-customizer-list');
+      if (!list) return;
+      const selected = getSelectedMobileNavKeys();
+      list.innerHTML = MOBILE_NAV_OPTIONS.map(opt => {
+        const isChecked = selected.includes(opt.key);
+        return `
+          <div class="nav-custom-chip ${isChecked ? 'selected' : ''}" onclick="toggleMobileNavTab('${opt.key}')">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <i class="fa-solid ${opt.icon}" style="width:18px; text-align:center; color:var(--accent);"></i>
+              <span style="font-size:14px; font-weight:600;">${opt.label}</span>
+            </div>
+            <input type="checkbox" ${isChecked ? 'checked' : ''} style="width:18px; height:18px; accent-color:var(--accent); pointer-events:none;">
+          </div>`;
+      }).join('');
+    }
+
+    function toggleMobileNavTab(key) {
+      let selected = getSelectedMobileNavKeys();
+      if (selected.includes(key)) {
+        if (selected.length <= 1) {
+          pSnd('tick');
+          showToast('Keep at least 1 tab selected.');
+          return;
+        }
+        selected = selected.filter(k => k !== key);
+      } else {
+        if (selected.length >= 4) {
+          pSnd('tick');
+          showToast('Maximum 4 tabs allowed (More menu stays in the 5th slot).');
+          return;
+        }
+        selected.push(key);
+      }
+      pSnd('pop');
+      appSet.mobileNavTabs = selected;
+      saveAppSettings();
+      applyMobileNavConfig();
+    }
+
+    function resetMobileNavTabs() {
+      pSnd('tick');
+      appSet.mobileNavTabs = [...DEFAULT_MOBILE_NAV];
+      saveAppSettings();
+      applyMobileNavConfig();
+      showToast('Navigation bar reset to default.');
+    }
+
+    window.addEventListener('resize', applyMobileNavConfig);
+    setTimeout(applyMobileNavConfig, 0);
+
     // --- MOBILE POPUP MENUS & INLINE CREATORS ---
     let mobileCreateType = 'task';
 
@@ -10790,17 +10928,22 @@
       if (!modal) return;
       modal.classList.remove('visible');
       setTimeout(() => { modal.style.display = 'none'; }, 220);
-    }
 
-    function openMobileAddSheet() {
-      resetMobileAddSheet();
-      openMobileSheet('mobile-add-modal');
+      // Restore the active pill to the screen currently visible behind the popup
+      const activeScreen = document.querySelector('.screen.active');
+      if (activeScreen) {
+        const navMatch = document.querySelector(`.nav-item[data-screen="${activeScreen.id}"]`);
+        if (navMatch) {
+          $$('.nav-item').forEach(nav => nav.classList.remove('active', 'show-label'));
+          navMatch.classList.add('active');
+        }
+      }
     }
 
     function resetMobileAddSheet() {
       const opts = $('mobile-add-options');
       const form = $('mobile-inline-creator');
-      const title = document.querySelector('#mobile-add-modal .mobile-sheet-title');
+      const title = $('mobile-add-screen-title');
       if (opts) opts.style.display = 'flex';
       if (form) form.style.display = 'none';
       if (title) title.textContent = 'Add New';
@@ -10811,13 +10954,15 @@
       mobileCreateType = type;
       const opts = $('mobile-add-options');
       const form = $('mobile-inline-creator');
-      const title = document.querySelector('#mobile-add-modal .mobile-sheet-title');
+      const title = $('mobile-add-screen-title');
+      const label = $('mobile-inline-label');
       const input = $('mob-create-text');
       const dateInput = $('mob-create-date');
 
       if (opts) opts.style.display = 'none';
       if (form) form.style.display = 'flex';
-      if (title) title.textContent = type === 'deadline' ? 'New Deadline' : 'New Task';
+      if (title) title.textContent = type === 'deadline' ? 'Add Deadline' : 'Add Task';
+      if (label) label.textContent = type === 'deadline' ? 'Deadline Details' : 'Task Details';
       if (input) {
         input.value = '';
         input.placeholder = type === 'deadline' ? 'E.g., Legal SAC...' : 'Task description...';
@@ -10844,8 +10989,8 @@
       }
       sDat();
       pSnd('success');
-      closeMobileSheet('mobile-add-modal');
-      renderHome(false);
+      resetMobileAddSheet();
+      navTo('home-screen');
     }
 
     // --- GLOBAL SEARCH & QUICK ACTIONS ---
