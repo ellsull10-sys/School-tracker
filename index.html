@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" style="background-color: #0B1120;">
+<html lang="en" style="background-color: #000000;">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" id="theme-color-meta" content="#0B1120">
+  <meta name="theme-color" id="theme-color-meta" content="#000000">
   
   <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/180/task.png">
   <title>School Tracker</title>
@@ -39,10 +39,10 @@
 
   <style>
     :root {
-      --bg-base: #F2F2F7;
-      --card-bg: rgba(255, 255, 255, 0.78);
+      --bg-base: #E0E0E0;
+      --card-bg: #FFFFFF;
       --card-border: rgba(0, 0, 0, 0.06);
-      --card-shadow: 0 12px 28px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.05);
+      --card-shadow: 0 8px 20px rgba(0, 0, 0, 0.07), 0 2px 6px rgba(0, 0, 0, 0.025);
       --input-bg: rgba(255, 255, 255, 0.7);
       --text-primary: #1C1C1E;
       --text-secondary: #636366;
@@ -55,27 +55,47 @@
     }
     
     html.bg-active, body.bg-active { background-color: #FFFFFF !important; }
-    body.bg-active { --card-bg: rgba(255, 255, 255, 0.88); --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.22), 0 8px 16px rgba(0, 0, 0, 0.12); }
+    body.bg-active { --bg-base: #FFFFFF; --card-bg: rgba(255, 255, 255, 0.78); --card-shadow: 0 14px 28px rgba(0, 0, 0, 0.14), 0 4px 10px rgba(0, 0, 0, 0.07); }
+    #home-ring-card, #dashboard-calendar-card, #calendar-screen { --card-bg: #FFFFFF; }
+    body.bg-active #home-ring-card, body.bg-active #dashboard-calendar-card, body.bg-active #calendar-screen { --card-bg: rgba(255, 255, 255, 0.78); }
+    #home-screen .top-bar .icon-btn.btn-grey { background: #cfedff !important; }
+    body.bg-active #home-screen .top-bar .icon-btn.btn-grey { background: rgba(207, 237, 255, 0.78) !important; }
     body.bg-active h1, body.bg-active h2 { text-shadow: 0 4px 12px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(255, 255, 255, 0.4) !important; }
 
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg-base: #000000;
-        --card-bg: rgba(28, 28, 30, 0.78);
+        --bg-base: #E0E0E0;
+        --card-bg: #1C1C1E;
         --card-border: rgba(255, 255, 255, 0.08);
-        --card-shadow: 0 14px 36px rgba(0, 0, 0, 0.5);
+        --card-shadow: 0 10px 24px rgba(0, 0, 0, 0.32);
         --input-bg: rgba(0, 0, 0, 0.35);
         --text-primary: #F5F5F5;
         --text-secondary: #98989D;
       }
-      html.bg-active, body.bg-active { background-color: #000000 !important; }
-      body.bg-active { --card-bg: rgba(28, 28, 30, 0.88); --card-shadow: 0 24px 54px rgba(0, 0, 0, 0.85), 0 8px 24px rgba(0, 0, 0, 0.65); }
+      html.bg-active, body.bg-active { background-color: var(--bg-base) !important; }
+      body.bg-active { --bg-base: #000000; --card-bg: rgba(28, 28, 30, 0.78); --card-shadow: 0 16px 36px rgba(0, 0, 0, 0.6), 0 6px 16px rgba(0, 0, 0, 0.38); }
+      #home-ring-card, #dashboard-calendar-card, #calendar-screen { --card-bg: #1C1C1E; }
+      body.bg-active #home-ring-card, body.bg-active #dashboard-calendar-card, body.bg-active #calendar-screen { --card-bg: rgba(28, 28, 30, 0.78); }
+      body.bg-active #home-screen .top-bar .icon-btn.btn-grey { background: rgba(28, 28, 30, 0.78) !important; }
+      body.bg-active #home-screen .top-bar .profile-avatar-mini { background-color: rgba(28, 28, 30, 0.78) !important; }
       body.bg-active h1, body.bg-active h2 { text-shadow: 0 4px 16px rgba(0,0,0,0.6) !important; }
     }
+    html.bg-placeholder, body.bg-placeholder { background-color: #F2F2F7 !important; }
+    body.bg-placeholder {
+      --bg-base: #F2F2F7;
+      --card-bg: #FFFFFF;
+      --card-border: rgba(0, 0, 0, 0.06);
+      --card-shadow: 0 8px 20px rgba(0, 0, 0, 0.07), 0 2px 6px rgba(0, 0, 0, 0.025);
+      --input-bg: rgba(0, 0, 0, 0.04);
+      --text-primary: #1C1C1E;
+      --text-secondary: #636366;
+    }
+    body.bg-placeholder #home-screen .top-bar .icon-btn.btn-grey { background: #FFFFFF !important; }
+    body.bg-placeholder #home-screen .top-bar .profile-avatar-mini { background-color: #FFFFFF !important; }
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     html, body {
-      background-color: #0B1120;
+      background-color: #E0E0E0;
       color: var(--text-primary);
       margin: 0;
       padding: 0;
@@ -91,6 +111,18 @@
     }
     body.app-ready {
       background-color: var(--bg-base);
+    }
+    body.app-ready:not(.bg-active):not(.bg-placeholder) {
+      background-color: #E0E0E0;
+      background-image: linear-gradient(to bottom, #8052E8 0%, #8B5CF6 12%, #8B5CF6 72%, #E0E0E0 100%);
+      background-position: top left;
+      background-repeat: no-repeat;
+      background-size: 100% var(--subject-gradient-height, 100vh);
+      background-attachment: scroll;
+    }
+    #home-screen .top-bar h1 {
+      color: #FFFFFF;
+      font-weight: 500;
     }
     
     #app-background {
@@ -524,6 +556,8 @@
     @media (prefers-color-scheme: dark) {
       .profile-avatar-mini { background-color: rgba(255, 255, 255, 0.08); }
     }
+    #home-screen .top-bar .profile-avatar-mini { background-color: #cfedff !important; }
+    body.bg-active #home-screen .top-bar .profile-avatar-mini { background-color: rgba(207, 237, 255, 0.78) !important; }
     .profile-avatar-mini:active { transform: scale(0.9); }
     
     .profile-avatar-large {
@@ -599,9 +633,9 @@
     .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
     #home-weather-card {
       position: relative;
-      min-height: 112px;
+      min-height: 104px;
       margin-bottom: 12px;
-      padding: 15px 16px;
+      padding: 13px 14px;
       overflow: hidden;
       background: linear-gradient(135deg, rgba(37, 99, 235, 0.9), rgba(14, 116, 144, 0.82));
       color: #fff;
@@ -619,12 +653,12 @@
       filter: blur(4px);
     }
     .weather-content { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-    .weather-temp { font: 800 34px/1 'Outfit', sans-serif; letter-spacing: -1px; }
+    .weather-temp { font: 800 31px/1 'Outfit', sans-serif; letter-spacing: -1px; }
     .weather-condition { margin-top: 4px; font-size: 12px; font-weight: 700; opacity: 0.9; }
     .weather-place { margin-top: 8px; font-size: 11px; font-weight: 700; }
     .weather-subtle { font-size: 10px; opacity: 0.7; font-weight: 500; }
     .weather-bom { display: inline-flex; align-items: center; margin-top: 7px; padding: 4px 9px; border-radius: 999px; color: #0f172a; background: rgba(255,255,255,0.9); font-size: 10px; font-weight: 800; text-decoration: none; }
-    .weather-art { width: 82px; height: 66px; flex: 0 0 82px; }
+    .weather-art { width: 74px; height: 60px; flex: 0 0 74px; }
     .weather-art .weather-sun { transform-origin: 50% 50%; animation: weatherSunPulse 3s ease-in-out infinite; }
     .weather-art .weather-cloud { animation: weatherCloudFloat 4s ease-in-out infinite; }
     .weather-art .weather-rain { animation: weatherRain 1.2s linear infinite; }
@@ -1033,7 +1067,14 @@
 
     @media (max-width: 849px) {
       #calendar-screen.active {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100dvh;
+        overflow: hidden;
+        z-index: 9000;
         padding: env(safe-area-inset-top) 0 calc(env(safe-area-inset-bottom) + 76px);
+        background: #FFFFFF;
       }
     }
 
@@ -1331,10 +1372,6 @@
     .home-layout { display: flex; flex-direction: column; }
     @media (min-width: 850px) {
       .screen { width: 100%; max-width: 1440px; margin: 0 auto; padding: 32px 40px 48px 110px; }
-      body:not(.bg-active) {
-        background-image: radial-gradient(900px 520px at 88% -8%, rgba(100, 116, 139, 0.16), transparent 70%), radial-gradient(760px 520px at 4% 108%, rgba(15, 23, 42, 0.10), transparent 70%);
-        background-attachment: fixed;
-      }
       .home-layout { display: grid; grid-template-columns: minmax(320px, 420px) minmax(0, 1fr); gap: 32px; align-items: start; justify-content: center; }
       .hl-left, .hl-right { display: flex; flex-direction: column; min-width: 0; }
 
@@ -1866,6 +1903,46 @@
       .nav-item.mobile-add-btn {
         padding: 12px 14px;
       }
+      #home-screen .top-bar {
+        gap: 8px;
+        align-items: center;
+      }
+      #home-screen .top-bar > .flex-col {
+        min-width: 0;
+        margin-left: 0 !important;
+        align-items: flex-start;
+        text-align: left;
+      }
+      #user-greeting {
+        color: var(--accent) !important;
+        font-size: 14px !important;
+        font-weight: 800 !important;
+        margin-bottom: 4px !important;
+        opacity: 1 !important;
+      }
+      #home-screen .top-bar h1 {
+        font-size: clamp(23px, 6vw, 26px) !important;
+        gap: 8px !important;
+        white-space: nowrap;
+      }
+      #iona-title-badge img {
+        width: 27px !important;
+        height: 27px !important;
+      }
+      #home-screen .top-bar > div:last-child {
+        flex-shrink: 0;
+        gap: 6px !important;
+      }
+      #home-screen .top-bar .icon-btn.btn-grey {
+        width: 36px !important;
+        height: 36px !important;
+        min-width: 36px !important;
+        min-height: 36px !important;
+      }
+      #home-screen .top-bar .profile-avatar-mini {
+        width: 36px;
+        height: 36px;
+      }
     }
     @media (min-width: 850px) {
       .nav-item.mobile-only-nav,
@@ -2342,7 +2419,7 @@
         
         <!-- 1. Notifications Button & Dropdown -->
         <div style="position: relative;">
-          <button type="button" class="icon-btn btn-grey" style="width: 38px !important; height: 38px !important; min-width: 38px !important; min-height: 38px !important;" aria-label="Notifications" onclick="toggleNotifications(event)">
+          <button type="button" class="icon-btn btn-grey" style="width: 36px !important; height: 36px !important; min-width: 36px !important; min-height: 36px !important;" aria-label="Notifications" onclick="toggleNotifications(event)">
             <i class="fa-solid fa-bell" style="font-size: 15px;"></i>
             <span id="notif-badge-count" style="display: none; position: absolute; top: -3px; right: -3px; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 999px; background: var(--critical); color: #FFFFFF; font-size: 10px; font-weight: 800; align-items: center; justify-content: center; border: 2px solid var(--bg-base); line-height: 1;">0</span>
           </button>
@@ -2350,12 +2427,12 @@
         </div>
 
         <!-- 2. Study Groups / Chat Button -->
-        <button type="button" class="icon-btn btn-grey" style="width: 38px !important; height: 38px !important; min-width: 38px !important; min-height: 38px !important;" aria-label="Study Groups" onclick="navTo('study-group-screen')">
+        <button type="button" class="icon-btn btn-grey" style="width: 36px !important; height: 36px !important; min-width: 36px !important; min-height: 36px !important;" aria-label="Study Groups" onclick="navTo('study-group-screen')">
           <i class="fa-solid fa-comments" style="font-size: 15px;"></i>
         </button>
 
         <!-- 3. Search Button -->
-        <button type="button" class="icon-btn btn-grey" style="width: 38px !important; height: 38px !important; min-width: 38px !important; min-height: 38px !important;" aria-label="Search" onclick="openGlobalSearch()">
+        <button type="button" class="icon-btn btn-grey" style="width: 36px !important; height: 36px !important; min-width: 36px !important; min-height: 36px !important;" aria-label="Search" onclick="openGlobalSearch()">
           <i class="fa-solid fa-magnifying-glass" style="font-size: 15px;"></i>
         </button>
 
@@ -2365,20 +2442,14 @@
 
     <div class="home-layout">
       <div class="hl-left">
-        <div id="home-weather-card" class="app-card cascade-item d-1" aria-live="polite">
-          <div class="weather-content">
-            <div>
-              <div id="home-weather-temp" class="weather-temp">--°C</div>
-              <div id="home-weather-condition" class="weather-condition">Loading weather...</div>
-              <div id="home-weather-place" class="weather-place">Detecting location</div>
-              <div class="weather-subtle">Based on your location</div>
-              <a id="home-weather-bom" class="weather-bom" href="https://www.bom.gov.au/" target="_blank" rel="noopener noreferrer">BOM ↗</a>
-            </div>
-            <svg id="home-weather-art" class="weather-art" viewBox="0 0 100 80" aria-hidden="true"></svg>
+        <div id="home-iona-bottom-stack">
+          <div id="home-health-card" class="health-bar-container app-card cascade-item d-1">
+            <div class="widget-title" style="margin-bottom: 0;">Subject Health</div>
+            <div class="health-bar" id="health-bar"></div>
           </div>
         </div>
-        <div class="dashboard-grid cascade-item d-1" id="home-dashboard-grid">
-          <div id="home-ring-card" class="widget app-card" onclick="addRSc()" title="Tap to increment goal">
+        <div class="dashboard-grid cascade-item d-2" id="home-dashboard-grid">
+          <div id="home-ring-card" class="widget app-card">
             <div class="widget-title">Today's Goal</div>
             <div class="ring-container">
               <svg viewBox="0 0 36 36" class="circular-chart"><path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" /><path class="circle" id="study-ring" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" /></svg>
@@ -2397,11 +2468,16 @@
           </div>
           <button type="button" class="add-btn dashboard-homework-button" aria-label="Add homework" onclick="openAddHw()"><span aria-hidden="true">+</span><span class="dashboard-homework-button-label">Add Homework</span></button>
         </div>
-
-        <div id="home-iona-bottom-stack">
-          <div id="home-health-card" class="health-bar-container app-card cascade-item d-3">
-            <div class="widget-title" style="margin-bottom: 0;">Subject Health</div>
-            <div class="health-bar" id="health-bar"></div>
+        <div id="home-weather-card" class="app-card cascade-item d-3" aria-live="polite">
+          <div class="weather-content">
+            <div>
+              <div id="home-weather-temp" class="weather-temp">--°C</div>
+              <div id="home-weather-condition" class="weather-condition">Loading weather...</div>
+              <div id="home-weather-place" class="weather-place">Detecting location</div>
+              <div class="weather-subtle">Based on your location</div>
+              <a id="home-weather-bom" class="weather-bom" href="https://www.bom.gov.au/" target="_blank" rel="noopener noreferrer">BOM ↗</a>
+            </div>
+            <svg id="home-weather-art" class="weather-art" viewBox="0 0 100 80" aria-hidden="true"></svg>
           </div>
         </div>
 
@@ -2415,7 +2491,7 @@
           <div id="current-homework-list" class="cascade-item d-4"></div>
         </div>
 
-        <h2 id="task-title" class="cascade-item d-7" style="margin-top: 0;">My Tasks</h2>
+        <h2 id="task-title" class="cascade-item d-7" style="display: none; margin-top: 0;">My Tasks</h2>
         <div id="task-input-card" class="input-group cascade-item d-8">
           <input type="text" id="global-task" placeholder="Task description...">
           <input type="date" id="global-date">
@@ -2975,7 +3051,8 @@
 
     <h3 class="cascade-item d-6">Appearance</h3>
     <div class="app-card setting-row cascade-item d-7">
-      <div class="flex-between" style="margin-bottom:12px;"><div style="font-size:15px; font-weight:600;">Custom Background</div><label class="toggle-switch"><input type="checkbox" id="bg-toggle" onchange="toggleBg()"><span class="slider"></span></label></div>
+      <div class="flex-between" style="margin-bottom:4px;"><div style="font-size:15px; font-weight:600;">Custom Image</div><label class="toggle-switch"><input type="checkbox" id="bg-toggle" onchange="toggleBg()"><span class="slider"></span></label></div>
+      <p style="font-size:12px; color:var(--text-secondary); margin:0 0 12px; line-height:1.4;">Turn on to use your saved image. Upload one to replace the light gray placeholder.</p>
       <div style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:8px;">IMAGE</div>
       <input type="file" id="bg-upload" accept="image/*" style="display:none;" onchange="handleBgUp(event)">
       <div style="display:flex; gap:8px; margin-bottom:12px;">
@@ -3913,11 +3990,26 @@
     }
 
     // Theme Controllers
-    function toggleBg() { appSet.bgEnabled = $('bg-toggle').checked; appSetApply(); saveAppSettings(); }
+    function toggleBg() {
+      appSet.bgEnabled = $('bg-toggle').checked;
+      appSetApply();
+      saveAppSettings();
+    }
     function saveAppSettings() { safeStorage.set('org_settings', appSet); queueCloudWrite(); }
     function appSetApply(updateUI) {
       if (updateUI === undefined) updateUI = true;
-      if (appSet.bgEnabled && appSet.bgImage) {
+      const hasBackground = !!(appSet.bgEnabled && appSet.bgImage);
+      const placeholderMode = !!(appSet.bgEnabled && !appSet.bgImage);
+      document.documentElement.classList.toggle('bg-active', hasBackground);
+      document.body.classList.toggle('bg-active', hasBackground);
+      document.documentElement.classList.toggle('bg-placeholder', placeholderMode);
+      document.body.classList.toggle('bg-placeholder', placeholderMode);
+      const themeMeta = $('theme-color-meta');
+      if (themeMeta) {
+        const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        themeMeta.setAttribute('content', placeholderMode ? '#F2F2F7' : hasBackground ? (isDark ? '#000000' : '#FFFFFF') : '#000000');
+      }
+      if (hasBackground) {
         $('app-background').style.backgroundImage = `url('${appSet.bgImage}')`;
         const opac = appSet.bgOpacity !== undefined ? appSet.bgOpacity : 50;
         $('app-background').style.opacity = opac / 100; } else {$('app-background').style.backgroundImage = 'none';
@@ -4025,6 +4117,11 @@
     let ring = safeStorage.get('org_ring', { score: 0 });
     let uData = safeStorage.get('org_user', null);
     let appSet = safeStorage.get('org_settings', { bgEnabled: false, bgOpacity: 50 });
+    if (typeof appSet.bgWhiteMode !== 'undefined') {
+      if (appSet.bgWhiteMode) appSet.bgEnabled = true;
+      delete appSet.bgWhiteMode;
+      safeStorage.set('org_settings', appSet);
+    }
     sData = normSubs(sData);
 
     // --- FIREBASE INITIALIZATION ADDED HERE ---
@@ -5700,7 +5797,7 @@
 
     function updBgOpac(v) {
       appSet.bgOpacity = v;
-      if (appSet.bgEnabled) $('app-background').style.opacity = v / 100;
+      if (appSet.bgEnabled && appSet.bgImage) $('app-background').style.opacity = v / 100;
       $('opacity-val').innerText = v;
       saveAppSettings();
     }
@@ -7305,8 +7402,7 @@
       document.documentElement.style.backgroundColor = '';
       const themeMeta = $('theme-color-meta');
       if (themeMeta) {
-        const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        themeMeta.setAttribute('content', isDark ? '#000000' : '#F2F2F7');
+        themeMeta.setAttribute('content', '#000000');
       }
 
       // 2. Mount the full app shell (dashboard + nav) once so it renders in its exact final layout
@@ -7546,6 +7642,8 @@
           }
           if (cloudData.appSet && typeof cloudData.appSet === 'object') {
             appSet = { ...appSet, ...cloudData.appSet };
+            if (appSet.bgWhiteMode) appSet.bgEnabled = true;
+            delete appSet.bgWhiteMode;
             safeStorage.set('org_settings', appSet);
             appSetApply(false);
           }
@@ -8110,6 +8208,22 @@
       return weatherRequest;
     }
 
+    let subjectGradientUpdateTimer = 0;
+    function updateSubjectGradientEnd() {
+      const home = $('home-screen');
+      const heading = $('subj-title');
+      if (!home || !heading || !home.classList.contains('active')) return;
+      const headingTop = heading.getBoundingClientRect().top + window.scrollY;
+      document.body.style.setProperty('--subject-gradient-height', `${Math.max(1, Math.floor(headingTop))}px`);
+    }
+    function scheduleSubjectGradientUpdate(delay = 0) {
+      clearTimeout(subjectGradientUpdateTimer);
+      subjectGradientUpdateTimer = setTimeout(() => requestAnimationFrame(updateSubjectGradientEnd), delay);
+    }
+    window.addEventListener('resize', () => scheduleSubjectGradientUpdate());
+    const homeScreenGradientObserver = new MutationObserver(() => scheduleSubjectGradientUpdate(400));
+    homeScreenGradientObserver.observe($('home-screen'), { attributes: true, childList: true, characterData: true, subtree: true });
+
     function renderHome(isInit = false) {
       const a = isInit ? 'cascade-item' : '';
       initWeatherWidget();
@@ -8138,8 +8252,8 @@
           if (isOther && simonCard) simonCard.style.display = 'none';
         } else {
           if (simonCard) simonCard.style.display = 'none';
-          if (ttSideStack) ttSideStack.style.display = 'flex';
-          if (ionaBottomStack) ionaBottomStack.style.display = 'none';
+          if (ttSideStack) ttSideStack.style.display = 'none';
+          if (ionaBottomStack) ionaBottomStack.style.display = 'block';
           dashGrid.style.marginBottom = '20px';
         }
       }
@@ -8245,7 +8359,10 @@
 
       sData.sort((x, y) => x.status - y.status);
       $('subjects-list').innerHTML = sData.map((s, i) => `<div class="card app-card ${a}" data-id="${s.id}" style="background-color: ${stD[s.status]?stD[s.status].c:'#FFF'}; border-color: ${stD[s.status]?stD[s.status].h:'#CCC'}; animation-delay: ${0.28 + (0.04*i)}s; z-index: ${100-i};" onclick="openDet('${s.id}')"><div class="boxes-container">${[0,1,2,3,4].map(j => `<div class="box ${s.status===j?'active':''}" style="--box-color: ${stD[j]?stD[j].h:'#CCC'};" onclick="event.stopPropagation(); setSt('${s.id}', ${j})"></div>`).join('')}</div><div class="subject-title">${s.name}</div></div>`).join('');
+      const taskTitle = $('task-title');
+      if (taskTitle) taskTitle.style.display = gNotes.length > 0 ? '' : 'none';
       $('global-notes-list').innerHTML = gNotes.map((n, i) => `<div id="global-item-${n.id}" class="list-item app-card task-card ${a} ${isOD(n.date)?'overdue':''}" style="animation-delay: ${0.40 + (0.04*i)}s;"><div><div style="font-weight: 600; font-size: 15px;">${n.text}</div><div class="date-badge">Due: ${fmtD(n.date)}</div></div><button class="delete-btn" onclick="compGAnim('${n.id}')">×</button></div>`).join('');
+      scheduleSubjectGradientUpdate(400);
     }
 
     function animRO(id) {
